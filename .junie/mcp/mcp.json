@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/zidni/Library/Application Support/Herd/bin/php84",
+            "args": [
+                "/Users/zidni/Herd/absolutelyHr/artisan",
+                "boost:mcp"
+            ]
+        },
+        "herd": {
+            "command": "/Users/zidni/Library/Application Support/Herd/bin/php84",
+            "args": [
+                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "/Users/zidni/Herd/absolutelyHr"
+            }
+        }
+    }
+}
