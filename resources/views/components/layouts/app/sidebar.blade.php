@@ -4,6 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
+        <x-alert-banner />
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -35,6 +36,14 @@
                             wire:navigate
                         >{{ __('User Management') }}</flux:navlist.item>
                     @endcan
+                    @can('settings.view')
+                        <flux:navlist.item
+                            icon="cog"
+                            :href="route('admin.settings.index')"
+                            :current="request()->routeIs('admin.settings.*')"
+                            wire:navigate
+                        >{{ __('General Settings') }}</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -49,7 +58,6 @@
                 </flux:navlist.item>
             </flux:navlist>
 
-            <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
                 <flux:profile
                     :name="auth()->user()->name"
@@ -73,7 +81,7 @@
                                 <div class="grid flex-1 text-start text-sm leading-tight">
                                     <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
                                     <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
+                                 </div>
                             </div>
                         </div>
                     </flux:menu.radio.group>
@@ -96,7 +104,6 @@
             </flux:dropdown>
         </flux:sidebar>
 
-        <!-- Mobile User Menu -->
         <flux:header class="lg:hidden">
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 

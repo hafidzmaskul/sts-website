@@ -35,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['role:admin'])->group(function () {
             Route::get('/admin/roles',  \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
             Route::get('/admin/users',  \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
+
+            // --- ADD THIS LINE ---
+            Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
+            // --- END OF NEW LINE ---
         });
 });
 
