@@ -36,9 +36,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/admin/roles',  \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
             Route::get('/admin/users',  \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
             Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
+            Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
 
             // --- ADD THIS LINE ---
-            Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
+            Route::get('/admin/newsletter-subscriptions', \App\Livewire\Admin\NewsletterSubscriptions\Index::class)->name('admin.newsletter-subscriptions.index')->middleware('can:newsletter-subscriptions.view');
             // --- END OF NEW LINE ---
         });
 });
