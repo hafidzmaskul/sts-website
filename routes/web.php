@@ -35,9 +35,10 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['role:admin'])->group(function () {
             Route::get('/admin/roles',  \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
             Route::get('/admin/users',  \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
+            Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
 
             // --- ADD THIS LINE ---
-            Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
+            Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
             // --- END OF NEW LINE ---
         });
 });

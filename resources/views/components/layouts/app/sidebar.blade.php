@@ -5,6 +5,7 @@
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <x-alert-banner />
+
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -45,7 +46,20 @@
                         >{{ __('General Settings') }}</flux:navlist.item>
                     @endcan
                 </flux:navlist.group>
-            </flux:navlist>
+
+                @can('testimonials.view')
+                <flux:navlist.group :heading="__('Content')" class="grid">
+                    @can('testimonials.view')
+                        <flux:navlist.item
+                            icon="chat-bubble-left-right"
+                            :href="route('admin.testimonials.index')"
+                            :current="request()->routeIs('admin.testimonials.*')"
+                            wire:navigate
+                        >{{ __('Testimonials') }}</flux:navlist.item>
+                    @endcan
+                </flux:navlist.group>
+                @endcan
+                </flux:navlist>
 
             <flux:spacer />
 
