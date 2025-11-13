@@ -47,7 +47,7 @@
                     @endcan
                 </flux:navlist.group>
 
-                @can('testimonials.view')
+                @canany(['testimonials.view', 'our-team.view'])
                 <flux:navlist.group :heading="__('Content')" class="grid">
                     @can('testimonials.view')
                         <flux:navlist.item
@@ -57,9 +57,16 @@
                             wire:navigate
                         >{{ __('Testimonials') }}</flux:navlist.item>
                     @endcan
+                    @can('our-team.view')
+                        <flux:navlist.item
+                            icon="user-group"
+                            :href="route('admin.our-team.index')"
+                            :current="request()->routeIs('admin.our-team.*')"
+                            wire:navigate
+                        >{{ __('Our Team') }}</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
-                @endcan
-
+                @endcanany
                 @canany(['newsletter-subscriptions.view', 'contact-submissions.view'])
                 <flux:navlist.group :heading="__('Leads')" class="grid">
                     @can('newsletter-subscriptions.view')
@@ -72,7 +79,8 @@
                     @endcan
                 </flux:navlist.group>
                 @endcanany
-                </flux:navlist>
+
+            </flux:navlist>
 
             <flux:spacer />
 
