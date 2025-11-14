@@ -67,6 +67,7 @@
                     @endcan
                 </flux:navlist.group>
                 @endcanany
+
                 @canany(['newsletter-subscriptions.view', 'contact-submissions.view'])
                 <flux:navlist.group :heading="__('Leads')" class="grid">
                     @can('newsletter-subscriptions.view')
@@ -77,10 +78,17 @@
                             wire:navigate
                         >{{ __('Newsletter') }}</flux:navlist.item>
                     @endcan
+                    @can('contact-submissions.view')
+                        <flux:navlist.item
+                            icon="envelope"
+                            :href="route('admin.contact-submissions.index')"
+                            :current="request()->routeIs('admin.contact-submissions.*')"
+                            wire:navigate
+                        >{{ __('Contact Submissions') }}</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
                 @endcanany
-
-            </flux:navlist>
+                </flux:navlist>
 
             <flux:spacer />
 

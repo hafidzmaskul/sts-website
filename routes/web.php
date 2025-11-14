@@ -38,10 +38,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
             Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
             Route::get('/admin/newsletter-subscriptions', \App\Livewire\Admin\NewsletterSubscriptions\Index::class)->name('admin.newsletter-subscriptions.index')->middleware('can:newsletter-subscriptions.view');
-
-            // --- ADD THIS LINE ---
             Route::get('/admin/our-team', \App\Livewire\Admin\OurTeam\Index::class)->name('admin.our-team.index')->middleware('can:our-team.view');
-            // --- END OF NEW LINE ---
+
+            Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index')->middleware('can:contact-submissions.view');
         });
 });
 
