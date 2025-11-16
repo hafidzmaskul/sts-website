@@ -12,7 +12,7 @@
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     @vite(['resources/css/app.css','resources/js/app.jsx'])
 </head>
-<body class="min-h-dvh bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+<body class="min-h-dvh bg-[#302F2F]">
     @inertia
 </body>
 </html>
