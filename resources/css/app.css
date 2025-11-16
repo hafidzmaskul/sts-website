@@ -1,6 +1,19 @@
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
+/* Font variables and utilities */
+:root {
+    --font-roboto: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-montserrat: "Montserrat", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-inter: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-akzidenz: "AkzidenzGroteskBQ-Super", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+.font-roboto { font-family: var(--font-roboto); }
+.font-montserrat { font-family: var(--font-montserrat); }
+.font-inter { font-family: var(--font-inter); }
+.font-akzidenz { font-family: var(--font-akzidenz); }
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
