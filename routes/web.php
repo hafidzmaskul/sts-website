@@ -1,19 +1,12 @@
 <?php
 
-use App\Http\Controllers\Landing\BookController;
-use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
-    return Inertia::render('Landing', [
-        'sliderImage' => asset('294-1200x800.jpg'),
-    ]);
+    return view('welcome');
 })->name('home');
-
-Route::get('/books', [BookController::class, 'index'])->name('books.index');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -37,22 +30,18 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/roles', \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
-        Route::get('/admin/users', \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
-    });
+
+
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/admin/roles',  \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
+            Route::get('/admin/users',  \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
+            Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
+            Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
+            Route::get('/admin/newsletter-subscriptions', \App\Livewire\Admin\NewsletterSubscriptions\Index::class)->name('admin.newsletter-subscriptions.index')->middleware('can:newsletter-subscriptions.view');
+            Route::get('/admin/our-team', \App\Livewire\Admin\OurTeam\Index::class)->name('admin.our-team.index')->middleware('can:our-team.view');
+
+            Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index')->middleware('can:contact-submissions.view');
+        });
 });
 
 require __DIR__.'/auth.php';
-
-// Marketing / public pages
-Route::get('/services', [PageController::class, 'services'])->name('services.index');
-Route::get('/services/{slug}', [PageController::class, 'serviceDetail'])->name('services.show');
-Route::get('/about-us', [PageController::class, 'about'])->name('about');
-Route::get('/contact-us', [PageController::class, 'contact'])->name('contact');
-Route::get('/news', [PageController::class, 'news'])->name('news.index');
-Route::get('/news/{slug}', [PageController::class, 'newsDetail'])->name('news.show');
-Route::get('/company-handbook', [PageController::class, 'companyHandbook'])->name('company.handbook');
-Route::get('/products', [PageController::class, 'products'])->name('products.index');
-Route::get('/products/{slug}', [PageController::class, 'productDetail'])->name('products.show');
-Route::get('/payment', [PageController::class, 'payment'])->name('payment');
