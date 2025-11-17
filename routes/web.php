@@ -47,6 +47,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index')->middleware('can:contact-submissions.view');
         Route::get('/admin/news-categories', \App\Livewire\Admin\NewsCategories\Index::class)->name('admin.news-categories.index')->middleware('can:news-categories.view');
+
+        Route::get('/admin/news', \App\Livewire\Admin\News\Index::class)->name('admin.news.index')->middleware('can:news.view');
+        Route::get('/admin/news/create', \App\Livewire\Admin\News\Create::class)->name('admin.news.create')->middleware('can:news.create');
+        Route::get('/admin/news/{news}/edit', \App\Livewire\Admin\News\Edit::class)->name('admin.news.edit')->middleware('can:news.edit');
     });
 });
 
