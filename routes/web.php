@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/our-team', \App\Livewire\Admin\OurTeam\Index::class)->name('admin.our-team.index')->middleware('can:our-team.view');
 
         Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index')->middleware('can:contact-submissions.view');
+        Route::get('/admin/news-categories', \App\Livewire\Admin\NewsCategories\Index::class)->name('admin.news-categories.index')->middleware('can:news-categories.view');
     });
 });
 
