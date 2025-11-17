@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 createInertiaApp({
   resolve: (name) => {
@@ -8,7 +10,22 @@ createInertiaApp({
     return pages[`./Pages/${name}.jsx`];
   },
   setup({ el, App, props }) {
-    createRoot(el).render(<App {...props} />);
+    const Root = () => {
+      useEffect(() => {
+        AOS.init({
+          duration: 700,
+          easing: 'ease-out-cubic',
+          once: true,
+          offset: 80,
+        });
+
+        AOS.refresh();
+      }, []);
+
+      return <App {...props} />;
+    };
+
+    createRoot(el).render(<Root />);
   },
 });
 

@@ -4,8 +4,9 @@ import ScaffoldBase from './_ScaffoldBase';
 export default function Payment() {
   return (
     <ScaffoldBase title="Payment">
-      <p>Payment page.</p>
+      <div data-aos="fade-up">
+        <p>Payment page.</p>
+      </div>
     </ScaffoldBase>
   );
 }
-
