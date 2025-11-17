@@ -6,6 +6,7 @@ import CircularCarousel from '../components/CircularCarousel';
 import SwiperSlider from '../components/SwiperSlider';
 // PERUBAHAN: Impor komponen ScrollActiveList yang baru
 import ScrollActiveList from '../components/ScrollActiveList';
+import ExploreButton from '../components/ExploreButton';
 
 export default function Landing({ sliderImage }) {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -112,8 +113,8 @@ export default function Landing({ sliderImage }) {
     };
 
     return (
-        <div className="min-h-dvh bg-[#302F2F] mb-40">
-            <div className="bg-[#fff] rounded-b-[190px]">
+        <div className="min-h-dvh bg-[#302F2F] mb-40" data-aos="fade-in">
+            <div className="bg-[#fff] rounded-b-[190px]" data-aos="fade-down">
 
                 <div className="bg-[#fff] rounded-b-full relative overflow-visible">
                     {/* Elemen gradien latar belakang */}
@@ -229,9 +230,10 @@ export default function Landing({ sliderImage }) {
 
             </div>
             <main className="flex-1">
-                <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none'> Some Fact About Absolutely Human Resources </h2>
+                <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none' data-aos="fade-up"> Some Fact About Absolutely Human Resources </h2>
                 <div className="container mx-auto px-10">
                     <div className="flex flex-row justify-between px-20 py-5 items-center mx-auto rounded-xl shadow-lg border-1 border-white"
+                        data-aos="zoom-in"
                         style={{ background: '#ffffff4d' }}
                     >
 
@@ -257,7 +259,7 @@ export default function Landing({ sliderImage }) {
                     </div>
                 </div>
                 {/* our sevice */}
-                <div className="container mx-auto px-10">
+                <div className="container mx-auto px-10" data-aos="fade-up">
                     <div className="flex flex-col md:flex-row gap-20 mt-10 md:mt-20">
                         {/* Kiri: Text */}
                         <div className="md:w-1/2">
@@ -282,7 +284,7 @@ export default function Landing({ sliderImage }) {
                     </div>
                 </div>
                 {/* Circular Carousel Section */}
-                <div className="relative w-full h-[600px] flex justify-center items-center overflow-hidden">
+                <div className="relative w-full h-[600px] flex justify-center items-center overflow-hidden" data-aos="fade-up">
                     <CircularCarousel>
                         {carouselItems.map((item, index) => (
                             <div key={index} className="carousel-card">
@@ -303,22 +305,17 @@ export default function Landing({ sliderImage }) {
                         ))}
                     </CircularCarousel>
                 </div>
-                <div className="text-center">
+                <div className="text-center" data-aos="fade-up">
                     <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
                     <p className='text-inter font-normal text-sm md:text-base text-white'>Lorem ipsum dolor sit amet consectetur adipiscing elit. <br />
                         Quisque faucibus ex sapien vitae pellentesque sem placerat.</p>
                     <div className="flex justify-center mt-6">
-                        <button className="flex text-monserat font-semibold text-base leading-1 items-center justify-center rounded-full bg-[#FFED2E] text-[#302F2F] p-3 shadow transition">
-                            <div className="bg-[#302F2F] rounded-full p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 512 512" className="text-[#FFED2E]">
-                                    <path fill="currentColor" d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h370.7L297.3 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-                                </svg>
-                            </div>
+                        <ExploreButton href="/services">
                             EXPLORE ALL SERVICES
-                        </button>
+                        </ExploreButton>
                     </div>
                 </div>
-                <div className="container mx-auto px-10 md:px-20">
+                <div className="container mx-auto px-10 md:px-20" data-aos="fade-up">
                     <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                         {/* Kiri: Text */}
                         <div className="md:w-1/2 w-full flex flex-col justify-center">
@@ -330,7 +327,9 @@ export default function Landing({ sliderImage }) {
                     </div>
 
                     
-                <SwiperSlider />
+                <div data-aos="fade-up">
+                    <SwiperSlider />
+                </div>
             </main>
             <Footer />
         </div>

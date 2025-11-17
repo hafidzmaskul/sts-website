@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\TeamMember;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,7 +29,11 @@ class PageController
 
     public function about(): Response
     {
-        return Inertia::render('AboutUs');
+        $teamMembers = TeamMember::all();
+
+        return Inertia::render('AboutUs', [
+            'teamMembers' => $teamMembers,
+        ]);
     }
 
     public function contact(): Response

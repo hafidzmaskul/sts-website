@@ -20,7 +20,7 @@ export default function Footer() {
                         <div className="flex items-start sm:items-center space-x-2">
                             <img src="/assets/address.svg" alt="Address" className="h-6" />
                             <span>
-                                <p className="font-monserat text-sm font-semibold lin">16 Society Road</p>
+                                <p className="font-montserrat text-sm font-semibold lin">16 Society Road</p>
                                 <p className='font-inter font-regular text-sm'>South Queensferry, Edinburgh EH30 9RX</p>
                             </span>
                         </div>
@@ -70,14 +70,14 @@ export default function Footer() {
                                     <div className="flex items-center space-x-2 justify-start md:justify-end">
                                         <img src="/assets/phone.svg" alt="Phone" className="h-6" />
                                         <span>
-                                            <p className="font-monserat text-sm font-semibold lin">0131 331 2735 or 07970 797 544</p>
+                                            <p className="font-montserrat text-sm font-semibold lin">0131 331 2735 or 07970 797 544</p>
                                             <p className='font-inter font-normal text-sm'>info@absolutelyhumanresources.co.uk</p>
                                         </span>
                                     </div>
                                     <div className="flex items-center space-x-2 justify-start md:justify-end">
                                         <img src="/assets/clock.svg" alt="Address" className="h-6" />
                                         <span>
-                                            <p className="font-monserat text-sm font-semibold lin">24/7</p>
+                                            <p className="font-montserrat text-sm font-semibold lin">24/7</p>
                                             <p className='font-inter font-normal text-sm'>Monday to Sunday</p>
                                         </span>
                                     </div>

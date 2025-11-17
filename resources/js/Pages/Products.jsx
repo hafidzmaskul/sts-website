@@ -61,13 +61,13 @@ export default function Products() {
     const skeletonCount = hasMore ? itemsPerPage : 0;
 
     return (
-        <div className="bg-[#302F2F]">
+        <div className="bg-[#302F2F]" data-aos="fade-in">
             <Header />
             <div className="w-full flex flex-col items-center text-center mt-20">
                 <H1 text={'ALL PRODUCTS'} color='white' />
 
             </div>
-            <main className="flex-1 container mx-auto px-6 py-12 ">
+            <main className="flex-1 container mx-auto px-6 py-12 " data-aos="fade-up">
                 {isLoading && (
                     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
                         <div className="h-10 w-10 rounded-full border-4 border-white/40 border-t-white animate-spin" />

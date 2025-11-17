@@ -10,7 +10,10 @@ Route::get('/', [App\Http\Controllers\PageController::class, 'landing'])->name('
 Route::get('/services', [App\Http\Controllers\PageController::class, 'services'])->name('services');
 Route::get('/service/{uuid}', [App\Http\Controllers\PageController::class, 'serviceDetail'])->name('service_detail');
 Route::get('/products', [App\Http\Controllers\PageController::class, 'products'])->name('products');
+Route::get('/products/{slug}', [App\Http\Controllers\PageController::class, 'productDetail'])->name('productDetail');
+Route::get('/companyHandbook', [App\Http\Controllers\PageController::class, 'companyHandbook'])->name('companyHandbook');
 Route::get('/news', [App\Http\Controllers\PageController::class, 'news'])->name('news');
+Route::get('/news/{slug}', [App\Http\Controllers\PageController::class, 'newsDetail'])->name('newsDetail');
 
 Route::get('/about-us', [App\Http\Controllers\PageController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [App\Http\Controllers\PageController::class, 'contact'])->name('contact-us');
