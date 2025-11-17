@@ -9,6 +9,11 @@ use Inertia\Response;
 
 class PageController
 {
+    public function landing(): Response
+    {
+        return Inertia::render('Landing');
+    }
+
     public function services(): Response
     {
         return Inertia::render('Service');
