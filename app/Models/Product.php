@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Service extends Model
+class Product extends Model
 {
     use HasFactory;
 
@@ -15,14 +15,16 @@ class Service extends Model
         'name',
         'slug',
         'content',
+        'price',
         'image',
+        'attachment',
         'status',
-        'sequence',
         'user_id',
     ];
 
     protected $casts = [
         'status' => 'boolean',
+        'price' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
@@ -30,8 +32,8 @@ class Service extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products(): BelongsToMany
+    public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_service');
+        return $this->belongsToMany(Service::class, 'product_service');
     }
 }

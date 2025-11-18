@@ -58,6 +58,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/services', \App\Livewire\Admin\Services\Index::class)->name('admin.services.index')->middleware('can:services.view');
             Route::get('/admin/services/create', \App\Livewire\Admin\Services\Create::class)->name('admin.services.create')->middleware('can:services.create');
             Route::get('/admin/services/{service}/edit', \App\Livewire\Admin\Services\Edit::class)->name('admin.services.edit')->middleware('can:services.edit');
+
+        Route::get('/admin/products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index')->middleware('can:products.view');
+        Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create')->middleware('can:products.create');
+        Route::get('/admin/products/{product}', \App\Livewire\Admin\Products\Show::class)->name('admin.products.show')->middleware('can:products.view');
+        Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit')->middleware('can:products.edit');
+        
     });
 });
 

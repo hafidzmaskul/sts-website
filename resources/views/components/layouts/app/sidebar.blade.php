@@ -57,6 +57,14 @@
                             wire:navigate
                         >{{ __('Services') }}</flux:navlist.item>
                     @endcan
+                    @can('products.view')
+                        <flux:navlist.item
+                            icon="shopping-bag"
+                            :href="route('admin.products.index')"
+                            :current="request()->routeIs('admin.products.*')"
+                            wire:navigate
+                        >{{ __('Products') }}</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
                 @endcanany
                 @canany(['testimonials.view', 'our-team.view', 'news-categories.view', 'news.view'])
