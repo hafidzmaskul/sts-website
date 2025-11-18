@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Testimonial;
 use App\Models\TeamMember;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -12,7 +13,15 @@ class PageController
 {
     public function landing(): Response
     {
-        return Inertia::render('Landing');
+        $testimonials = Testimonial::query()
+            ->where('status', true)
+            ->orderBy('sequence')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return Inertia::render('Landing', [
+            'testimonials' => $testimonials,
+        ]);
     }
 
     public function services(): Response
