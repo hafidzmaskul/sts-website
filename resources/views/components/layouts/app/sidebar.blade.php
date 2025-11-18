@@ -47,6 +47,18 @@
                     @endcan
                 </flux:navlist.group>
 
+                @canany(['services.view', 'products.view'])
+                <flux:navlist.group :heading="__('Catalog')" class="grid">
+                    @can('services.view')
+                        <flux:navlist.item
+                            icon="briefcase"
+                            :href="route('admin.services.index')"
+                            :current="request()->routeIs('admin.services.*')"
+                            wire:navigate
+                        >{{ __('Services') }}</flux:navlist.item>
+                    @endcan
+                </flux:navlist.group>
+                @endcanany
                 @canany(['testimonials.view', 'our-team.view', 'news-categories.view', 'news.view'])
                 <flux:navlist.group :heading="__('Content')" class="grid">
                     @can('news-categories.view')

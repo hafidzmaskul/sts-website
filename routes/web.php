@@ -54,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/news', \App\Livewire\Admin\News\Index::class)->name('admin.news.index')->middleware('can:news.view');
         Route::get('/admin/news/create', \App\Livewire\Admin\News\Create::class)->name('admin.news.create')->middleware('can:news.create');
         Route::get('/admin/news/{news}/edit', \App\Livewire\Admin\News\Edit::class)->name('admin.news.edit')->middleware('can:news.edit');
+
+        Route::get('/admin/services', \App\Livewire\Admin\Services\Index::class)->name('admin.services.index')->middleware('can:services.view');
+            Route::get('/admin/services/create', \App\Livewire\Admin\Services\Create::class)->name('admin.services.create')->middleware('can:services.create');
+            Route::get('/admin/services/{service}/edit', \App\Livewire\Admin\Services\Edit::class)->name('admin.services.edit')->middleware('can:services.edit');
     });
 });
 
