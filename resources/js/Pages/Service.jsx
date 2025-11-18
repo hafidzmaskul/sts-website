@@ -59,7 +59,18 @@ export default function Service() {
                 </div>
             </div>
 
-            <main className="flex-1 container mx-auto px-6 py-12 " data-aos="fade-up">
+            <main className="flex-1 container mx-auto px-6 py-12 relative overflow-hidden" data-aos="fade-up">
+                {/* Decorative partial background image */}
+                <img
+                    src="/assets/gradient-service1.png"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 top-20 left-30 w-3/5 max-w-xl opacity-60"
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
 
                 {/* Wrap the grid and the nav buttons in a flex container */}
                 <div className="flex items-center justify-center w-full">
@@ -87,7 +98,7 @@ export default function Service() {
                     </button>
 
                     {/* The grid of cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 flex-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 flex-1">
                         {currentCards.map((i) => (
                             <ServiceCard uuid={i} key={i} index={i} isLoading={isLoading} />
                         ))}
@@ -123,7 +134,6 @@ export default function Service() {
                         Page {currentPage} of {totalPages}
                     </span>
                 </div>
-
             </main>
             <Footer />
         </div>
