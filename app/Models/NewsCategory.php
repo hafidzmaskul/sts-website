@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NewsCategory extends Model
@@ -45,5 +46,10 @@ class NewsCategory extends Model
     public function children(): HasMany
     {
         return $this->hasMany(NewsCategory::class, 'parent_id');
+    }
+
+    public function news(): BelongsToMany
+    {
+        return $this->belongsToMany(News::class, 'news_news_category');
     }
 }

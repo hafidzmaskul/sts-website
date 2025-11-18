@@ -6,8 +6,9 @@ import CircularCarousel from '../components/CircularCarousel';
 import SwiperSlider from '../components/SwiperSlider';
 // PERUBAHAN: Impor komponen ScrollActiveList yang baru
 import ScrollActiveList from '../components/ScrollActiveList';
+import ExploreButton from '../components/ExploreButton';
 
-export default function Landing({ sliderImage }) {
+export default function Landing({ sliderImage, testimonials = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const slides = [
@@ -112,43 +113,11 @@ export default function Landing({ sliderImage }) {
     };
 
     return (
-        <div className="min-h-dvh bg-[#302F2F] mb-40">
-            <div className="bg-[#fff] rounded-b-[190px]">
+        <div className="min-h-dvh bg-[#302F2F] mb-40" data-aos="fade-in">
+            <div className="flex flex-col rounded-b-xl md:rounded-b-[200px]" style={{ backgroundImage: 'url(/assets/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
-                <div className="bg-[#fff] rounded-b-full relative overflow-visible">
-                    {/* Elemen gradien latar belakang */}
-                    {/*
-                    <div
-                        className="absolute right-0 bottom-[80px] w-[150px] h-[120px] rounded-b-full rounded-t-full blur-[50px] opacity-100 z-10 shadow-2xl"
-                        style={{
+                <div className=" relative overflow-visible">
 
-                            background: 'linear-gradient(180deg, #FF7BCA 0%, rgba(255, 197, 111, 0.46) 100%)',
-                            transform: 'rotate(-144.71deg)',
-                        }}
-                    ></div>
-                    <div
-                        className="absolute right-0 bottom-[80px] w-[240px] h-[230px] rounded-full opacity-100 z-10 blur-[50px] shadow-2xl"
-                        style={{
-                            background: 'linear-gradient(180deg, #FFED2E 0%, rgba(245, 138, 37, 0) 100%, #7061A3 100%)',
-                            transform: 'rotate(-144.71deg)',
-                        }}
-                    ></div> */}
-                    {/* Gradien kiri atas */}
-                    {/* <div
-                        className="absolute left-0 top-0 w-[150px] h-[120px] rounded-b-full rounded-t-full blur-[50px] opacity-100 z-10 shadow-2xl"
-                        style={{
-
-                            background: 'linear-gradient(180deg, #FF7BCA 0%, rgba(255, 197, 111, 0.46) 100%)',
-                            transform: 'rotate(35.29deg)',
-                        }}
-                    ></div>
-                    <div
-                        className="absolute left-0 top-10 w-[240px] h-[230px] rounded-full opacity-100 z-10 blur-[50px] shadow-2xl"
-                        style={{
-                            background: 'linear-gradient(180deg, #FFED2E 0%, rgba(245, 138, 37, 0) 100%, #7061A3 100%)',
-                            transform: 'rotate(35.29deg)',
-                        }}
-                    ></div> */}
 
                     <div className="mx-auto container px-10 md:px-10">
                         <Header />
@@ -210,7 +179,8 @@ export default function Landing({ sliderImage }) {
                         {/* Half-circle with CEO photo, made bigger and moved up into the middle of the text */}
                         <div className="relative w-full flex justify-center" style={{ marginTop: '-80px' }}>
                             {/* Bigger Half-circle background */}
-                            <div className="w-[420px] h-[210px] md:w-[520px] md:h-[260px] bg-[#302F2F] rounded-t-full rounded-b-none mx-auto relative z-10 flex items-end justify-center">
+                            {/* Desktop (md and up) - half-circle and CEO photo, hidden on mobile */}
+                            <div className="hidden md:flex w-[420px] h-[210px] md:w-[520px] md:h-[260px] bg-[#302F2F] rounded-t-full rounded-b-none mx-auto relative z-10 items-end justify-center">
                                 {/* CEO Photo menempel di bagian bawah */}
                                 <img
                                     src="/assets/ceo.svg"
@@ -223,41 +193,78 @@ export default function Landing({ sliderImage }) {
                                     }}
                                 />
                             </div>
+                            {/* Mobile (only on mobile view, not absolute, full image only) */}
+                            <div className="flex md:hidden w-full justify-center my-6 mt-30">
+                                <img
+                                    src="/assets/ceo.svg"
+                                    alt="CEO"
+                                    className="w-[220px] h-[220px] object-cover"
+                                    style={{
+                                        borderRadius: "50%",
+                                        background: "#302F2F"
+                                    }}
+                                />
+                            </div>
+                            {/* Tombol-tombol di bawah layer CEO, lebih ke atas sedikit */}
+                            <div
+                                className="absolute z-30 flex gap-4 rounded-xl py-2 px-3 left-1/2 -translate-x-1/2"
+                                style={{
+                                    bottom: '10px',
+                                    background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
+                                    backdropFilter: 'blur(50px)'
+
+
+                                }}
+                            >
+
+                                <button className="text-sm px-10 py-2 rounded-xl bg-[#FFED2E] text-[#302F2F] font-inter font-semibold border  transition-colors shadow-lg">
+                                    Start Here
+                                </button>
+                                <button className="text-sm px-10 py-2 rounded-xl  text-white font-inter font-semibold border border-white  transition-colors shadow-lg"
+                                    style={{
+                                        background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)'
+                                    }}>
+                                    Book Now
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>
             <main className="flex-1">
-                <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none'> Some Fact About Absolutely Human Resources </h2>
-                <div className="container mx-auto px-10">
-                    <div className="flex flex-row justify-between px-20 py-5 items-center mx-auto rounded-xl shadow-lg border-1 border-white"
+                <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none' data-aos="fade-up"> Some Fact About Absolutely Human Resources </h2>
+                <div className="container mx-auto px-4 sm:px-6 lg:px-10">
+                    <div
+                        className="flex flex-col md:flex-row justify-between items-stretch gap-6 md:gap-0 px-4 md:px-20 py-5 mx-auto rounded-xl shadow-lg border-1 border-white"
+                        data-aos="zoom-in"
                         style={{ background: '#ffffff4d' }}
                     >
-
                         {/* Item 1 */}
-                        <div className="items-start flex flex-col">
+                        <div className="flex flex-col items-center md:items-start w-full md:w-auto">
                             <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">30+</span>
-                            <span className="font-montserrat font-semibold text-white text-base mt-1 leading-tight text-center">Years of Business</span>
+                            <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Years of Business</span>
                         </div>
                         {/* Separator */}
-                        <div className="h-12 border-l-2 border-[#fff] opacity-60 "></div>
+                        <div className="hidden md:block h-12 border-l-2 border-[#fff] opacity-60 mx-8"></div>
+                        <div className="block md:hidden w-10/12 mx-auto h-px border-t-2 border-[#fff] opacity-60 my-2"></div>
                         {/* Item 2 */}
-                        <div className="items-start flex flex-col">
+                        <div className="flex flex-col items-center md:items-start w-full md:w-auto">
                             <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">521+</span>
-                            <span className="font-montserrat font-semibold text-white text-base mt-1 leading-tight text-center">Happy Clients</span>
+                            <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Happy Clients</span>
                         </div>
                         {/* Separator */}
-                        <div className="h-12 border-l-2 border-[#fff] opacity-60 "></div>
+                        <div className="hidden md:block h-12 border-l-2 border-[#fff] opacity-60 mx-8"></div>
+                        <div className="block md:hidden w-10/12 mx-auto h-px border-t-2 border-[#fff] opacity-60 my-2"></div>
                         {/* Item 3 */}
-                        <div className="items-start flex flex-col">
+                        <div className="flex flex-col items-center md:items-start w-full md:w-auto">
                             <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">15+</span>
-                            <span className="font-montserrat font-semibold text-white text-base mt-1 leading-tight text-center">Business Sector's Expertise</span>
+                            <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Business Sector's Expertise</span>
                         </div>
                     </div>
                 </div>
                 {/* our sevice */}
-                <div className="container mx-auto px-10">
+                <div className="container mx-auto px-10" data-aos="fade-up">
                     <div className="flex flex-col md:flex-row gap-20 mt-10 md:mt-20">
                         {/* Kiri: Text */}
                         <div className="md:w-1/2">
@@ -282,7 +289,7 @@ export default function Landing({ sliderImage }) {
                     </div>
                 </div>
                 {/* Circular Carousel Section */}
-                <div className="relative w-full h-[600px] flex justify-center items-center overflow-hidden">
+                <div className="relative w-full h-[600px] flex justify-center items-center overflow-hidden" data-aos="fade-up">
                     <CircularCarousel>
                         {carouselItems.map((item, index) => (
                             <div key={index} className="carousel-card">
@@ -303,22 +310,17 @@ export default function Landing({ sliderImage }) {
                         ))}
                     </CircularCarousel>
                 </div>
-                <div className="text-center">
+                <div className="text-center" data-aos="fade-up">
                     <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
                     <p className='text-inter font-normal text-sm md:text-base text-white'>Lorem ipsum dolor sit amet consectetur adipiscing elit. <br />
                         Quisque faucibus ex sapien vitae pellentesque sem placerat.</p>
                     <div className="flex justify-center mt-6">
-                        <button className="flex text-monserat font-semibold text-base leading-1 items-center justify-center rounded-full bg-[#FFED2E] text-[#302F2F] p-3 shadow transition">
-                            <div className="bg-[#302F2F] rounded-full p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 512 512" className="text-[#FFED2E]">
-                                    <path fill="currentColor" d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h370.7L297.3 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
-                                </svg>
-                            </div>
+                        <ExploreButton href="/services">
                             EXPLORE ALL SERVICES
-                        </button>
+                        </ExploreButton>
                     </div>
                 </div>
-                <div className="container mx-auto px-10 md:px-20">
+                <div className="container mx-auto px-10 md:px-20" data-aos="fade-up">
                     <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                         {/* Kiri: Text */}
                         <div className="md:w-1/2 w-full flex flex-col justify-center">
@@ -326,13 +328,57 @@ export default function Landing({ sliderImage }) {
                         </div>
                         {/* PERUBAHAN: Ganti bagian list lama dengan komponen ScrollActiveList */}
                         <ScrollActiveList />
-                        </div>
                     </div>
+                </div>
 
-                    
-                <SwiperSlider />
+                <div className="">
+                <H1 text="TESTIMONIALS" color="white" className="text-center uppercase mb-10" data-aos="fade-up" />
+                <div className="w-full overflow-x-auto py-20" data-aos="fade-up">
+                    <div className="flex gap-12 ">
+                        {testimonials.map((testimonial, idx) => (
+                            <div
+                                key={testimonial.id ?? idx}
+                                className="relative rounded-2xl min-w-[90px] max-w-[230px] p-4 md:rounded-3xl md:min-w-[420px] md:max-w-md md:p-10 flex-shrink-0"
+                                style={{
+                                    background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
+                                }}
+                            >
+                                {/* Avatar anchored on left top, half above card */}
+                                <div className="absolute -top-10 left-8">
+                                    <div className="w-20 h-20 rounded-full  shadow-lg overflow-hidden bg-gray-200">
+                                        <img
+                                            src={testimonial.image ? `/storage/${testimonial.image}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name ?? 'User')}`}
+                                            alt={testimonial.name ?? 'User avatar'}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                </div>
+                                {/* Card Content */}
+                                <div className="pt-16">
+
+                                    <p className="text-base text-white font-inter font-normal mb-4">
+                                        {testimonial.description}
+                                    </p>
+                                    <h4 className="font-bold  font-inter text-lg text-white mb-2">
+                                        {testimonial.name}
+                                    </h4>
+                                    <span className="block  font-inter text-sm text-white mb-4">
+                                        {testimonial.job_title}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                </div>
+
+
+                <div data-aos="fade-up">
+                    <SwiperSlider />
+                </div>
             </main>
             <Footer />
         </div>
-                    );
+    );
 }
