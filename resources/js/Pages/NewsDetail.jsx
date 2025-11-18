@@ -3,6 +3,7 @@ import ScaffoldBase from './_ScaffoldBase';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
+import ExploreButton from '../components/ExploreButton';
 
 export default function NewsDetail({ slug }) {
     return (
@@ -136,7 +137,7 @@ export default function NewsDetail({ slug }) {
                                     </span>
                                 </div>
                                 <h3 className="text-lg md:text-2xl font-inter text-white font-bold mb-5 uppercase">
-                                ACAS and Early Conciliation – Arrives from 6th April 2014. Live from May 2014
+                                    ACAS and Early Conciliation – Arrives from 6th April 2014. Live from May 2014
                                 </h3>
                                 <p className="text-sm  font-regular  md:text-sm font-montserrat text-white mb-4 uppercase tracking-tight ">
                                     With over 18 years of experience in Human Resources, I am a seasoned professional specialising in employment law and Employee Relations (ER) issues. My expertise lies in navigating complex legal
@@ -151,7 +152,11 @@ export default function NewsDetail({ slug }) {
                                 </div>
                             </div>
                         </div>
-                       
+                    </div>
+                    <div className="flex justify-center mt-10">
+                        <ExploreButton href="/news">
+                            EXPLORE OTHER ARTICLES
+                        </ExploreButton>
                     </div>
                 </section>
             </main>

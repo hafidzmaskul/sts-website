@@ -3,6 +3,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ProductCard from '../components/ProductCard';
+import ExploreButton from '../components/ExploreButton';
 
 export default function ProductDetail({ slug }) {
     return (
@@ -205,10 +206,16 @@ export default function ProductDetail({ slug }) {
                 <section id="product-showcase">
                     <H1 text="PRODUCT SHOWCASE" color="white" />
 
-                    <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3].map((product) => (
                             <ProductCard key={product} index={product} isLoading={false} />
                         ))}
+                    </div>
+                    <div className="flex justify-center mt-10">
+
+                        <ExploreButton href="/products">
+                            EXPLORE OTHER PRODUCTS
+                        </ExploreButton>
                     </div>
                 </section>
             </main>

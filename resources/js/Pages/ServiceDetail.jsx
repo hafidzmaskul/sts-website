@@ -114,7 +114,7 @@ export default function ServiceDetail() {
                             </svg>
                         </button>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 flex-1">
                             {currentServices.map((service) => (
                                 <ServiceCard key={service} index={service} isLoading={isLoading} />
                             ))}

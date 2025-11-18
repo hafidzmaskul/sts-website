@@ -55,7 +55,7 @@ export default function ProductCard({ index,slug, isLoading }) {
             </p>
             <div className="flex justify-center">
               <a
-                href={`products/${slug}`}
+                href={`products/1`}
                 className="bg-white text-black px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-200 transition flex items-center justify-center"
               >
                 Buy Now

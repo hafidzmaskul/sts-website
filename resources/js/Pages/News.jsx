@@ -81,7 +81,7 @@ export default function News() {
                         </svg>
                     </button>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 mx-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 flex-1 mx-4">
                         {currentArticles.map((article) => (
                             <NewsCard key={article} index={article} slug={1}  isLoading={isLoading} />
                         ))}
@@ -110,7 +110,7 @@ export default function News() {
                     </button>
                 </div>
 
-                <div className="flex items-center justify-center mt-10 text-black">
+                <div className="flex items-center justify-center mt-10 text-white">
                     <span className="text-sm">
                         Page {currentPage} of {totalPages}
                     </span>
