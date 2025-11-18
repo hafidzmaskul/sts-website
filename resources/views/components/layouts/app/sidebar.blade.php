@@ -47,6 +47,26 @@
                     @endcan
                 </flux:navlist.group>
 
+                @canany(['services.view', 'products.view'])
+                <flux:navlist.group :heading="__('Catalog')" class="grid">
+                    @can('services.view')
+                        <flux:navlist.item
+                            icon="briefcase"
+                            :href="route('admin.services.index')"
+                            :current="request()->routeIs('admin.services.*')"
+                            wire:navigate
+                        >{{ __('Services') }}</flux:navlist.item>
+                    @endcan
+                    @can('products.view')
+                        <flux:navlist.item
+                            icon="shopping-bag"
+                            :href="route('admin.products.index')"
+                            :current="request()->routeIs('admin.products.*')"
+                            wire:navigate
+                        >{{ __('Products') }}</flux:navlist.item>
+                    @endcan
+                </flux:navlist.group>
+                @endcanany
                 @canany(['testimonials.view', 'our-team.view', 'news-categories.view', 'news.view'])
                 <flux:navlist.group :heading="__('Content')" class="grid">
                     @can('news-categories.view')
@@ -56,6 +76,14 @@
                             :current="request()->routeIs('admin.news-categories.*')"
                             wire:navigate
                         >{{ __('News Categories') }}</flux:navlist.item>
+                    @endcan
+                    @can('news.view')
+                        <flux:navlist.item
+                            icon="newspaper"
+                            :href="route('admin.news.index')"
+                            :current="request()->routeIs('admin.news.*')"
+                            wire:navigate
+                        >{{ __('News') }}</flux:navlist.item>
                     @endcan
                     @can('testimonials.view')
                         <flux:navlist.item
@@ -75,6 +103,7 @@
                     @endcan
                 </flux:navlist.group>
                 @endcanany
+
                 @canany(['newsletter-subscriptions.view', 'contact-submissions.view'])
                 <flux:navlist.group :heading="__('Leads')" class="grid">
                     @can('newsletter-subscriptions.view')
