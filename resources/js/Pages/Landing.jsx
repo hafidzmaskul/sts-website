@@ -8,7 +8,7 @@ import SwiperSlider from '../components/SwiperSlider';
 import ScrollActiveList from '../components/ScrollActiveList';
 import ExploreButton from '../components/ExploreButton';
 
-export default function Landing({ sliderImage }) {
+export default function Landing({ sliderImage, testimonials = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const slides = [
@@ -335,10 +335,10 @@ export default function Landing({ sliderImage }) {
                 <H1 text="TESTIMONIALS" color="white" className="text-center uppercase mb-10" data-aos="fade-up" />
                 <div className="w-full overflow-x-auto py-20" data-aos="fade-up">
                     <div className="flex gap-12 ">
-                        {[1, 2, 3,4,5,6,7,8,9].map((testimonial, idx) => (
+                        {testimonials.map((testimonial, idx) => (
                             <div
-                                key={idx}
-                                className="relative -60 rounded-3xl  min-w-[420px] max-w-md flex-shrink-0 p-10"
+                                key={testimonial.id ?? idx}
+                                className="relative rounded-2xl min-w-[90px] max-w-[230px] p-4 md:rounded-3xl md:min-w-[420px] md:max-w-md md:p-10 flex-shrink-0"
                                 style={{
                                     background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
                                 }}
@@ -347,8 +347,8 @@ export default function Landing({ sliderImage }) {
                                 <div className="absolute -top-10 left-8">
                                     <div className="w-20 h-20 rounded-full  shadow-lg overflow-hidden bg-gray-200">
                                         <img
-                                            src={`https://randomuser.me/api/portraits/men/${10 + idx}.jpg`}
-                                            alt="User avatar"
+                                            src={testimonial.image ? `/storage/${testimonial.image}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name ?? 'User')}`}
+                                            alt={testimonial.name ?? 'User avatar'}
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
@@ -357,11 +357,14 @@ export default function Landing({ sliderImage }) {
                                 <div className="pt-16">
 
                                     <p className="text-base text-white font-inter font-normal mb-4">
-                                        “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris egestas, elit non blandit ultricies, erat nunc cursus odio, at pharetra neque tellus id erat.”
-
+                                        {testimonial.description}
                                     </p>
-                                    <h4 className="font-bold  font-inter text-lg text-white mb-2">John Doe</h4>
-                                    <span className="block  font-inter text-sm text-white mb-4">CEO, Example Company</span>
+                                    <h4 className="font-bold  font-inter text-lg text-white mb-2">
+                                        {testimonial.name}
+                                    </h4>
+                                    <span className="block  font-inter text-sm text-white mb-4">
+                                        {testimonial.job_title}
+                                    </span>
                                 </div>
                             </div>
                         ))}
