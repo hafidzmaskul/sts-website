@@ -41,7 +41,7 @@ export default function Service() {
     };
 
     return (
-        <div className="bg-[#302F2F]">
+        <div className="bg-[#302F2F]" data-aos="fade-in">
             {isLoading && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
                     <div className="h-10 w-10 rounded-full border-4 border-white/40 border-t-white animate-spin" />
@@ -59,7 +59,7 @@ export default function Service() {
                 </div>
             </div>
 
-            <main className="flex-1 container mx-auto px-6 py-12 ">
+            <main className="flex-1 container mx-auto px-6 py-12 " data-aos="fade-up">
 
                 {/* Wrap the grid and the nav buttons in a flex container */}
                 <div className="flex items-center justify-center w-full">
@@ -70,11 +70,24 @@ export default function Service() {
                         disabled={currentPage === 1}
                         className="px-2 py-2 rounded-full border border-white/40 text-white disabled:opacity-40 disabled:cursor-not-allowed mr-2"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-chevron-left-icon lucide-chevron-left"
+                        >
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
                     </button>
 
                     {/* The grid of cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 flex-1">
                         {currentCards.map((i) => (
                             <ServiceCard uuid={i} key={i} index={i} isLoading={isLoading} />
                         ))}
@@ -87,7 +100,20 @@ export default function Service() {
                         disabled={currentPage === totalPages}
                         className="px-2 py-2 rounded-full border border-white/40 text-white disabled:opacity-40 disabled:cursor-not-allowed ml-2"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-chevron-right-icon lucide-chevron-right"
+                        >
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
                     </button>
                 </div>
 
