@@ -5,13 +5,13 @@ import H1 from '../components/H1';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 
-export default function Products() {
+export default function Products({ products = [] }) {
     const itemsPerPage = 6;
 
     const [visibleCount, setVisibleCount] = useState(itemsPerPage);
     const [isLoading, setIsLoading] = useState(true);
 
-    const allProducts = Array.from({ length: 30 }, (_item, index) => index + 1);
+    const allProducts = products;
 
     const hasMore = visibleCount < allProducts.length;
     const visibleProducts = allProducts.slice(0, visibleCount);
@@ -35,6 +35,7 @@ export default function Products() {
 
         return timeoutId;
     };
+    console.log(products)
 
     useEffect(() => {
         setIsLoading(false);
@@ -47,10 +48,19 @@ export default function Products() {
                 <H1 text={'ALL PRODUCTS'} color='white' />
 
             </div>
+
+
             <main className="flex-1 container mx-auto px-6 py-12 " data-aos="fade-up">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8">
-                    {visibleProducts.map((product) => (
-                        <ProductCard key={product} index={product} slug={1} isLoading={false} />
+                    {visibleProducts.map((product, index) => (
+                        <ProductCard
+                            key={product.id ?? index}
+                            index={index + 1}
+                            slug={product.slug}
+                            name={product.name}
+                            content={product.content}
+                            isLoading={false}
+                        />
                     ))}
                 </div>
 

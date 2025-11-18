@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function NewsCard({ index, isLoading,slug = 1 }) {
+export default function NewsCard({ index, isLoading,slug, title, content }) {
+
+
     return (
         <div
             className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-col"
@@ -19,7 +21,7 @@ export default function NewsCard({ index, isLoading,slug = 1 }) {
                             boxShadow: '0px 1.2px 29.92px 0px #452A7C1A',
                             background:
                                 'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
-                        }}
+                    }}
                     >
                         <div className="h-5 w-2/3 mb-3 rounded bg-gray-200/80 animate-pulse" />
                         <div className="space-y-2 mb-6 flex-1">
@@ -48,13 +50,10 @@ export default function NewsCard({ index, isLoading,slug = 1 }) {
                         }}
                     >
                         <h2 className="text-lg md:text-4xl text-center uppercase font-inter text-black font-bold mb-2">
-                            Service Title {index}
+                            {title}
                         </h2>
                         <p className="text-white text-xs md:text-sm mb-6 flex-1">
-                            Every business needs good HR support, but as an SME you do not need the costs and
-                            overheads of an internal HR department.We offer a 24 hour advice for our Edinburgh
-                            clients. Our staff will be able to listen and provide immediate support whatever the
-                            scale of your problem.
+                           {content}
                         </p>
                         <div className="flex w-full justify-center">
                             <a
