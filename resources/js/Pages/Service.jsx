@@ -87,7 +87,7 @@ export default function Service() {
                     </button>
 
                     {/* The grid of cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8 flex-1">
                         {currentCards.map((i) => (
                             <ServiceCard uuid={i} key={i} index={i} isLoading={isLoading} />
                         ))}

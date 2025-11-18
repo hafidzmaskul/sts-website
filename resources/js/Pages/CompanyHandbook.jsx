@@ -180,7 +180,7 @@ export default function CompanyHandbook() {
                 <section id="product-showcase" data-aos="fade-up">
                     <H1 text="PRODUCT SHOWCASE" color="white" />
 
-                    <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3].map((product) => (
                             <ProductCard key={product} index={product} slug={1} isLoading={false} />
                         ))}
