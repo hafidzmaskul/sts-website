@@ -1,8 +1,13 @@
 import React from 'react';
 
-export default function NewsCard({ index, isLoading,slug, title, content }) {
-
-
+export default function NewsCard({
+    index,
+    isLoading,
+    slug,
+    title,
+    content,
+    image,
+}) {
     return (
         <div
             className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-col"
@@ -37,7 +42,7 @@ export default function NewsCard({ index, isLoading,slug, title, content }) {
             ) : (
                 <>
                     <img
-                        src="assets/our-service.jpg"
+                        src={image}
                         alt={`Service ${index}`}
                         className="w-full h-48 mb-3 object-cover rounded-2xl"
                     />
@@ -69,5 +74,4 @@ export default function NewsCard({ index, isLoading,slug, title, content }) {
         </div>
     );
 }
-
 

@@ -11,6 +11,10 @@ class News extends Model
 {
     use HasFactory;
 
+    protected $appends = [
+        'image_url',
+    ];
+
     protected $fillable = [
         'title',
         'slug',
@@ -31,5 +35,14 @@ class News extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(NewsCategory::class, 'news_news_category');
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image) {
+            return asset('storage/'.$this->image);
+        }
+
+        return 'https://placehold.co/600x400?text=No+Image';
     }
 }

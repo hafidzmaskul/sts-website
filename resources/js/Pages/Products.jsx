@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 import ScaffoldBase from './_ScaffoldBase';
 import ProductCard from '../components/ProductCard';
 import H1 from '../components/H1';
@@ -42,6 +43,8 @@ export default function Products({ products = [] }) {
     }, []);
 
     return (
+        <>
+        <Head title="Products - AbsolutelyHR" />
         <div className="bg-[#302F2F]" data-aos="fade-in">
             <Header />
             <div className="w-full flex flex-col items-center text-center mt-20">
@@ -50,17 +53,23 @@ export default function Products({ products = [] }) {
             </div>
 
 
-            <main className="flex-1 container mx-auto px-6 py-12 " data-aos="fade-up">
+            <main className="flex-1 container mx-auto px-10 md:px-20 py-12 " data-aos="fade-up">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8">
                     {visibleProducts.map((product, index) => (
-                        <ProductCard
+                        <div
                             key={product.id ?? index}
-                            index={index + 1}
-                            slug={product.slug}
-                            name={product.name}
-                            content={product.content}
-                            isLoading={false}
-                        />
+                            data-aos="fade-up"
+                            data-aos-delay={index * 100}
+                        >
+                            <ProductCard
+                                index={index + 1}
+                                slug={product.slug}
+                                name={product.name}
+                                content={product.content}
+                                image={product.image_url}
+                                isLoading={false}
+                            />
+                        </div>
                     ))}
                 </div>
 
@@ -79,5 +88,6 @@ export default function Products({ products = [] }) {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
@@ -40,6 +41,8 @@ export default function News({ news = [] }) {
     };
 
   return (
+    <>
+    <Head title="News - AbsolutelyHR" />
     <div className="" data-aos="fade-in">
             {isLoading && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
@@ -96,6 +99,7 @@ export default function News({ news = [] }) {
                                 title={article.title}
                                 contet={article.content}
                                 slug={article.slug}
+                                image={article.image_url}
                                 isLoading={isLoading}
                             />
                         ))}
@@ -135,5 +139,6 @@ export default function News({ news = [] }) {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import ScaffoldBase from './_ScaffoldBase';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
@@ -7,7 +8,11 @@ import ProductCard from '../components/ProductCard';
 
 export default function CompanyHandbook() {
 
+    useEffect(() => {}, []);
+
     return (
+        <>
+        <Head title="Company Handbook - AbsolutelyHR" />
         <div className="bg-[#302F2F]" data-aos="fade-in">
 
             <div
@@ -193,5 +198,6 @@ export default function CompanyHandbook() {
 
             <Footer />
         </div>
+        </>
     );
 }

@@ -11,6 +11,7 @@ Route::get('/services', [App\Http\Controllers\PageController::class, 'services']
 Route::get('/service/{uuid}', [App\Http\Controllers\PageController::class, 'serviceDetail'])->name('service_detail');
 Route::get('/products', [App\Http\Controllers\PageController::class, 'products'])->name('products');
 Route::get('/products/{slug}', [App\Http\Controllers\PageController::class, 'productDetail'])->name('productDetail');
+Route::get('/payment/{uuid}', [App\Http\Controllers\PageController::class, 'payment'])->name('payment');
 Route::get('/companyHandbook', [App\Http\Controllers\PageController::class, 'companyHandbook'])->name('companyHandbook');
 Route::get('/news', [App\Http\Controllers\PageController::class, 'news'])->name('news');
 Route::get('/news/{slug}', [App\Http\Controllers\PageController::class, 'newsDetail'])->name('newsDetail');
@@ -65,9 +66,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit')->middleware('can:products.edit');
 
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
-        
+
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
-        
+
     });
 });
 

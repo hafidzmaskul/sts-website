@@ -21,8 +21,8 @@ export default function H1({ text, color = 'black', className = '' }) {
   return (
     <h1
       className={`
-        capitalize 
-        text-xl md:text-3xl lg:text-5xl
+        capitalize
+        text-xl md:text-3xl lg:text-6xl
         leading-[100%]
         tracking-[0.00em]
         font-medium

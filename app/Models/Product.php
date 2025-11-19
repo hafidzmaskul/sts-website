@@ -11,6 +11,10 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $appends = [
+        'image_url',
+    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -35,5 +39,14 @@ class Product extends Model
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'product_service');
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image) {
+            return asset('storage/'.$this->image);
+        }
+
+        return 'https://placehold.co/600x400?text=No+Image';
     }
 }
