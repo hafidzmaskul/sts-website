@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ProductCard({ index,slug, isLoading }) {
+export default function ProductCard({ index,slug, isLoading, name, content }) {
   return (
     <div
       className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-col"
@@ -47,15 +47,14 @@ export default function ProductCard({ index,slug, isLoading }) {
             }}
           >
             <h2 className="text-lg md:text-xl text-black font-semibold mb-2">
-              Product Title {index}
+               {name}
             </h2>
             <p className="text-black text-sm mb-6 flex-1">
-              A practical HR product designed to help your organisation manage policies, compliance,
-              and people processes more efficiently.
+              {content}
             </p>
             <div className="flex justify-center">
               <a
-                href={`products/1`}
+                href={`products/${slug}`}
                 className="bg-white text-black px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-200 transition flex items-center justify-center"
               >
                 Buy Now

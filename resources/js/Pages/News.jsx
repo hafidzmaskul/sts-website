@@ -4,10 +4,10 @@ import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import NewsCard from '../components/NewsCard';
 
-export default function News() {
+export default function News({ news = [] }) {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-
+    console.log(news)
     useEffect(() => {
         setIsLoading(true);
 
@@ -21,9 +21,9 @@ export default function News() {
     }, [currentPage]);
 
     const itemsPerPage = 6;
-    const articles = Array.from({ length: 18 }, (_item, index) => index + 1);
+    const articles = news;
 
-    const totalPages = Math.ceil(articles.length / itemsPerPage);
+    const totalPages = Math.max(1, Math.ceil(articles.length / itemsPerPage));
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentArticles = articles.slice(startIndex, startIndex + itemsPerPage);
 
@@ -58,6 +58,13 @@ export default function News() {
             </div>
 
             <main className="flex-1 container mx-auto px-6 py-12 text-white" data-aos="fade-up">
+                {articles.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <p className="text-sm md:text-base text-white/80">
+                            Belum ada berita yang tersedia saat ini.
+                        </p>
+                    </div>
+                ) : (
                 <div className="flex items-center justify-between">
                     <button
                         type="button"
@@ -82,8 +89,15 @@ export default function News() {
                     </button>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 flex-1 mx-4">
-                        {currentArticles.map((article) => (
-                            <NewsCard key={article} index={article} slug={1}  isLoading={isLoading} />
+                        {currentArticles.map((article, index) => (
+                            <NewsCard
+                                key={article.id ?? index}
+                                index={index + 1}
+                                title={article.title}
+                                contet={article.content}
+                                slug={article.slug}
+                                isLoading={isLoading}
+                            />
                         ))}
                     </div>
 
@@ -109,12 +123,15 @@ export default function News() {
                         </svg>
                     </button>
                 </div>
+                )}
 
-                <div className="flex items-center justify-center mt-10 text-white">
-                    <span className="text-sm">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                </div>
+                {articles.length > 0 && (
+                    <div className="flex items-center justify-center mt-10 text-white">
+                        <span className="text-sm">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                    </div>
+                )}
             </main>
             <Footer />
         </div>
