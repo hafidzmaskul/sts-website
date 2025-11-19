@@ -70,11 +70,13 @@
                                 class="w-full text-sm dark:text-zinc-100 file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-4 file:py-2 file:text-white file:dark:bg-white file:dark:text-zinc-900"
                             >
                             <div wire:loading wire:target="image" class="mt-2 text-sm dark:text-zinc-100">Uploading...</div>
-                            @if ($image)
+                            
+                            @if ($image && $image->isPreviewable())
                                 <img src="{{ $image->temporaryUrl() }}" class="mt-4 w-full rounded-lg object-cover">
-                            @elseif ($existingImage)
+                            @elseif ($existingImage && !$image)
                                 <img src="{{ Storage::url($existingImage) }}" class="mt-4 w-full rounded-lg object-cover">
                             @endif
+                            
                             @error('image') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -109,11 +111,22 @@
                             class="w-full text-sm dark:text-zinc-100 file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-4 file:py-2 file:text-white file:dark:bg-white file:dark:text-zinc-900"
                         >
                         <div wire:loading wire:target="attachment" class="mt-2 text-sm dark:text-zinc-100">Uploading...</div>
-                        @if ($existingAttachment && !$attachment)
+                        
+                        @if ($attachment)
+                            @if($attachment->isPreviewable())
+                                <img src="{{ $attachment->temporaryUrl() }}" class="mt-2 h-20 w-auto rounded-lg object-cover">
+                            @else
+                                <div class="mt-2 flex items-center gap-2 p-3 rounded-lg border dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
+                                    <span class="text-sm dark:text-zinc-200">New File: {{ $attachment->getClientOriginalName() }}</span>
+                                    <span class="text-xs text-zinc-500 uppercase">({{ $attachment->extension() }})</span>
+                                </div>
+                            @endif
+                        @elseif ($existingAttachment)
                             <p class="mt-4 text-sm font-medium dark:text-zinc-100">
                                 Current File: <a href="{{ Storage::url($existingAttachment) }}" class="text-blue-400" target="_blank">Download</a>
                             </p>
                         @endif
+
                         @error('attachment') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                 </div>
