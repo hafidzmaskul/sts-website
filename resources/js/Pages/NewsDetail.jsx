@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import ScaffoldBase from './_ScaffoldBase';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ExploreButton from '../components/ExploreButton';
+import { getMaxWords } from '../helpers/text';
 
-export default function NewsDetail({ news }) {
-    const data = news
-    console.log(data)
+export default function NewsDetail({ news, otherNews }) {
+    const data = news;
+    const metaTitle = data?.meta_title || data?.title || 'News Detail';
+    const metaDescription = data?.meta_description || '';
+    const metaKeywords = data?.meta_keyword || '';
     return (
+        <>
+        <Head title={metaTitle}>
+            {metaDescription && (
+                <meta name="description" content={metaDescription} />
+            )}
+            {metaKeywords && (
+                <>
+                    <meta name="keywords" content={metaKeywords} />
+                    <meta name="keyword" content={metaKeywords} />
+                </>
+            )}
+        </Head>
         <div className="" data-aos="fade-in">
             <div
                 className="relative flex flex-col rounded-b-4xl sm:rounded-b[100px] lg:rounded-b-[100px] overflow-visible"
@@ -20,13 +36,26 @@ export default function NewsDetail({ news }) {
             >
                 <Header />
                 <div className="container mx-auto px-10 md:px-20 flex flex-col items-center text-center mt-20">
-                    <div
-                        className="inline-block px-3 py-1 rounded-full bg-[#FFED2E] font-inter font-normal text-xs mb-10"
-                    >
-                        Categories
+                    <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
+
+                        {Array.isArray(data.categories) && data.categories.length > 0 ? (
+                            data.categories.map((category) => (
+                                <span
+                                    key={category.id}
+                                    className="inline-block px-3 py-1 rounded-full bg-[#FFED2E] font-inter font-normal text-xs"
+                                >
+                                    {category.name}
+                                </span>
+                            ))
+                        ) : (
+                            <span className="">
+                            </span>
+                        )}
                     </div>
 
-                    <h1 className='font-montserrat font-bold md:text-5xl text-2xl mb-10 md:mb-50'>{data.title}</h1>
+                    <h1 className="font-montserrat font-bold md:text-5xl text-2xl mb-10 md:mb-50">
+                        {data.title}
+                    </h1>
                 </div>
 
                 {/* Mobile image is in div, desktop is absolute */}
@@ -62,60 +91,65 @@ export default function NewsDetail({ news }) {
                 <section className='py-20'>
                     <H1 text={'Other Article'} color='white' className='uppercase' />
 
-
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                        <div
-                            className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-row items-stretch"
-                            style={{
-                                background:
-                                    'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
-                            }}
-                        >
-                            {/* Image (kiri) */}
-                            <div className="w-2/4  rounded-l-2xl overflow-hidden bg-white/40 flex items-center justify-center">
-                                <img
-                                    src='/assets/detail-service.png'
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-
-                            {/* Text (kanan) */}
-                            <div
-                                className="flex-1 px-6 rounded-r-2xl pt-6 pb-4 flex flex-col"
-                                style={{
-                                    boxShadow: '0px 1.2px 29.92px 0px #452A7C1A',
-                                    background:
-                                        'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
-                                }}
-                            >
-                                {/* Tambahkan ini dan di samping kanannya ada tanggal */}
-                                <div className="flex items-center justify-between mb-4">
-                                    <div
-                                        className="inline-block px-3 py-1 rounded-full bg-[#fff] text-black font-inter font-normal text-xs "
-                                    >
-                                        Categories
+                        {Array.isArray(otherNews) && otherNews.length > 0 ? (
+                            otherNews.map((article, idx) => (
+                                <div
+                                    key={article.id || idx}
+                                    className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-row items-stretch"
+                                    style={{
+                                        background:
+                                            'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
+                                    }}
+                                >
+                                    {/* Image (kiri) */}
+                                    <div className="w-2/4 rounded-l-2xl overflow-hidden bg-white/40 flex items-center justify-center">
+                                        <img
+                                            src={article.image ? `/storage/${article.image}` : 'https://placehold.co/600x400?text=No+Image'}
+                                            alt={article.title || "News Image"}
+                                            className="w-full h-full object-cover"
+                                        />
                                     </div>
-                                    <span className="text-xs text-[#ffff] font-bold font-inter">
-                                        12 Jun 2024
-                                    </span>
-                                </div>
-                                <h3 className="text-lg md:text-2xl font-inter text-white font-bold mb-5 uppercase">
-                                    ACAS and Early Conciliation – Arrives from 6th April 2014. Live from May 2014
-                                </h3>
-                                <p className="text-sm  font-regular  md:text-sm font-montserrat text-white mb-4 uppercase tracking-tight ">
-                                    With over 18 years of experience in Human Resources, I am a seasoned professional specialising in employment law and Employee Relations (ER) issues. My expertise lies in navigating complex legal
-                                </p>
-                                <div className="flex w-full justify-center">
-                                    <a
-                                        href={`/news/${data.slug || ''}`}
-                                        className="bg-white text-black w-full px-6 py-1 rounded-full font-semibold shadow hover:bg-gray-200 transition inline-flex items-center justify-center"
+
+                                    {/* Text (kanan) */}
+                                    <div
+                                        className="flex-1 px-6 rounded-r-2xl pt-6 pb-4 flex flex-col"
+                                        style={{
+                                            boxShadow: '0px 1.2px 29.92px 0px #452A7C1A',
+                                            background:
+                                                'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
+                                        }}
                                     >
-                                        Read More
-                                    </a>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="inline-block px-3 py-1 rounded-full bg-[#fff] text-black font-inter font-normal text-xs ">
+                                                {article.category || 'Categories'}
+                                            </div>
+                                            <span className="text-xs text-[#ffff] font-bold font-inter">
+                                                {article.date ? article.date : ''}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-lg md:text-2xl font-inter text-white font-bold mb-5 uppercase">
+                                            {getMaxWords(article.title,20)}
+                                        </h3>
+                                        <p className="text-sm font-regular md:text-sm font-montserrat text-white mb-4 uppercase tracking-tight">
+                                            {article.excerpt || (article.content ? article.content.substring(0, 120) + '...' : '')}
+                                        </p>
+                                        <div className="flex w-full justify-center">
+                                            <a
+                                                href={`/news/${article.slug || ''}`}
+                                                className="bg-white text-black w-full px-6 py-1 rounded-full font-semibold shadow hover:bg-gray-200 transition inline-flex items-center justify-center"
+                                            >
+                                                Read More
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="col-span-2 text-center text-gray-300 py-8">
+                                No other articles available.
                             </div>
-                        </div>
+                        )}
                     </div>
                     <div className="flex justify-center mt-10">
                         <ExploreButton href="/news">
@@ -126,5 +160,6 @@ export default function NewsDetail({ news }) {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
@@ -7,8 +8,9 @@ import SwiperSlider from '../components/SwiperSlider';
 // PERUBAHAN: Impor komponen ScrollActiveList yang baru
 import ScrollActiveList from '../components/ScrollActiveList';
 import ExploreButton from '../components/ExploreButton';
+import { getMaxWords } from '../helpers/text';
 
-export default function Landing({ sliderImage, testimonials = [] }) {
+export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const slides = [
@@ -34,45 +36,14 @@ export default function Landing({ sliderImage, testimonials = [] }) {
             experience: "SATISFIED"
         }
     ];
-    const carouselItems = [
-        {
-            title: "Strategic Planning",
-            text: "Comprehensive business strategy development and implementation planning.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        },
-        {
-            title: "HR Consulting",
-            text: "Expert human resources consulting for optimal workforce management.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        },
-        {
-            title: "Talent Acquisition",
-            text: "Strategic recruitment and talent acquisition solutions for your business.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        },
-        {
-            title: "Leadership Development",
-            text: "Customized leadership training programs to enhance management skills.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        },
-        {
-            title: "Performance Management",
-            text: "Effective performance evaluation and improvement systems.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        },
-        {
-            title: "Organizational Design",
-            text: "Optimize your organizational structure for maximum efficiency.",
-            image: "/assets/our-service.jpg",
-            buttonText: "Next"
-        }
-    ];
-
+    const carouselItems = services.map((service) => ({
+        title: service.name,
+        text: service.content ?? '',
+        image: service.image_url,
+        buttonText: 'Next',
+        slug: service.slug,
+    }));
+ console.log(services)
 
     // Auto-play functionality
     useEffect(() => {
@@ -113,6 +84,8 @@ export default function Landing({ sliderImage, testimonials = [] }) {
     };
 
     return (
+        <>
+        <Head title="Home - AbsolutelyHR" />
         <div className="min-h-dvh bg-[#302F2F] mb-40" data-aos="fade-in">
             <div className="flex flex-col rounded-b-xl md:rounded-b-[200px]" style={{ backgroundImage: 'url(/assets/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
@@ -233,6 +206,7 @@ export default function Landing({ sliderImage, testimonials = [] }) {
 
             </div>
             <main className="flex-1">
+
                 <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none' data-aos="fade-up"> Some Fact About Absolutely Human Resources </h2>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-10">
                     <div
@@ -264,8 +238,20 @@ export default function Landing({ sliderImage, testimonials = [] }) {
                     </div>
                 </div>
                 {/* our sevice */}
-                <div className="container mx-auto px-10" data-aos="fade-up">
+                <div className="container mx-auto px-10" data-aos="zoom-out">
                     <div className="flex flex-col md:flex-row gap-20 mt-10 md:mt-20">
+                         {/* Decorative partial background image */}
+                <img
+                    src="/assets/gradient-service1.png"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 top-20 left-30 w-3/5 max-w-xl opacity-60"
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
+
                         {/* Kiri: Text */}
                         <div className="md:w-1/2">
                             <H1 text="Our SERVICE" color="white" className="text-start uppercase mb-10" />
@@ -279,17 +265,29 @@ export default function Landing({ sliderImage, testimonials = [] }) {
                             </p>
                         </div>
                         {/* Kanan: Gambar */}
-                        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
+                        <div className="md:w-1/2 flex justify-center mt-8 md:mt-0 relative">
+                            {/* Kotak dengan teks, sekarang benar-benar di atas gambar dan sedikit keluar ke kiri */}
                             <img
                                 src="/assets/our-service.jpg"
                                 alt="Our Services"
-                                className="rounded-4xl object-contain"
+                                className="rounded-4xl object-contain relative z-10"
                             />
+                            <div
+                                className="absolute left-0 bottom-0 md:-left-20 md:bottom-10 z-20 bg-[#FFED2E] bg-opacity-80 rounded-xl px-5 py-7 flex flex-col items-start shadow-lg"
+                                style={{
+                                    transform: "translateY(10%)" // Agak ke atas (lebih sedikit dari 30%)
+                                }}
+                            >
+                                <span className="font-akzidenz text-[#302F2F] font-regular text-xs md:text-base mb-1">
+                                Lorem ipsum dolor sit amet consectetur
+                                </span>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-                {/* Circular Carousel Section */}
-                <div className="relative w-full h-[600px] flex justify-center items-center overflow-hidden" data-aos="fade-up">
+                {/* Circular Carousel Section - desktop */}
+                <div className="relative w-full h-[600px] justify-center items-center overflow-hidden hidden lg:flex" data-aos="fade-up">
                     <CircularCarousel>
                         {carouselItems.map((item, index) => (
                             <div key={index} className="carousel-card">
@@ -301,14 +299,60 @@ export default function Landing({ sliderImage, testimonials = [] }) {
                                 ></div>
                                 <div className="carousel-card-overlay">
                                     <h3 className="carousel-card-title text-inter font-bold text-lg text-center">{item.title}</h3>
-                                    <p className="carousel-card-text text-[#302F2F] leading-none tracking-normal text-xs font-normal text-monserat text-center">{item.text}</p>
+                                    <p className="carousel-card-text text-[#302F2F] leading-none tracking-normal text-xs font-normal text-monserat text-center">
+                {getMaxWords(item.text, 20)}
+                                    </p>
                                     <div className="w-full flex justify-center mt-2">
-                                        <button className="carousel-card-button px-3 py-2 rounded-xl text-xs">{item.buttonText}</button>
+                                        <a
+                                            href={`/service/${item.slug ?? ''}`}
+                                            className="carousel-card-button px-3 py-2 rounded-xl text-xs inline-flex items-center justify-center"
+                                        >
+                                            {item.buttonText}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </CircularCarousel>
+                </div>
+                {/* Linear carousel for tablet & mobile */}
+                <div className="w-full overflow-x-auto py-10 px-6 flex lg:hidden" data-aos="fade-up">
+                    <div className="flex gap-6 min-w-full">
+                        {carouselItems.map((item, index) => (
+                            <div
+                                key={index}
+                                className="group relative flex-shrink-0 w-64 rounded-3xl overflow-hidden bg-white/90 transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
+                            >
+                                <div
+                                    className="h-40 bg-cover bg-center"
+                                    style={{ backgroundImage: `url(${item.image})` }}
+                                />
+                                <div className="p-4">
+                                    <h3 className="text-inter font-bold text-base text-[#302F2F] text-center mb-2">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-[#4B5563] text-xs font-normal text-monserat text-center">
+                                        {item.text}
+                                    </p>
+                                </div>
+                                {/* Hover overlay */}
+                                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center px-4 text-center">
+                                    <h3 className="text-white text-sm font-bold mb-2">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-white/90 text-xs mb-3">
+                                        {item.text}
+                                    </p>
+                                    <a
+                                        href={`/service/${item.slug ?? ''}`}
+                                        className="carousel-card-button px-3 py-2 rounded-xl text-xs inline-flex items-center justify-center"
+                                    >
+                                        {item.buttonText}
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <div className="text-center" data-aos="fade-up">
                     <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
@@ -323,62 +367,100 @@ export default function Landing({ sliderImage, testimonials = [] }) {
                 <div className="container mx-auto px-10 md:px-20" data-aos="fade-up">
                     <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                         {/* Kiri: Text */}
-                        <div className="md:w-1/2 w-full flex flex-col justify-center">
-                            <H1 text="Over 29 Years of Experience in HR & Recruitment" color="white" />
+                        <div className="md:w-1/2 w-full flex justify-center items-center">
+                            <H1 text="Over 29 Years of Experience in HR & Recruitment" className='text-start leading-10' color="white" />
                         </div>
+
                         {/* PERUBAHAN: Ganti bagian list lama dengan komponen ScrollActiveList */}
                         <ScrollActiveList />
                     </div>
                 </div>
 
                 <div className="">
-                <H1 text="TESTIMONIALS" color="white" className="text-center uppercase mb-10" data-aos="fade-up" />
-                <div className="w-full overflow-x-auto py-20" data-aos="fade-up">
-                    <div className="flex gap-12 ">
-                        {testimonials.map((testimonial, idx) => (
-                            <div
-                                key={testimonial.id ?? idx}
-                                className="relative rounded-2xl min-w-[90px] max-w-[230px] p-4 md:rounded-3xl md:min-w-[420px] md:max-w-md md:p-10 flex-shrink-0"
-                                style={{
-                                    background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
-                                }}
-                            >
-                                {/* Avatar anchored on left top, half above card */}
-                                <div className="absolute -top-10 left-8">
-                                    <div className="w-20 h-20 rounded-full  shadow-lg overflow-hidden bg-gray-200">
-                                        <img
-                                            src={testimonial.image ? `/storage/${testimonial.image}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name ?? 'User')}`}
-                                            alt={testimonial.name ?? 'User avatar'}
-                                            className="w-full h-full object-cover"
-                                        />
+                    <div className="" data-aos="fade-up">
+
+                    <H1 text="TESTIMONIALS" color="white" className="text-center uppercase mb-10"  />
+                    </div>
+                    <div className="w-full overflow-x-auto py-20" data-aos="fade-up">
+                        <div className="flex gap-12 ">
+                            {testimonials.map((testimonial, idx) => (
+                                <div
+                                    key={testimonial.id ?? idx}
+                                    className="relative rounded-2xl min-w-[90px] max-w-[230px] p-4 md:rounded-3xl md:min-w-[420px] md:max-w-md md:p-10 flex-shrink-0"
+                                    style={{
+                                        background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
+                                    }}
+                                >
+                                    {/* Avatar anchored on left top, half above card */}
+                                    <div className="absolute -top-10 left-8">
+                                        <div className="w-20 h-20 rounded-full  shadow-lg overflow-hidden bg-gray-200">
+                                            <img
+                                                src={testimonial.image ? `/storage/${testimonial.image}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name ?? 'User')}`}
+                                                alt={testimonial.name ?? 'User avatar'}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Card Content */}
+                                    <div className="pt-16">
+                                        <p className="text-base text-white font-inter font-normal mb-4">
+                                            {testimonial.description}
+                                        </p>
+                                        <h4 className="font-bold  font-inter text-lg text-white mb-2">
+                                            {testimonial.name}
+                                        </h4>
+                                        <span className="block  font-inter text-sm text-white mb-4">
+                                            {testimonial.job_title}
+                                        </span>
                                     </div>
                                 </div>
-                                {/* Card Content */}
-                                <div className="pt-16">
-
-                                    <p className="text-base text-white font-inter font-normal mb-4">
-                                        {testimonial.description}
-                                    </p>
-                                    <h4 className="font-bold  font-inter text-lg text-white mb-2">
-                                        {testimonial.name}
-                                    </h4>
-                                    <span className="block  font-inter text-sm text-white mb-4">
-                                        {testimonial.job_title}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
 
+                {/* Swiper slider: desktop only */}
+                <div data-aos="fade-up" className="hidden lg:block">
+                    <SwiperSlider news={news} />
                 </div>
+                {/* Simple horizontal slider for tablet & mobile */}
+                <div data-aos="fade-up" className="block lg:hidden">
+                    <div className="w-full overflow-x-auto py-10 px-6">
+                        <div className="flex gap-6">
+                            {news.map((item) => {
+                                const image =
+                                    item.image_url ??
+                                    'https://placehold.co/600x400?text=No+Image';
 
-
-                <div data-aos="fade-up">
-                    <SwiperSlider />
+                                return (
+                                <div
+                                    key={item.id}
+                                    className="group relative flex-shrink-0 w-64 h-40 rounded-3xl overflow-hidden bg-cover bg-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
+                                    style={{ backgroundImage: `url('${image}')` }}
+                                >
+                                    <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center px-4 text-center">
+                                        <h3 className="text-white text-sm font-bold mb-2">
+                                            {item.title}
+                                        </h3>
+                                        <p className="text-white/90 text-xs mb-3">
+                                            {item.meta_description ?? item.content ?? ''}
+                                        </p>
+                                        <a
+                                            href={`/news/${item.slug ?? ''}`}
+                                            className="carousel-card-button px-3 py-2 rounded-xl text-xs inline-flex items-center justify-center"
+                                        >
+                                            Read more
+                                        </a>
+                                    </div>
+                                </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
             </main>
             <Footer />
         </div>
+        </>
     );
 }

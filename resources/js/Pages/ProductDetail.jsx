@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ProductCard from '../components/ProductCard';
 import ExploreButton from '../components/ExploreButton';
 
-export default function ProductDetail({ product }) {
-    // Ambil data product dari controller (via props)
+export default function ProductDetail({ product, products = [] }) {
     const data = product;
+    const imageUrl = data?.image_url ?? 'https://placehold.co/600x400?text=No+Image';
 
-    console.log(data)
-
-    return (
-        <div className="bg-[#302F2F]" data-aos="fade-in">
+  return (
+    <>
+    <Head title={data?.name ? `${data.name} - Product` : 'Product Detail'} />
+    <div className="bg-[#302F2F]" data-aos="fade-in">
 
             <div
                 className="relative rounded-b-xl md:rounded-b-[200px] overflow-hidden h-[50vh] mx-auto "
@@ -25,7 +26,7 @@ export default function ProductDetail({ product }) {
                     {/* Left: Image */}
                     <div className="flex-1 flex justify-center items-center ">
                         <img
-                            src={`storage/${data.image}`}
+                            src={imageUrl}
                             alt={data.name}
                             className="w-48 drop-shadow-lg "
                             style={{ objectFit: 'contain' }}
@@ -52,7 +53,7 @@ export default function ProductDetail({ product }) {
                 {/* Left: Image */}
                 <div className="flex-1 flex justify-center items-center relative md:-mt-60">
                     <img
-                       src={`/storage/${data.image}`}
+                        src={imageUrl}
                         alt={data.name}
                         className="w-48 md:w-200 drop-shadow-lg relative md:-left-10"
                         style={{ objectFit: 'contain' }}
@@ -64,7 +65,7 @@ export default function ProductDetail({ product }) {
                         £{Number(data.price).toFixed(2)}
                     </div>
                     <a
-                        href="#"
+                        href={`/payment/${product.slug}`}
                         className="text-[#302F2F] px-20 font-inter py-5 rounded-xl font-semibold text-sm transition"
                         style={{
                             background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
@@ -160,8 +161,16 @@ export default function ProductDetail({ product }) {
                     <H1 text="PRODUCT SHOWCASE" color="white" />
 
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((i) => (
-                            <ProductCard key={i} index={i} isLoading={false} />
+                        {products.map((relatedProduct, index) => (
+                            <ProductCard
+                                key={relatedProduct.id ?? index}
+                                index={index + 1}
+                                slug={relatedProduct.slug}
+                                name={relatedProduct.name}
+                                content={relatedProduct.content}
+                                image={relatedProduct.image_url}
+                                isLoading={false}
+                            />
                         ))}
                     </div>
                     <div className="flex justify-center mt-10">
@@ -175,5 +184,6 @@ export default function ProductDetail({ product }) {
 
             <Footer />
         </div>
+        </>
     );
 }

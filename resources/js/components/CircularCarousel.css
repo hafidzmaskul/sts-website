@@ -68,8 +68,8 @@
   /* Carousel Card Styles */
   .carousel-card {
     position: relative;
-    width: 240px;
-    height: 280px;
+    width: 260px;
+    height: 340px;
     border-radius: 16px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +81,7 @@
   }
 
   .carousel-card:hover {
-    height: 450px;
+    height: 550px;
     z-index: 10;
     transform: translateY(-20px);
     box-shadow: 0px 8px 30px rgba(69, 42, 124, 0.3);
@@ -101,7 +101,7 @@
 
   /* Perubahan hover - gambar menyusut dengan jarak dari atas */
   .carousel-card:hover .carousel-card-image {
-    height: 35%;
+    height: 25%;
     transform: scale(1);
     border-radius: 12px;
 
@@ -109,22 +109,21 @@
     margin-top: 40px; /* Jarak 24px dari atas */
     margin-left: 16px; /* Jarak dari kiri */
     margin-right: 16px; /* Jarak dari kanan */
+    margin-bottom: 16px; /* Jarak dari kanan */
     /* margin-bottom akan otomatis menyesuaikan */
   }
 
   .carousel-card-overlay {
     position: absolute;
-    bottom: 16px;
     left: 16px;
     right: 16px;
-    height: 50%;
+    height: 35%;
     background: linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%);
     backdrop-filter: blur(70px);
     box-shadow: 0px 1.2px 29.92px 0px #452A7C1A;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 20px;
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateY(20px);

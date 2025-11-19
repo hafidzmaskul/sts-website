@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
@@ -42,6 +43,8 @@ export default function Service({ services = [] }) {
     };
 
     return (
+        <>
+        <Head title="Services - AbsolutelyHR" />
         <div className="bg-[#302F2F]" data-aos="fade-in">
             {isLoading && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
@@ -60,7 +63,7 @@ export default function Service({ services = [] }) {
                 </div>
             </div>
 
-            <main className="flex-1 container mx-auto px-6 py-12 relative overflow-hidden" data-aos="fade-up">
+            <main className="flex-1 container mx-auto px-10 md:px-20 py-12 relative overflow-hidden" data-aos="fade-up">
                 {/* Decorative partial background image */}
                 <img
                     src="/assets/gradient-service1.png"
@@ -107,6 +110,7 @@ export default function Service({ services = [] }) {
                                 index={index + 1}
                                 title={service.name}
                                 desc={getMaxWords(service.content, 50)}
+                                image={service.image_url}
                                 isLoading={isLoading}
                             />
                         ))}
@@ -145,5 +149,6 @@ export default function Service({ services = [] }) {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

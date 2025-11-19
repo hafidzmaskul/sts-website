@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
@@ -7,7 +8,11 @@ export default function AboutUs({ teamMembers }) {
     const members = teamMembers ?? [];
     console.log(members);
 
+    useEffect(() => {}, []);
+
     return (
+        <>
+        <Head title="About Us - AbsolutelyHR" />
         <div className="" data-aos="fade-in">
             <div
                 className="relative flex flex-col rounded-b-4xl sm:rounded-b[100px] lg:rounded-b-[100px] overflow-visible"
@@ -53,7 +58,7 @@ export default function AboutUs({ teamMembers }) {
                 />
             </div>
 
-            <main className="flex-1 mt-10 md:mt-30 container mx-auto px-6 py-12 text-white" data-aos="fade-up">
+            <main className="flex-1 mt-10 md:mt-30 container mx-auto px-10  md:px-20 py-12 text-white" data-aos="fade-up">
                 <section className="text-center" data-aos="fade-up">
 
                     <h1 className='font-montserrat mt-5 md:mt-30 font-bold text-3xl md:text-5xl text-white mb-10'>
@@ -186,7 +191,7 @@ export default function AboutUs({ teamMembers }) {
                         </div>
                     </div>
                 </section>
-            
+
 
                 {members.length > 0 && (
                     <section id="our-team" className="mt-30 mb-30" data-aos="fade-up">
@@ -266,5 +271,6 @@ export default function AboutUs({ teamMembers }) {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

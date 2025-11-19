@@ -32,12 +32,13 @@ const ScrollActiveList = () => {
 
             // Tentukan zona scroll di mana efek akan aktif
             // Zona dimulai saat bagian atas container mencapai tengah layar
-            const scrollStart = windowHeight / 4;
+            const scrollStart = windowHeight / 2;
             // Zona berakhir saat bagian bawah container mencapai tengah layar
             const scrollEnd = containerTop + containerHeight - (windowHeight / 2);
 
             // Hitung progress scroll (nilai dari 0 hingga 1)
-            let progress = (  containerTop - scrollStart) / (  containerTop - scrollEnd);
+            // Perubahan di sini untuk membuat arah scroll dari atas ke bawah
+            let progress = (scrollStart - containerTop) / (scrollEnd - containerTop);
             progress = Math.max(0, Math.min(1, progress)); // Pastikan nilai tetap antara 0 dan 1
 
             // Tentukan index item yang aktif berdasarkan progress
@@ -51,8 +52,8 @@ const ScrollActiveList = () => {
         // Logika scroll hanya akan berjalan saat komponen terlihat di layar
         const observerOptions = {
             root: null, // relative to the viewport
-            rootMargin: '0px',
-            threshold: 0.1 // trigger saat 10% container terlihat
+            rootMargin: '100px',
+            threshold: 1 // trigger saat 10% container terlihat
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -84,7 +85,7 @@ const ScrollActiveList = () => {
 
     return (
         // Ref untuk container utama
-        <div className="md:w-1/2 w-full flex flex-col gap-2" ref={containerRef}>
+        <div className="md:w-1/2 w-full  flex justify-center items-center flex-col gap-2" ref={containerRef}>
             {/* Ref untuk list item */}
             <ul ref={listRef} className="list-inside text-white text-base md:text-lg font-inter list-none">
                 {features.map((feature, index) => (
@@ -92,7 +93,7 @@ const ScrollActiveList = () => {
                         key={index}
                         // Class dinamis berdasarkan activeIndex
                         // `transition-all duration-500 ease-out` untuk animasi yang halus
-                        className={`font-inter font-bold transition-all duration-500 ease-out ${
+                        className={`font-inter font-bold text-3xl transition-all duration-1000 ease-out ${
                             index === activeIndex
                                 ? 'mx-2 text-[#FFED2E]' // Gaya untuk item aktif
                                 : 'text-[#FFED2E4F]' // Gaya untuk item non-aktif

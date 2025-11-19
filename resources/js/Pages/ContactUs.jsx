@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
@@ -91,8 +92,10 @@ export default function ContactUs() {
         }
     };
 
-    return (
-        <div className="" data-aos="fade-in">
+  return (
+    <>
+    <Head title="Contact Us - AbsolutelyHR" />
+    <div className="" data-aos="fade-in">
             <div className="flex flex-col rounded-b-xl md:rounded-b-[200px]" style={{ backgroundImage: 'url(/assets/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <Header />
                 <div className="w-full flex flex-col items-center text-center mt-20">
@@ -104,7 +107,7 @@ export default function ContactUs() {
                 </div>
             </div>
 
-            <main className="flex-1 container mx-auto px-6 py-12 text-white" data-aos="fade-up">
+            <main className="flex-1 container mx-auto px-10 md:px-20 py-12 text-white" data-aos="fade-up">
                 <div className="flex flex-col gap-8 md:flex-row md:gap-16 w-full">
                     <form
                         onSubmit={handleSubmit}
@@ -256,5 +259,6 @@ export default function ContactUs() {
             </main>
             <Footer />
         </div>
+        </>
     );
 }

@@ -16,14 +16,29 @@ class PageController
 {
     public function landing(): Response
     {
+        $services = Service::query()
+            ->where('status', true)
+            ->orderBy('sequence')
+            ->orderByDesc('created_at')
+            ->take(6)
+            ->get();
+
         $testimonials = Testimonial::query()
             ->where('status', true)
             ->orderBy('sequence')
             ->orderByDesc('created_at')
             ->get();
 
+        $news = News::query()
+            ->where('status', 'published')
+            ->orderByDesc('created_at')
+            ->take(6)
+            ->get();
+
         return Inertia::render('Landing', [
+            'services' => $services,
             'testimonials' => $testimonials,
+            'news' => $news,
         ]);
     }
 
@@ -42,9 +57,21 @@ class PageController
 
     public function serviceDetail(string $slug): Response
     {
-        $service = Service::where('slug',$slug )->with('products')->firstOrFail();
+        $service = Service::where('slug', $slug)
+            ->with('products')
+            ->firstOrFail();
+
+        $otherServices = Service::query()
+            ->where('status', true)
+            ->where('id', '!=', $service->id)
+            ->orderBy('sequence')
+            ->orderByDesc('created_at')
+            ->take(9)
+            ->get();
+
         return Inertia::render('ServiceDetail', [
             'service' => $service,
+            'otherServices' => $otherServices,
         ]);
     }
 
@@ -76,10 +103,11 @@ class PageController
 
     public function newsDetail(string $slug): Response
     {
-        $news = News::where('slug', $slug)
-        ->first();
+        $news = News::where('slug', $slug)->with('categories')->first();
+        $otherNews = News::take(2)->get();
         return Inertia::render('NewsDetail', [
             'news' => $news,
+            'otherNews' => $otherNews
         ]);
     }
 
@@ -102,15 +130,32 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::where('slug', $slug)->with('services')
+        $product = Product::where('slug', $slug)
+            ->with('services')
             ->firstOrFail();
+
+        $products = Product::query()
+            ->where('status', true)
+            ->where('id', '!=', $product->id)
+            ->orderByDesc('created_at')
+            ->take(6)
+            ->get();
+
         return Inertia::render('ProductDetail', [
             'product' => $product,
+            'products' => $products,
         ]);
     }
 
-    public function payment(): Response
+    public function payment(string $slug): Response
     {
-        return Inertia::render('Payment');
+        $product = Product::query()
+            ->where('slug', $slug)
+            ->where('status', true)
+            ->firstOrFail();
+
+        return Inertia::render('Payment', [
+            'product' => $product,
+        ]);
     }
 }

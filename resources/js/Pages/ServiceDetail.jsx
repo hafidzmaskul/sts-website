@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
-import ServiceCard from '../components/ServiceCard';
 import ExploreButton from '../components/ExploreButton';
 
-export default function ServiceDetail({ service }) {
+import ServiceCard from '../components/ServiceCard';
+
+export default function ServiceDetail({ service, otherServices = [] }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
     console.log(service)
     // Per JSON sample: image, name, content -- fallback if not provided
     const serviceName = service?.name || '';
     const serviceContent = service?.content || '';
-    const serviceImage = service?.image
-        ? service.image
-        : '/assets/detail-service.png'; // fallback jika null
+    const serviceImage =
+        service?.image_url ?? 'https://placehold.co/600x400?text=No+Image';
 
     const itemsPerPage = 3;
-    const products = Array.isArray(service?.products) ? service.products : [];
-
-    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const services = Array.isArray(otherServices) ? otherServices : [];
+    console.log(services)
+    const totalPages = Math.ceil(services.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentServices = products.slice(startIndex, startIndex + itemsPerPage);
+    const currentServices = services.slice(startIndex, startIndex + itemsPerPage);
 
     useEffect(() => {
         setIsLoading(true);
@@ -34,6 +35,8 @@ export default function ServiceDetail({ service }) {
             clearTimeout(timeoutId);
         };
     }, [currentPage, service]);
+
+    useEffect(() => {}, [serviceName]);
 
     const handleNext = () => {
         if (currentPage < totalPages) {
@@ -48,6 +51,8 @@ export default function ServiceDetail({ service }) {
     };
 
     return (
+        <>
+        <Head title={serviceName ? `${serviceName} - Service` : 'Service Detail'} />
         <div className="bg-[#302F2F]" data-aos="fade-in">
             {isLoading && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40">
@@ -61,7 +66,7 @@ export default function ServiceDetail({ service }) {
                 }}
             >
                 <Header />
-                <div className="container px-10 md:px-10 mx-auto justify-center mb-20 mt-12">
+                <div className="container px-10 md:px-20 mx-auto justify-center mb-20 mt-12">
                     <div
                         className="w-full overflow-hidden mx-auto"
                         style={{
@@ -128,13 +133,12 @@ export default function ServiceDetail({ service }) {
                                 <div className="col-span-3 text-white text-lg">No other services found.</div>
                             )}
 
-                            {currentServices.map((product) => (
+                            {currentServices.map((serviceItem, index) => (
                                 <ServiceCard
-                                    key={product.id}
-                                    name={product.name}
-                                    content={product.content}
-                                    image={product.image}
-                                    product={product}
+                                    key={serviceItem.id ?? index}
+                                    title={serviceItem.name}
+                                    desc={serviceItem.content}
+                                    image={serviceItem.image_url}
                                     isLoading={isLoading}
                                 />
                             ))}
@@ -178,5 +182,6 @@ export default function ServiceDetail({ service }) {
 
             <Footer />
         </div>
+        </>
     );
 }
