@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Testimonial;
+use App\Models\News;
+use App\Models\Product;
+use App\Models\Service;
 use App\Models\TeamMember;
+use App\Models\Testimonial;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,13 +29,22 @@ class PageController
 
     public function services(): Response
     {
-        return Inertia::render('Service');
+        $services = Service::query()
+            ->where('status', true)
+            ->orderBy('sequence')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return Inertia::render('Service', [
+            'services' => $services,
+        ]);
     }
 
     public function serviceDetail(string $slug): Response
     {
+        $service = Service::where('slug',$slug )->with('products')->firstOrFail();
         return Inertia::render('ServiceDetail', [
-            'slug' => $slug,
+            'service' => $service,
         ]);
     }
 
@@ -52,13 +64,22 @@ class PageController
 
     public function news(): Response
     {
-        return Inertia::render('News');
+        $news = News::query()
+            ->where('status', 'published')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return Inertia::render('News', [
+            'news' => $news,
+        ]);
     }
 
     public function newsDetail(string $slug): Response
     {
+        $news = News::where('slug', $slug)
+        ->first();
         return Inertia::render('NewsDetail', [
-            'slug' => $slug,
+            'news' => $news,
         ]);
     }
 
@@ -69,13 +90,22 @@ class PageController
 
     public function products(): Response
     {
-        return Inertia::render('Products');
+        $products = Product::query()
+            ->where('status', true)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return Inertia::render('Products', [
+            'products' => $products,
+        ]);
     }
 
     public function productDetail(string $slug): Response
     {
+        $product = Product::where('slug', $slug)->with('services')
+            ->firstOrFail();
         return Inertia::render('ProductDetail', [
-            'slug' => $slug,
+            'product' => $product,
         ]);
     }
 

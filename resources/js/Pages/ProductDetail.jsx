@@ -5,7 +5,12 @@ import H1 from '../components/H1';
 import ProductCard from '../components/ProductCard';
 import ExploreButton from '../components/ExploreButton';
 
-export default function ProductDetail({ slug }) {
+export default function ProductDetail({ product }) {
+    // Ambil data product dari controller (via props)
+    const data = product;
+
+    console.log(data)
+
     return (
         <div className="bg-[#302F2F]" data-aos="fade-in">
 
@@ -20,8 +25,8 @@ export default function ProductDetail({ slug }) {
                     {/* Left: Image */}
                     <div className="flex-1 flex justify-center items-center ">
                         <img
-                            src="/assets/book.png"
-                            alt="Book"
+                            src={`storage/${data.image}`}
+                            alt={data.name}
                             className="w-48 drop-shadow-lg "
                             style={{ objectFit: 'contain' }}
                         />
@@ -29,7 +34,7 @@ export default function ProductDetail({ slug }) {
                     {/* Right: Price and Button */}
                     <div className="flex-1 flex flex-col items-start justify-center mt-8 mb-10">
                         <div className="text-2xl font-bold text-white">
-                            £99.00
+                            £{Number(data.price).toFixed(2)}
                         </div>
                         <a
                             href="#"
@@ -47,8 +52,8 @@ export default function ProductDetail({ slug }) {
                 {/* Left: Image */}
                 <div className="flex-1 flex justify-center items-center relative md:-mt-60">
                     <img
-                        src="/assets/book.png"
-                        alt="Book"
+                       src={`/storage/${data.image}`}
+                        alt={data.name}
                         className="w-48 md:w-200 drop-shadow-lg relative md:-left-10"
                         style={{ objectFit: 'contain' }}
                     />
@@ -56,7 +61,7 @@ export default function ProductDetail({ slug }) {
                 {/* Right: Price and Button */}
                 <div className="flex-1 flex flex-col items-start md:items-start justify-center mt-8 md:mt-0 md:ml-16">
                     <div className="text-3xl md:text-5xl font-bold text-white mb-4">
-                        £99.00
+                        £{Number(data.price).toFixed(2)}
                     </div>
                     <a
                         href="#"
@@ -72,11 +77,9 @@ export default function ProductDetail({ slug }) {
             <main className="flex-1 container mx-auto px-10 md:px-20  py-20" data-aos="fade-up">
                 <section className='py-20' data-aos="fade-up">
 
-                    <h1 className='font-montserrat font-extrabold text-2xl md:text-5xl mb-10 text-white uppercase text-center'>Company Handbooks</h1>
+                    <h1 className='font-montserrat font-extrabold text-2xl md:text-5xl mb-10 text-white uppercase text-center'>{data.name}</h1>
                     <p className='font-normal font-roboto text-sm md:font-base text-white text-center'>
-                        Unfortunately, it is often overlooked by SMEs that this documentation is a legal requirement of employing staff.
-                        If you do not give these essential documents to your employees they can take you to an Employment Tribunal and could win an award equivalent to four weeks pay.
-                        Although your staff may know this and the other legally required information already, it does need to be written down in set a format. Company Handbooks are required for informing staff about current Employment Law and HR Policies. Thankfully, Absolutely Human Resources, HR Advisors in Edinburgh, can help you with all kinds of Employment Law situations and issues.
+                        {data.description}
                     </p>
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
 
@@ -96,47 +99,19 @@ export default function ProductDetail({ slug }) {
                                         'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                                 }}
                             >
-                                {/* Tambahkan ini dan di samping kanannya ada tanggal */}
-
                                 <h3 className="text-lg md:text-1xl font-inter text-white font-bold mb-5 uppercase">
                                     Handbooks also outline best practice, including:
                                 </h3>
                                 <ul className="text-left space-y-3 text-white">
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        How to discipline employees
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        How staff may raise grievances
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Staff illness and absence reporting
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Maternity leave/paternity leave/adoption leave
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Holidays
-                                    </li>
+                                    {data.benefits && data.benefits.map((benefit, idx) => (
+                                        <li className="flex items-start" key={idx}>
+                                            <span
+                                                className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
+                                                style={{ background: '#FFED2E' }}
+                                            ></span>
+                                            {benefit}
+                                        </li>
+                                    ))}
                                 </ul>
 
                             </div>
@@ -158,48 +133,26 @@ export default function ProductDetail({ slug }) {
                                         'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                                 }}
                             >
-                                {/* Tambahkan ini dan di samping kanannya ada tanggal */}
-
                                 <h3 className="text-lg md:text-1xl font-inter text-white font-bold mb-5 uppercase">
                                     We also ensure that suitable HR Policies are put in place to protect your business, this includes guidance on:
                                 </h3>
                                 <ul className="text-left space-y-3 text-white">
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Intellectual Property
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        E-mail, Internet &amp; Social Media Policy
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Breach of Contract
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span
-                                            className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
-                                            style={{ background: '#FFED2E' }}
-                                        ></span>
-                                        Conditions applying post employees leaving or being terminated
-                                    </li>
+                                    {data.policies && data.policies.map((policy, idx) => (
+                                        <li className="flex items-start" key={idx}>
+                                            <span
+                                                className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
+                                                style={{ background: '#FFED2E' }}
+                                            ></span>
+                                            {policy}
+                                        </li>
+                                    ))}
                                 </ul>
-
                             </div>
                         </div>
 
                     </div>
                     <p className='font-normal font-roboto text-sm md:font-base mt-10 text-white text-center'>
-                        These lists are not exhaustive, but they form the core of the company policies of which your employees must be informed.
+                        {data.note}
                     </p>
                 </section>
 
@@ -207,8 +160,8 @@ export default function ProductDetail({ slug }) {
                     <H1 text="PRODUCT SHOWCASE" color="white" />
 
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((product) => (
-                            <ProductCard key={product} index={product} isLoading={false} />
+                        {[1, 2, 3].map((i) => (
+                            <ProductCard key={i} index={i} isLoading={false} />
                         ))}
                     </div>
                     <div className="flex justify-center mt-10">
@@ -219,9 +172,6 @@ export default function ProductDetail({ slug }) {
                     </div>
                 </section>
             </main>
-
-
-
 
             <Footer />
         </div>

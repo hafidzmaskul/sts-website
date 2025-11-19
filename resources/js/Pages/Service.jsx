@@ -3,9 +3,9 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ServiceCard from '../components/ServiceCard';
+import { getMaxWords } from '../helpers/text';
 
-
-export default function Service() {
+export default function Service({ services = [] }) {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,8 +22,9 @@ export default function Service() {
     }, [currentPage]);
 
     const itemsPerPage = 6;
-    const cards = Array.from({ length: 18 }, (_item, index) => index + 1);
+    const cards = services;
 
+    console.log(cards)
     const totalPages = Math.ceil(cards.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentCards = cards.slice(startIndex, startIndex + itemsPerPage);
@@ -99,8 +100,15 @@ export default function Service() {
 
                     {/* The grid of cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 flex-1">
-                        {currentCards.map((i) => (
-                            <ServiceCard uuid={i} key={i} index={i} isLoading={isLoading} />
+                        {currentCards.map((service, index) => (
+                            <ServiceCard
+                                slug={service.slug ?? index}
+                                key={service.id ?? index}
+                                index={index + 1}
+                                title={service.name}
+                                desc={getMaxWords(service.content, 50)}
+                                isLoading={isLoading}
+                            />
                         ))}
                     </div>
 

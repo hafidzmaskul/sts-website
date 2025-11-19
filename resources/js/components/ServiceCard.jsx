@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ServiceCard({ index, isLoading, uuid }) {
+export default function ServiceCard({ desc, title, index, isLoading, slug }) {
     return (
         <div
             className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-col"
@@ -8,7 +8,7 @@ export default function ServiceCard({ index, isLoading, uuid }) {
                 background:
                     'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
             }}
-            data-uuid={uuid}
+            data-slug={slug}
         >
             {isLoading ? (
                 <>
@@ -48,17 +48,14 @@ export default function ServiceCard({ index, isLoading, uuid }) {
                         }}
                     >
                         <h2 className="text-lg text-center md:text-3xl font-inter text-black font-bold mb-2">
-                            Service Title {index}
+                            {title}
                         </h2>
-                        <p className="text-black text-xs md:text-sm mb-6 flex-1">
-                            Every business needs good HR support, but as an SME you do not need the costs and
-                            overheads of an internal HR department.We offer a 24 hour advice for our Edinburgh
-                            clients. Our staff will be able to listen and provide immediate support whatever the
-                            scale of your problem.
+                        <p className="text-black text-xs md:text-sm text-center mb-6 flex-1">
+                           {desc}
                         </p>
                         <div className="flex justify-center">
                             <a
-                                href={`/service/${uuid || ''}`}
+                                href={`/service/${slug || ''}`}
                                 className="bg-white text-black px-6 py-2 rounded-lg font-semibold shadow hover:bg-gray-200 transition inline-flex items-center justify-center"
                             >
                                 Next
