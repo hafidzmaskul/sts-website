@@ -14,6 +14,7 @@
             </a>
 
             <flux:navlist variant="outline">
+                
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item
                         icon="home"
@@ -67,6 +68,16 @@
                     @endcan
                 </flux:navlist.group>
                 @endcanany
+
+                <flux:navlist.group :heading="__('Sales')" class="grid">
+                    <flux:navlist.item
+                        icon="banknotes"
+                        :href="route('admin.transactions.index')"
+                        :current="request()->routeIs('admin.transactions.*')"
+                        wire:navigate
+                    >{{ __('Transactions') }}</flux:navlist.item>
+                </flux:navlist.group>
+
                 @canany(['testimonials.view', 'our-team.view', 'news-categories.view', 'news.view'])
                 <flux:navlist.group :heading="__('Content')" class="grid">
                     @can('news-categories.view')

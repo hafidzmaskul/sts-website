@@ -63,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create')->middleware('can:products.create');
         Route::get('/admin/products/{product}', \App\Livewire\Admin\Products\Show::class)->name('admin.products.show')->middleware('can:products.view');
         Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit')->middleware('can:products.edit');
+
+        Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
+        
+        Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
         
     });
 });
