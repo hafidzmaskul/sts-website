@@ -77,7 +77,7 @@ class PageController
 
     public function about(): Response
     {
-        $teamMembers = TeamMember::all();
+        $teamMembers = TeamMember::orderBy('sequence')->get();
 
         return Inertia::render('AboutUs', [
             'teamMembers' => $teamMembers,
