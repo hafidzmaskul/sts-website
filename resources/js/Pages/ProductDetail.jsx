@@ -75,6 +75,29 @@ export default function ProductDetail({ product, products = [] }) {
                     </a>
                 </div>
             </div>
+
+            <img
+                    src="/assets/gradient-product-detail.svg"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 top-50 left-0 w-1/4 max-w-lg opacity-60"
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
+
+<img
+                    src="/assets/gradient-product-detail2.svg"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 bottom-200 right-0 w-1/4 max-w-lg opacity-60"
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
+
             <main className="flex-1 container mx-auto px-10 md:px-20  py-20" data-aos="fade-up">
                 <section className='py-20' data-aos="fade-up">
 
