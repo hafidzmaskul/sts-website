@@ -25,11 +25,10 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
-                            <textarea
-                                wire:model="content"
-                                rows="8"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                            ></textarea>
+                            <input id="overview_input" type="hidden" wire:model.live="content" value="{{ $content ?? '' }}">
+                            <div wire:ignore>
+                                <div id="overview_editor" class="min-h-[260px] rounded-lg border border-input bg-background"></div>
+                            </div>
                             @error('content') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                         </div>
                     </div>
