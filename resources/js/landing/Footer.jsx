@@ -161,13 +161,13 @@ export default function Footer() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                             <div className="flex flex-wrap items-center space-x-4 space-y-2 md:space-y-0 md:space-x-4">
-                                <a href="#" className="font-roboto text-sm hover:underline">Service</a>
+                                <a href="/services" className="font-roboto text-sm hover:underline">Service</a>
                                 <span className="hidden md:inline h-4 w-px bg-[#9095B8]"></span>
-                                <a href="#" className="font-roboto text-sm hover:underline">About Us</a>
+                                <a href="/about-us" className="font-roboto text-sm hover:underline">About Us</a>
                                 <span className="hidden md:inline h-4 w-px bg-[#9095B8]"></span>
-                                <a href="#" className="font-roboto text-sm hover:underline">News</a>
+                                <a href="/news" className="font-roboto text-sm hover:underline">News</a>
                                 <span className="hidden md:inline h-4 w-px bg-[#9095B8]"></span>
-                                <a href="#" className="font-roboto text-sm hover:underline">Contact Us</a>
+                                <a href="/contact-us" className="font-roboto text-sm hover:underline">Contact Us</a>
                             </div>
                             <div className="flex justify-start md:justify-start  md:mt-0">
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
