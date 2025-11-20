@@ -276,7 +276,7 @@ export default function AboutUs({ teamMembers }) {
                                                     </span>
                                                 )}
                                                 {member.description && (
-                                                    <p className="text-white font-monserat font-normal leading-2 text-sm/8 mb-4 flex-1">
+                                                    <p className="text-white font-monserat font-normal leading-none text-sm   tracking-wider mb-4 flex-1">
                                                         {member.description}
                                                     </p>
                                                 )}
