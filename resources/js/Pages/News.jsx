@@ -137,6 +137,18 @@ export default function News({ news = [] }) {
                     </div>
                 )}
             </main>
+
+
+            <img
+                    src="/assets/gradient-news.svg"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 bottom-100 left-0 w-1/4 max-w-lg "
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
             <Footer />
         </div>
         </>

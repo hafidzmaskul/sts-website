@@ -116,6 +116,9 @@ export default function Service({ services = [] }) {
                         ))}
                     </div>
 
+
+
+
                     {/* Next button, at the right of the grid */}
                     <button
                         type="button"
@@ -146,7 +149,19 @@ export default function Service({ services = [] }) {
                         Page {currentPage} of {totalPages}
                     </span>
                 </div>
+
             </main>
+            <img
+                    src="/assets/gradient-service-2.svg"
+                    alt=""
+                    className="pointer-events-none select-none absolute -z-10 top-200 right-0 w-1/4 max-w-lg opacity-60"
+                    style={{
+                        // Example: appear only in top right, not covering full area
+                        objectFit: "contain",
+                    }}
+                    aria-hidden="true"
+                />
+
             <Footer />
         </div>
         </>
