@@ -286,7 +286,10 @@ export default function Payment({ product }) {
                   id="submitPaymentBtn"
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-lg font-inter flex items-center justify-center relative px-4 py-3 bg-gradient-to-r from-[#840CCF] via-[#39B3F7] to-[#5CE989] text-white font-semibold shadow-lg disabled:opacity-60 disabled:cursor-not-allowed transition-transform hover:-translate-y-0.5"
+                  className="text-[#302F2F] px-20 font-inter py-2 rounded-xl font-semibold text-xs transition"
+                  style={{
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
+                  }}
                 >
                   {isSubmitting && (
                     <span className="mr-2 inline-block h-4 w-4 rounded-full border-2 border-white/60 border-t-transparent animate-spin" />

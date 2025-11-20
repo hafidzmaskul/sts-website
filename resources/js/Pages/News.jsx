@@ -4,6 +4,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import NewsCard from '../components/NewsCard';
+import { getMaxCharacters } from '../helpers/text';
 
 export default function News({ news = [] }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +98,7 @@ export default function News({ news = [] }) {
                                 key={article.id ?? index}
                                 index={index + 1}
                                 title={article.title}
-                                contet={article.content}
+                                content={getMaxCharacters(article.content,100)}
                                 slug={article.slug}
                                 image={article.image_url}
                                 isLoading={isLoading}
