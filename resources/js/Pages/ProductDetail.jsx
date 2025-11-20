@@ -8,7 +8,21 @@ import ExploreButton from '../components/ExploreButton';
 
 export default function ProductDetail({ product, products = [] }) {
     const data = product;
+    console.log(product)
     const imageUrl = data?.image_url ?? 'https://placehold.co/600x400?text=No+Image';
+    const handbookBenefits = [
+        'How to discipline employees',
+        'How staff may raise grievances',
+        'Staff illness and absence reporting',
+        'Maternity leave/paternity leave/adoption leave',
+        'Holidays',
+    ];
+    const handbookPolicies = [
+        'Intellectual Property',
+        'E-mail, Internet & Social Media Policy',
+        'Breach of Contract',
+        'Conditions applying post employees leaving or being terminated',
+    ];
 
   return (
     <>
@@ -101,9 +115,9 @@ export default function ProductDetail({ product, products = [] }) {
             <main className="flex-1 container mx-auto px-10 md:px-20  py-20" data-aos="fade-up">
                 <section className='py-20' data-aos="fade-up">
 
-                    <h1 className='font-montserrat font-extrabold text-2xl md:text-5xl mb-10 text-white uppercase text-center'>{data.name}</h1>
+                    <H1 text={'ABOUT THIS BOOK'} color='white' />
                     <p className='font-normal font-roboto text-sm md:font-base text-white text-center'>
-                        {data.description}
+                        {data.content}
                     </p>
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
 
@@ -127,7 +141,7 @@ export default function ProductDetail({ product, products = [] }) {
                                     Handbooks also outline best practice, including:
                                 </h3>
                                 <ul className="text-left space-y-3 text-white">
-                                    {data.benefits && data.benefits.map((benefit, idx) => (
+                                    {handbookBenefits.map((benefit, idx) => (
                                         <li className="flex items-start" key={idx}>
                                             <span
                                                 className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
@@ -161,7 +175,7 @@ export default function ProductDetail({ product, products = [] }) {
                                     We also ensure that suitable HR Policies are put in place to protect your business, this includes guidance on:
                                 </h3>
                                 <ul className="text-left space-y-3 text-white">
-                                    {data.policies && data.policies.map((policy, idx) => (
+                                    {handbookPolicies.map((policy, idx) => (
                                         <li className="flex items-start" key={idx}>
                                             <span
                                                 className="inline-block w-3 h-3 mt-2 rounded-full mr-3"
@@ -181,7 +195,7 @@ export default function ProductDetail({ product, products = [] }) {
                 </section>
 
                 <section id="product-showcase">
-                    <H1 text="PRODUCT SHOWCASE" color="white" />
+                    <H1 text="OTHER PRODUCTS " color="white" />
 
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {products.map((relatedProduct, index) => (
