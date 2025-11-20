@@ -72,14 +72,16 @@ export default function NewsDetail({ news, otherNews }) {
                         src={`/storage/${data.image}`}
                         alt=""
                         className="
-                hidden md:block
-                absolute left-1/2 transform -translate-x-1/2
-                md:w-3/3 w-[20vw] max-w-lg
-                z-10
-                rounded-4xl
-            "
+                        hidden md:block
+                        absolute left-1/2 transform -translate-x-1/2
+                        z-10
+                        rounded-4xl
+                        "
                         style={{
                             bottom: '-30%',
+                            width: '400px',
+                            height: '300px',
+                            objectFit: 'cover',
                         }}
                     />
                 </div>
@@ -105,9 +107,10 @@ export default function NewsDetail({ news, otherNews }) {
                     aria-hidden="true"
                 />
                 <main className="flex-1 container px-10 md:px-20 mx-auto md:mt-50 py-12 text-white" data-aos="fade-up">
-                    <article className="prose prose-invert  mx-auto">
-                        {data.content}
-                    </article>
+                    <article
+                        className="prose prose-invert  mx-auto"
+                        dangerouslySetInnerHTML={{ __html: data.content }}
+                    />
                     <section className='py-20'>
                         <H1 text={'Other Article'} color='white' className='uppercase' />
 
