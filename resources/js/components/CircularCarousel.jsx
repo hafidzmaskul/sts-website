@@ -52,8 +52,6 @@ function CircularCarouselComp(
 
     const tryMove = (next) => {
       _deg = nextRef.current += next;
-      _deg = nextRef.current = Math.min(_deg, 3);
-      _deg = nextRef.current = Math.max(_deg, -ARC_SIZE + 3);
       if (!rendering.current) {
         rendering.current = true;
         requestAnimationFrame(move);
@@ -81,21 +79,12 @@ function CircularCarouselComp(
       document.removeEventListener("touchend", onMouseUp);
 
       const angle = ARC_SIZE / len;
-      const mod = _deg % angle;
-      const diff = angle - Math.abs(mod);
-      const sign = Math.sign(_deg);
-      const max = angle * (len - 1);
-
-      if (_deg > 0) {
-        if (onSwapRight && indexRef.current === 0 && _deg > 2) {
-          onSwapRight();
-        }
-        tryMove(-_deg);
-      } else if (-_deg > max) {
-        tryMove(-_deg - max);
-      } else {
-        const move = (diff <= angle / 2 ? diff : mod) * sign;
-        tryMove(move);
+      const steps = Math.round(_deg / angle);
+      const snapped = steps * angle;
+      nextRef.current = snapped % ARC_SIZE;
+      if (!rendering.current) {
+        rendering.current = true;
+        requestAnimationFrame(move);
       }
     };
     if (isTouch) {

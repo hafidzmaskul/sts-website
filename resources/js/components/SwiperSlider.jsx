@@ -6,10 +6,12 @@ const SwiperSlider = ({
     bottomText = 'LATEST NEWS',
 }) => {
     const swiperContainerRef = useRef(null);
+    const swiperDirectionRef = useRef(1);
 
     useEffect(() => {
         let swiperInstance = null;
         let styleEl = null;
+        let autoplayInterval = null;
 
         // Dynamically import Swiper JS & CSS
         if (typeof window !== 'undefined') {
@@ -19,12 +21,49 @@ const SwiperSlider = ({
 
                 if (swiperContainerRef.current) {
                     swiperInstance = new Swiper(swiperContainerRef.current, {
-                        loop: true,
+                        loop: false,
                         grabCursor: true,
                         slidesPerView: 5,
                         spaceBetween: 16,
-                        speed: 800
+                        speed: 800,
+                        centeredSlides: true,
+                        on: {
+                            reachEnd() {
+                                swiperDirectionRef.current = -1;
+                            },
+                            reachBeginning() {
+                                swiperDirectionRef.current = 1;
+                            },
+                        },
                     });
+
+                    // Start with the third item centered so the left side isn't empty
+                    if (swiperInstance.slides.length > 3) {
+                        swiperInstance.slideTo(2, 0);
+                    }
+
+                    autoplayInterval = setInterval(() => {
+                        if (!swiperInstance) {
+                            return;
+                        }
+                        const direction = swiperDirectionRef.current;
+
+                        if (direction === 1) {
+                            if (swiperInstance.isEnd) {
+                                swiperDirectionRef.current = -1;
+                                swiperInstance.slidePrev();
+                            } else {
+                                swiperInstance.slideNext();
+                            }
+                        } else {
+                            if (swiperInstance.isBeginning) {
+                                swiperDirectionRef.current = 1;
+                                swiperInstance.slideNext();
+                            } else {
+                                swiperInstance.slidePrev();
+                            }
+                        }
+                    }, 5000);
                 }
             });
 
@@ -47,6 +86,9 @@ const SwiperSlider = ({
                         justify-content: center;
                         align-items: center;
                         transition: transform 0.3s ease;
+                    }
+                    .swiper-slide-active {
+                        transform: translateY(-6px);
                     }
                     .swiper-slide:hover {
                         transform: translateY(-6px);
@@ -78,6 +120,9 @@ const SwiperSlider = ({
                         color: #fff;
                         opacity: 0;
                         transition: opacity 0.3s ease;
+                    }
+                    .swiper-slide-active .slide-overlay {
+                        opacity: 1;
                     }
                     .swiper-slide:hover .slide-overlay {
                         opacity: 1;
@@ -193,6 +238,9 @@ const SwiperSlider = ({
         return () => {
             if (swiperInstance && swiperInstance.destroy) {
                 swiperInstance.destroy();
+            }
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
             }
             if (styleEl) {
                 document.head.removeChild(styleEl);

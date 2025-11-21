@@ -9,7 +9,7 @@ const features = [
     { text: '24/7 HELPLINE' },
 ];
 
-const ScrollActiveList = () => {
+const ScrollActiveList = ({ onProgress = () => null }) => {
     // State untuk melacak index item yang sedang aktif
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -26,26 +26,35 @@ const ScrollActiveList = () => {
             if (!container || !listItems) return;
 
             // Dapatkan posisi container relatif terhadap viewport
-            const containerTop = container.getBoundingClientRect().top;
+            const containerRect = container.getBoundingClientRect();
+            const containerTop = containerRect.top;
             const containerHeight = container.offsetHeight;
             const windowHeight = window.innerHeight;
 
-            // Tentukan zona scroll di mana efek akan aktif
-            // Zona dimulai saat bagian atas container mencapai tengah layar
-            const scrollStart = windowHeight / 2;
-            // Zona berakhir saat bagian bawah container mencapai tengah layar
-            const scrollEnd = containerTop + containerHeight - (windowHeight / 2);
+            // Gunakan titik tengah viewport dan posisi container untuk progress top-to-bottom
+            const viewportCenter = windowHeight / 2;
+            const offsetFromTop = viewportCenter - containerTop;
 
-            // Hitung progress scroll (nilai dari 0 hingga 1)
-            // Perubahan di sini untuk membuat arah scroll dari atas ke bawah
-            let progress = (scrollStart - containerTop) / (scrollEnd - containerTop);
-            progress = Math.max(0, Math.min(1, progress)); // Pastikan nilai tetap antara 0 dan 1
+            // Bagi dengan jarak lebih panjang untuk memperlambat perpindahan antar item
+            const travelDistance = containerHeight * 2;
+            const progress = Math.max(0, Math.min(1, offsetFromTop / travelDistance));
 
-            // Tentukan index item yang aktif berdasarkan progress
-            const newIndex = Math.round(progress * (listItems.length - 1));
+            const targetIndex = Math.floor(progress * listItems.length);
+            const clampedTarget = Math.max(0, Math.min(listItems.length - 1, targetIndex));
 
-            // Update state hanya jika index berubah
-            setActiveIndex(newIndex);
+            setActiveIndex((prev) => {
+                if (clampedTarget === prev) {
+                    return prev;
+                }
+
+                if (Math.abs(clampedTarget - prev) > 1) {
+                    return clampedTarget > prev ? prev + 1 : prev - 1;
+                }
+
+                return clampedTarget;
+            });
+
+            onProgress(progress);
         };
 
         // Intersection Observer untuk performa yang lebih baik
@@ -81,7 +90,7 @@ const ScrollActiveList = () => {
             }
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []); // Dependency array kosong berarti efek ini hanya berjalan sekali saat komponen dimuat
+    }, [onProgress]); // Dependency array kosong berarti efek ini hanya berjalan sekali saat komponen dimuat
 
     return (
         // Ref untuk container utama
@@ -92,8 +101,8 @@ const ScrollActiveList = () => {
                     <li
                         key={index}
                         // Class dinamis berdasarkan activeIndex
-                        // `transition-all duration-500 ease-out` untuk animasi yang halus
-                        className={`font-inter font-bold text-3xl transition-all duration-1000 ease-out ${
+                        // `transition-all` untuk animasi yang halus
+                        className={`font-inter font-bold text-3xl transition-all duration-2000 ease-out ${
                             index === activeIndex
                                 ? 'mx-2 text-[#FFED2E]' // Gaya untuk item aktif
                                 : 'text-[#FFED2E4F]' // Gaya untuk item non-aktif
