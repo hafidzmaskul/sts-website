@@ -117,9 +117,9 @@ export default function ServiceDetail({ service, otherServices = [] }) {
                 />
 
 
-                <main className="flex-1 container mx-auto px-10 md:px-10 text-center py-20" data-aos="fade-up">
+                <main className="flex-1 container mx-auto px-10 md:px-10 py-20" data-aos="fade-up">
                     <section className="mb-30">
-                        <h1 className="font-montserrat font-bold text-3xl md:text-5xl text-white mb-2">
+                        <h1 className="font-montserrat font-bold text-3xl text-center  md:text-5xl text-white mb-2">
                             {serviceName}
                         </h1>
 
