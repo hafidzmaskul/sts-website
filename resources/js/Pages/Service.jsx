@@ -4,7 +4,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ServiceCard from '../components/ServiceCard';
-import { getMaxWords } from '../helpers/text';
+import { getMaxCharacters } from '../helpers/text';
 
 export default function Service({ services = [] }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -109,7 +109,7 @@ export default function Service({ services = [] }) {
                                 key={service.id ?? index}
                                 index={index + 1}
                                 title={service.name}
-                                desc={getMaxWords(service.content, 50)}
+                                shortDescription={getMaxCharacters(service.short_description ?? service.content, 100)}
                                 image={service.image_url}
                                 isLoading={isLoading}
                             />
