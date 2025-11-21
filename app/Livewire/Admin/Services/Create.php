@@ -15,6 +15,7 @@ class Create extends Component
     use WithFileUploads;
 
     public $name;
+    public $short_description;
     public $content;
     public $status = false;
     public $sequence = 0;
@@ -24,6 +25,7 @@ class Create extends Component
     {
         return [
             'name' => 'required|string|max:255',
+            'short_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'status' => 'boolean',
             'sequence' => 'integer',
@@ -53,6 +55,7 @@ class Create extends Component
         $data = [
             'name' => $this->name,
             'slug' => $slug,
+            'short_description' => $this->short_description,
             'content' => $this->content,
             'status' => $this->status,
             'sequence' => $this->sequence,

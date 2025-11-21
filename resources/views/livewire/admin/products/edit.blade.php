@@ -25,6 +25,7 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
+                            <!-- Manual Editor implementation to avoid component errors -->
                             <input id="overview_input" type="hidden" wire:model.live="content" value="{{ $content ?? '' }}">
                             <div wire:ignore>
                                 <div id="overview_editor" class="min-h-[260px] rounded-lg border border-input bg-background"></div>
@@ -48,16 +49,30 @@
                             @error('price') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- UPDATED STATUS FIELD (Radio Buttons) -->
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Status</label>
-                                <label class="flex items-center gap-2 rounded-lg border p-3 dark:bg-zinc-800 dark:border-zinc-700">
-                                <input
-                                    type="checkbox"
-                                    wire:model="status"
-                                    class="dark:accent-zinc-700"
-                                />
-                                <span class="text-sm dark:text-zinc-100">{{ $status ? 'Published' : 'Draft' }}</span>
-                            </label>
+                            <label class="block text-sm font-medium mb-2 dark:text-zinc-100">Status</label>
+                            <div class="flex items-center gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input 
+                                        type="radio" 
+                                        wire:model="status" 
+                                        value="0" 
+                                        class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
+                                    >
+                                    <span class="text-sm dark:text-zinc-300">Draft</span>
+                                </label>
+
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input 
+                                        type="radio" 
+                                        wire:model="status" 
+                                        value="1" 
+                                        class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
+                                    >
+                                    <span class="text-sm dark:text-zinc-300">Published</span>
+                                </label>
+                            </div>
                             @error('status') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                         </div>
 
@@ -116,7 +131,7 @@
                                 <img src="{{ $attachment->temporaryUrl() }}" class="mt-2 h-20 w-auto rounded-lg object-cover">
                             @else
                                 <div class="mt-2 flex items-center gap-2 p-3 rounded-lg border dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
-                                    <span class="text-sm dark:text-zinc-200">New File: {{ $attachment->getClientOriginalName() }}</span>
+                                    <span class="text-sm dark:text-zinc-200">{{ $attachment->getClientOriginalName() }}</span>
                                     <span class="text-xs text-zinc-500 uppercase">({{ $attachment->extension() }})</span>
                                 </div>
                             @endif

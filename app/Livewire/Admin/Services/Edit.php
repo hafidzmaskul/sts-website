@@ -17,6 +17,7 @@ class Edit extends Component
     public Service $service;
 
     public $name;
+    public $short_description;
     public $content;
     public $status;
     public $sequence;
@@ -27,6 +28,7 @@ class Edit extends Component
     {
         return [
             'name' => 'required|string|max:255',
+            'short_description' => 'nullable|string|max:500',
             'content' => 'required|string',
             'status' => 'boolean',
             'sequence' => 'integer',
@@ -38,6 +40,7 @@ class Edit extends Component
     {
         $this->service = $service;
         $this->name = $service->name;
+        $this->short_description = $service->short_description;
         $this->content = $service->content;
         $this->status = $service->status;
         $this->sequence = $service->sequence;
@@ -69,6 +72,7 @@ class Edit extends Component
         $data = [
             'name' => $this->name,
             'slug' => $slug,
+            'short_description' => $this->short_description,
             'content' => $this->content,
             'status' => $this->status,
             'sequence' => $this->sequence,

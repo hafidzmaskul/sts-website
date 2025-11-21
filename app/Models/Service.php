@@ -23,6 +23,7 @@ class Service extends Model
         'status',
         'sequence',
         'user_id',
+        'short_description'
     ];
 
     protected $casts = [

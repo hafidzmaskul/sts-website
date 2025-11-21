@@ -11,6 +11,7 @@
         <div class="w-full rounded-2xl bg-white p-6 dark:bg-zinc-900 border dark:border-zinc-700">
             <form wire:submit.prevent="save" class="space-y-5">
                 
+                <!-- Name -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Name</label>
                     <input
@@ -21,6 +22,19 @@
                     @error('name') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
 
+                <!-- Short Description -->
+                <div>
+                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Short Description</label>
+                    <textarea
+                        wire:model="short_description"
+                        rows="3"
+                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                        placeholder="Brief summary of the service..."
+                    ></textarea>
+                    @error('short_description') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- Content (Rich Editor) -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
                     <input id="overview_input" type="hidden" wire:model.live="content" value="{{ $content ?? '' }}">
@@ -31,6 +45,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Sequence -->
                     <div>
                         <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Sequence</label>
                         <input
@@ -41,20 +56,35 @@
                         @error('sequence') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     
+                    <!-- Status (Radio Buttons) -->
                     <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Status</label>
-                            <label class="flex items-center gap-2 rounded-lg border p-3 dark:bg-zinc-800 dark:border-zinc-700">
-                            <input
-                                type="checkbox"
-                                wire:model="status"
-                                class="dark:accent-zinc-700"
-                            />
-                            <span class="text-sm dark:text-zinc-100">{{ $status ? 'Published' : 'Draft' }}</span>
-                        </label>
+                        <label class="block text-sm font-medium mb-2 dark:text-zinc-100">Status</label>
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="radio" 
+                                    wire:model="status" 
+                                    value="0" 
+                                    class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
+                                >
+                                <span class="text-sm dark:text-zinc-300">Draft</span>
+                            </label>
+
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="radio" 
+                                    wire:model="status" 
+                                    value="1" 
+                                    class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
+                                >
+                                <span class="text-sm dark:text-zinc-300">Published</span>
+                            </label>
+                        </div>
                         @error('status') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
+                <!-- Image Upload -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Image</label>
                     <input
@@ -64,7 +94,7 @@
                     >
                     <div wire:loading wire:target="image" class="mt-2 text-sm dark:text-zinc-100">Uploading...</div>
 
-                    @if ($image)
+                    @if ($image && $image->isPreviewable())
                         <p class="mt-4 text-sm font-medium dark:text-zinc-100">New Image Preview:</p>
                         <img src="{{ $image->temporaryUrl() }}" class="mt-2 w-full max-w-sm rounded-lg object-cover">
                     @endif
@@ -72,7 +102,7 @@
                     @error('image') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
 
-
+                <!-- Buttons -->
                 <div class="flex items-center justify-end gap-2 border-t dark:border-zinc-700 pt-5">
                     <a
                         href="{{ route('admin.services.index') }}"
