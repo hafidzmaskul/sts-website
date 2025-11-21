@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function ServiceCard({
-    desc,
+    shortDescription,
     title,
     index,
     isLoading,
@@ -57,8 +57,8 @@ export default function ServiceCard({
                         <h2 className="text-lg text-center md:text-3xl font-inter text-black font-bold mb-2">
                             {title}
                         </h2>
-                        <p className="text-black text-xs md:text-sm text-center mb-6 flex-1">
-                           {desc}
+                        <p className="text-black text-xs md:text-sm text-center mb-6 flex-1 line-clamp-3">
+                           {shortDescription}
                         </p>
                         <div className="flex justify-center">
                             <a

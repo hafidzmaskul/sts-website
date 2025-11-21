@@ -5,6 +5,7 @@ import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ProductCard from '../components/ProductCard';
 import ExploreButton from '../components/ExploreButton';
+import { getMaxCharacters } from '../helpers/text';
 
 export default function ProductDetail({ product, products = [] }) {
     const data = product;
@@ -116,9 +117,10 @@ export default function ProductDetail({ product, products = [] }) {
                 <section className='py-20' data-aos="fade-up">
 
                     <H1 text={'ABOUT THIS BOOK'} color='white' />
-                    <p className='font-normal font-roboto text-sm md:font-base text-white text-center'>
-                        {data.content}
-                    </p>
+                    <article
+                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white text-center prose prose-invert max-w-none'
+                        dangerouslySetInnerHTML={{ __html: data.content }}
+                    />
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
 
                         <div
@@ -204,7 +206,7 @@ export default function ProductDetail({ product, products = [] }) {
                                 index={index + 1}
                                 slug={relatedProduct.slug}
                                 name={relatedProduct.name}
-                                content={relatedProduct.content}
+                                shortDescription={getMaxCharacters(relatedProduct.short_description ?? relatedProduct.content, 100)}
                                 image={relatedProduct.image_url}
                                 isLoading={false}
                             />
