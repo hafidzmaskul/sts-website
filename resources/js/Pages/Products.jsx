@@ -82,7 +82,7 @@ export default function Products({ products = [] }) {
                                 <ProductCard
                                     index={index + 1}
                                     slug={product.slug}
-                                    name={product.name}
+                                    name={getMaxCharacters(product.name,20)}
                                     shortDescription={getMaxCharacters(product.short_description ?? product.content, 100)}
                                     image={product.image_url}
                                     isLoading={false}

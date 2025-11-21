@@ -5,7 +5,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ExploreButton from '../components/ExploreButton';
-import { getMaxWords } from '../helpers/text';
+import { getMaxCharacters, getMaxWords } from '../helpers/text';
 
 export default function NewsDetail({ news, otherNews }) {
     const data = news;
@@ -152,15 +152,16 @@ export default function NewsDetail({ news, otherNews }) {
                                                 </span>
                                             </div>
                                             <h3 className="text-lg md:text-2xl font-inter text-white font-bold mb-5 uppercase">
-                                                {getMaxWords(article.title, 20)}
+                                                {getMaxWords(article.title, 10)}
                                             </h3>
                                             <p className="text-sm font-regular md:text-sm font-montserrat text-white mb-4 uppercase tracking-tight">
-                                                {article.excerpt || (article.content ? article.content.substring(0, 120) + '...' : '')}
+                                                {getMaxCharacters(article.content, 50)}
                                             </p>
-                                            <div className="flex w-full justify-center">
+                                            <div className="flex w-full justify-center mt-auto">
                                                 <a
                                                     href={`/news/${article.slug || ''}`}
                                                     className="bg-white text-black w-full px-6 py-1 rounded-full font-semibold shadow hover:bg-gray-200 transition inline-flex items-center justify-center"
+                                                    style={{ position: 'sticky', bottom: 0 }}
                                                 >
                                                     Read More
                                                 </a>
