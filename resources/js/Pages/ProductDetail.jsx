@@ -76,6 +76,7 @@ export default function ProductDetail({ product, products = [] }) {
                 </div>
                 {/* Right: Price and Button */}
                 <div className="flex-1 flex flex-col items-start md:items-start justify-center mt-8 md:mt-0 md:ml-16">
+                    <H1 text={data.name} color='white' className='text-start mb-10' />
                     <div className="text-3xl md:text-5xl font-bold text-white mb-4">
                         £{Number(data.price).toFixed(2)}
                     </div>
