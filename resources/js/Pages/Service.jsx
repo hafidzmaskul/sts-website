@@ -9,7 +9,7 @@ import { getMaxCharacters } from '../helpers/text';
 export default function Service({ services = [] }) {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-
+    console.log.og(services)
     useEffect(() => {
         setIsLoading(true);
 
@@ -108,7 +108,8 @@ export default function Service({ services = [] }) {
                                 slug={service.slug ?? index}
                                 key={service.id ?? index}
                                 index={index + 1}
-                                title={service.name}
+                                title={getMaxCharacters(service.name,20)}
+
                                 shortDescription={getMaxCharacters(service.short_description ?? service.content, 100)}
                                 image={service.image_url}
                                 isLoading={isLoading}

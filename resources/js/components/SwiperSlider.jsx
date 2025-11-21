@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { getMaxCharacters } from '../helpers/text';
 
 const SwiperSlider = ({
     news = [],
@@ -7,7 +8,7 @@ const SwiperSlider = ({
 }) => {
     const swiperContainerRef = useRef(null);
     const swiperDirectionRef = useRef(1);
-
+    console.log(news)
     useEffect(() => {
         let swiperInstance = null;
         let styleEl = null;
@@ -103,7 +104,7 @@ const SwiperSlider = ({
                     .snapper {
                         width: 100%;
                         height: 100%;
-                        background-size: cover;
+                        background-size: contain;
                         background-position: center;
                         border-radius: inherit;
                     }
@@ -141,7 +142,7 @@ const SwiperSlider = ({
                         display: inline-flex;
                         align-items: center;
                         justify-content: center;
-                        padding: 0.6rem 1.4rem;
+                        padding: 0.3rem 1.2rem;
                         border-radius: 9999px;
                         border: none;
                         cursor: pointer;
@@ -271,8 +272,7 @@ const SwiperSlider = ({
                     {news.map((item, idx) => {
                         const image =
                             item.image_url ?? 'https://placehold.co/600x400?text=No+Image';
-                        const description =
-                            item.meta_description ?? item.content ?? '';
+                        const description =  item.content ?? '';
 
                         return (
                             <div className="swiper-slide" key={idx}>
@@ -282,11 +282,9 @@ const SwiperSlider = ({
                                     style={{ backgroundImage: `url('${image}')` }}
                                 />
                                 <div className="slide-overlay">
-                                    <div className="slide-overlay-title">
-                                        {item.title}
-                                    </div>
+
                                     <div className="slide-overlay-text">
-                                        {description}
+                                        {getMaxCharacters(description, 100)}
                                     </div>
                                     <a
                                         href={`/news/${item.slug ?? ''}`}
