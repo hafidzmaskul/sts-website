@@ -105,7 +105,7 @@ const SwiperSlider = ({
                         width: 100%;
                         height: 100%;
                         background-size: cover;
-                        background-position: center center;
+                        background-position: center;
                         border-radius: inherit;
 
                     }
@@ -206,6 +206,7 @@ const SwiperSlider = ({
                         position: absolute;
                         width: 500%;
                         height: 500%;
+                        background-color: #302F2F;
                         border-radius: 50%;
                         left: 50%;
                         transform: translateX(-50%);
@@ -222,7 +223,7 @@ const SwiperSlider = ({
                         text-align: center;
                     }
                     .slider-text-overlay.top::before {
-                        // top: -470%;
+                        top: -470%;
                     }
                     .slider-text-overlay.bottom {
                         justify-content: flex-end;
