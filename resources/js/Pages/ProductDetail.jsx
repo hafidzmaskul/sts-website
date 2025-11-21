@@ -118,7 +118,7 @@ export default function ProductDetail({ product, products = [] }) {
 
                     <H1 text={'ABOUT THIS BOOK'} color='white' />
                     <article
-                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white text-center prose prose-invert max-w-none'
+                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white  prose prose-invert max-w-none'
                         dangerouslySetInnerHTML={{ __html: data.content }}
                     />
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">

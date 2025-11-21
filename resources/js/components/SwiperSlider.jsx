@@ -258,16 +258,16 @@ const SwiperSlider = ({
             {/* Text overlay di atas slider */}
             <div className="slider-text-overlay text-white top ">
                 <div className="slider-text-overlay-inner">
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                     <span className="slider-text-main">{topText}</span>
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                 </div>
             </div>
             <div className="slider-text-overlay bottom text-white">
                 <div className="slider-text-overlay-inner">
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                     <span className="slider-text-main">{bottomText}</span>
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                 </div>
             </div>
 
