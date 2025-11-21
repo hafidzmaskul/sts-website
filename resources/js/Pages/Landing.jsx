@@ -8,7 +8,7 @@ import SwiperSlider from '../components/SwiperSlider';
 // PERUBAHAN: Impor komponen ScrollActiveList yang baru
 import ScrollActiveList from '../components/ScrollActiveList';
 import ExploreButton from '../components/ExploreButton';
-import { getMaxWords } from '../helpers/text';
+import { getMaxCharacters, getMaxWords } from '../helpers/text';
 
 export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -46,7 +46,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     ];
     const carouselItems = services.map((service) => ({
         title: service.name,
-        text: service.content ?? '',
+        text: getMaxCharacters(service.short_description ?? service.content ?? '', 50),
         image: service.image_url,
         buttonText: 'Next',
         slug: service.slug,

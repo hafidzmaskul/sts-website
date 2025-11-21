@@ -4,6 +4,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ExploreButton from '../components/ExploreButton';
+import { getMaxCharacters } from '../helpers/text';
 
 import ServiceCard from '../components/ServiceCard';
 
@@ -84,7 +85,7 @@ export default function ServiceDetail({ service, otherServices = [] }) {
                                     maxHeight: '400px',
                                     height: '100%',
                                     width: '100%',
-                                    objectFit: 'cover',
+                                    objectFit: 'contain',
                                     borderRadius: 'inherit',
                                 }}
                             />
@@ -123,9 +124,10 @@ export default function ServiceDetail({ service, otherServices = [] }) {
                         </h1>
 
 
-                        <p className="font-roboto font-normal md:text-xs text-base text-white">
-                            {serviceContent}
-                        </p>
+                        <article
+                            className="font-roboto font-normal md:text-xs text-base mt-20 text-white prose prose-invert max-w-none"
+                            dangerouslySetInnerHTML={{ __html: serviceContent }}
+                        />
                     </section>
 
                     <section id="otherService" className="mt-16">
@@ -163,7 +165,7 @@ export default function ServiceDetail({ service, otherServices = [] }) {
                                     <ServiceCard
                                         key={serviceItem.id ?? index}
                                         title={serviceItem.name}
-                                        desc={serviceItem.content}
+                                        shortDescription={getMaxCharacters(serviceItem.short_description ?? serviceItem.content, 100)}
                                         image={serviceItem.image_url}
                                         isLoading={isLoading}
                                     />

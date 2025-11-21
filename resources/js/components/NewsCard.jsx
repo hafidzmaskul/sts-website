@@ -5,7 +5,7 @@ export default function NewsCard({
     isLoading,
     slug,
     title,
-    content,
+    shortDescription,
     image,
 }) {
     return (
@@ -58,7 +58,7 @@ export default function NewsCard({
                             {title}
                         </h2>
                         <p className="text-white text-xs md:text-sm mb-6 flex-1">
-                           {content}
+                           {shortDescription}
                         </p>
                         <div className="flex w-full justify-center">
                             <a
@@ -74,4 +74,3 @@ export default function NewsCard({
         </div>
     );
 }
-

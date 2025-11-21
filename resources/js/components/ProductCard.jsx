@@ -5,7 +5,7 @@ export default function ProductCard({
     slug,
     isLoading,
     name,
-    content,
+    shortDescription,
     image,
 }) {
   return (
@@ -56,8 +56,8 @@ export default function ProductCard({
             <h2 className="text-lg md:text-xl text-black font-semibold mb-2">
                {name}
             </h2>
-            <p className="text-black text-sm mb-6 flex-1">
-              {content}
+            <p className="text-black text-sm mb-6 flex-1 line-clamp-3">
+              {shortDescription}
             </p>
             <div className="flex justify-center">
               <a

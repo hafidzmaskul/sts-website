@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import H1 from '../components/H1';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
+import { getMaxCharacters } from '../helpers/text';
 
 export default function Products({ products = [] }) {
     const itemsPerPage = 6;
@@ -82,7 +83,7 @@ export default function Products({ products = [] }) {
                                     index={index + 1}
                                     slug={product.slug}
                                     name={product.name}
-                                    content={product.content}
+                                    shortDescription={getMaxCharacters(product.short_description ?? product.content, 100)}
                                     image={product.image_url}
                                     isLoading={false}
                                 />
