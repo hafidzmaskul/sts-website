@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
@@ -12,6 +12,14 @@ import { getMaxWords } from '../helpers/text';
 
 export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const carouselRef = useRef(null);
+    const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+    const carouselDirectionRef = useRef(1);
+    const testimonialsRef = useRef(null);
+    const testimonialsDirectionRef = useRef(1);
+    const testimonialsDraggingRef = useRef(false);
+    const testimonialsStartXRef = useRef(0);
+    const testimonialsScrollLeftRef = useRef(0);
 
     const slides = [
         {
@@ -80,6 +88,104 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
         if (isRightSwipe) {
             setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
         }
+    };
+
+    useEffect(() => {
+        if (carouselItems.length > 1) {
+            setActiveServiceIndex(1);
+            carouselRef.current?.scrollTo?.(1);
+        }
+    }, [carouselItems.length]);
+
+    useEffect(() => {
+        if (carouselItems.length === 0) {
+            return undefined;
+        }
+
+        const autoRotate = setInterval(() => {
+            setActiveServiceIndex((prev) => {
+                if (carouselItems.length === 0) {
+                    return prev;
+                }
+
+                let nextIndex = prev + carouselDirectionRef.current;
+
+                if (nextIndex >= carouselItems.length) {
+                    carouselDirectionRef.current = -1;
+                    nextIndex = prev - 1 >= 0 ? prev - 1 : carouselItems.length - 2;
+                } else if (nextIndex < 0) {
+                    carouselDirectionRef.current = 1;
+                    nextIndex = prev + 1 < carouselItems.length ? prev + 1 : 0;
+                }
+
+                carouselRef.current?.scrollTo?.(nextIndex);
+
+                return nextIndex;
+            });
+        }, 5000);
+
+        return () => clearInterval(autoRotate);
+    }, [carouselItems.length]);
+
+    useEffect(() => {
+        const container = testimonialsRef.current;
+        if (!container) {
+            return undefined;
+        }
+
+        const tick = () => {
+            if (!container) {
+                return;
+            }
+            const maxScroll = container.scrollWidth - container.clientWidth;
+            if (maxScroll <= 0) {
+                return;
+            }
+
+            const step = 1.5;
+            const direction = testimonialsDirectionRef.current;
+
+            container.scrollLeft += direction * step;
+
+            if (container.scrollLeft >= maxScroll) {
+                testimonialsDirectionRef.current = -1;
+            } else if (container.scrollLeft <= 0) {
+                testimonialsDirectionRef.current = 1;
+            }
+        };
+
+        const interval = setInterval(tick, 20);
+
+        return () => clearInterval(interval);
+    }, [testimonials.length]);
+
+    const handleTestimonialsMouseDown = (event) => {
+        const container = testimonialsRef.current;
+        if (!container) {
+            return;
+        }
+
+        testimonialsDraggingRef.current = true;
+        testimonialsStartXRef.current = event.pageX - container.offsetLeft;
+        testimonialsScrollLeftRef.current = container.scrollLeft;
+
+        const handleMouseMove = (e) => {
+            if (!testimonialsDraggingRef.current) {
+                return;
+            }
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - testimonialsStartXRef.current) * 1.25;
+            container.scrollLeft = testimonialsScrollLeftRef.current - walk;
+        };
+
+        const handleMouseUp = () => {
+            testimonialsDraggingRef.current = false;
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
     };
 
     return (
@@ -207,15 +313,15 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                 <main className="flex-1">
 
                     <img
-                                src="/assets/gradient-landing.svg"
-                                alt=""
-                                className="pointer-events-none select-none absolute -z-10   right-0 w-1/4 max-w-lg opacity-60"
-                                style={{
-                                    // Example: appear only in top right, not covering full area
-                                    objectFit: "contain",
-                                }}
-                                aria-hidden="true"
-                            />
+                        src="/assets/gradient-landing.svg"
+                        alt=""
+                        className="pointer-events-none select-none absolute -z-10   right-0 w-1/4 max-w-lg opacity-60"
+                        style={{
+                            // Example: appear only in top right, not covering full area
+                            objectFit: "contain",
+                        }}
+                        aria-hidden="true"
+                    />
                     <h2 className='font-montserrat font-bold py-10 text-white text-center text-3xl capitlize leading-none' data-aos="fade-up"> Some Fact About Absolutely Human Resources </h2>
                     <div className="container mx-auto px-4 sm:px-6 lg:px-10">
 
@@ -300,9 +406,12 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                     </div>
                     {/* Circular Carousel Section - desktop */}
                     <div className="relative w-full h-[600px] justify-center items-center overflow-hidden hidden lg:flex" data-aos="fade-up">
-                        <CircularCarousel>
+                        <CircularCarousel ref={carouselRef} onSelect={setActiveServiceIndex}>
                             {carouselItems.map((item, index) => (
-                                <div key={index} className="carousel-card">
+                                <div
+                                    key={index}
+                                    className={`carousel-card ${activeServiceIndex === index ? 'active' : ''}`}
+                                >
                                     <div
                                         className="carousel-card-image"
                                         style={{
@@ -377,16 +486,16 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                         </div>
                     </div>
                     <img
-                                src="/assets/gradient-landing3.svg"
-                                alt=""
-                                className="pointer-events-none select-none absolute -z-10  left-0 w-1/4 max-w-lg opacity-60"
-                                style={{
-                                    // Example: appear only in top right, not covering full area
-                                    objectFit: "contain",
-                                }}
-                                aria-hidden="true"
-                            />
-                    <div className="container mx-auto px-10 md:px-20" data-aos="fade-up">
+                        src="/assets/gradient-landing3.svg"
+                        alt=""
+                        className="pointer-events-none select-none absolute -z-10  left-0 w-1/4 max-w-lg opacity-60"
+                        style={{
+                            // Example: appear only in top right, not covering full area
+                            objectFit: "contain",
+                        }}
+                        aria-hidden="true"
+                    />
+                    <div className="container mx-auto px-10 md:px-20 py-20 mt-20" data-aos="fade-up">
 
                         <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                             {/* Kiri: Text */}
@@ -399,12 +508,17 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                         </div>
                     </div>
 
-                    <div className="">
+                    <div className="py-20">
                         <div className="" data-aos="fade-up">
 
                             <H1 text="TESTIMONIALS" color="white" className="text-center uppercase mb-10" />
                         </div>
-                        <div className="w-full overflow-x-auto py-20" data-aos="fade-up">
+                        <div
+                            className="w-full overflow-hidden py-20 cursor-grab active:cursor-grabbing"
+                            data-aos="fade-up"
+                            ref={testimonialsRef}
+                            onMouseDown={handleTestimonialsMouseDown}
+                        >
                             <div className="flex gap-12 ">
                                 {testimonials.map((testimonial, idx) => (
                                     <div
@@ -444,15 +558,15 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
 
                     {/* Swiper slider: desktop only */}
                     <img
-                                src="/assets/gradient-landing-4.svg"
-                                alt=""
-                                className="pointer-events-none select-none  hidden md:block absolute bottom-150 z-10 mb-30 right-30 w-2/6 max-w-2xl "
-                                style={{
-                                    // Example: appear only in top right, not covering full area
-                                    objectFit: "contain",
-                                }}
-                                aria-hidden="true"
-                            />
+                        src="/assets/gradient-landing-4.svg"
+                        alt=""
+                        className="pointer-events-none select-none  hidden md:block absolute bottom-150 z-10 mb-30 right-30 w-2/6 max-w-2xl "
+                        style={{
+                            // Example: appear only in top right, not covering full area
+                            objectFit: "contain",
+                        }}
+                        aria-hidden="true"
+                    />
                     <div data-aos="fade-up" className="hidden lg:block">
                         <SwiperSlider news={news} />
                     </div>
@@ -491,6 +605,13 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             </div>
                         </div>
                     </div>
+                    <div className="flex justify-center py-3 mb-5">
+
+                        <ExploreButton href="/news">
+                            EXPLORE ALL NEWS
+                        </ExploreButton>
+                    </div>
+
                 </main>
                 <Footer />
             </div>
