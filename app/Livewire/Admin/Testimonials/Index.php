@@ -26,8 +26,8 @@ class Index extends Component
     public $description;
     public $status = false;
     public $sequence = 0;
-    public $image; // For new file upload
-    public $existingImage; // To display the current image
+    public $image; 
+    public $existingImage; 
 
     public function rules()
     {
@@ -37,7 +37,7 @@ class Index extends Component
             'description' => 'required|string',
             'status' => 'boolean',
             'sequence' => 'integer',
-            'image' => 'nullable|image|max:2048', // Allow null for edits, validate if present
+            'image' => 'nullable|image|max:2048',
         ];
     }
 
@@ -63,10 +63,13 @@ class Index extends Component
         $this->name = $testimonial->name;
         $this->job_title = $testimonial->job_title;
         $this->description = $testimonial->description;
-        $this->status = $testimonial->status;
+        
+        // FIX: Cast to integer to match dropdown values (0 or 1)
+        $this->status = (int) $testimonial->status;
+        
         $this->sequence = $testimonial->sequence;
         $this->existingImage = $testimonial->image;
-        $this->image = null; // Clear any previous file upload
+        $this->image = null; 
         $this->showForm = true;
     }
 
@@ -82,12 +85,9 @@ class Index extends Component
             'sequence' => $this->sequence,
         ];
 
-        // Handle file upload
         if ($this->image) {
-            // Store new image
             $data['image'] = $this->image->store('testimonials', 'public');
 
-            // If editing, delete old image
             if ($this->editingId && $this->existingImage) {
                 if (Storage::disk('public')->exists($this->existingImage)) {
                     Storage::disk('public')->delete($this->existingImage);
@@ -96,7 +96,6 @@ class Index extends Component
         }
 
         if ($this->editingId) {
-            // Update
             if (Gate::denies('testimonials.edit')) {
                 $this->dispatch('alert', type: 'error', message: 'You do not have permission to edit testimonials.');
                 return;
@@ -104,7 +103,6 @@ class Index extends Component
             Testimonial::findOrFail($this->editingId)->update($data);
             $this->dispatch('alert', type: 'success', message: 'Testimonial updated successfully.');
         } else {
-            // Create
             if (Gate::denies('testimonials.create')) {
                 $this->dispatch('alert', type: 'error', message: 'You do not have permission to create testimonials.');
                 return;
@@ -125,7 +123,6 @@ class Index extends Component
 
         $testimonial = Testimonial::findOrFail($id);
 
-        // Delete image from storage
         if ($testimonial->image) {
             if (Storage::disk('public')->exists($testimonial->image)) {
                 Storage::disk('public')->delete($testimonial->image);
@@ -148,7 +145,7 @@ class Index extends Component
         $this->name = '';
         $this->job_title = '';
         $this->description = '';
-        $this->status = false;
+        $this->status = 0; // Default to Draft (0)
         $this->sequence = 0;
         $this->image = null;
         $this->existingImage = null;

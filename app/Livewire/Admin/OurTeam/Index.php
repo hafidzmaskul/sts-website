@@ -27,10 +27,10 @@ class Index extends Component
     public $phone;
     public $linkedin;
     public $description;
-    public $status = false;
+    public $status; // Changed default to null or handle in mount/reset
     public $sequence = 0;
-    public $image; // For new file upload
-    public $existingImage; // To display the current image
+    public $image; 
+    public $existingImage; 
 
     public function rules()
     {
@@ -43,7 +43,7 @@ class Index extends Component
             'description' => 'nullable|string',
             'status' => 'boolean',
             'sequence' => 'integer',
-            'image' => 'nullable|image|max:2048', // 2MB Max
+            'image' => 'nullable|image|max:2048',
         ];
     }
 
@@ -72,10 +72,14 @@ class Index extends Component
         $this->phone = $member->phone;
         $this->linkedin = $member->linkedin;
         $this->description = $member->description;
-        $this->status = $member->status;
+        
+        // FIX: Cast to integer (1 or 0) to match the dropdown values
+        // This ensures "Visible" or "Hidden" is auto-selected
+        $this->status = (int) $member->status;
+        
         $this->sequence = $member->sequence;
         $this->existingImage = $member->image;
-        $this->image = null; // Clear any previous file upload
+        $this->image = null; 
         $this->showForm = true;
     }
 
@@ -92,15 +96,12 @@ class Index extends Component
             'description' => $this->description,
             'status' => $this->status,
             'sequence' => $this->sequence,
-            'user_id' => auth()->id(), // Set the author
+            'user_id' => auth()->id(),
         ];
 
-        // Handle file upload
         if ($this->image) {
-            // Store new image
             $data['image'] = $this->image->store('team', 'public');
 
-            // If editing, delete old image
             if ($this->editingId && $this->existingImage) {
                 if (Storage::disk('public')->exists($this->existingImage)) {
                     Storage::disk('public')->delete($this->existingImage);
@@ -109,7 +110,6 @@ class Index extends Component
         }
 
         if ($this->editingId) {
-            // Update
             if (Gate::denies('our-team.edit')) {
                 $this->dispatch('alert', type: 'error', message: 'You do not have permission to edit team members.');
                 return;
@@ -117,7 +117,6 @@ class Index extends Component
             TeamMember::findOrFail($this->editingId)->update($data);
             $this->dispatch('alert', type: 'success', message: 'Team member updated successfully.');
         } else {
-            // Create
             if (Gate::denies('our-team.create')) {
                 $this->dispatch('alert', type: 'error', message: 'You do not have permission to create team members.');
                 return;
@@ -138,7 +137,6 @@ class Index extends Component
 
         $member = TeamMember::findOrFail($id);
 
-        // Delete image from storage
         if ($member->image) {
             if (Storage::disk('public')->exists($member->image)) {
                 Storage::disk('public')->delete($member->image);
@@ -164,7 +162,7 @@ class Index extends Component
         $this->phone = '';
         $this->linkedin = '';
         $this->description = '';
-        $this->status = false;
+        $this->status = 0; // Default to Hidden
         $this->sequence = 0;
         $this->image = null;
         $this->existingImage = null;

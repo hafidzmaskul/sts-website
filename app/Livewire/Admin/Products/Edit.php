@@ -50,7 +50,10 @@ class Edit extends Component
         $this->name = $product->name;
         $this->content = $product->content;
         $this->price = $product->price;
-        $this->status = $product->status;
+        
+        // FIX: Cast boolean to integer (1 or 0) to match dropdown values
+        $this->status = (int) $product->status;
+        
         $this->existingImage = $product->image;
         $this->existingAttachment = $product->attachment;
         $this->selectedServices = $product->services->pluck('id')->toArray();

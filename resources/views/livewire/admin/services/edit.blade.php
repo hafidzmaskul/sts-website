@@ -11,6 +11,7 @@
         <div class="w-full rounded-2xl bg-white p-6 dark:bg-zinc-900 border dark:border-zinc-700">
             <form wire:submit.prevent="save" class="space-y-5">
                 
+                <!-- Name -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Name</label>
                     <input
@@ -33,6 +34,7 @@
                     @error('short_description') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
 
+                <!-- Content (Rich Editor) -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
                     <!-- Manual Editor implementation to avoid component errors -->
@@ -44,6 +46,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Sequence -->
                     <div>
                         <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Sequence</label>
                         <input
@@ -54,34 +57,18 @@
                         @error('sequence') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                     
-                    <!-- STATUS: Radio Buttons -->
+                    <!-- Status (Dropdown) -->
                     <div>
-                        <label class="block text-sm font-medium mb-2 dark:text-zinc-100">Status</label>
-                        <div class="flex items-center gap-4">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input 
-                                    type="radio" 
-                                    wire:model="status" 
-                                    value="0" 
-                                    class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
-                                >
-                                <span class="text-sm dark:text-zinc-300">Draft</span>
-                            </label>
-
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input 
-                                    type="radio" 
-                                    wire:model="status" 
-                                    value="1" 
-                                    class="w-4 h-4 text-zinc-900 bg-gray-100 border-gray-300 focus:ring-zinc-900 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600"
-                                >
-                                <span class="text-sm dark:text-zinc-300">Published</span>
-                            </label>
-                        </div>
+                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Status</label>
+                        <select wire:model="status" class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                            <option value="0">Draft</option>
+                            <option value="1">Published</option>
+                        </select>
                         @error('status') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
+                <!-- Image Upload -->
                 <div>
                     <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Image</label>
                     <input
@@ -102,7 +89,7 @@
                     @error('image') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
 
-
+                <!-- Buttons -->
                 <div class="flex items-center justify-end gap-2 border-t dark:border-zinc-700 pt-5">
                     <a
                         href="{{ route('admin.services.index') }}"
