@@ -26,7 +26,7 @@ const SwiperSlider = ({
                         grabCursor: true,
                         slidesPerView: 5,
                         spaceBetween: 16,
-                        speed: 800,
+                        speed: 200000,
                         centeredSlides: true,
                         on: {
                             reachEnd() {
@@ -100,13 +100,16 @@ const SwiperSlider = ({
                         height: 100%;
                         border-radius: 32px;
                         overflow: hidden;
-                    }
+                        }
                     .snapper {
                         width: 100%;
-                        height: 100%;
+                        height: 50%;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         background-size: cover;
                         background-position: center;
-                        border-radius: inherit;
 
                     }
                     .slide-overlay {
