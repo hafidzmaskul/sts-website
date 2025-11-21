@@ -284,7 +284,7 @@ const SwiperSlider = ({
                                 <div className="slide-overlay">
 
                                     <div className="slide-overlay-text">
-                                        {getMaxCharacters(description, 100)}
+                                        {getMaxCharacters(item.title, 100)}
                                     </div>
                                     <a
                                         href={`/news/${item.slug ?? ''}`}
