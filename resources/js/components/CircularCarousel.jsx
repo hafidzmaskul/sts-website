@@ -6,9 +6,40 @@ export function lerp(start, stop, amt) {
 }
 
 const ANGLE_PER_ITEM = 100;
-const VISIBLE_ITEMS = 3;
-const BUFFER_ITEMS = 2;
 const CENTER_OFFSET = 0;
+const FULL_ROTATION = 360;
+const ACTIVE_ANGLE_THRESHOLD = 8;
+
+function normalizeAngle(angle) {
+  const normalized = angle % FULL_ROTATION;
+  return normalized < 0 ? normalized + FULL_ROTATION : normalized;
+}
+
+function distanceToTop(angle) {
+  const normalized = normalizeAngle(angle - CENTER_OFFSET);
+  return Math.min(normalized, FULL_ROTATION - normalized);
+}
+
+function findUprightIndex(currentDeg, itemCount) {
+  if (itemCount === 0) {
+    return 0;
+  }
+
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  for (let i = 0; i < itemCount; i += 1) {
+    const angle = (i * ANGLE_PER_ITEM) + currentDeg;
+    const distance = distanceToTop(angle);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = i;
+    }
+  }
+
+  return closestIndex;
+}
 
 function CircularCarouselComp(
   { onSelect, onSwapRight, onPointerDown, children },
@@ -22,13 +53,10 @@ function CircularCarouselComp(
   const rendering = useRef(false);
   const [deg, setDeg] = useState(CENTER_OFFSET);
   const [wrapper, setWrapper] = useState(null);
-  const autoSlideInterval = useRef(null);
 
   const handleSetWrapper = (ref) => {
     setWrapper(ref);
   };
-
-  prevRef.current = deg;
 
   function move() {
     if (len === 0) {
@@ -37,20 +65,19 @@ function CircularCarouselComp(
 
     const next = nextRef.current;
     const prev = prevRef.current;
-    const deg = lerp(prev, next, 0.15);
-    if (deg !== prev) {
-      setDeg(deg);
+    const currentDeg = lerp(prev, next, 0.15);
+    if (currentDeg !== prev) {
+      setDeg(currentDeg);
+      prevRef.current = currentDeg;
       requestAnimationFrame(move);
     } else {
       rendering.current = false;
     }
-    
-    const totalArc = ANGLE_PER_ITEM * len;
-    const normalized = ((-(deg - CENTER_OFFSET) % totalArc) + totalArc) % totalArc;
-    const index = Math.round(normalized / ANGLE_PER_ITEM) % len;
-    if (index !== indexRef.current) {
-      indexRef.current = index;
-      onSelect && onSelect(index);
+
+    const uprightIndex = findUprightIndex(currentDeg, len);
+    if (uprightIndex !== indexRef.current) {
+      indexRef.current = uprightIndex;
+      onSelect && onSelect(uprightIndex);
     }
   }
 
@@ -170,7 +197,9 @@ function CircularCarouselComp(
       childArray.forEach((child, i) => {
         const absoluteIndex = copy * len + i;
         const angle = absoluteIndex * ANGLE_PER_ITEM;
-        
+        const normalizedAngle = normalizeAngle(angle + deg);
+        const isActive = distanceToTop(normalizedAngle) <= ACTIVE_ANGLE_THRESHOLD;
+
         items.push(
           <div
             key={`${copy}-${i}`}
@@ -179,7 +208,9 @@ function CircularCarouselComp(
               transform: `translateX(-50%) rotate(${angle}deg)`,
             }}
           >
-            {child}
+            {React.cloneElement(child, {
+              className: `${child.props.className ?? ''}${isActive ? ' active' : ''}`.trim(),
+            })}
           </div>
         );
       });
