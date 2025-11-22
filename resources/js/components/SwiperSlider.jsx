@@ -7,12 +7,17 @@ const SwiperSlider = ({
     bottomText = 'LATEST NEWS',
 }) => {
     const swiperContainerRef = useRef(null);
-    const swiperDirectionRef = useRef(1);
-    console.log(news)
+    const slideCount = news.length;
+    const slidesPerView = 5;
+    const shouldLoop = slideCount >= 10;
+    const shouldAutoSlide = shouldLoop;
+    const allowTouchMove = slideCount > 1;
     useEffect(() => {
         let swiperInstance = null;
         let styleEl = null;
         let autoplayInterval = null;
+        const autoplayDelay = 5000;
+        const slideSpeed = 800;
 
         // Dynamically import Swiper JS & CSS
         if (typeof window !== 'undefined') {
@@ -22,49 +27,25 @@ const SwiperSlider = ({
 
                 if (swiperContainerRef.current) {
                     swiperInstance = new Swiper(swiperContainerRef.current, {
-                        loop: false,
+                        loop: shouldLoop,
                         grabCursor: true,
-                        slidesPerView: 5,
+                        slidesPerView,
                         spaceBetween: 16,
-                        speed: 200000,
+                        speed: slideSpeed,
                         centeredSlides: true,
-                        on: {
-                            reachEnd() {
-                                swiperDirectionRef.current = -1;
-                            },
-                            reachBeginning() {
-                                swiperDirectionRef.current = 1;
-                            },
-                        },
+                        centeredSlidesBounds: true,
+                        allowTouchMove,
                     });
 
-                    // Start with the third item centered so the left side isn't empty
-                    if (swiperInstance.slides.length > 3) {
-                        swiperInstance.slideTo(2, 0);
+                    if (shouldAutoSlide) {
+                        autoplayInterval = setInterval(() => {
+                            if (!swiperInstance || swiperInstance.animating) {
+                                return;
+                            }
+
+                            swiperInstance.slideNext();
+                        }, autoplayDelay);
                     }
-
-                    autoplayInterval = setInterval(() => {
-                        if (!swiperInstance) {
-                            return;
-                        }
-                        const direction = swiperDirectionRef.current;
-
-                        if (direction === 1) {
-                            if (swiperInstance.isEnd) {
-                                swiperDirectionRef.current = -1;
-                                swiperInstance.slidePrev();
-                            } else {
-                                swiperInstance.slideNext();
-                            }
-                        } else {
-                            if (swiperInstance.isBeginning) {
-                                swiperDirectionRef.current = 1;
-                                swiperInstance.slideNext();
-                            } else {
-                                swiperInstance.slidePrev();
-                            }
-                        }
-                    }, 5000);
                 }
             });
 
@@ -251,7 +232,7 @@ const SwiperSlider = ({
                 document.head.removeChild(styleEl);
             }
         };
-    }, []);
+    }, [allowTouchMove, shouldAutoSlide, shouldLoop, slideCount, slidesPerView]);
 
     return (
         <section className="slider">
@@ -276,7 +257,6 @@ const SwiperSlider = ({
                     {news.map((item, idx) => {
                         const image =
                             item.image_url ?? 'https://placehold.co/600x400?text=No+Image';
-                        const description =  item.content ?? '';
 
                         return (
                             <div className="swiper-slide" key={idx}>

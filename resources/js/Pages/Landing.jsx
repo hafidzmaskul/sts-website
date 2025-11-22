@@ -11,6 +11,7 @@ import ExploreButton from '../components/ExploreButton';
 import { getMaxCharacters, getMaxWords } from '../helpers/text';
 
 export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
+    console.log(services)
     const [currentSlide, setCurrentSlide] = useState(0);
     const carouselRef = useRef(null);
     const [activeServiceIndex, setActiveServiceIndex] = useState(0);
@@ -93,9 +94,9 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     };
 
     useEffect(() => {
-        if (carouselItems.length > 1) {
-            setActiveServiceIndex(1);
-            carouselRef.current?.scrollTo?.(1);
+        if (carouselItems.length > 0) {
+            setActiveServiceIndex(0);
+            carouselRef.current?.scrollTo?.(0);
         }
     }, [carouselItems.length]);
 
