@@ -11,10 +11,9 @@ import ExploreButton from '../components/ExploreButton';
 import { getMaxCharacters, getMaxWords } from '../helpers/text';
 
 export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
-    console.log(services)
     const [currentSlide, setCurrentSlide] = useState(0);
     const carouselRef = useRef(null);
-    const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+    const [, setActiveServiceIndex] = useState(0);
     const testimonialsRef = useRef(null);
     const testimonialsDraggingRef = useRef(false);
     const testimonialsStartXRef = useRef(0);
@@ -104,7 +103,6 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
         if (carouselItems.length === 0) {
             return undefined;
         }
-
         const autoRotate = setInterval(() => {
             setActiveServiceIndex((prev) => {
                 const itemCount = carouselItems.length;
@@ -403,7 +401,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             {carouselItems.map((item, index) => (
                                 <div
                                     key={index}
-                                    className={`carousel-card ${activeServiceIndex === index ? 'active' : ''}`}
+                                    className="carousel-card"
                                 >
                                     <div
                                         className="carousel-card-image"
