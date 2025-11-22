@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
@@ -14,12 +14,14 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     const [currentSlide, setCurrentSlide] = useState(0);
     const carouselRef = useRef(null);
     const [activeServiceIndex, setActiveServiceIndex] = useState(0);
-    const carouselDirectionRef = useRef(1);
     const testimonialsRef = useRef(null);
-    const testimonialsDirectionRef = useRef(1);
     const testimonialsDraggingRef = useRef(false);
     const testimonialsStartXRef = useRef(0);
     const testimonialsScrollLeftRef = useRef(0);
+    const loopedTestimonials = useMemo(
+        () => (testimonials.length > 0 ? [...testimonials, ...testimonials] : []),
+        [testimonials],
+    );
 
     const slides = [
         {
@@ -104,19 +106,12 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
 
         const autoRotate = setInterval(() => {
             setActiveServiceIndex((prev) => {
-                if (carouselItems.length === 0) {
+                const itemCount = carouselItems.length;
+                if (itemCount === 0) {
                     return prev;
                 }
 
-                let nextIndex = prev + carouselDirectionRef.current;
-
-                if (nextIndex >= carouselItems.length) {
-                    carouselDirectionRef.current = -1;
-                    nextIndex = prev - 1 >= 0 ? prev - 1 : carouselItems.length - 2;
-                } else if (nextIndex < 0) {
-                    carouselDirectionRef.current = 1;
-                    nextIndex = prev + 1 < carouselItems.length ? prev + 1 : 0;
-                }
+                const nextIndex = (prev + 1) % itemCount;
 
                 carouselRef.current?.scrollTo?.(nextIndex);
 
@@ -129,35 +124,32 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
 
     useEffect(() => {
         const container = testimonialsRef.current;
-        if (!container) {
+        if (!container || loopedTestimonials.length === 0) {
             return undefined;
         }
 
         const tick = () => {
-            if (!container) {
+            if (!container || testimonialsDraggingRef.current) {
                 return;
             }
-            const maxScroll = container.scrollWidth - container.clientWidth;
-            if (maxScroll <= 0) {
+
+            const singleSetWidth = container.scrollWidth / 2;
+            if (singleSetWidth <= 0) {
                 return;
             }
 
             const step = 1.5;
-            const direction = testimonialsDirectionRef.current;
+            const nextScroll = container.scrollLeft + step;
 
-            container.scrollLeft += direction * step;
-
-            if (container.scrollLeft >= maxScroll) {
-                testimonialsDirectionRef.current = -1;
-            } else if (container.scrollLeft <= 0) {
-                testimonialsDirectionRef.current = 1;
-            }
+            container.scrollLeft = nextScroll >= singleSetWidth
+                ? nextScroll - singleSetWidth
+                : nextScroll;
         };
 
         const interval = setInterval(tick, 20);
 
         return () => clearInterval(interval);
-    }, [testimonials.length]);
+    }, [loopedTestimonials.length]);
 
     const handleTestimonialsMouseDown = (event) => {
         const container = testimonialsRef.current;
@@ -520,9 +512,9 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             onMouseDown={handleTestimonialsMouseDown}
                         >
                             <div className="flex gap-12 ">
-                                {testimonials.map((testimonial, idx) => (
+                                {loopedTestimonials.map((testimonial, idx) => (
                                     <div
-                                        key={testimonial.id ?? idx}
+                                        key={testimonial.id ? `${testimonial.id}-${idx}` : `testimonial-${idx}`}
                                         className="relative rounded-2xl min-w-[90px] max-w-[230px] p-4 md:rounded-3xl md:min-w-[420px] md:max-w-md md:p-10 flex-shrink-0"
                                         style={{
                                             background: 'linear-gradient(110.97deg, rgba(255, 255, 255, 0.5) -4.87%, rgba(255, 255, 255, 0) 103.95%)',
