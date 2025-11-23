@@ -8,7 +8,7 @@ export function lerp(start, stop, amt) {
 const ANGLE_PER_ITEM = 100;
 const CENTER_OFFSET = 0;
 const FULL_ROTATION = 360;
-const ACTIVE_ANGLE_THRESHOLD = 8;
+const ACTIVE_ANGLE_THRESHOLD = 6;
 const AUTO_STEP_DEG = -20;
 
 function normalizeAngle(angle) {
