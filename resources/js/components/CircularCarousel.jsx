@@ -9,6 +9,7 @@ const ANGLE_PER_ITEM = 100;
 const CENTER_OFFSET = 0;
 const FULL_ROTATION = 360;
 const ACTIVE_ANGLE_THRESHOLD = 8;
+const AUTO_STEP_DEG = -20;
 
 function normalizeAngle(angle) {
   const normalized = angle % FULL_ROTATION;
@@ -53,6 +54,7 @@ function CircularCarouselComp(
   const rendering = useRef(false);
   const [deg, setDeg] = useState(CENTER_OFFSET);
   const [wrapper, setWrapper] = useState(null);
+  const degRef = useRef(CENTER_OFFSET);
 
   const handleSetWrapper = (ref) => {
     setWrapper(ref);
@@ -65,14 +67,23 @@ function CircularCarouselComp(
 
     const next = nextRef.current;
     const prev = prevRef.current;
-    const currentDeg = lerp(prev, next, 0.15);
-    if (currentDeg !== prev) {
-      setDeg(currentDeg);
-      prevRef.current = currentDeg;
-      requestAnimationFrame(move);
-    } else {
+    const delta = next - prev;
+    if (Math.abs(delta) < 0.01) {
+      prevRef.current = next;
+      setDeg(next);
+      const uprightIndex = findUprightIndex(next, len);
+      if (uprightIndex !== indexRef.current) {
+        indexRef.current = uprightIndex;
+        onSelect && onSelect(uprightIndex);
+      }
       rendering.current = false;
+      return;
     }
+
+    const currentDeg = lerp(prev, next, 0.12);
+    setDeg(currentDeg);
+    prevRef.current = currentDeg;
+    requestAnimationFrame(move);
 
     const uprightIndex = findUprightIndex(currentDeg, len);
     if (uprightIndex !== indexRef.current) {
@@ -80,6 +91,10 @@ function CircularCarouselComp(
       onSelect && onSelect(uprightIndex);
     }
   }
+
+  React.useEffect(() => {
+    degRef.current = deg;
+  }, [deg]);
 
   const onMouseDown = (e) => {
     const isTouch = e.type === "touchstart";
@@ -109,22 +124,22 @@ function CircularCarouselComp(
       prevTouchPageX = pageX;
     };
 
-  const onMouseUp = () => {
-    document.removeEventListener("touchmove", onTouchMove);
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-    document.removeEventListener("touchend", onMouseUp);
+    const onMouseUp = () => {
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("touchend", onMouseUp);
 
-    if (len === 0) {
-      return;
-    }
+      if (len === 0) {
+        return;
+      }
 
-    nextRef.current = _deg;
-    if (!rendering.current) {
-      rendering.current = true;
-      requestAnimationFrame(move);
-    }
-  };
+      nextRef.current = _deg;
+      if (!rendering.current) {
+        rendering.current = true;
+        requestAnimationFrame(move);
+      }
+    };
     if (isTouch) {
       document.addEventListener("touchmove", onTouchMove);
       document.addEventListener("touchend", onMouseUp);
@@ -141,48 +156,73 @@ function CircularCarouselComp(
     };
   }, []);
 
+  const moveToIndex = React.useCallback((targetIndex) => {
+    if (len === 0) {
+      return;
+    }
+
+    let normalizedTarget = targetIndex % len;
+    if (normalizedTarget < 0) {
+      normalizedTarget += len;
+    }
+
+    const currentIndex = indexRef.current % len;
+    const forwardDiff = (normalizedTarget - currentIndex + len) % len;
+    if (forwardDiff === 0) {
+      return;
+    }
+
+    const clampedDiff = Math.min(forwardDiff, 1);
+    const targetDeg = degRef.current - (clampedDiff * ANGLE_PER_ITEM);
+
+    prevRef.current = degRef.current;
+    nextRef.current = targetDeg;
+
+    if (!rendering.current) {
+      rendering.current = true;
+      requestAnimationFrame(move);
+    }
+  }, [len]);
+
+  const moveByDegrees = React.useCallback((delta) => {
+    if (len === 0) {
+      return;
+    }
+
+    const base = degRef.current;
+    prevRef.current = base;
+    nextRef.current = base + delta;
+
+    if (!rendering.current) {
+      rendering.current = true;
+      requestAnimationFrame(move);
+    }
+  }, [len]);
+
+  React.useEffect(() => {
+    if (len === 0) {
+      return undefined;
+    }
+
+    const interval = setInterval(() => {
+      if (rendering.current) {
+        return;
+      }
+
+      moveByDegrees(AUTO_STEP_DEG);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [len, moveByDegrees]);
 
   useImperativeHandle(
     ref,
     () => ({
       scrollTo(i) {
-        if (len === 0) {
-          return;
-        }
-        
-        const totalArc = ANGLE_PER_ITEM * len;
-        const currentNormalized = ((-(deg - CENTER_OFFSET) % totalArc) + totalArc) % totalArc;
-        const currentIndex = Math.round(currentNormalized / ANGLE_PER_ITEM) % len;
-        
-        let targetIndex = i % len;
-        if (targetIndex < 0) {
-          targetIndex += len;
-        }
-        
-        let indexDiff = targetIndex - currentIndex;
-        
-        if (indexDiff === 0) {
-          return;
-        }
-        
-        if (indexDiff < 0) {
-          indexDiff += len;
-        }
-        
-        if (indexDiff > 1) {
-          indexDiff = 1;
-        }
-        
-        const degDiff = -indexDiff * ANGLE_PER_ITEM;
-        nextRef.current = deg + degDiff;
-        
-        if (!rendering.current) {
-          rendering.current = true;
-          requestAnimationFrame(move);
-        }
+        moveToIndex(i);
       },
     }),
-    [len, deg],
+    [moveToIndex],
   );
 
   const renderItems = () => {

@@ -100,28 +100,6 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     }, [carouselItems.length]);
 
     useEffect(() => {
-        if (carouselItems.length === 0) {
-            return undefined;
-        }
-        const autoRotate = setInterval(() => {
-            setActiveServiceIndex((prev) => {
-                const itemCount = carouselItems.length;
-                if (itemCount === 0) {
-                    return prev;
-                }
-
-                const nextIndex = (prev + 1) % itemCount;
-
-                carouselRef.current?.scrollTo?.(nextIndex);
-
-                return nextIndex;
-            });
-        }, 5000);
-
-        return () => clearInterval(autoRotate);
-    }, [carouselItems.length]);
-
-    useEffect(() => {
         const container = testimonialsRef.current;
         if (!container || loopedTestimonials.length === 0) {
             return undefined;
