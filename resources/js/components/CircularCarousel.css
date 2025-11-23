@@ -17,13 +17,13 @@
 
   @media screen and (max-width: 1024px) {
     .circular-carousel-root {
-      --height: 50vh;
+      --height: 60vh;
     }
   }
 
   @media screen and (max-width: 768px) {
     .circular-carousel-root {
-      --height: 45vh;
+      --height: 60vh;
     }
   }
 
@@ -65,7 +65,7 @@
     overflow: hidden;
   }
 
-  
+
   .carousel-card {
     position: relative;
     width: 260px;
@@ -95,9 +95,9 @@
   }
 
   .carousel-card-image {
-    margin: 16px; 
-    width: calc(100% - 32px); 
-    height: calc(100% - 32px); 
+    margin: 16px;
+    width: calc(100% - 32px);
+    height: calc(100% - 32px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: block;
     border-radius: 12px;
@@ -106,18 +106,18 @@
     background-repeat: no-repeat;
   }
 
-  
+
   .carousel-card:hover .carousel-card-image {
     height: 35%;
     transform: scale(1);
     border-radius: 12px;
 
-    
-    margin-top: 40px; 
-    margin-left: 16px; 
-    margin-right: 16px; 
-    margin-bottom: 16px; 
-    
+
+    margin-top: 40px;
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+
   }
 
   .carousel-card.active .carousel-card-image {
