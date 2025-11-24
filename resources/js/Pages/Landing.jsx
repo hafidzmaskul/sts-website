@@ -365,7 +365,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                                         transform: "translateY(10%)" // Agak ke atas (lebih sedikit dari 30%)
                                     }}
                                 >
-                                    <span className="font-akzidenz text-[#302F2F] font-regular text-xs md:text-base mb-1">
+                                    <span className="font-inter text-[#302F2F] font-bold text-xs md:text-xs mb-1">
                                         We deal with any human resource issues, leaving our clients to run their business worry free.
                                     </span>
 
