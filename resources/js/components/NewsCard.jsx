@@ -54,12 +54,13 @@ export default function NewsCard({
                                 'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                         }}
                     >
-                        <h2 className="text-lg md:text-4xl text-center uppercase font-inter text-black font-bold mb-2">
+                        <h2 className="text-lg md:text-xl text-center uppercase font-inter text-black font-bold mb-2">
                             {title}
                         </h2>
-                        <p className="text-white text-xs md:text-sm mb-6 flex-1">
-                           {shortDescription}
-                        </p>
+                        <div
+                            className="text-white text-xs md:text-sm mb-6 flex-1"
+                            dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
+                        />
                         <div className="flex w-full justify-center">
                             <a
                                 href={`/news/${slug || ''}`}

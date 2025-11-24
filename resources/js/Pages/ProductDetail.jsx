@@ -76,6 +76,7 @@ export default function ProductDetail({ product, products = [] }) {
                 </div>
                 {/* Right: Price and Button */}
                 <div className="flex-1 flex flex-col items-start md:items-start justify-center mt-8 md:mt-0 md:ml-16">
+                    <H1 text={data.name} color='white' className='text-start mb-10' />
                     <div className="text-3xl md:text-5xl font-bold text-white mb-4">
                         £{Number(data.price).toFixed(2)}
                     </div>
@@ -118,7 +119,7 @@ export default function ProductDetail({ product, products = [] }) {
 
                     <H1 text={'ABOUT THIS BOOK'} color='white' />
                     <article
-                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white text-center prose prose-invert max-w-none'
+                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white  prose prose-invert max-w-none'
                         dangerouslySetInnerHTML={{ __html: data.content }}
                     />
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">

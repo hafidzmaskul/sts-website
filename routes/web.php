@@ -15,6 +15,8 @@ Route::get('/payment/{uuid}', [App\Http\Controllers\PageController::class, 'paym
 Route::get('/companyHandbook', [App\Http\Controllers\PageController::class, 'companyHandbook'])->name('companyHandbook');
 Route::get('/news', [App\Http\Controllers\PageController::class, 'news'])->name('news');
 Route::get('/news/{slug}', [App\Http\Controllers\PageController::class, 'newsDetail'])->name('newsDetail');
+Route::get('/career', [App\Http\Controllers\PageController::class, 'career'])->name('career');
+Route::get('/career/{job}', [App\Http\Controllers\PageController::class, 'careerDetail'])->name('career.detail');
 
 Route::get('/about-us', [App\Http\Controllers\PageController::class, 'about'])->name('about-us');
 Route::get('/contact-us', [App\Http\Controllers\PageController::class, 'contact'])->name('contact-us');
@@ -57,8 +59,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/news/{news}/edit', \App\Livewire\Admin\News\Edit::class)->name('admin.news.edit')->middleware('can:news.edit');
 
         Route::get('/admin/services', \App\Livewire\Admin\Services\Index::class)->name('admin.services.index')->middleware('can:services.view');
-            Route::get('/admin/services/create', \App\Livewire\Admin\Services\Create::class)->name('admin.services.create')->middleware('can:services.create');
-            Route::get('/admin/services/{service}/edit', \App\Livewire\Admin\Services\Edit::class)->name('admin.services.edit')->middleware('can:services.edit');
+        Route::get('/admin/services/create', \App\Livewire\Admin\Services\Create::class)->name('admin.services.create')->middleware('can:services.create');
+        Route::get('/admin/services/{service}/edit', \App\Livewire\Admin\Services\Edit::class)->name('admin.services.edit')->middleware('can:services.edit');
 
         Route::get('/admin/products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index')->middleware('can:products.view');
         Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create')->middleware('can:products.create');

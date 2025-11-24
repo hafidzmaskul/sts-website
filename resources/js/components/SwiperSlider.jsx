@@ -6,12 +6,17 @@ const SwiperSlider = ({
     bottomText = 'LATEST NEWS',
 }) => {
     const swiperContainerRef = useRef(null);
-    const swiperDirectionRef = useRef(1);
-
+    const slideCount = news.length;
+    const slidesPerView = 5;
+    const shouldLoop = slideCount >= 10;
+    const shouldAutoSlide = shouldLoop;
+    const allowTouchMove = slideCount > 1;
     useEffect(() => {
         let swiperInstance = null;
         let styleEl = null;
         let autoplayInterval = null;
+        const autoplayDelay = 5000;
+        const slideSpeed = 800;
 
         // Dynamically import Swiper JS & CSS
         if (typeof window !== 'undefined') {
@@ -21,49 +26,25 @@ const SwiperSlider = ({
 
                 if (swiperContainerRef.current) {
                     swiperInstance = new Swiper(swiperContainerRef.current, {
-                        loop: false,
+                        loop: shouldLoop,
                         grabCursor: true,
-                        slidesPerView: 5,
+                        slidesPerView,
                         spaceBetween: 16,
-                        speed: 800,
+                        speed: slideSpeed,
                         centeredSlides: true,
-                        on: {
-                            reachEnd() {
-                                swiperDirectionRef.current = -1;
-                            },
-                            reachBeginning() {
-                                swiperDirectionRef.current = 1;
-                            },
-                        },
+                        centeredSlidesBounds: true,
+                        allowTouchMove,
                     });
 
-                    // Start with the third item centered so the left side isn't empty
-                    if (swiperInstance.slides.length > 3) {
-                        swiperInstance.slideTo(2, 0);
+                    if (shouldAutoSlide) {
+                        autoplayInterval = setInterval(() => {
+                            if (!swiperInstance || swiperInstance.animating) {
+                                return;
+                            }
+
+                            swiperInstance.slideNext();
+                        }, autoplayDelay);
                     }
-
-                    autoplayInterval = setInterval(() => {
-                        if (!swiperInstance) {
-                            return;
-                        }
-                        const direction = swiperDirectionRef.current;
-
-                        if (direction === 1) {
-                            if (swiperInstance.isEnd) {
-                                swiperDirectionRef.current = -1;
-                                swiperInstance.slidePrev();
-                            } else {
-                                swiperInstance.slideNext();
-                            }
-                        } else {
-                            if (swiperInstance.isBeginning) {
-                                swiperDirectionRef.current = 1;
-                                swiperInstance.slideNext();
-                            } else {
-                                swiperInstance.slidePrev();
-                            }
-                        }
-                    }, 5000);
                 }
             });
 
@@ -99,13 +80,17 @@ const SwiperSlider = ({
                         height: 100%;
                         border-radius: 32px;
                         overflow: hidden;
-                    }
+                        }
                     .snapper {
                         width: 100%;
-                        height: 100%;
+                        height: 50%;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         background-size: cover;
                         background-position: center;
-                        border-radius: inherit;
+
                     }
                     .slide-overlay {
                         position: absolute;
@@ -141,7 +126,7 @@ const SwiperSlider = ({
                         display: inline-flex;
                         align-items: center;
                         justify-content: center;
-                        padding: 0.6rem 1.4rem;
+                        padding: 0.3rem 1.2rem;
                         border-radius: 9999px;
                         border: none;
                         cursor: pointer;
@@ -246,23 +231,23 @@ const SwiperSlider = ({
                 document.head.removeChild(styleEl);
             }
         };
-    }, []);
+    }, [allowTouchMove, shouldAutoSlide, shouldLoop, slideCount, slidesPerView]);
 
     return (
         <section className="slider">
             {/* Text overlay di atas slider */}
             <div className="slider-text-overlay text-white top ">
                 <div className="slider-text-overlay-inner">
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                     <span className="slider-text-main">{topText}</span>
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                 </div>
             </div>
             <div className="slider-text-overlay bottom text-white">
                 <div className="slider-text-overlay-inner">
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                     <span className="slider-text-main">{bottomText}</span>
-                    <span className="slider-text-side">Lorem ipsum</span>
+                    <span className="slider-text-side"></span>
                 </div>
             </div>
 
@@ -271,8 +256,6 @@ const SwiperSlider = ({
                     {news.map((item, idx) => {
                         const image =
                             item.image_url ?? 'https://placehold.co/600x400?text=No+Image';
-                        const description =
-                            item.meta_description ?? item.content ?? '';
 
                         return (
                             <div className="swiper-slide" key={idx}>
@@ -282,12 +265,8 @@ const SwiperSlider = ({
                                     style={{ backgroundImage: `url('${image}')` }}
                                 />
                                 <div className="slide-overlay">
-                                    <div className="slide-overlay-title">
-                                        {item.title}
-                                    </div>
-                                    <div className="slide-overlay-text">
-                                        {description}
-                                    </div>
+
+                                    <div className="slide-overlay-text">{item.title}</div>
                                     <a
                                         href={`/news/${item.slug ?? ''}`}
                                         className="slide-overlay-button"

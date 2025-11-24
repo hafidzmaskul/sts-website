@@ -5,44 +5,96 @@ export function lerp(start, stop, amt) {
   return (1 - amt) * start + amt * stop;
 }
 
-// Mengurangi ARC_SIZE untuk membuat jarak antar item lebih dekat
-const ARC_SIZE = 150; // Dari 150 menjadi 100
+const ANGLE_PER_ITEM = 100;
+const CENTER_OFFSET = 0;
+const FULL_ROTATION = 360;
+const ACTIVE_ANGLE_THRESHOLD = 6;
+const AUTO_STEP_DEG = -20;
+
+function normalizeAngle(angle) {
+  const normalized = angle % FULL_ROTATION;
+  return normalized < 0 ? normalized + FULL_ROTATION : normalized;
+}
+
+function distanceToTop(angle) {
+  const normalized = normalizeAngle(angle - CENTER_OFFSET);
+  return Math.min(normalized, FULL_ROTATION - normalized);
+}
+
+function findUprightIndex(currentDeg, itemCount) {
+  if (itemCount === 0) {
+    return 0;
+  }
+
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  for (let i = 0; i < itemCount; i += 1) {
+    const angle = (i * ANGLE_PER_ITEM) + currentDeg;
+    const distance = distanceToTop(angle);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = i;
+    }
+  }
+
+  return closestIndex;
+}
 
 function CircularCarouselComp(
   { onSelect, onSwapRight, onPointerDown, children },
   ref
 ) {
+  const childArray = Children.toArray(children);
+  const len = childArray.length;
   const indexRef = useRef(0);
   const prevRef = useRef(0);
   const nextRef = useRef(0);
   const rendering = useRef(false);
-  const [deg, setDeg] = useState(0);
+  const [deg, setDeg] = useState(CENTER_OFFSET);
   const [wrapper, setWrapper] = useState(null);
+  const degRef = useRef(CENTER_OFFSET);
 
   const handleSetWrapper = (ref) => {
     setWrapper(ref);
   };
 
-  prevRef.current = deg;
-
   function move() {
+    if (len === 0) {
+      return;
+    }
+
     const next = nextRef.current;
     const prev = prevRef.current;
-    const deg = lerp(prev, next, 0.2);
-    if (deg !== prev) {
-      setDeg(deg);
-      requestAnimationFrame(move);
-    } else {
+    const delta = next - prev;
+    if (Math.abs(delta) < 0.01) {
+      prevRef.current = next;
+      setDeg(next);
+      const uprightIndex = findUprightIndex(next, len);
+      if (uprightIndex !== indexRef.current) {
+        indexRef.current = uprightIndex;
+        onSelect && onSelect(uprightIndex);
+      }
       rendering.current = false;
+      return;
     }
-    const index = Math.round(Math.abs(((deg / ARC_SIZE) * len) % len));
-    if (index != indexRef.current) {
-      indexRef.current = index;
-      onSelect && onSelect(index);
+
+    const currentDeg = lerp(prev, next, 0.12);
+    setDeg(currentDeg);
+    prevRef.current = currentDeg;
+    requestAnimationFrame(move);
+
+    const uprightIndex = findUprightIndex(currentDeg, len);
+    if (uprightIndex !== indexRef.current) {
+      indexRef.current = uprightIndex;
+      onSelect && onSelect(uprightIndex);
     }
   }
 
-  const len = Children.count(children);
+  React.useEffect(() => {
+    degRef.current = deg;
+  }, [deg]);
 
   const onMouseDown = (e) => {
     const isTouch = e.type === "touchstart";
@@ -78,10 +130,11 @@ function CircularCarouselComp(
       document.removeEventListener("mouseup", onMouseUp);
       document.removeEventListener("touchend", onMouseUp);
 
-      const angle = ARC_SIZE / len;
-      const steps = Math.round(_deg / angle);
-      const snapped = steps * angle;
-      nextRef.current = snapped % ARC_SIZE;
+      if (len === 0) {
+        return;
+      }
+
+      nextRef.current = _deg;
       if (!rendering.current) {
         rendering.current = true;
         requestAnimationFrame(move);
@@ -103,20 +156,108 @@ function CircularCarouselComp(
     };
   }, []);
 
+  const moveToIndex = React.useCallback((targetIndex) => {
+    if (len === 0) {
+      return;
+    }
+
+    let normalizedTarget = targetIndex % len;
+    if (normalizedTarget < 0) {
+      normalizedTarget += len;
+    }
+
+    const currentIndex = indexRef.current % len;
+    const forwardDiff = (normalizedTarget - currentIndex + len) % len;
+    if (forwardDiff === 0) {
+      return;
+    }
+
+    const clampedDiff = Math.min(forwardDiff, 1);
+    const targetDeg = degRef.current - (clampedDiff * ANGLE_PER_ITEM);
+
+    prevRef.current = degRef.current;
+    nextRef.current = targetDeg;
+
+    if (!rendering.current) {
+      rendering.current = true;
+      requestAnimationFrame(move);
+    }
+  }, [len]);
+
+  const moveByDegrees = React.useCallback((delta) => {
+    if (len === 0) {
+      return;
+    }
+
+    const base = degRef.current;
+    prevRef.current = base;
+    nextRef.current = base + delta;
+
+    if (!rendering.current) {
+      rendering.current = true;
+      requestAnimationFrame(move);
+    }
+  }, [len]);
+
+  React.useEffect(() => {
+    if (len === 0) {
+      return undefined;
+    }
+
+    const interval = setInterval(() => {
+      if (rendering.current) {
+        return;
+      }
+
+      moveByDegrees(AUTO_STEP_DEG);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [len, moveByDegrees]);
+
   useImperativeHandle(
     ref,
     () => ({
       scrollTo(i) {
-        const _deg = (-ARC_SIZE / len) * i;
-        nextRef.current = _deg;
-        if (!rendering.current) {
-          rendering.current = true;
-          requestAnimationFrame(move);
-        }
+        moveToIndex(i);
       },
     }),
-    [len],
+    [moveToIndex],
   );
+
+  const renderItems = () => {
+    if (len === 0) {
+      return null;
+    }
+
+    const items = [];
+    const totalCopies = 3;
+
+    for (let copy = -1; copy <= totalCopies; copy++) {
+      childArray.forEach((child, i) => {
+        const absoluteIndex = copy * len + i;
+        const angle = absoluteIndex * ANGLE_PER_ITEM;
+        const normalizedAngle = normalizeAngle(angle + deg);
+        const isActive = distanceToTop(normalizedAngle) <= ACTIVE_ANGLE_THRESHOLD;
+
+        items.push(
+          <div
+            key={`${copy}-${i}`}
+            className="circular-carousel-item"
+            style={{
+              transform: `translateX(-50%) rotate(${angle}deg)`,
+            }}
+          >
+            {React.cloneElement(child, {
+              className: `${child.props.className ?? ''}${isActive ? ' active' : ''}`.trim(),
+            })}
+          </div>
+        );
+      });
+    }
+
+    return items;
+  };
 
   return (
     <div className="circular-carousel-root" ref={handleSetWrapper}>
@@ -130,17 +271,7 @@ function CircularCarouselComp(
             className="circular-carousel-items"
             style={{ transform: `rotate(${deg}deg)` }}
           >
-            {Children.map(children, (child, i) => (
-              <div
-                key={i}
-                className="circular-carousel-item"
-                style={{
-                  transform: `translateX(-50%) rotate(${i * (ARC_SIZE / len)}deg)`,
-                }}
-              >
-                {child}
-              </div>
-            ))}
+            {renderItems()}
           </div>
         </div>
       </div>

@@ -9,7 +9,6 @@ import { getMaxCharacters } from '../helpers/text';
 export default function Service({ services = [] }) {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-
     useEffect(() => {
         setIsLoading(true);
 
