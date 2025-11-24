@@ -343,12 +343,8 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             <div className="md:w-1/2">
                                 <H1 text="Our SERVICE" color="white" className="text-start uppercase mb-10" />
                                 <p className="font-inter text-white font-regular text-sm md:text-base mt-20">
-                                    Lorem ipsum dolor sit amet consectetur adipiscing elit.
-                                    Quisque faucibus ex sapien vitae pellentesque sem placerat.
-                                    In id cursus mi pretium tellus duis convallis. Tempus leo eu
-                                    aenean sed diam urna tempor. Pulvinar vivamus fringilla
-                                    lacus nec metus bibendum egestas. Iaculis massa nisl
-                                    malesuada lacinia integer nunc posuere.
+                                At Absolutely HR, we provide practical, reliable and people-focused HR support to help small and growing businesses thrive. We work closely with you to understand your needs, resolve challenges quickly and ensure your workforce is protected, supported and compliant.
+
                                 </p>
                             </div>
                             {/* Kanan: Gambar */}
@@ -366,7 +362,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                                     }}
                                 >
                                     <span className="font-akzidenz text-[#302F2F] font-regular text-xs md:text-base mb-1">
-                                        Lorem ipsum dolor sit amet consectetur
+                                    We deal with any human resource issues, leaving our clients to run their business worry free.
                                     </span>
 
                                 </div>
@@ -444,10 +440,10 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             ))}
                         </div>
                     </div>
-                    <div className="text-center" data-aos="fade-up">
+                    <div className="text-center container mx-auto px-10 md:px-20" data-aos="fade-up">
                         <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
-                        <p className='text-inter font-normal text-sm md:text-base text-white'>Lorem ipsum dolor sit amet consectetur adipiscing elit. <br />
-                            Quisque faucibus ex sapien vitae pellentesque sem placerat.</p>
+                        <p className='text-inter font-normal text-sm md:text-base text-white'>Whether you need help navigating employment issues, improving workplace culture, or strengthening your HR processes, our team is here to guide you with clear advice and hands-on support. From day-to-day HR tasks to more complex matters, we make HR simple, effective and stress-free.
+                        </p>
                         <div className="flex justify-center mt-6">
                             <ExploreButton href="/services">
                                 EXPLORE ALL SERVICES
