@@ -83,7 +83,7 @@ export default function Career({ jobs = [] }) {
 
     return (
         <>
-            <Head title="Career - AbsolutelyHR" />
+            <Head title="Recruitment - AbsolutelyHR" />
             <div className="bg-[#302F2F]" data-aos="fade-in">
                 <div
                     className="py-10 rounded-b-xl md:rounded-b-[200px] overflow-hidden"
@@ -121,7 +121,7 @@ export default function Career({ jobs = [] }) {
                     </div>
                 </div>
                 <div className="container px-10 md:px-20 mx-auto mt-12 text-center flex flex-col items-center">
-                    <H1 text="CAREER" color="white" className="uppercase text-center mb-20" />
+                    <H1 text="Recruitment" color="white" className="uppercase text-center mb-20" />
                     <p className="text-sm md:text-base leading-relaxed text-white font-roboto  text-center">
                         Lorem ipsum dolor sit amet consectetur. Bibendum mauris commodo scelerisque id suspendisse viverra integer et sed. Donec diam purus sed velit etiam purus morbi. Id tristique amet lobortis amet eu. Mattis bibendum sagittis vel fermentum nunc tortor. Dis platea egestas quis consequat mauris adipiscing.
                     </p>
