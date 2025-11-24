@@ -69,6 +69,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
 
+        Route::get('/admin/careers', \App\Livewire\Admin\Careers\Index::class)->name('admin.careers.index')->middleware('can:careers.view');
+        Route::get('/admin/careers/create', \App\Livewire\Admin\Careers\Create::class)->name('admin.careers.create')->middleware('can:careers.create');
+        Route::get('/admin/careers/{career}/edit', \App\Livewire\Admin\Careers\Edit::class)->name('admin.careers.edit')->middleware('can:careers.edit');
+        Route::get('/admin/career-submissions', \App\Livewire\Admin\CareerSubmissions\Index::class)->name('admin.career-submissions.index')->middleware('can:careers.view');
+
     });
 });
 

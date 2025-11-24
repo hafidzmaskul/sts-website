@@ -40,11 +40,17 @@ class RolesAndPermissionsSeeder extends Seeder
             // 7. Products
             'products.view', 'products.create', 'products.edit', 'products.delete',
 
-            // 8. Contact Submissions
+            // 8. Transactions (Sales)
+            'transactions.view',
+
+            // 9. Contact Submissions
             'contact-submissions.view', 'contact-submissions.delete',
 
-            // 9. Our Team
+            // 10. Our Team
             'our-team.view', 'our-team.create', 'our-team.edit', 'our-team.delete',
+
+            // 11. Careers (New)
+            'careers.view', 'careers.create', 'careers.edit', 'careers.delete',
         ];
 
         // Create permissions
@@ -63,7 +69,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'news.create',
             'news.edit',
             'news.delete',
-            'news-categories.view'
+            'news-categories.view',
+            'careers.view', // Can view careers
         ]);
     }
 }

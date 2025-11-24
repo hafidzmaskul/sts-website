@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CareerSubmissionController;
 use App\Http\Controllers\Api\ContactSubmissionController;
 use App\Http\Controllers\Api\NewsletterSubscriptionController;
 use App\Http\Controllers\Api\TransactionController;
@@ -14,6 +15,8 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/subscribe', [NewsletterSubscriptionController::class, 'store'])->name('api.subscribe');
 Route::post('/contact', [ContactSubmissionController::class, 'store'])->name('api.contact.store');
+
+Route::post('/careers/apply', [CareerSubmissionController::class, 'store'])->name('api.careers.apply');
 
 Route::post('/checkout', [TransactionController::class, 'store'])->name('api.checkout.store');
 Route::post('/webhooks/square', [WebhookController::class, 'handleSquare'])->name('api.webhooks.square');
