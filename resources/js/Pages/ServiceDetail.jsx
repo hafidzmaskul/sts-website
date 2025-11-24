@@ -4,9 +4,8 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import ExploreButton from '../components/ExploreButton';
-import { getMaxCharacters } from '../helpers/text';
-
 import ServiceCard from '../components/ServiceCard';
+import { getMaxCharacters } from '../helpers/text';
 
 export default function ServiceDetail({ service, otherServices = [] }) {
     const [currentPage, setCurrentPage] = useState(1);

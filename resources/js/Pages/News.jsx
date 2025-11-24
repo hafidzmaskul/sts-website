@@ -97,7 +97,7 @@ export default function News({ news = [] }) {
                             <NewsCard
                                 key={article.id ?? index}
                                 index={index + 1}
-                                title={getMaxCharacters(article.title,20)}
+                                title={article.title}
                                 shortDescription={getMaxCharacters(article.short_description ?? article.content, 100)}
                                 slug={article.slug}
                                 image={article.image_url}

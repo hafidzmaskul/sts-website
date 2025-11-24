@@ -10,7 +10,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-XFrnTkjC.css",
+    "file": "assets/app-DOa_zhBV.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -18,7 +18,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-Bdy4ZHJ6.js",
+    "file": "assets/app-B4AyyktJ.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -26,7 +26,7 @@
       "node_modules/swiper/swiper-bundle.mjs"
     ],
     "css": [
-      "assets/app-DlW5yN23.css"
+      "assets/app-C0w7fn9E.css"
     ]
   }
 }
