@@ -55,8 +55,7 @@ export default function News({ news = [] }) {
                 <div className="w-full flex flex-col items-center text-center mt-20">
                     <H1 text={'News'} color='black' />
                     <p className='text-roboto text-xs md:text-base font-normal mb-10 md:mb-20 mt-10 max-w-md'>
-                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu
-                        aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl  malesuada lacinia integer nunc posuere.
+                    Welcome to our news section, where we share helpful HR tips, updates and stories from the world of people management. Check back regularly for insights that support your business and your team.
                     </p>
                 </div>
             </div>

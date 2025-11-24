@@ -8,6 +8,7 @@ import { getMaxWords } from '../helpers/text';
 const fallbackJobs = [
     {
         id: 1,
+        slug: 'senior-hr-consultant',
         title: 'Senior HR Consultant',
         category: 'HR Consulting',
         summary: 'Lead retainer clients on complex employee relations cases, coach managers through sensitive changes, and deliver compliance audits. You will map processes, create policies, and prepare training that keeps teams confident during transitions. This role mixes strategic advisory with hands-on delivery, so you will spend time in workshops, producing toolkits, and presenting recommendations to stakeholders across the region.',
@@ -29,6 +30,7 @@ const fallbackJobs = [
     },
     {
         id: 2,
+        slug: 'people-operations-lead',
         title: 'People Operations Lead',
         category: 'People Operations',
         summary: 'Own the people ops engine that powers onboarding, payroll inputs, benefits, and HRIS hygiene. You will streamline workflows, remove friction for employees, and ensure data accuracy for reporting. The role needs someone who loves process, automation, and partnering closely with finance to keep everything running smoothly and on time each month.',
@@ -50,6 +52,7 @@ const fallbackJobs = [
     },
     {
         id: 3,
+        slug: 'talent-acquisition-partner',
         title: 'Talent Acquisition Partner',
         category: 'Talent',
         summary: 'Shape the candidate experience from first touch to offer acceptance. You will run end-to-end searches, build diverse pipelines, and coach hiring managers on structured interviews. Storytelling is key: you will translate our value proposition into outreach, events, and content that attracts the right people for each role.',
@@ -76,6 +79,7 @@ export default function Career({ jobs = [] }) {
         () => (Array.isArray(jobs) && jobs.length > 0 ? jobs : fallbackJobs),
         [jobs],
     );
+    const stripHtml = (value) => (typeof value === 'string' ? value.replace(/<[^>]+>/g, '') : '');
 
     return (
         <>
@@ -167,28 +171,36 @@ export default function Career({ jobs = [] }) {
                                             <h3 className="text-xl font-bold text-white leading-tight">
                                                 {job.title}
                                             </h3>
-                                            <div className="flex space-x-2 mb-2">
-                                                <div className="flex items-center">
+                                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                                                {job.level && (
                                                     <span className="text-[11px] uppercase tracking-wide bg-[#E3E3E3] text-black px-2 py-1 rounded-full font-semibold text-center">
-                                                        JUNIOR
+                                                        {job.level}
                                                     </span>
-                                                    <span className="text-black mx-1 flex items-center justify-center h-full">.</span>
+                                                )}
+                                                {job.employment_type && (
                                                     <span className="text-[11px] uppercase tracking-wide bg-[#E3E3E3] text-black px-2 py-1 rounded-full font-semibold text-center">
-                                                        Remote
+                                                        {job.employment_type}
                                                     </span>
-                                                </div>
+                                                )}
+                                                {job.location && (
+                                                    <span className="text-[11px] uppercase tracking-wide bg-[#E3E3E3] text-black px-2 py-1 rounded-full font-semibold text-center">
+                                                        {job.location}
+                                                    </span>
+                                                )}
                                             </div>
-                                            <div className="flex">
-                                                <span className="text-[11px] uppercase tracking-wide bg-[#E3E3E3] text-black px-6 py-1 rounded-full font-semibold  text-center">
-                                                    {job.category}
-                                                </span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {(job.department || job.category) && (
+                                                    <span className="text-[11px] uppercase tracking-wide bg-[#E3E3E3] text-black px-6 py-1 rounded-full font-semibold text-center">
+                                                        {job.department || job.category}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                         <p className="mt-4 text-sm text-white/80 leading-relaxed flex-1">
-                                            {getMaxWords(job.summary ?? job.description, 50)}
+                                            {getMaxWords(stripHtml(job.description ?? job.summary ?? ''), 50)}
                                         </p>
                                         <a
-                                            href={`/career/${job.id}`}
+                                            href={`/career/${job.slug ?? job.id}`}
                                             className="mt-6 inline-flex items-center justify-center gap-2 text-black px-6 py-1 rounded-full font-semibold shadow hover:bg-[#FFED2E] transition" style={{ background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)' }}
                                         >
                                             See Detail
