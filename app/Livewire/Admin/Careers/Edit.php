@@ -17,21 +17,21 @@ class Edit extends Component
     public $employment_type;
     public $department;
     public $location;
-    public $description;
+    public $content;
     public $status;
     public $sequence;
 
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255',
-            'level' => 'nullable|string|max:255',
-            'employment_type' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'description' => 'required|string',
-            'status' => 'boolean',
-            'sequence' => 'integer',
+            'title'             => 'required|string|max:255',
+            'level'             => 'nullable|string|max:255',
+            'employment_type'   => 'nullable|string|max:255',
+            'department'        => 'nullable|string|max:255',
+            'location'          => 'nullable|string|max:255',
+            'content'           => 'required|string',
+            'status'            => 'boolean',
+            'sequence'          => 'integer',
         ];
     }
 
@@ -43,7 +43,7 @@ class Edit extends Component
         $this->employment_type = $career->employment_type;
         $this->department = $career->department;
         $this->location = $career->location;
-        $this->description = $career->description;
+        $this->content = $career->description;
         // Fix: Cast to int for dropdown
         $this->status = (int) $career->status;
         $this->sequence = $career->sequence;
@@ -68,7 +68,7 @@ class Edit extends Component
             'employment_type' => $this->employment_type,
             'department' => $this->department,
             'location' => $this->location,
-            'description' => $this->description,
+            'description' => $this->content,
             'status' => $this->status,
             'sequence' => $this->sequence,
         ]);

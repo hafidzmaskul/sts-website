@@ -38,13 +38,13 @@
 
                 <!-- Description (Standard Textarea) -->
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Description</label>
-                    <textarea
-                        wire:model="description"
-                        rows="10"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                    ></textarea>
-                    @error('description') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
+                    <!-- Manual Editor implementation to avoid component errors -->
+                    <input id="overview_input" type="hidden" wire:model.live="content" value="{{ $content ?? '' }}">
+                    <div wire:ignore>
+                        <div id="overview_editor" class="min-h-[260px] rounded-lg border border-input bg-background"></div>
+                    </div>
+                    @error('content') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

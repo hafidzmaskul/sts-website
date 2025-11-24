@@ -15,7 +15,7 @@ class Create extends Component
     public $employment_type;
     public $department;
     public $location;
-    public $description;
+    public $content;
     public $status = false;
     public $sequence = 0;
 
@@ -27,7 +27,7 @@ class Create extends Component
             'employment_type' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
-            'description' => 'required|string',
+            'content' => 'required|string',
             'status' => 'boolean',
             'sequence' => 'integer',
         ];
@@ -52,7 +52,7 @@ class Create extends Component
             'employment_type' => $this->employment_type,
             'department' => $this->department,
             'location' => $this->location,
-            'description' => $this->description,
+            'description' => $this->content,
             'status' => $this->status,
             'sequence' => $this->sequence,
             'user_id' => auth()->id(),
