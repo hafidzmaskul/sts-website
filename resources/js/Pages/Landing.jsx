@@ -343,7 +343,11 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             <div className="md:w-1/2">
                                 <H1 text="Our SERVICE" color="white" className="text-start uppercase mb-10" />
                                 <p className="font-inter text-white font-regular text-sm md:text-base mt-20">
-                                At Absolutely HR, we provide practical, reliable and people-focused HR support to help small and growing businesses thrive. We work closely with you to understand your needs, resolve challenges quickly and ensure your workforce is protected, supported and compliant.
+                                    At Absolutely HR, we provide practical, reliable and people-focused HR support to help small and growing businesses thrive. We work closely with you to understand your needs, resolve challenges quickly and ensure your workforce is protected, supported and compliant. <br />
+                                    <br/>
+                                    Whether you need help navigating employment issues, improving workplace culture, or strengthening your HR processes, our team is here to guide you with clear advice and hands-on support. From day-to-day HR tasks to more complex matters, we make HR simple, effective and stress-free. <br />
+                                    <br/>
+                                    Employee Relations · HR Compliance · HR Consultancy · Workplace Improvement
 
                                 </p>
                             </div>
@@ -356,13 +360,13 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                                     className="rounded-4xl object-contain relative z-10"
                                 />
                                 <div
-                                    className="absolute left-0 bottom-0 md:-left-20 md:bottom-10 z-20 bg-[#FFED2E] bg-opacity-80 rounded-xl px-5 py-7 flex flex-col items-start shadow-lg"
+                                    className="absolute left-0 bottom-0 md:-left-20 md:bottom-10 z-20 bg-[#FFED2E] bg-opacity-80 rounded-2xl px-5 py-7 flex flex-col items-start shadow-lg"
                                     style={{
                                         transform: "translateY(10%)" // Agak ke atas (lebih sedikit dari 30%)
                                     }}
                                 >
                                     <span className="font-akzidenz text-[#302F2F] font-regular text-xs md:text-base mb-1">
-                                    We deal with any human resource issues, leaving our clients to run their business worry free.
+                                        We deal with any human resource issues, leaving our clients to run their business worry free.
                                     </span>
 
                                 </div>
@@ -440,10 +444,10 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             ))}
                         </div>
                     </div>
-                    <div className="text-center container mx-auto px-10 md:px-20" data-aos="fade-up">
+                    <div className="text-center" data-aos="fade-up">
                         <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
-                        <p className='text-inter font-normal text-sm md:text-base text-white'>Whether you need help navigating employment issues, improving workplace culture, or strengthening your HR processes, our team is here to guide you with clear advice and hands-on support. From day-to-day HR tasks to more complex matters, we make HR simple, effective and stress-free.
-                        </p>
+                        <p className='text-inter font-normal text-sm md:text-base text-white'>Lorem ipsum dolor sit amet consectetur adipiscing elit. <br />
+                            Quisque faucibus ex sapien vitae pellentesque sem placerat.</p>
                         <div className="flex justify-center mt-6">
                             <ExploreButton href="/services">
                                 EXPLORE ALL SERVICES
