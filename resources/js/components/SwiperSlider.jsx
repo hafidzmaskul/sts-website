@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { getMaxCharacters } from '../helpers/text';
 
 const SwiperSlider = ({
     news = [],
@@ -267,9 +266,7 @@ const SwiperSlider = ({
                                 />
                                 <div className="slide-overlay">
 
-                                    <div className="slide-overlay-text">
-                                        {getMaxCharacters(item.title, 100)}
-                                    </div>
+                                    <div className="slide-overlay-text">{item.title}</div>
                                     <a
                                         href={`/news/${item.slug ?? ''}`}
                                         className="slide-overlay-button"

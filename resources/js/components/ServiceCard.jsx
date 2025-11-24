@@ -54,12 +54,13 @@ export default function ServiceCard({
                                 'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                         }}
                     >
-                        <h2 className="text-lg text-center md:text-3xl font-inter text-black font-bold mb-2">
+                        <h2 className="text-lg text-center md:text-xl font-inter text-black font-bold mb-2">
                             {title}
                         </h2>
-                        <p className="text-black text-xs md:text-sm text-center mb-6 flex-1 line-clamp-3">
-                           {shortDescription}
-                        </p>
+                        <div
+                            className="text-black text-xs md:text-sm text-center mb-6 flex-1 line-clamp-3"
+                            dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
+                        />
                         <div className="flex justify-center">
                             <a
                                 href={`/service/${slug || ''}`}

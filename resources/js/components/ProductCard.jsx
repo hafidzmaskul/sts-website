@@ -56,9 +56,10 @@ export default function ProductCard({
             <h2 className="text-lg md:text-xl text-black font-semibold mb-2">
                {name}
             </h2>
-            <p className="text-black text-sm mb-6 flex-1 line-clamp-3">
-              {shortDescription}
-            </p>
+            <div
+              className="text-black text-sm mb-6 flex-1 line-clamp-3"
+              dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
+            />
             <div className="flex justify-center">
               <a
                 href={`products/${slug}`}

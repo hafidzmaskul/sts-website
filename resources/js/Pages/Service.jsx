@@ -107,8 +107,7 @@ export default function Service({ services = [] }) {
                                 slug={service.slug ?? index}
                                 key={service.id ?? index}
                                 index={index + 1}
-                                title={getMaxCharacters(service.name,20)}
-
+                                title={service.name}
                                 shortDescription={getMaxCharacters(service.short_description ?? service.content, 100)}
                                 image={service.image_url}
                                 isLoading={isLoading}

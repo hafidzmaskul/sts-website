@@ -325,11 +325,11 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                         required
                                         value={formData.fullName}
                                         onChange={handleInputChange}
-                                        className="w-full rounded-xl border border-white/20 text-black placeholder-black px-4 py-3 focus:outline-none "
+                                         className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 font-monserat font-normal text-sm"
                                         placeholder="Full Name"
                                         style={{
-                                            background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
-                                        }}
+                                    background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)',
+                                }}
                                     />
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-4">
@@ -341,7 +341,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                             required
                                             value={formData.email}
                                             onChange={handleInputChange}
-                                            className="w-full rounded-xl border border-white/20 text-black placeholder-black px-4 py-3 focus:outline-none "
+                                             className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 font-monserat font-normal text-sm"
                                             placeholder="Email"
                                             style={{
                                                 background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
@@ -356,7 +356,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                             required
                                             value={formData.phone}
                                             onChange={handleInputChange}
-                                            className="w-full rounded-xl border border-white/20 text-black placeholder-black px-4 py-3 focus:outline-none "
+                                             className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 font-monserat font-normal text-sm"
                                             placeholder="Mobile Phone"
                                             style={{
                                                 background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
@@ -372,8 +372,8 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                         onChange={handleInputChange}
                                         className="w-full rounded-xl border border-white/20 text-black placeholder-black px-4 py-3 file:mr-3 file:rounded-lg file:border-0 file:text-black file:px-3 file:py-2  "
                                         style={{
-                                            background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
-                                        }}
+                                    background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)',
+                                }}
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2 md:col-span-1">
@@ -386,8 +386,8 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                         className="w-full rounded-xl border border-white/20 text-black placeholder-black px-4 py-3  "
                                         placeholder="Message"
                                         style={{
-                                            background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
-                                        }}
+                                    background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)',
+                                }}
                                     />
                                 </div>
 
@@ -401,8 +401,8 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                         onChange={handleInputChange}
                                         className="h-4 w-4 rounded border-white/40 text-[#FFED2E] focus:ring-[#FFED2E]"
                                         style={{
-                                            background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)'
-                                        }}
+                                    background: 'linear-gradient(181.35deg, rgba(255, 255, 255, 0.5) 1.15%, rgba(255, 255, 255, 0) 98.91%)',
+                                }}
                                     />
                                     {/* Label intentionally removed as per spec */}
                                 </div>
