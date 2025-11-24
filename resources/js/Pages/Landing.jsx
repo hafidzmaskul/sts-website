@@ -48,9 +48,9 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     ];
     const carouselItems = services.map((service) => ({
         title: service.name,
-        text: getMaxCharacters(service.short_description ?? service.content ?? '', 50),
+        text: getMaxCharacters(service.short_description ?? service.content ?? '', 500),
         image: service.image_url,
-        buttonText: 'Next',
+        buttonText: 'Read More',
         slug: service.slug,
     }));
 
