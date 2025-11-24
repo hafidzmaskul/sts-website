@@ -6,49 +6,10 @@ import Footer from '../landing/Footer';
 import H1 from '../components/H1';
 import { getMaxWords } from '../helpers/text';
 
-const fallbackJobs = [
-    {
-        id: 1,
-        slug: 'senior-hr-consultant',
-        title: 'Senior HR Consultant',
-        category: 'HR Consulting',
-        summary: 'Lead retainer clients on complex employee relations cases, coach managers through sensitive changes, and deliver compliance audits. You will map processes, create policies, and prepare training that keeps teams confident during transitions. This role mixes strategic advisory with hands-on delivery, so you will spend time in workshops, producing toolkits, and presenting recommendations to stakeholders across the region.',
-        description: 'You will partner directly with business owners to deliver pragmatic HR advice and bespoke documentation that keeps them compliant and confident. From disciplinary and grievance investigations to restructuring programmes, you will design people plans that balance empathy and risk. You will also facilitate learning sessions for managers, keep our knowledge base sharp, and ensure our playbooks stay current with the latest employment law changes.',
-        location: 'London, United Kingdom',
-        type: 'Full Time',
-        level: 'Senior',
-        department: 'Client Advisory',
-        // Overwrite responsibilities/requirements
-    },
-    {
-        id: 2,
-        slug: 'people-operations-lead',
-        title: 'People Operations Lead',
-        category: 'People Operations',
-        summary: 'Own the people ops engine that powers onboarding, payroll inputs, benefits, and HRIS hygiene. You will streamline workflows, remove friction for employees, and ensure data accuracy for reporting. The role needs someone who loves process, automation, and partnering closely with finance to keep everything running smoothly and on time each month.',
-        description: 'You will design and maintain the operating rhythm for our people team. From pre-boarding through offboarding, you will refine checklists, automate approvals, and keep documentation consistent. You will be the bridge between HR and finance to reconcile payroll changes, and you will monitor service levels so colleagues feel supported at every touchpoint.',
-        location: 'Hybrid - Manchester',
-        type: 'Full Time',
-        level: 'Mid-Senior',
-        department: 'Operations',
-        // Overwrite responsibilities/requirements
-    },
-    {
-        id: 3,
-        slug: 'talent-acquisition-partner',
-        title: 'Talent Acquisition Partner',
-        category: 'Talent',
-        summary: 'Shape the candidate experience from first touch to offer acceptance. You will run end-to-end searches, build diverse pipelines, and coach hiring managers on structured interviews. Storytelling is key: you will translate our value proposition into outreach, events, and content that attracts the right people for each role.',
-        description: 'As a Talent Acquisition Partner you will own searches across consulting, operations, and product. You will design scorecards, run inclusive processes, and keep candidates informed at every stage. Beyond filling roles, you will contribute to employer brand campaigns, source at events, and experiment with new channels to reach niche profiles.',
-        location: 'Remote, GMT ±2',
-        type: 'Contract to Permanent',
-        level: 'Mid',
-        department: 'Talent',
-        // Overwrite responsibilities/requirements
-    },
-];
+
 
 export default function CareerDetail({ job = null, jobs = [] }) {
+    console.log(job)
     const preparedJobs = useMemo(
         () => (Array.isArray(jobs) && jobs.length > 0 ? jobs : fallbackJobs),
         [jobs],
@@ -231,7 +192,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                     <button
                                         type="button"
                                         onClick={handleShare}
-                                        className="inline-flex items-center  px-4 py-3 rounded-full  text-black transition"
+                                        className="inline-flex items-center  px-4 py-3 rounded-xl  text-black transition"
                                         style={{
                                             background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
                                         }}
@@ -250,25 +211,22 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                             'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                                     }}
                                 >
-                                    <div className=" p-3 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-wide">
-                                        {selectedJob?.location && (
+                                    <div className="p-3 flex flex-wrap gap-3 text-xs font-medium uppercase tracking-wide">
+                                        {selectedJob?.employment_type && (
                                             <span className="px-3 py-1 rounded-full bg-[#E3E3E3] text-black">
-                                                {selectedJob.location}
+                                                Type : <b>{selectedJob.employment_type}</b>
                                             </span>
                                         )}
-                                        {selectedJob?.type && (
-                                            <span className="px-3 py-1 rounded-full bg-[#E3E3E3] text-black">
-                                                {selectedJob.type}
-                                            </span>
-                                        )}
+                                        {selectedJob?.employment_type && selectedJob?.level && <span className="text-black">.</span>}
                                         {selectedJob?.level && (
                                             <span className="px-3 py-1 rounded-full bg-[#E3E3E3] text-black">
-                                                {selectedJob.level}
+                                                Level : <b>{selectedJob.level}</b>
                                             </span>
                                         )}
+                                        {(selectedJob?.employment_type || selectedJob?.level) && selectedJob?.department && <span className="text-black">.</span>}
                                         {selectedJob?.department && (
                                             <span className="px-3 py-1 rounded-full bg-[#E3E3E3] text-black">
-                                                {selectedJob.department}
+                                                Department :<b>{selectedJob.department}</b>
                                             </span>
                                         )}
                                     </div>
@@ -433,65 +391,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                         </div>
                     </section>
 
-                    <section className="mt-6">
-                        <H1 text="Other Positions" color="white" className="uppercase text-left mb-6" />
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {otherJobs
-                                .slice(0, 3)
-                                .map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="p-5 backdrop-blur-[70px] rounded-2xl shadow-[0px_1.2px_29.92px_0px_rgba(69,42,124,0.10)] overflow-hidden flex flex-col"
-                                        style={{
-                                            background:
-                                                'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
-                                        }}
-                                    >
-                                        <div
-                                            className="px-6 rounded-2xl pt-6 pb-4 flex flex-col flex-1"
-                                            style={{
-                                                boxShadow: '0px 1.2px 29.92px 0px #452A7C1A',
-                                                background:
-                                                    'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
-                                            }}
-                                        >
-                                            <div className="flex items-start justify-between gap-3">
-                                                <h3 className="text-xl font-bold text-white leading-tight">
-                                                    {item.title}
-                                                </h3>
-                                                <span className="text-[11px] uppercase tracking-wide bg-[#FFED2E] text-black px-3 py-1 rounded-full font-semibold">
-                                                    {item.department ?? item.category ?? 'Career'}
-                                                </span>
-                                            </div>
-                                            <p className="mt-4 text-sm text-white/80 leading-relaxed flex-1">
-                                                {getMaxWords(stripHtml(item.description ?? item.summary ?? ''), 40)}
-                                            </p>
-                                            <a
-                                                href={`/career/${item.slug ?? item.id}`}
-                                                className="mt-6 inline-flex items-center justify-center gap-2 bg-white text-black px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#FFED2E] transition"
-                                            >
-                                                See Detail
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="16"
-                                                    height="16"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="lucide lucide-arrow-up-right"
-                                                >
-                                                    <path d="M7 7h10v10" />
-                                                    <path d="M7 17 17 7" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))}
-                        </div>
-                    </section>
+
                 </main>
 
                 <Footer />
