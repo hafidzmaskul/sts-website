@@ -56,7 +56,7 @@ export default function Service({ services = [] }) {
                 <div className="w-full flex flex-col items-center text-center mt-20">
                     <H1 text={'Our Services'} color='black'  />
                     <p className='text-roboto text-xs md:text-base font-normal mb-10 md:mb-20 mt-10 max-w-md'>
-                    Welping your business stay compliant, supported and ready to grow
+                    Helping your business stay compliant, supported and ready to grow
                     </p>
                 </div>
             </div>

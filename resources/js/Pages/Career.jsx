@@ -101,7 +101,7 @@ export default function Career({ jobs = [] }) {
                                                 'linear-gradient(86.16deg, rgba(255, 255, 255, 0.2) 11.14%, rgba(255, 255, 255, 0.035) 113.29%)',
                                         }}
                                     >
-                                        <div className="items-start gap-3 w-1/2">
+                                        <div className="items-start gap-3 w-2/3">
                                             <h3 className="text-xl font-bold text-white leading-tight">
                                                 {job.title}
                                             </h3>

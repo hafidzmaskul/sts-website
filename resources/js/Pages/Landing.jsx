@@ -26,25 +26,19 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     const slides = [
         {
             id: 1,
-            text: "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere.",
-            buttonText: "Lorem Ipsum",
+            text: "With over 29 years of HR and Employment Law experience, including UK-wide Employment Tribunal representation since 2003, we have supported more than 500 clients across multiple sectors. Schedule your strategy session for clear, informed guidance tailored to your organisation.",
+            buttonText: "Learn More",
             years: "+29 YEARS",
             experience: "EXPERIENCE"
         },
         {
             id: 2,
-            text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            text: "We provide HR and Employment Law support across a broad range of industries, from construction and finance to healthcare, manufacturing and professional services. Book a session to discuss your requirements with an experienced, sector-aware specialist.",
             buttonText: "Learn More",
-            years: "+500 PROJECTS",
-            experience: "COMPLETED"
+            years: "500+ clients",
+            experience: "CLIENT"
         },
-        {
-            id: 3,
-            text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-            buttonText: "Get Started",
-            years: "+1000 CLIENTS",
-            experience: "SATISFIED"
-        }
+
     ];
     const carouselItems = services.map((service) => ({
         title: service.name,
@@ -446,8 +440,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                     </div>
                     <div className="text-center" data-aos="fade-up">
                         <H1 text="OUR SERVICES" color="white" className="text-center uppercase mb-10" />
-                        <p className='text-inter font-normal text-sm md:text-base text-white'>Lorem ipsum dolor sit amet consectetur adipiscing elit. <br />
-                            Quisque faucibus ex sapien vitae pellentesque sem placerat.</p>
+                        <p className='text-inter font-normal text-sm md:text-base text-white'>Helping your business stay compliant, supported and ready to grow</p>
                         <div className="flex justify-center mt-6">
                             <ExploreButton href="/services">
                                 EXPLORE ALL SERVICES
