@@ -7,6 +7,7 @@ export default function ProductCard({
     name,
     shortDescription,
     image,
+    price
 }) {
   return (
     <div
@@ -56,6 +57,11 @@ export default function ProductCard({
             <h2 className="text-lg md:text-xl text-black font-semibold mb-2">
                {name}
             </h2>
+            <div className="py-3">
+
+            <span className="text-[11px] uppercase  tracking-wide bg-[#E3E3E3] text-black px-2 py-1 rounded-full font-semibold text-center">
+            £{Number(price).toLocaleString('en-UK', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            </div>
             <div
               className="text-black text-sm mb-6 flex-1 line-clamp-3"
               dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}

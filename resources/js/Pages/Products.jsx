@@ -85,6 +85,7 @@ export default function Products({ products = [] }) {
                                     name={product.name}
                                     shortDescription={getMaxCharacters(product.short_description ?? product.content, 100)}
                                     image={product.image_url}
+                                    price={product.price}
                                     isLoading={false}
                                 />
                             </div>

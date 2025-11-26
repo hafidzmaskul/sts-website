@@ -147,7 +147,7 @@ export default function AboutUs({ teamMembers }) {
                                                 Range of Business Sectors
                                             </h2>
                                             <p className="text-white font-montserrat text-sm flex-1">
-                                                We cover all market sectors. A complete A-Z of the business world.
+                                            We bring extensive experience across a wide range of sectors, including Construction, Trades, Finance, Healthcare, IT, Media, Real Estate, Logistics, Hospitality, Manufacturing, Education, Professional Services and many more.
                                             </p>
                                         </div>
                                     </div>

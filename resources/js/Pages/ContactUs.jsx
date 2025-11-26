@@ -101,8 +101,7 @@ export default function ContactUs() {
                 <div className="w-full flex flex-col items-center text-center mt-20">
                     <H1 text={'Contact Us'} color='black' />
                     <p className='text-roboto text-xs md:text-base font-normal mb-10 md:mb-20 mt-10 max-w-md'>
-                        Lorem ipsum dolor sit amet consectetur adipiscing elit.  Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu
-                        aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl  malesuada lacinia integer nunc posuere.
+                    If you’re facing an HR challenge or looking for trusted guidance, we’re here to help. Reach out to our team and we’ll provide the support you need.
                     </p>
                 </div>
             </div>
@@ -227,7 +226,7 @@ export default function ContactUs() {
 
 
                         <h2 className="font-montserrat text-1xl md:text-3xl font-extrabold mb-2 text-center md:text-left">Please Contact Us We Are Happy To Help</h2>
-                        <p className="font-roboto text-xs md:text-sm fonr-normal mb-4 text-center md:text-left">We’re always interested in new projects, big or small. Send us an email andwe’ll get in touch shortly, or phone anytime Monday to Sunday.</p>
+                        <p className="font-roboto text-xs md:text-sm fonr-normal mb-4 text-center md:text-left">We’re always interested in new projects, big or small. Send us an email and we’ll get in touch shortly, or phone anytime Monday to Sunday.</p>
                         <div className="w-full flex flex-col gap-4">
                             <h6 className='font-montserrat font-bold text-base md:text-xl ' >
                                 Absolutely Human Resources Limited
