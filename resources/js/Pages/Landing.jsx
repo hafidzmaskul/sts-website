@@ -469,7 +469,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                         <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                             {/* Kiri: Text */}
                             <div className="md:w-1/2 w-full flex justify-center items-center">
-                                <H1 text="Over 29 Years of Experience in HR & Recruitment" className='text-start leading-10' color="white" />
+                                <H1 text="HR Employment Law and Reqruitment" className='text-start leading-10' color="white" />
                             </div>
 
                             {/* PERUBAHAN: Ganti bagian list lama dengan komponen ScrollActiveList */}
