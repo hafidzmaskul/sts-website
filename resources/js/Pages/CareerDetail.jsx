@@ -3,14 +3,8 @@ import axios from 'axios';
 import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
-import H1 from '../components/H1';
-import { getMaxWords } from '../helpers/text';
-
-
 
 export default function CareerDetail({ job = null, jobs = [] }) {
-    console.log(job)
-    // Removed fallbackJobs reference to avoid ReferenceError
     const preparedJobs = useMemo(
         () => (Array.isArray(jobs) && jobs.length > 0 ? jobs : []),
         [jobs],
