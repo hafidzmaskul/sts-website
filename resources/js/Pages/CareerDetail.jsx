@@ -10,8 +10,9 @@ import { getMaxWords } from '../helpers/text';
 
 export default function CareerDetail({ job = null, jobs = [] }) {
     console.log(job)
+    // Removed fallbackJobs reference to avoid ReferenceError
     const preparedJobs = useMemo(
-        () => (Array.isArray(jobs) && jobs.length > 0 ? jobs : fallbackJobs),
+        () => (Array.isArray(jobs) && jobs.length > 0 ? jobs : []),
         [jobs],
     );
 
