@@ -24,16 +24,16 @@ export default function Header() {
 
     // Navigation items configuration
     const navItems = [
-        { name: 'Services', href: '/services' },
-        { name: 'Products', href: '/products' },
+        { name: 'About Us', href: '/about-us' },
         { name: 'News', href: '/news' },
+        { name: 'Services', href: '/services' },
     ];
 
     const rightNavItems = [
-        { name: 'Career', href: '/career' },
-
-        { name: 'About Us', href: '/about-us' },
+        { name: 'Recruitment', href: '/career' },
+        { name: 'Products', href: '/products' },
         { name: 'Contact Us', href: '/contact-us' },
+
     ];
 
     // Generate breadcrumb items based on current path
