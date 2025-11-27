@@ -103,6 +103,24 @@
                 </div>
             </div>
 
+            <div class="rounded-2xl bg-white p-6 dark:bg-zinc-900 border dark:border-zinc-700">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">
+                            Landing Page Settings
+                        </label>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 truncate">Manage footer, address, contact,
+                            and operational hours</p>
+                    </div>
+                    @can('settings.update')
+                        <button wire:click="edit('landing_page')"
+                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors">
+                            Setting
+                        </button>
+                    @endcan
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -166,46 +184,107 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Google Analytics ID</label>
-                                <input
-                                    type="text"
-                                    wire:model="integrationForm.google_analytics_id"
+                                <input type="text" wire:model="integrationForm.google_analytics_id"
                                     class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                                    placeholder="e.g., G-XXXXXXXXXX"
-                                >
-                                @error('integrationForm.google_analytics_id') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                                    placeholder="e.g., G-XXXXXXXXXX">
+                                @error('integrationForm.google_analytics_id') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Google Tag Manager ID</label>
-                                <input
-                                    type="text"
-                                    wire:model="integrationForm.google_tag_manager_id"
+                                <input type="text" wire:model="integrationForm.google_tag_manager_id"
                                     class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                                    placeholder="e.g., GTM-XXXXXXX"
-                                >
-                                @error('integrationForm.google_tag_manager_id') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                                    placeholder="e.g., GTM-XXXXXXX">
+                                @error('integrationForm.google_tag_manager_id') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Custom Script (Header)</label>
-                                <textarea
-                                    wire:model="integrationForm.custom_script_header"
-                                    rows="5"
+                                <textarea wire:model="integrationForm.custom_script_header" rows="5"
                                     class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                                    placeholder="<script>...</script>"
-                                ></textarea>
-                                @error('integrationForm.custom_script_header') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                                    placeholder="<script>...</script>"></textarea>
+                                @error('integrationForm.custom_script_header') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Custom Script (Footer)</label>
-                                <textarea
-                                    wire:model="integrationForm.custom_script_footer"
-                                    rows="5"
+                                <textarea wire:model="integrationForm.custom_script_footer" rows="5"
                                     class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                                    placeholder="<script>...</script>"
-                                ></textarea>
-                                @error('integrationForm.custom_script_footer') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                                    placeholder="<script>...</script>"></textarea>
+                                @error('integrationForm.custom_script_footer') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($editingKey === 'landing_page')
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Footer Description</label>
+                                <textarea wire:model="landingPageForm.footer_description" rows="3"
+                                    class="w-full rounded-lg border px-3 py-2 text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="Absolutely Human Resources Limited support clients in their Human Resource and Employment Law needs. We ensure that our clients are regularly updated with the current, frequent and ongoing changes to UK Employment Law."></textarea>
+                                @error('landingPageForm.footer_description') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Address Label 1</label>
+                                    <input type="text" wire:model="landingPageForm.address_label_1"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="16 Society Road">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Address Label 2</label>
+                                    <input type="text" wire:model="landingPageForm.address_label_2"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="South Queensferry, Edinburgh EH30 9RX">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Contact 1</label>
+                                    <input type="text" wire:model="landingPageForm.contact_1"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="0131 331 2735">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Contact 2</label>
+                                    <input type="text" wire:model="landingPageForm.contact_2"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="07970 797 544">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Operational Time Label
+                                        1</label>
+                                    <input type="text" wire:model="landingPageForm.time_operational_label_1"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="24/7">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Operational Time Label
+                                        2</label>
+                                    <input type="text" wire:model="landingPageForm.time_operational_label_2"
+                                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                        placeholder="Monday to Sunday">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Email</label>
+                                <input type="email" wire:model="landingPageForm.landing_page_email"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="info@absolutelyhumanresources.co.uk">
+                                @error('landingPageForm.landing_page_email') <p
+                                class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     @endif

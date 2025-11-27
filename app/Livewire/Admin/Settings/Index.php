@@ -23,6 +23,7 @@ class Index extends Component
     public $customScriptHeader; // [NEW]
     public $customScriptFooter; // [NEW]
     public $integrationForm = []; // [NEW]
+    public $landingPageForm = []; // [NEW]
     public $showModal = false;
     public $editingKey = null;
     public $editingLabel = null;
@@ -82,6 +83,18 @@ class Index extends Component
                 'google_tag_manager_id' => $this->googleTagManagerId,
                 'custom_script_header' => $this->customScriptHeader,
                 'custom_script_footer' => $this->customScriptFooter,
+            ];
+        } elseif ($key === 'landing_page') {
+            $this->editingLabel = 'Landing Page Settings';
+            $this->landingPageForm = [
+                'footer_description' => Setting::where('key', 'footer_description')->first()?->value,
+                'address_label_1' => Setting::where('key', 'address_label_1')->first()?->value,
+                'address_label_2' => Setting::where('key', 'address_label_2')->first()?->value,
+                'contact_1' => Setting::where('key', 'contact_1')->first()?->value,
+                'contact_2' => Setting::where('key', 'contact_2')->first()?->value,
+                'time_operational_label_1' => Setting::where('key', 'time_operational_label_1')->first()?->value,
+                'time_operational_label_2' => Setting::where('key', 'time_operational_label_2')->first()?->value,
+                'landing_page_email' => Setting::where('key', 'landing_page_email')->first()?->value,
             ];
         }
 
@@ -168,6 +181,23 @@ class Index extends Component
             }
 
             $message = 'Integration settings updated.';
+        } elseif ($this->editingKey === 'landing_page') {
+            $validated = $this->validate([
+                'landingPageForm.footer_description' => 'nullable|string',
+                'landingPageForm.address_label_1' => 'nullable|string',
+                'landingPageForm.address_label_2' => 'nullable|string',
+                'landingPageForm.contact_1' => 'nullable|string',
+                'landingPageForm.contact_2' => 'nullable|string',
+                'landingPageForm.time_operational_label_1' => 'nullable|string',
+                'landingPageForm.time_operational_label_2' => 'nullable|string',
+                'landingPageForm.landing_page_email' => 'nullable|email',
+            ]);
+
+            foreach ($validated['landingPageForm'] as $key => $value) {
+                Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            }
+
+            $message = 'Landing page settings updated.';
         }
 
         $this->loadSettings();
