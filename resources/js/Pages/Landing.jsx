@@ -299,7 +299,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                         >
                             {/* Item 1 */}
                             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">30+</span>
+                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">29+</span>
                                 <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Years of Business</span>
                             </div>
                             {/* Separator */}
@@ -307,7 +307,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             <div className="block md:hidden w-10/12 mx-auto h-px border-t-2 border-[#fff] opacity-60 my-2"></div>
                             {/* Item 2 */}
                             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">521+</span>
+                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">500+</span>
                                 <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Happy Clients</span>
                             </div>
                             {/* Separator */}
@@ -315,7 +315,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             <div className="block md:hidden w-10/12 mx-auto h-px border-t-2 border-[#fff] opacity-60 my-2"></div>
                             {/* Item 3 */}
                             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">15+</span>
+                                <span className="font-montserrat font-bold text-2xl md:text-5xl text-white leading-none">100+</span>
                                 <span className="font-montserrat font-semibold text-white text-sm md:text-base mt-1 leading-tight text-center md:text-left">Business Sector's Expertise</span>
                             </div>
 
