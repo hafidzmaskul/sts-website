@@ -85,6 +85,24 @@
                 </div>
             </div>
 
+            <div class="rounded-2xl bg-white p-6 dark:bg-zinc-900 border dark:border-zinc-700">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">
+                            Integration Panel
+                        </label>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 truncate">Manage Google Analytics, GTM, and
+                            custom scripts</p>
+                    </div>
+                    @can('settings.update')
+                        <button wire:click="edit('integrations')"
+                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors">
+                            Setting
+                        </button>
+                    @endcan
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -141,6 +159,54 @@
                                 class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"></textarea>
                             @error('editingValue') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p>
                             @enderror
+                        </div>
+                    @endif
+
+                    @if($editingKey === 'integrations')
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Google Analytics ID</label>
+                                <input
+                                    type="text"
+                                    wire:model="integrationForm.google_analytics_id"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="e.g., G-XXXXXXXXXX"
+                                >
+                                @error('integrationForm.google_analytics_id') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Google Tag Manager ID</label>
+                                <input
+                                    type="text"
+                                    wire:model="integrationForm.google_tag_manager_id"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="e.g., GTM-XXXXXXX"
+                                >
+                                @error('integrationForm.google_tag_manager_id') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Custom Script (Header)</label>
+                                <textarea
+                                    wire:model="integrationForm.custom_script_header"
+                                    rows="5"
+                                    class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="<script>...</script>"
+                                ></textarea>
+                                @error('integrationForm.custom_script_header') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Custom Script (Footer)</label>
+                                <textarea
+                                    wire:model="integrationForm.custom_script_footer"
+                                    rows="5"
+                                    class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="<script>...</script>"
+                                ></textarea>
+                                @error('integrationForm.custom_script_footer') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            </div>
                         </div>
                     @endif
 

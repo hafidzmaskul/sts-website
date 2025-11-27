@@ -18,6 +18,11 @@ class Index extends Component
     public $heroBanner;
     public $vatPercentage; // [NEW]
     public $robotsTxtContent; // [NEW]
+    public $googleAnalyticsId; // [NEW]
+    public $googleTagManagerId; // [NEW]
+    public $customScriptHeader; // [NEW]
+    public $customScriptFooter; // [NEW]
+    public $integrationForm = []; // [NEW]
     public $showModal = false;
     public $editingKey = null;
     public $editingLabel = null;
@@ -39,6 +44,11 @@ class Index extends Component
         if (!$this->robotsTxtContent && file_exists(public_path('robots.txt'))) {
             $this->robotsTxtContent = file_get_contents(public_path('robots.txt'));
         }
+
+        $this->googleAnalyticsId = Setting::where('key', 'google_analytics_id')->first()?->value;
+        $this->googleTagManagerId = Setting::where('key', 'google_tag_manager_id')->first()?->value;
+        $this->customScriptHeader = Setting::where('key', 'custom_script_header')->first()?->value;
+        $this->customScriptFooter = Setting::where('key', 'custom_script_footer')->first()?->value;
     }
 
     public function edit($key)
@@ -65,6 +75,14 @@ class Index extends Component
         } elseif ($key === 'robots_txt_content') { // [NEW]
             $this->editingLabel = 'Robots.txt Content';
             $this->editingValue = $this->robotsTxtContent;
+        } elseif ($key === 'integrations') {
+            $this->editingLabel = 'Integration Panel';
+            $this->integrationForm = [
+                'google_analytics_id' => $this->googleAnalyticsId,
+                'google_tag_manager_id' => $this->googleTagManagerId,
+                'custom_script_header' => $this->customScriptHeader,
+                'custom_script_footer' => $this->customScriptFooter,
+            ];
         }
 
         $this->showModal = true;
@@ -136,6 +154,20 @@ class Index extends Component
             file_put_contents(public_path('robots.txt'), $validated['editingValue']);
 
             $message = 'Robots.txt updated.';
+
+        } elseif ($this->editingKey === 'integrations') {
+            $validated = $this->validate([
+                'integrationForm.google_analytics_id' => 'nullable|string',
+                'integrationForm.google_tag_manager_id' => 'nullable|string',
+                'integrationForm.custom_script_header' => 'nullable|string',
+                'integrationForm.custom_script_footer' => 'nullable|string',
+            ]);
+
+            foreach ($validated['integrationForm'] as $key => $value) {
+                Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            }
+
+            $message = 'Integration settings updated.';
         }
 
         $this->loadSettings();

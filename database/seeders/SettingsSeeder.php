@@ -21,5 +21,9 @@ class SettingsSeeder extends Seeder
             ['key' => 'robots_txt_content'],
             ['value' => "User-agent: *\nDisallow:"]
         );
+
+        foreach (['google_analytics_id', 'google_tag_manager_id', 'custom_script_header', 'custom_script_footer'] as $key) {
+            Setting::firstOrCreate(['key' => $key], ['value' => '']);
+        }
     }
 }
