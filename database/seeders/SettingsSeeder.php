@@ -16,5 +16,10 @@ class SettingsSeeder extends Seeder
             ['key' => 'vat_percentage'],
             ['value' => '0']
         );
+
+        Setting::firstOrCreate(
+            ['key' => 'robots_txt_content'],
+            ['value' => "User-agent: *\nDisallow:"]
+        );
     }
 }

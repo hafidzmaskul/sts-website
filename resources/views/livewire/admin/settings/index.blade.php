@@ -67,6 +67,24 @@
                 </div>
             </div>
 
+            <div class="rounded-2xl bg-white p-6 dark:bg-zinc-900 border dark:border-zinc-700">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">
+                            Robots.txt Content
+                        </label>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 truncate">Manage search engine indexing rules
+                        </p>
+                    </div>
+                    @can('settings.update')
+                        <button wire:click="edit('robots_txt_content')"
+                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors">
+                            Setting
+                        </button>
+                    @endcan
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -116,6 +134,15 @@
                         </div>
                     @endif
 
+                    @if($editingKey === 'robots_txt_content')
+                        <div>
+                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Content</label>
+                            <textarea wire:model="editingValue" rows="10"
+                                class="w-full rounded-lg border px-3 py-2 font-mono text-sm dark:bg-zinc-800 dark:text-white dark:border-zinc-700"></textarea>
+                            @error('editingValue') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <div class="flex items-center justify-end gap-2">
                         <button type="button" wire:click="closeModal"

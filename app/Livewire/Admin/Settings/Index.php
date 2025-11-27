@@ -17,6 +17,7 @@ class Index extends Component
     public $adminEmail;
     public $heroBanner;
     public $vatPercentage; // [NEW]
+    public $robotsTxtContent; // [NEW]
     public $showModal = false;
     public $editingKey = null;
     public $editingLabel = null;
@@ -32,7 +33,12 @@ class Index extends Component
     {
         $this->adminEmail = Setting::where('key', 'admin_email')->first()?->value;
         $this->heroBanner = Setting::where('key', 'hero_banner')->first()?->value;
-        $this->vatPercentage = Setting::where('key', 'vat_percentage')->first()?->value ?? '0'; // [NEW]
+        $this->vatPercentage = Setting::where('key', 'vat_percentage')->first()?->value ?? '0';
+
+        $this->robotsTxtContent = Setting::where('key', 'robots_txt_content')->first()?->value;
+        if (!$this->robotsTxtContent && file_exists(public_path('robots.txt'))) {
+            $this->robotsTxtContent = file_get_contents(public_path('robots.txt'));
+        }
     }
 
     public function edit($key)
@@ -56,6 +62,9 @@ class Index extends Component
         } elseif ($key === 'vat_percentage') { // [NEW]
             $this->editingLabel = 'VAT Percentage';
             $this->editingValue = $this->vatPercentage;
+        } elseif ($key === 'robots_txt_content') { // [NEW]
+            $this->editingLabel = 'Robots.txt Content';
+            $this->editingValue = $this->robotsTxtContent;
         }
 
         $this->showModal = true;
@@ -112,6 +121,21 @@ class Index extends Component
                 ['value' => $validated['editingValue']]
             );
             $message = 'VAT percentage updated.';
+
+        } elseif ($this->editingKey === 'robots_txt_content') { // [NEW]
+            $validated = $this->validate(
+                ['editingValue' => 'required|string'],
+                ['editingValue.required' => 'Content cannot be empty.']
+            );
+
+            Setting::updateOrCreate(
+                ['key' => 'robots_txt_content'],
+                ['value' => $validated['editingValue']]
+            );
+
+            file_put_contents(public_path('robots.txt'), $validated['editingValue']);
+
+            $message = 'Robots.txt updated.';
         }
 
         $this->loadSettings();
