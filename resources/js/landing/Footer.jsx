@@ -207,7 +207,7 @@ export default function Footer({ landingPageData = {} }) {
                         <hr className='-mt-5' style={{ borderColor: "#4D558D" }} />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 items-center">
                             <div className="flex items-center space-x-4">
-                                <p className='font-roboto font-normal text-sm'>© Copyright 2025 Absolutely HR</p>
+                                <p className='font-roboto font-normal text-sm'>© Copyright 2025 Absolutely Human Resources</p>
                             </div>
                             <div className="flex justify-start md:justify-end mt-4 md:mt-0">
                                 <div className="flex items-center space-x-4 sm:space-x-6">
