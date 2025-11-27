@@ -15,7 +15,8 @@ class Index extends Component
     use WithFileUploads;
 
     public $adminEmail;
-    public $heroBanner; 
+    public $heroBanner;
+    public $vatPercentage; // [NEW]
     public $showModal = false;
     public $editingKey = null;
     public $editingLabel = null;
@@ -31,6 +32,7 @@ class Index extends Component
     {
         $this->adminEmail = Setting::where('key', 'admin_email')->first()?->value;
         $this->heroBanner = Setting::where('key', 'hero_banner')->first()?->value;
+        $this->vatPercentage = Setting::where('key', 'vat_percentage')->first()?->value ?? '0'; // [NEW]
     }
 
     public function edit($key)
@@ -43,7 +45,7 @@ class Index extends Component
 
         $this->editingKey = $key;
         $this->resetErrorBag();
-        $this->heroBannerUpload = null; 
+        $this->heroBannerUpload = null;
 
         if ($key === 'admin_email') {
             $this->editingLabel = 'Admin Notification Email';
@@ -51,6 +53,9 @@ class Index extends Component
         } elseif ($key === 'hero_banner') {
             $this->editingLabel = 'Hero Banner Image';
             $this->editingValue = null;
+        } elseif ($key === 'vat_percentage') { // [NEW]
+            $this->editingLabel = 'VAT Percentage';
+            $this->editingValue = $this->vatPercentage;
         }
 
         $this->showModal = true;
@@ -71,7 +76,7 @@ class Index extends Component
                 ['editingValue' => 'required|email'],
                 ['editingValue.required' => 'The value cannot be empty.', 'editingValue.email' => 'Please provide a valid email address.']
             );
-            
+
             Setting::updateOrCreate(
                 ['key' => 'admin_email'],
                 ['value' => $validated['editingValue']]
@@ -80,14 +85,14 @@ class Index extends Component
 
         } elseif ($this->editingKey === 'hero_banner') {
             $validated = $this->validate(
-                ['heroBannerUpload' => 'required|image|max:2048'], 
+                ['heroBannerUpload' => 'required|image|max:2048'],
                 ['heroBannerUpload.required' => 'Please select an image.', 'heroBannerUpload.image' => 'The file must be an image.']
             );
 
             if ($this->heroBanner && Storage::disk('public')->exists($this->heroBanner)) {
                 Storage::disk('public')->delete($this->heroBanner);
             }
-            
+
             $path = $this->heroBannerUpload->store('banners', 'public');
 
             Setting::updateOrCreate(
@@ -95,6 +100,18 @@ class Index extends Component
                 ['value' => $path]
             );
             $message = 'Hero banner updated.';
+
+        } elseif ($this->editingKey === 'vat_percentage') { // [NEW]
+            $validated = $this->validate(
+                ['editingValue' => 'required|numeric|min:0|max:100'],
+                ['editingValue.required' => 'The VAT percentage is required.', 'editingValue.numeric' => 'Must be a number.', 'editingValue.min' => 'Cannot be negative.', 'editingValue.max' => 'Cannot exceed 100.']
+            );
+
+            Setting::updateOrCreate(
+                ['key' => 'vat_percentage'],
+                ['value' => $validated['editingValue']]
+            );
+            $message = 'VAT percentage updated.';
         }
 
         $this->loadSettings();
