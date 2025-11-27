@@ -341,7 +341,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                             <div className="md:w-1/2">
                                 <H1 text="Our SERVICE" color="white" className="text-start uppercase mb-10" />
                                 <p className="font-inter text-white font-regular text-sm md:text-base mt-20">
-                                    At Absolutely HR, we provide practical, reliable and people-focused HR support to help small and growing businesses thrive. We work closely with you to understand your needs, resolve challenges quickly and ensure your workforce is protected, supported and compliant. <br />
+                                    At Absolutely Human Resources, we provide practical, reliable and people-focused HR support to help small and growing businesses thrive. We work closely with you to understand your needs, resolve challenges quickly and ensure your workforce is protected, supported and compliant. <br />
                                     <br/>
                                     Whether you need help navigating employment issues, improving workplace culture, or strengthening your HR processes, our team is here to guide you with clear advice and hands-on support. From day-to-day HR tasks to more complex matters, we make HR simple, effective and stress-free. <br />
                                     <br/>
