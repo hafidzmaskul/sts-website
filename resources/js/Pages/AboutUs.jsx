@@ -12,7 +12,7 @@ export default function AboutUs({ teamMembers }) {
 
     return (
         <>
-            <Head title="About Us - AbsolutelyHR" />
+            <Head title="About Us - Absolutely Human Resources" />
             <div className="" data-aos="fade-in">
                 <div
                     className="relative flex flex-col rounded-b-4xl sm:rounded-b[100px] lg:rounded-b-[100px] overflow-visible"

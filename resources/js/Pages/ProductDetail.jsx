@@ -109,7 +109,7 @@ export default function ProductDetail({ product, products = [] }) {
                     className="pointer-events-none select-none absolute -z-10 bottom-200 right-0 w-1/4 max-w-lg opacity-60"
                     style={{
                         // Example: appear only in top right, not covering full area
-                        objectFit: "contain",
+                    objectFit: "contain",
                     }}
                     aria-hidden="true"
                 />
@@ -119,7 +119,7 @@ export default function ProductDetail({ product, products = [] }) {
 
                     <H1 text={'ABOUT THIS BOOK'} color='white' />
                     <article
-                        className='font-normal font-roboto text-sm md:font-base mt-20 text-white  prose prose-invert max-w-none'
+                        className="font-normal font-roboto text-sm md:font-base mt-20 text-white prose prose-invert max-w-none rich-text"
                         dangerouslySetInnerHTML={{ __html: data.content }}
                     />
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">

@@ -12,7 +12,7 @@ export default function CompanyHandbook() {
 
     return (
         <>
-        <Head title="Company Handbook - AbsolutelyHR" />
+        <Head title="Company Handbook - Absolutely Human Resources" />
         <div className="bg-[#302F2F]" data-aos="fade-in">
 
             <div

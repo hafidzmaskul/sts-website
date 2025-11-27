@@ -10,7 +10,7 @@ import ScrollActiveList from '../components/ScrollActiveList';
 import ExploreButton from '../components/ExploreButton';
 import { getMaxCharacters, getMaxWords } from '../helpers/text';
 
-export default function Landing({ sliderImage, services = [], testimonials = [], news = [] }) {
+export default function Landing({ sliderImage, services = [], testimonials = [], news = [], landingPageData = {} }) {
     const [currentSlide, setCurrentSlide] = useState(0);
     const carouselRef = useRef(null);
     const [, setActiveServiceIndex] = useState(0);
@@ -94,6 +94,10 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
     }, [carouselItems.length]);
 
     useEffect(() => {
+        console.log('landingPageData', landingPageData);
+    }, [landingPageData]);
+
+    useEffect(() => {
         const container = testimonialsRef.current;
         if (!container || loopedTestimonials.length === 0) {
             return undefined;
@@ -153,7 +157,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
 
     return (
         <>
-            <Head title="Home - AbsolutelyHR" />
+            <Head title="Home - Absolutely Human Resources" />
             <div className="min-h-dvh bg-[#302F2F] mb-40" data-aos="fade-in">
                 <div className="flex flex-col rounded-b-xl md:rounded-b-[200px]" style={{ backgroundImage: 'url(/assets/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
@@ -462,7 +466,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                         <div className="flex flex-col md:flex-row justify-center gap-12 my-16 ">
                             {/* Kiri: Text */}
                             <div className="md:w-1/2 w-full flex justify-center items-center">
-                                <H1 text="HR Employment Law and Reqruitment" className='text-start leading-10' color="white" />
+                                <H1 text="HR Employment Law and Recruitment" className='text-start leading-10' color="white" />
                             </div>
 
                             {/* PERUBAHAN: Ganti bagian list lama dengan komponen ScrollActiveList */}
@@ -575,7 +579,7 @@ export default function Landing({ sliderImage, services = [], testimonials = [],
                     </div>
 
                 </main>
-                <Footer />
+                <Footer landingPageData={landingPageData} />
             </div>
         </>
     );

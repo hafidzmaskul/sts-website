@@ -42,7 +42,7 @@ function Alert({ type, children, onClose }) {
     );
 }
 
-export default function Footer() {
+export default function Footer({ landingPageData = {} }) {
     const year = new Date().getFullYear();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
@@ -86,6 +86,19 @@ export default function Footer() {
         }
     };
 
+    const {
+        footer_description: footerDescription = '',
+        address_label_1: addressLine1 = '',
+        address_label_2: addressLine2 = '',
+        contact_1: contactPrimary = '',
+        contact_2: contactSecondary = '',
+        time_operational_label_1: timeLabelPrimary = '',
+        time_operational_label_2: timeLabelSecondary = '',
+        landing_page_email: landingEmail = '',
+    } = landingPageData ?? {};
+
+    const phoneDisplay = [contactPrimary, contactSecondary].filter(Boolean).join(' · ');
+
     return (
         <footer
             className=" pt-5 "
@@ -104,8 +117,8 @@ export default function Footer() {
                         <div className="flex items-start sm:items-center space-x-2">
                             <img src="/assets/address.svg" alt="Address" className="h-6" />
                             <span>
-                                <p className="font-montserrat text-sm font-semibold lin">16 Society Road</p>
-                                <p className='font-inter font-regular text-sm'>South Queensferry, Edinburgh EH30 9RX</p>
+                                <p className="font-montserrat text-sm font-semibold lin">{addressLine1}</p>
+                                <p className='font-inter font-regular text-sm'>{addressLine2}</p>
                             </span>
                         </div>
                     </div>
@@ -116,7 +129,7 @@ export default function Footer() {
                     {/* Baris 2 */}
                     <div className="flex items-center">
                         <p className='font-roboto font-regular text-sm md:text-base'>
-                            Absolutely&nbsp;Human&nbsp;Resources Limited support clients in their Human Resource and Employment Law needs. We ensure that our clients are regularly updated with the current, frequent and ongoing changes to UK Employment Law.
+                            {footerDescription}
                         </p>
                     </div>
                     <div className="flex flex-col w-full  ">
@@ -174,15 +187,15 @@ export default function Footer() {
                                     <div className="flex items-center space-x-2 justify-start md:justify-end">
                                         <img src="/assets/phone.svg" alt="Phone" className="h-6" />
                                         <span>
-                                            <p className="font-montserrat text-sm font-semibold lin">0131 331 2735 or 07970 797 544</p>
-                                            <p className='font-inter font-normal text-sm'>info@absolutelyhumanresources.co.uk</p>
+                                            <p className="font-montserrat text-sm font-semibold lin">{phoneDisplay}</p>
+                                            <p className='font-inter font-normal text-sm'>{landingEmail}</p>
                                         </span>
                                     </div>
                                     <div className="flex items-center space-x-2 justify-start md:justify-end">
                                         <img src="/assets/clock.svg" alt="Address" className="h-6" />
                                         <span>
-                                            <p className="font-montserrat text-sm font-semibold lin">24/7</p>
-                                            <p className='font-inter font-normal text-sm'>Monday to Sunday</p>
+                                            <p className="font-montserrat text-sm font-semibold lin">{timeLabelPrimary}</p>
+                                            <p className='font-inter font-normal text-sm'>{timeLabelSecondary}</p>
                                         </span>
                                     </div>
                                 </div>

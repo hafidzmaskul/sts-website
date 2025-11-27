@@ -124,7 +124,7 @@ export default function ServiceDetail({ service, otherServices = [] }) {
 
 
                         <article
-                            className="font-roboto font-normal md:text-base text-md mt-20 text-white prose prose-invert max-w-none"
+                            className="font-roboto font-normal md:text-base text-md mt-20 text-white prose prose-invert max-w-none rich-text"
                             dangerouslySetInnerHTML={{ __html: serviceContent }}
                         />
                     </section>

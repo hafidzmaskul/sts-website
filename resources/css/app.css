@@ -232,3 +232,35 @@ select:focus[data-flux-control] {
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
 }
+
+.rich-text {
+    line-height: 1.7;
+}
+
+.rich-text p {
+    margin: 0.75rem 0;
+}
+
+.rich-text ul,
+.rich-text ol {
+    margin: 0.75rem 0 0.75rem 1.5rem;
+    padding-left: 1.25rem;
+}
+
+.rich-text ul {
+    list-style: disc;
+}
+
+.rich-text ol {
+    list-style: decimal;
+}
+
+.rich-text li {
+    margin-bottom: 0.35rem;
+    list-style-position: outside;
+}
+
+.rich-text a {
+    color: inherit;
+    text-decoration: underline;
+}

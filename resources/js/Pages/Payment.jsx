@@ -17,11 +17,30 @@ export default function Payment({ product }) {
   const [apiMessage, setApiMessage] = useState(null);
   const [apiMessageType, setApiMessageType] = useState(''); // 'success' | 'error' | ''
 
-  const price = product?.price ?? 0;
+  const rawPrice = product?.price ?? 0;
+  const price = Number.isFinite(Number.parseFloat(rawPrice))
+    ? Number.parseFloat(rawPrice)
+    : 0;
+  const vatRate = 0.1; // 10% VAT
+  const vat = price * vatRate;
+
+  const total = price + vat;
+
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(price);
+
+  const formattedVat = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(vat);
+
+  // This will display "$NaN" if total is NaN
+  const formattedTotal = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(total);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,6 +70,7 @@ export default function Payment({ product }) {
       town_city: city || 'Jakarta',
       postcode: postcode || '554123',
       payment_method: 'payment_gateway',
+      vat: vat, // tambahkan 'vat' ke payload jika diperlukan
     };
 
     try {
@@ -106,25 +126,23 @@ export default function Payment({ product }) {
         <H1 text="PAYMENT" color="white" />
       </div>
       <img
-                    src="/assets/gradient-payment.svg"
-                    alt=""
-                    className="pointer-events-none select-none absolute -z-10 top-50 left-0 w-1/4 max-w-lg opacity-60"
-                    style={{
-                        // Example: appear only in top right, not covering full area
-                        objectFit: "contain",
-                    }}
-                    aria-hidden="true"
-                />
-                <img
-                    src="/assets/gradient-payment2.svg"
-                    alt=""
-                    className="pointer-events-none select-none absolute -z-10 bottom-100 right-0 w-1/4 max-w-lg opacity-60"
-                    style={{
-                        // Example: appear only in top right, not covering full area
-                        objectFit: "contain",
-                    }}
-                    aria-hidden="true"
-                />
+        src="/assets/gradient-payment.svg"
+        alt=""
+        className="pointer-events-none select-none absolute -z-10 top-50 left-0 w-1/4 max-w-lg opacity-60"
+        style={{
+            objectFit: "contain",
+        }}
+        aria-hidden="true"
+      />
+      <img
+        src="/assets/gradient-payment2.svg"
+        alt=""
+        className="pointer-events-none select-none absolute -z-10 bottom-100 right-0 w-1/4 max-w-lg opacity-60"
+        style={{
+            objectFit: "contain",
+        }}
+        aria-hidden="true"
+      />
       <main
         className="flex-1 container mx-auto px-10 md:px-20 py-12"
         data-aos="fade-up"
@@ -318,6 +336,10 @@ export default function Payment({ product }) {
                         {formattedPrice}
                       </td>
                     </tr>
+                    <tr>
+                      <td className="text-lg text-left">VAT (10%)</td>
+                      <td className="text-lg text-right">{formattedVat}</td>
+                    </tr>
                   </tbody>
                 </table>
                 <hr />
@@ -325,7 +347,7 @@ export default function Payment({ product }) {
                   <tbody>
                     <tr>
                       <td className="text-lg text-left">Total</td>
-                      <td className="text-lg text-right">{formattedPrice}</td>
+                      <td className="text-lg text-right">{formattedTotal}</td>
                     </tr>
                   </tbody>
                 </table>

@@ -108,7 +108,7 @@ export default function NewsDetail({ news, otherNews }) {
                 />
                 <main className="flex-1 container px-10 md:px-20 mt-20 mx-auto md:mt-50 py-12 text-white" data-aos="fade-up">
                     <article
-                        className="prose prose-invert  mx-auto"
+                        className="prose prose-invert mx-auto rich-text"
                         dangerouslySetInnerHTML={{ __html: data.content }}
                     />
                     <section className='py-20'>
