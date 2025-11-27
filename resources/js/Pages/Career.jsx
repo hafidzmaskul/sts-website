@@ -13,7 +13,7 @@ export default function Career({ jobs = [] }) {
 
     return (
         <>
-            <Head title="Recruitment - AbsolutelyHR" />
+            <Head title="Recruitment - Absolutely Human Resources" />
             <div className="bg-[#302F2F]" data-aos="fade-in">
                 <div
                     className="py-10 rounded-b-xl md:rounded-b-[200px] overflow-hidden"
@@ -123,7 +123,7 @@ export default function Career({ jobs = [] }) {
                                             </div>
                                         </div>
                                         <p
-                                            className="mt-4 text-sm text-white/80 leading-relaxed flex-1"
+                                            className="mt-4 text-sm text-white/80 leading-relaxed flex-1 rich-text"
                                             dangerouslySetInnerHTML={{ __html: ((job.description ?? job.summary ?? '').slice(0, 350) + ((job.description ?? job.summary ?? '').length > 350 ? '...' : '')) }}
                                         />
                                         <a

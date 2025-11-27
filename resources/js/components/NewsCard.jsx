@@ -58,7 +58,7 @@ export default function NewsCard({
                             {title}
                         </h2>
                         <div
-                            className="text-white text-xs md:text-sm mb-6 flex-1"
+                            className="text-white text-xs md:text-sm mb-6 flex-1 rich-text"
                             dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
                         />
                         <div className="flex w-full justify-center">

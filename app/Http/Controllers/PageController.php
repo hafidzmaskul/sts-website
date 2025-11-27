@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\News;
 use App\Models\Career;
+use App\Models\News;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
+use App\Services\LandingPageService;
 use Inertia\Inertia;
 use Inertia\Response;
-
-use function abort_if;
 
 class PageController
 {
@@ -37,10 +37,13 @@ class PageController
             ->orderByDesc('created_at')
             ->get();
 
+        $landingPageData = LandingPageService::getSettings();
+
         return Inertia::render('Landing', [
             'services' => $services,
             'testimonials' => $testimonials,
             'news' => $news,
+            'landingPageData' => $landingPageData,
         ]);
     }
 
@@ -190,9 +193,10 @@ class PageController
             ->where('slug', $slug)
             ->where('status', true)
             ->firstOrFail();
-
+        $vat =   Setting::where('key', 'vat_percentage')->first();
         return Inertia::render('Payment', [
             'product' => $product,
+            'vat'     => $vat
         ]);
     }
 }

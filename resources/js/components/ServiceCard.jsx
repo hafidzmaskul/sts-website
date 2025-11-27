@@ -58,7 +58,7 @@ export default function ServiceCard({
                             {title}
                         </h2>
                         <div
-                            className="text-black text-xs md:text-sm text-center mb-6 flex-1 line-clamp-3"
+                            className="text-black text-xs md:text-sm text-center mb-6 flex-1 line-clamp-3 rich-text"
                             dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
                         />
                         <div className="flex justify-center">

@@ -45,7 +45,7 @@ export default function Products({ products = [] }) {
 
     return (
         <>
-            <Head title="Products - AbsolutelyHR" />
+            <Head title="Products - Absolutely Human Resources" />
             <div className="bg-[#302F2F]" data-aos="fade-in">
                 <Header />
                 <div className="w-full flex flex-col items-center text-center mt-20">

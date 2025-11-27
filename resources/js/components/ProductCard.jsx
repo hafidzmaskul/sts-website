@@ -63,7 +63,7 @@ export default function ProductCard({
             £{Number(price).toLocaleString('en-UK', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             <div
-              className="text-black text-sm mb-6 flex-1 line-clamp-3"
+              className="text-black text-sm mb-6 flex-1 line-clamp-3 rich-text"
               dangerouslySetInnerHTML={{ __html: shortDescription ?? '' }}
             />
             <div className="flex justify-center">

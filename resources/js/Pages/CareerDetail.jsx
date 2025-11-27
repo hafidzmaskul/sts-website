@@ -138,7 +138,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
 
     return (
         <>
-            <Head title={`${selectedJob?.title ?? 'Career'} - AbsolutelyHR`} />
+            <Head title={`${selectedJob?.title ?? 'Career'} - Absolutely Human Resources`} />
             <div className="bg-[#302F2F]" data-aos="fade-in">
             <Header />
                 <img
@@ -231,7 +231,7 @@ export default function CareerDetail({ job = null, jobs = [] }) {
                                         Role Description
                                     </h4>
                                     <div
-                                        className="prose prose-sm prose-invert max-w-none text-black/80 leading-relaxed"
+                                        className="prose prose-sm prose-invert max-w-none text-black/80 leading-relaxed rich-text"
                                         dangerouslySetInnerHTML={{
                                             __html: selectedJob?.description
                                                 ?? 'Details coming soon.',

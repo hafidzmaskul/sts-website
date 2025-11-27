@@ -94,7 +94,7 @@ export default function ContactUs() {
 
   return (
     <>
-    <Head title="Contact Us - AbsolutelyHR" />
+    <Head title="Contact Us - Absolutely Human Resources" />
     <div className="" data-aos="fade-in">
             <div className="flex flex-col rounded-b-xl md:rounded-b-[200px]" style={{ backgroundImage: 'url(/assets/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <Header />
