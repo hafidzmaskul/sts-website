@@ -6,25 +6,6 @@ use Livewire\Volt\Volt;
 
 // Create route names and controller-based routes for main and right navigation items
 
-Route::get('/', [App\Http\Controllers\PageController::class, 'landing'])->name('home');
-Route::get('/services', [App\Http\Controllers\PageController::class, 'services'])->name('services');
-Route::get('/service/{uuid}', [App\Http\Controllers\PageController::class, 'serviceDetail'])->name('service_detail');
-Route::get('/products', [App\Http\Controllers\PageController::class, 'products'])->name('products');
-Route::get('/products/{slug}', [App\Http\Controllers\PageController::class, 'productDetail'])->name('productDetail');
-Route::get('/payment/{uuid}', [App\Http\Controllers\PageController::class, 'payment'])->name('payment');
-Route::get('/companyHandbook', [App\Http\Controllers\PageController::class, 'companyHandbook'])->name('companyHandbook');
-Route::get('/news', [App\Http\Controllers\PageController::class, 'news'])->name('news');
-Route::get('/news/{slug}', [App\Http\Controllers\PageController::class, 'newsDetail'])->name('newsDetail');
-Route::get('/career', [App\Http\Controllers\PageController::class, 'career'])->name('career');
-Route::get('/career/{job}', [App\Http\Controllers\PageController::class, 'careerDetail'])->name('career.detail');
-
-Route::get('/about-us', [App\Http\Controllers\PageController::class, 'about'])->name('about-us');
-Route::get('/contact-us', [App\Http\Controllers\PageController::class, 'contact'])->name('contact-us');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -46,35 +27,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/roles', \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
         Route::get('/admin/users', \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
-        Route::get('/admin/settings', \App\Livewire\Admin\Settings\Index::class)->name('admin.settings.index')->middleware('can:settings.view');
-        Route::get('/admin/testimonials', \App\Livewire\Admin\Testimonials\Index::class)->name('admin.testimonials.index')->middleware('can:testimonials.view');
-        Route::get('/admin/newsletter-subscriptions', \App\Livewire\Admin\NewsletterSubscriptions\Index::class)->name('admin.newsletter-subscriptions.index')->middleware('can:newsletter-subscriptions.view');
-        Route::get('/admin/our-team', \App\Livewire\Admin\OurTeam\Index::class)->name('admin.our-team.index')->middleware('can:our-team.view');
-
-        Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index')->middleware('can:contact-submissions.view');
-        Route::get('/admin/news-categories', \App\Livewire\Admin\NewsCategories\Index::class)->name('admin.news-categories.index')->middleware('can:news-categories.view');
-
-        Route::get('/admin/news', \App\Livewire\Admin\News\Index::class)->name('admin.news.index')->middleware('can:news.view');
-        Route::get('/admin/news/create', \App\Livewire\Admin\News\Create::class)->name('admin.news.create')->middleware('can:news.create');
-        Route::get('/admin/news/{news}/edit', \App\Livewire\Admin\News\Edit::class)->name('admin.news.edit')->middleware('can:news.edit');
-
-        Route::get('/admin/services', \App\Livewire\Admin\Services\Index::class)->name('admin.services.index')->middleware('can:services.view');
-        Route::get('/admin/services/create', \App\Livewire\Admin\Services\Create::class)->name('admin.services.create')->middleware('can:services.create');
-        Route::get('/admin/services/{service}/edit', \App\Livewire\Admin\Services\Edit::class)->name('admin.services.edit')->middleware('can:services.edit');
-
-        Route::get('/admin/products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index')->middleware('can:products.view');
-        Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create')->middleware('can:products.create');
-        Route::get('/admin/products/{product}', \App\Livewire\Admin\Products\Show::class)->name('admin.products.show')->middleware('can:products.view');
-        Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit')->middleware('can:products.edit');
-
-        Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
-
-        Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
-
-        Route::get('/admin/careers', \App\Livewire\Admin\Careers\Index::class)->name('admin.careers.index')->middleware('can:careers.view');
-        Route::get('/admin/careers/create', \App\Livewire\Admin\Careers\Create::class)->name('admin.careers.create')->middleware('can:careers.create');
-        Route::get('/admin/careers/{career}/edit', \App\Livewire\Admin\Careers\Edit::class)->name('admin.careers.edit')->middleware('can:careers.edit');
-        Route::get('/admin/career-submissions', \App\Livewire\Admin\CareerSubmissions\Index::class)->name('admin.career-submissions.index')->middleware('can:careers.view');
 
     });
 });

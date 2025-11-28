@@ -39,14 +39,6 @@
                             wire:navigate
                         >{{ __('User Management') }}</flux:navlist.item>
                     @endcan
-                    @can('settings.view')
-                        <flux:navlist.item
-                            icon="cog"
-                            :href="route('admin.settings.index')"
-                            :current="request()->routeIs('admin.settings.*')"
-                            wire:navigate
-                        >{{ __('General Settings') }}</flux:navlist.item>
-                    @endcan
                 </flux:navlist.group>
 
                 <!-- Catalog Group -->
@@ -67,94 +59,6 @@
                             :current="request()->routeIs('admin.products.*')"
                             wire:navigate
                         >{{ __('Products') }}</flux:navlist.item>
-                    @endcan
-                </flux:navlist.group>
-                @endcanany
-
-                <!-- Sales Group -->
-                @can('transactions.view')
-                <flux:navlist.group :heading="__('Sales')" class="grid">
-                    <flux:navlist.item
-                        icon="banknotes"
-                        :href="route('admin.transactions.index')"
-                        :current="request()->routeIs('admin.transactions.*')"
-                        wire:navigate
-                    >{{ __('Transactions') }}</flux:navlist.item>
-                </flux:navlist.group>
-                @endcan
-
-                <!-- Content Group -->
-                @canany(['testimonials.view', 'our-team.view', 'news-categories.view', 'news.view', 'careers.view'])
-                <flux:navlist.group :heading="__('Content')" class="grid">
-                    @can('news-categories.view')
-                        <flux:navlist.item
-                            icon="tag"
-                            :href="route('admin.news-categories.index')"
-                            :current="request()->routeIs('admin.news-categories.*')"
-                            wire:navigate
-                        >{{ __('News Categories') }}</flux:navlist.item>
-                    @endcan
-                    @can('news.view')
-                        <flux:navlist.item
-                            icon="newspaper"
-                            :href="route('admin.news.index')"
-                            :current="request()->routeIs('admin.news.*')"
-                            wire:navigate
-                        >{{ __('News') }}</flux:navlist.item>
-                    @endcan
-                    @can('careers.view')
-                        <flux:navlist.item
-                            icon="briefcase"
-                            :href="route('admin.careers.index')"
-                            :current="request()->routeIs('admin.careers.*')"
-                            wire:navigate
-                        >{{ __('Careers') }}</flux:navlist.item>
-                    @endcan
-                    @can('testimonials.view')
-                        <flux:navlist.item
-                            icon="chat-bubble-left-right"
-                            :href="route('admin.testimonials.index')"
-                            :current="request()->routeIs('admin.testimonials.*')"
-                            wire:navigate
-                        >{{ __('Testimonials') }}</flux:navlist.item>
-                    @endcan
-                    @can('our-team.view')
-                        <flux:navlist.item
-                            icon="user-group"
-                            :href="route('admin.our-team.index')"
-                            :current="request()->routeIs('admin.our-team.*')"
-                            wire:navigate
-                        >{{ __('Our Team') }}</flux:navlist.item>
-                    @endcan
-                </flux:navlist.group>
-                @endcanany
-
-                <!-- Leads Group -->
-                @canany(['newsletter-subscriptions.view', 'contact-submissions.view', 'careers.view'])
-                <flux:navlist.group :heading="__('Leads')" class="grid">
-                    @can('newsletter-subscriptions.view')
-                        <flux:navlist.item
-                            icon="inbox-arrow-down"
-                            :href="route('admin.newsletter-subscriptions.index')"
-                            :current="request()->routeIs('admin.newsletter-subscriptions.*')"
-                            wire:navigate
-                        >{{ __('Newsletter') }}</flux:navlist.item>
-                    @endcan
-                    @can('contact-submissions.view')
-                        <flux:navlist.item
-                            icon="envelope"
-                            :href="route('admin.contact-submissions.index')"
-                            :current="request()->routeIs('admin.contact-submissions.*')"
-                            wire:navigate
-                        >{{ __('Contact Submissions') }}</flux:navlist.item>
-                    @endcan
-                    @can('careers.view')
-                        <flux:navlist.item
-                            icon="document-text"
-                            :href="route('admin.career-submissions.index')"
-                            :current="request()->routeIs('admin.career-submissions.*')"
-                            wire:navigate
-                        >{{ __('Job Applications') }}</flux:navlist.item>
                     @endcan
                 </flux:navlist.group>
                 @endcanany

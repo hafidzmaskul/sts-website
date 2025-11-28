@@ -58,16 +58,16 @@
                     {{ __('Back') }}
                 </a>
 
-                <a href="{{ route('home', absolute: false) }}" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/15 hover:shadow-[0_20px_50px_-30px_rgba(255,255,255,0.8)]">
+                {{-- <a href="{{ route('home', absolute: false) }}" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/15 hover:shadow-[0_20px_50px_-30px_rgba(255,255,255,0.8)]">
                     {{ __('Go home') }}
-                </a>
+                </a> --}}
 
-                <a href="{{ route('contact-us') }}" class="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-zinc-100 transition hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/5">
+                {{-- <a href="{{ route('contact-us') }}" class="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-zinc-100 transition hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/5">
                     {{ __('Contact us') }}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4.5 6.75 12 12l7.5-5.25M4.5 17.25 12 12l7.5 5.25" />
                     </svg>
-                </a>
+                </a> --}}
             </div>
 
             <div class="mt-8 grid gap-2 text-sm text-zinc-400 md:grid-cols-2">
