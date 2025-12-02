@@ -1,124 +1,149 @@
-<div>
-    <header class="sticky top-0 z-10 border-b border-zinc-200 bg-white/50 backdrop-blur dark:border-zinc-700 dark:bg-zinc-800/50">
-        <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <h1 class="text-xl font-semibold dark:text-white">
-                News Categories
-            </h1>
-            @can('news-categories.create')
-            <button 
-                wire:click="create" 
-                class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors"
-            >
-                New Category
+<div class="p-6 space-y-6 dark:bg-zinc-900">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">News Categories</h1>
+        @can('news-categories.create')
+            <button wire:click="create"
+                class="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 transition-colors">
+                + New Category
             </button>
-            @endcan
-        </div>
-    </header>
+        @endcan
+    </div>
 
-    <div class="mx-auto max-w-7xl space-y-6 px-4 py-12 sm:px-6 lg:px-8">
-        
+    @if($showForm)
+        <div class="bg-white p-6 rounded-2xl shadow dark:bg-zinc-900 dark:border dark:border-zinc-700">
+            <h2 class="text-xl font-semibold mb-4 dark:text-white">{{ $editingId ? 'Edit Category' : 'Create Category' }}
+            </h2>
+
+            <form wire:submit.prevent="save" class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Name</label>
+                        <input type="text" wire:model.live="name"
+                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
+                    <!-- Slug -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Slug</label>
+                        <input type="text" wire:model="slug"
+                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900">
+                        @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
+                    <!-- Parent Category -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Parent
+                            Category</label>
+                        <select wire:model="parent_id"
+                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                            <option value="">None (Top Level)</option>
+                            @foreach($parentOptions as $option)
+                                <option value="{{ $option->id }}">{{ $option->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('parent_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
+                    <!-- SEO Section -->
+                    <div class="md:col-span-2 border-t pt-4 dark:border-zinc-700">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">SEO Metadata</h3>
+
+                        <div class="space-y-4">
+                            <!-- SEO Title -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">SEO
+                                    Title</label>
+                                <input type="text" wire:model="seo_title"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                                @error('seo_title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- SEO Description -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">SEO
+                                    Description</label>
+                                <textarea wire:model="seo_description" rows="3"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"></textarea>
+                                @error('seo_description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- SEO Keywords -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">SEO
+                                    Keywords</label>
+                                <input type="text" wire:model="seo_keywords"
+                                    class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                    placeholder="comma, separated, keywords">
+                                @error('seo_keywords') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" wire:click="cancel"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 dark:bg-white dark:text-zinc-900">Save</button>
+                </div>
+            </form>
+        </div>
+    @else
+        <!-- Search -->
         <div class="flex items-center gap-3">
-            <input
-                type="text"
-                wire:model.live="search"
-                placeholder="Search by name..."
-                class="w-full md:w-80 rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-            />
+            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search categories..."
+                class="w-full md:w-80 rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
         </div>
 
+        <!-- Table -->
         <div class="overflow-x-auto rounded-xl border dark:border-zinc-700 dark:bg-zinc-800">
             <table class="min-w-full text-sm">
                 <thead class="bg-zinc-50 text-left dark:bg-zinc-900 dark:text-zinc-200">
                     <tr>
-                        <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Slug</th>
-                        <th class="px-4 py-3">Parent Category</th>
-                        <th class="px-4 py-3 w-40">Action</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">Slug</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">Parent</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">SEO Title</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200 dark:divide-zinc-700">
                     @forelse($categories as $category)
-                        <tr class="border-t dark:border-zinc-700">
-                            <td class="px-4 py-3 font-medium dark:text-white">{{ $category->name }}</td>
-                            <td class="px-4 py-3 dark:text-zinc-300">{{ $category->slug }}</td>
-                            <td class="px-4 py-3 dark:text-zinc-300">
-                                {{ $category->parent?->name ?? '—' }}
+                        <tr class="dark:text-zinc-100">
+                            <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $category->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">{{ $category->slug }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                                {{ $category->parent->name ?? '-' }}
                             </td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center gap-2">
-                                    @can('news-categories.edit')
-                                    <button
-                                        wire:click="edit({{ $category->id }})"
-                                        class="px-3 py-1.5 rounded border dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                                    >Edit</button>
-                                    @endcan
-                                    @can('news-categories.delete')
-                                    <button
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                                {{ Str::limit($category->seo_title, 30) ?: '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2">
+                                @can('news-categories.edit')
+                                    <button wire:click="edit({{ $category->id }})"
+                                        class="px-3 py-1.5 rounded border dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 hover:bg-gray-50 dark:hover:bg-zinc-700">Edit</button>
+                                @endcan
+                                @can('news-categories.delete')
+                                    <button wire:confirm="Are you sure you want to delete this category?"
                                         wire:click="delete({{ $category->id }})"
-                                        wire:confirm="Are you sure you want to delete this category?"
-                                        class="px-3 py-1.5 rounded border text-red-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-red-400"
-                                    >Delete</button>
-                                    @endcan
-                                </div>
+                                        class="px-3 py-1.5 rounded border text-red-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-red-400 hover:bg-red-50 dark:hover:bg-zinc-700">Delete</button>
+                                @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">No categories found.</td>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-zinc-400">No categories found.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <div>{{ $categories->links() }}</div>
-
-        @if($showForm)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div class="w-full max-w-xl rounded-2xl bg-white p-6 dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
-                <h2 class="text-xl font-semibold mb-4 dark:text-white">{{ $editingId ? 'Edit Category' : 'New Category' }}</h2>
-
-                <form wire:submit.prevent="save" class="space-y-5">
-                    
-                    <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Name</label>
-                        <input
-                            type="text"
-                            wire:model="name"
-                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                        >
-                        @error('name') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Parent Category</label>
-                        <select
-                            wire:model="parent_id"
-                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                        >
-                            <option value="">— None —</option>
-                            @foreach($allCategories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('parent_id') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
-                    </div>
-                    
-
-                    <div class="flex items-center justify-end gap-2">
-                        <button
-                            type="button"
-                            wire:click="closeModal"
-                            class="px-4 py-2 rounded-lg border dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                        >Cancel</button>
-                        <button
-                            type="submit"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors"
-                        >Save</button>
-                    </div>
-                </form>
-            </div>
+        <div class="mt-4">
+            {{ $categories->links() }}
         </div>
-        @endif
-    </div>
+    @endif
 </div>
