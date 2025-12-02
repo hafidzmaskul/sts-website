@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Career;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\TeamMember;
-use App\Models\Testimonial;
-use App\Services\LandingPageService;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,31 +18,17 @@ class PageController
 {
     public function landing(): Response
     {
-        $services = Service::query()
-            ->where('status', true)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->take(6)
-            ->get();
-
-        $testimonials = Testimonial::query()
-            ->where('status', true)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->get();
-
-        $news = News::query()
-            ->where('status', 'published')
-            ->orderByDesc('created_at')
-            ->get();
-
-        $landingPageData = LandingPageService::getSettings();
+        $banners = Banner::query()
+            ->latest()
+            ->get([
+                'id',
+                'name',
+                'file_path',
+                'cta_url',
+            ]);
 
         return Inertia::render('Landing', [
-            'services' => $services,
-            'testimonials' => $testimonials,
-            'news' => $news,
-            'landingPageData' => $landingPageData,
+            'banners' => $banners,
         ]);
     }
 
@@ -193,10 +178,11 @@ class PageController
             ->where('slug', $slug)
             ->where('status', true)
             ->firstOrFail();
-        $vat =   Setting::where('key', 'vat_percentage')->first();
+        $vat = Setting::where('key', 'vat_percentage')->first();
+
         return Inertia::render('Payment', [
             'product' => $product,
-            'vat'     => $vat
+            'vat' => $vat,
         ]);
     }
 }

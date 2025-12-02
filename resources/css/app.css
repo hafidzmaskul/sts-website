@@ -3,26 +3,36 @@
 
 /* Font variables and utilities */
 :root {
-    --font-roboto: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-    --font-montserrat: "Montserrat", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     --font-inter: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-    --font-akzidenz: "AkzidenzGroteskBQ-Super", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-}
-
-.font-roboto {
-    font-family: var(--font-roboto);
-}
-
-.font-montserrat {
-    font-family: var(--font-montserrat);
+    --font-inter-tight: "Inter Tight", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-dm-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-bebas-neue: "Bebas Neue", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-poppins: "Poppins", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-nunito-sans: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
 .font-inter {
     font-family: var(--font-inter);
 }
 
-.font-akzidenz {
-    font-family: var(--font-akzidenz);
+.font-inter-tight {
+    font-family: var(--font-inter-tight);
+}
+
+.font-dm-sans {
+    font-family: var(--font-dm-sans);
+}
+
+.font-bebas-neue {
+    font-family: var(--font-bebas-neue);
+}
+
+.font-poppins {
+    font-family: var(--font-poppins);
+}
+
+.font-nunito-sans {
+    font-family: var(--font-nunito-sans);
 }
 
 @source '../views';
