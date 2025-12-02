@@ -28,7 +28,7 @@ export default function H1({ text, color = 'black', className = '' }) {
         font-medium
         text-center
         align-middle
-        font-akzidenz
+        font-bebas-neue
         ${COLOR_CLASSES[color] || COLOR_CLASSES.black}
         ${className}
       `}

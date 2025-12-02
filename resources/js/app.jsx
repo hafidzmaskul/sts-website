@@ -30,7 +30,9 @@ createInertiaApp({
 });
 
 
-// font-roboto
-// font-montserrat
 // font-inter
-// font-akzidenz
+// font-inter-tight
+// font-dm-sans
+// font-bebas-neue
+// font-poppins
+// font-nunito-sans

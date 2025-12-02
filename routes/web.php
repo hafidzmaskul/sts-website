@@ -7,7 +7,7 @@ use Livewire\Volt\Volt;
 // Create route names and controller-based routes for main and right navigation items
 // Public Routes
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
-    Route::get('/', 'landing')->name('landing');
+    Route::get('/', 'landing')->name('home');
     Route::get('/services', 'services')->name('services');
     Route::get('/services/{slug}', 'serviceDetail')->name('services.detail');
     Route::get('/products', 'products')->name('products');
@@ -54,4 +54,4 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
