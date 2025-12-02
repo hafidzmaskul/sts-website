@@ -5,9 +5,16 @@ use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
 // Create route names and controller-based routes for main and right navigation items
+Route::get('/', function () {
+    return 'Home';
+})->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
+
+    Route::view('dashboard', 'dashboard')
+        ->middleware(['verified'])
+        ->name('dashboard');
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
     Volt::route('settings/password', 'settings.password')->name('password.edit');
@@ -17,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
@@ -27,8 +34,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/roles', \App\Livewire\Admin\Roles\Index::class)->name('admin.roles.index');
         Route::get('/admin/users', \App\Livewire\Admin\Users\Index::class)->name('admin.users.index');
+        Route::get('/admin/banners', \App\Livewire\Admin\Banners\Index::class)->name('admin.banners.index');
 
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

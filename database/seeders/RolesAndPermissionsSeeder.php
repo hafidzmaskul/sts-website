@@ -16,41 +16,77 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create Permissions
         $perms = [
             // User & Role Management
-            'roles.view', 'roles.create', 'roles.edit', 'roles.delete',
-            'users.view', 'users.create', 'users.edit', 'users.delete',
+            'roles.view',
+            'roles.create',
+            'roles.edit',
+            'roles.delete',
+            'users.view',
+            'users.create',
+            'users.edit',
+            'users.delete',
 
             // 1. General Settings
-            'settings.view', 'settings.update',
+            'settings.view',
+            'settings.update',
 
             // 2. Testimonials
-            'testimonials.view', 'testimonials.create', 'testimonials.edit', 'testimonials.delete',
+            'testimonials.view',
+            'testimonials.create',
+            'testimonials.edit',
+            'testimonials.delete',
 
             // 3. Newsletter Subscriptions
-            'newsletter-subscriptions.view', 'newsletter-subscriptions.delete',
+            'newsletter-subscriptions.view',
+            'newsletter-subscriptions.delete',
 
             // 4. News Categories
-            'news-categories.view', 'news-categories.create', 'news-categories.edit', 'news-categories.delete',
+            'news-categories.view',
+            'news-categories.create',
+            'news-categories.edit',
+            'news-categories.delete',
 
             // 5. News
-            'news.view', 'news.create', 'news.edit', 'news.delete',
+            'news.view',
+            'news.create',
+            'news.edit',
+            'news.delete',
 
             // 6. Services
-            'services.view', 'services.create', 'services.edit', 'services.delete',
+            'services.view',
+            'services.create',
+            'services.edit',
+            'services.delete',
 
             // 7. Products
-            'products.view', 'products.create', 'products.edit', 'products.delete',
+            'products.view',
+            'products.create',
+            'products.edit',
+            'products.delete',
 
             // 8. Transactions (Sales)
             'transactions.view',
 
             // 9. Contact Submissions
-            'contact-submissions.view', 'contact-submissions.delete',
+            'contact-submissions.view',
+            'contact-submissions.delete',
 
             // 10. Our Team
-            'our-team.view', 'our-team.create', 'our-team.edit', 'our-team.delete',
+            'our-team.view',
+            'our-team.create',
+            'our-team.edit',
+            'our-team.delete',
 
             // 11. Careers (New)
-            'careers.view', 'careers.create', 'careers.edit', 'careers.delete',
+            'careers.view',
+            'careers.create',
+            'careers.edit',
+            'careers.delete',
+
+            // 12. Banners
+            'banner.view',
+            'banner.create',
+            'banner.edit',
+            'banner.delete',
         ];
 
         // Create permissions
