@@ -1,16 +1,6 @@
 {
-  "node_modules/swiper/swiper-bundle.css": {
-    "file": "assets/swiper-bundle-DDQ4uUkz.css",
-    "src": "node_modules/swiper/swiper-bundle.css"
-  },
-  "node_modules/swiper/swiper-bundle.mjs": {
-    "file": "assets/swiper-bundle-D4n6qxDJ.js",
-    "name": "swiper-bundle",
-    "src": "node_modules/swiper/swiper-bundle.mjs",
-    "isDynamicEntry": true
-  },
   "resources/css/app.css": {
-    "file": "assets/app-BF7DuSX4.css",
+    "file": "assets/app-DbAk2qTe.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -18,15 +8,12 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-InSEahH7.js",
+    "file": "assets/app-BU4QMLds.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
-    "dynamicImports": [
-      "node_modules/swiper/swiper-bundle.mjs"
-    ],
     "css": [
-      "assets/app-BODSc1BJ.css"
+      "assets/app-BSatTUGK.css"
     ]
   }
 }

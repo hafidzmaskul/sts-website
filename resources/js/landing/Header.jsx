@@ -150,9 +150,9 @@ export default function Header() {
                     </div>
                     <a href="/" className=" text-[#007580]">Home</a>
                     <a href="/shop" className=" text-[#636270]">Shop</a>
-                    <a href="/product" className=" text-[#636270]">Product</a>
+                    <a href="/products" className=" text-[#636270]">Product</a>
                     <a href="/pages" className=" text-[#636270]">Pages</a>
-                    <a href="/about" className=" text-[#636270]">About</a>
+                    <a href="/about-us" className=" text-[#636270]">About</a>
                 </div>
                 <div className="flex items-center space-x-2">
                     <span className="text-[#636270]">Contact:</span>

@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
-use App\Models\Career;
 use App\Models\News;
-use App\Models\Product;
-use App\Models\Service;
-use App\Models\Setting;
-use App\Models\TeamMember;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,43 +29,28 @@ class PageController
 
     public function services(): Response
     {
-        $services = Service::query()
-            ->where('status', true)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->get();
-
         return Inertia::render('Service', [
-            'services' => $services,
+            'services' => [],
         ]);
     }
 
     public function serviceDetail(string $slug): Response
     {
-        $service = Service::where('slug', $slug)
-            ->with('products')
-            ->firstOrFail();
-
-        $otherServices = Service::query()
-            ->where('status', true)
-            ->where('id', '!=', $service->id)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->take(9)
-            ->get();
-
         return Inertia::render('ServiceDetail', [
-            'service' => $service,
-            'otherServices' => $otherServices,
+            'service' => [
+                'name' => 'Sample Service',
+                'slug' => $slug,
+                'description' => 'Dummy service description.',
+                'products' => [],
+            ],
+            'otherServices' => [],
         ]);
     }
 
     public function about(): Response
     {
-        $teamMembers = TeamMember::orderBy('sequence')->get();
-
         return Inertia::render('AboutUs', [
-            'teamMembers' => $teamMembers,
+            'teamMembers' => [],
         ]);
     }
 
@@ -81,35 +61,16 @@ class PageController
 
     public function career(): Response
     {
-        $jobs = Career::query()
-            ->where('status', true)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->get();
-
         return Inertia::render('Career', [
-            'jobs' => $jobs,
+            'jobs' => [],
         ]);
     }
 
     public function careerDetail(string $slug): Response
     {
-        $job = Career::query()
-            ->where('slug', $slug)
-            ->where('status', true)
-            ->firstOrFail();
-
-        $jobs = Career::query()
-            ->where('status', true)
-            ->where('id', '!=', $job->id)
-            ->orderBy('sequence')
-            ->orderByDesc('created_at')
-            ->take(6)
-            ->get();
-
         return Inertia::render('CareerDetail', [
-            'job' => $job,
-            'jobs' => $jobs,
+            'job' => null,
+            'jobs' => [],
         ]);
     }
 
@@ -143,10 +104,56 @@ class PageController
 
     public function products(): Response
     {
-        $products = Product::query()
-            ->where('status', true)
-            ->orderByDesc('created_at')
-            ->get();
+        $products = [
+            [
+                'id' => 1,
+                'name' => 'Smart CCTV Camera Pro',
+                'slug' => 'smart-cctv-camera-pro',
+                'price' => 'Rp 1.250.000',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Access Control Door Lock',
+                'slug' => 'access-control-door-lock',
+                'price' => 'Rp 1.850.000',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Network Switch 24 Port',
+                'slug' => 'network-switch-24-port',
+                'price' => 'Rp 2.150.000',
+            ],
+            [
+                'id' => 4,
+                'name' => 'Smart Office Starter Kit',
+                'slug' => 'smart-office-starter-kit',
+                'price' => 'Rp 3.500.000',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Smart Office Starter Kit',
+                'slug' => 'smart-office-starter-kit',
+                'price' => 'Rp 3.500.000',
+            ],
+            [
+                'id' => 6,
+                'name' => 'Smart Office Starter Kit',
+                'slug' => 'smart-office-starter-kit',
+                'price' => 'Rp 3.500.000',
+            ],
+            [
+                'id' => 7,
+                'name' => 'Smart Office Starter Kit',
+                'slug' => 'smart-office-starter-kit',
+                'price' => 'Rp 3.500.000',
+            ],
+            [
+                'id' => 8,
+                'name' => 'Smart Office Starter Kit',
+                'slug' => 'smart-office-starter-kit',
+                'price' => 'Rp 3.500.000',
+            ],
+        ];
 
         return Inertia::render('Products', [
             'products' => $products,
@@ -155,34 +162,33 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::where('slug', $slug)
-            ->with('services')
-            ->firstOrFail();
-
-        $products = Product::query()
-            ->where('status', true)
-            ->where('id', '!=', $product->id)
-            ->orderByDesc('created_at')
-            ->take(6)
-            ->get();
-
         return Inertia::render('ProductDetail', [
-            'product' => $product,
-            'products' => $products,
+            'product' => [
+                'id' => 1,
+                'name' => 'Smart CCTV Camera Pro',
+                'slug' => $slug,
+                'description' => 'Dummy product description.',
+                'price' => 'Rp 1.250.000',
+            ],
+            'products' => [],
         ]);
+    }
+
+    public function cart(): Response
+    {
+        return Inertia::render('Cart');
+    }
+
+    public function likedProducts(): Response
+    {
+        return Inertia::render('LikedProducts');
     }
 
     public function payment(string $slug): Response
     {
-        $product = Product::query()
-            ->where('slug', $slug)
-            ->where('status', true)
-            ->firstOrFail();
-        $vat = Setting::where('key', 'vat_percentage')->first();
-
         return Inertia::render('Payment', [
-            'product' => $product,
-            'vat' => $vat,
+            'product' => null,
+            'vat' => null,
         ]);
     }
 }

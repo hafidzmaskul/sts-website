@@ -1,13 +1,123 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
+import ProductCard from '../components/ProductCard';
+import CategoryCard from '../components/CategoryCard';
+import FeaturedProductsSection from '../components/FeaturedProductsSection';
+import 'swiper/css';
+
+const fallbackProducts = [
+    {
+        id: 1,
+        title: 'Aurora Fabric Armchair',
+        price: 1299000,
+        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+        badge: 'New',
+    },
+    {
+        id: 2,
+        title: 'Nordic Wooden Lamp',
+        price: 759000,
+        image: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1200&q=80',
+        badge: 'Sale',
+    },
+    {
+        id: 3,
+        title: 'Marble Side Table',
+        price: 999000,
+        image: 'https://images.unsplash.com/photo-1517701604594-6c73f2a46b5c?auto=format&fit=crop&w=1200&q=80',
+        badge: 'Hot',
+    },
+    {
+        id: 4,
+        title: 'Cloud Cotton Sofa',
+        price: 3999000,
+        image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=1200&q=80',
+        badge: 'New',
+    },
+    {
+        id: 5,
+        title: 'Slate Steel Bookshelf',
+        price: 1849000,
+        image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80',
+        badge: 'Limited',
+    },
+    {
+        id: 6,
+        title: 'Sienna Leather Tote',
+        price: 1250000,
+        image: 'https://images.unsplash.com/photo-1483982258113-b72862e6cff6?auto=format&fit=crop&w=1200&q=80',
+        badge: 'Sale',
+    },
+    {
+        id: 7,
+        title: 'Cerulean Table Lamp',
+        price: 545000,
+        image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
+        badge: 'New',
+    },
+    {
+        id: 8,
+        title: 'Monaco Lounge Chair',
+        price: 2199000,
+        image: 'https://images.unsplash.com/photo-1618219805997-e3736730b8c1?auto=format&fit=crop&w=1200&q=80',
+        badge: 'Featured',
+    },
+];
+
+const fallbackCategories = [
+    {
+        id: 1,
+        title: 'Security Systems',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 2,
+        title: 'Access Control',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 3,
+        title: 'Video Surveillance',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 4,
+        title: 'Networking',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 5,
+        title: 'Smart Office',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 6,
+        title: 'Home Automation',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+    {
+        id: 7,
+        title: 'Audio Visual',
+        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+    },
+];
 
 export default function Landing({
     banners = [],
     landingPageData = {},
 }) {
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+    const [activeProductIndex, setActiveProductIndex] = useState(0);
+    const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
+    const productSwiperRef = useRef(null);
+    const categorySwiperRef = useRef(null);
+    const shopSwiper1Ref = useRef(null);
+    const shopSwiper2Ref = useRef(null);
+    const shopSwiper3Ref = useRef(null);
 
     const heroDescription = landingPageData.hero_description ?? 'Discover personalised HR and employment law support crafted for ambitious teams and growing organisations.';
 
@@ -46,6 +156,157 @@ export default function Landing({
     const goNext = () => goToSlide(currentBannerIndex + 1);
     const goPrevious = () => goToSlide(currentBannerIndex - 1);
 
+    const products = useMemo(() => {
+        const normalizedProducts = (landingPageData.products ?? []).map((product, index) => ({
+            id: product.id ?? index,
+            title: product.name ?? `Product ${index + 1}`,
+            price: product.price ?? product.formatted_price ?? null,
+            image: product.image_url
+                ?? product.image
+                ?? (product.file_path ? `/storage/${product.file_path}` : null)
+                ?? fallbackProducts[index % fallbackProducts.length].image,
+            badge: product.badge ?? (product.is_new ? 'New' : 'Sale'),
+        }));
+
+        return normalizedProducts.length > 0 ? normalizedProducts : fallbackProducts;
+    }, [landingPageData.products]);
+
+    const visibleSlides = useMemo(() => {
+        if (products.length >= 4) {
+            return 4;
+        }
+
+        if (products.length === 3) {
+            return 3;
+        }
+
+        if (products.length === 2) {
+            return 2;
+        }
+
+        return 1;
+    }, [products.length]);
+
+    const shouldLoopProducts = products.length > visibleSlides;
+
+    useEffect(() => {
+        setActiveProductIndex(0);
+        if (productSwiperRef.current) {
+            productSwiperRef.current.slideTo(0);
+        }
+    }, [products.length]);
+
+    const handleProductSlideChange = (swiperInstance) => {
+        setActiveProductIndex(swiperInstance.realIndex ?? swiperInstance.activeIndex ?? 0);
+    };
+
+    const goToProductSlide = (index) => {
+        if (!productSwiperRef.current) {
+            return;
+        }
+
+        if (shouldLoopProducts) {
+            productSwiperRef.current.slideToLoop(index);
+            return;
+        }
+
+        productSwiperRef.current.slideTo(index);
+    };
+
+    const goToNextProduct = () => {
+        productSwiperRef.current?.slideNext();
+    };
+
+    const goToPreviousProduct = () => {
+        productSwiperRef.current?.slidePrev();
+    };
+
+    const categories = useMemo(() => {
+        const normalizedCategories = (landingPageData.categories ?? []).map((category, index) => ({
+            id: category.id ?? index,
+            title: category.name ?? category.title ?? `Category ${index + 1}`,
+            image: category.image_url
+                ?? category.thumbnail_url
+                ?? (category.file_path ? `/storage/${category.file_path}` : null)
+                ?? fallbackCategories[index % fallbackCategories.length].image,
+        }));
+
+        return normalizedCategories.length > 0 ? normalizedCategories : fallbackCategories;
+    }, [landingPageData.categories]);
+
+    const categorySlidesPerView = 5;
+    const shouldLoopCategories = categories.length > 1;
+    const initialCategoryIndex = categories.length >= 3 ? 2 : Math.max(0, categories.length - 1);
+
+    useEffect(() => {
+        setActiveCategoryIndex(initialCategoryIndex);
+        if (categorySwiperRef.current) {
+            if (shouldLoopCategories) {
+                categorySwiperRef.current.slideToLoop(initialCategoryIndex);
+            } else {
+                categorySwiperRef.current.slideTo(initialCategoryIndex);
+            }
+        }
+    }, [categories.length, initialCategoryIndex, shouldLoopCategories]);
+
+    const handleCategorySlideChange = (swiperInstance) => {
+        setActiveCategoryIndex(swiperInstance.realIndex ?? swiperInstance.activeIndex ?? 0);
+    };
+
+    const goToCategorySlide = (index) => {
+        if (!categorySwiperRef.current) {
+            return;
+        }
+
+        if (shouldLoopCategories) {
+            categorySwiperRef.current.slideToLoop(index);
+            return;
+        }
+
+        categorySwiperRef.current.slideTo(index);
+    };
+
+    const goToNextCategory = () => {
+        categorySwiperRef.current?.slideNext();
+    };
+
+    const goToPreviousCategory = () => {
+        categorySwiperRef.current?.slidePrev();
+    };
+
+    const goToNextShop = () => {
+        shopSwiper1Ref.current?.slideNext();
+        shopSwiper2Ref.current?.slideNext();
+        shopSwiper3Ref.current?.slideNext();
+    };
+
+    const goToPreviousShop = () => {
+        shopSwiper1Ref.current?.slidePrev();
+        shopSwiper2Ref.current?.slidePrev();
+        shopSwiper3Ref.current?.slidePrev();
+    };
+
+    const offsetFromActiveCategory = (index) => {
+        const total = categories.length;
+
+        if (total === 0) {
+            return 0;
+        }
+
+        const rawOffset = index - activeCategoryIndex;
+        const half = Math.floor(total / 2);
+
+        if (rawOffset > half) {
+            return rawOffset - total;
+        }
+
+        if (rawOffset < -half) {
+            return rawOffset + total;
+        }
+
+        return rawOffset;
+    };
+
     return (
         <div className="min-h-screen  ">
             <Head title="Home - Absolutely Human Resources" />
@@ -62,7 +323,7 @@ export default function Landing({
                 <div className="container mx-auto px-6 md:px-10 lg:px-20 relative z-10">
                     <div className=" flex flex-col md:flex-row items-center gap-10">
                         <div className="w-full md:w-1/2 space-y-6">
-                        <p className='text-white text-2xl font-light'>Welcome to STS</p>
+                            <p className='text-white text-2xl font-light'>Welcome to STS</p>
                             <h1 className="font-bebas-neue text-white text-5xl md:text-6xl leading-[1.1]">
                                 {activeBanner?.name ?? 'Banner Coming Soon'}
                             </h1>
@@ -95,7 +356,7 @@ export default function Landing({
                                 onClick={goPrevious}
                                 className="pointer-events-auto inline-flex items-end gap-2  border-none  bg-white px-10 py-2 font-semibold text-[#0079C2] transition hover:bg-[#0079C2] hover:text-white"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 8l-4 4l4 4m-4-4h20"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m6 8l-4 4l4 4m-4-4h20" /></svg>
                             </button>
                             <button
                                 type="button"
@@ -118,8 +379,8 @@ export default function Landing({
                                 type="button"
                                 onClick={() => goToSlide(index)}
                                 className={`h-3 w-3 rounded-full border border-[#0079C2]/70 transition ${currentBannerIndex === index
-                                        ? 'bg-black'
-                                        : 'bg-transparent hover:bg-[#0079C2]/40'
+                                    ? 'bg-black'
+                                    : 'bg-transparent hover:bg-[#0079C2]/40'
                                     }`}
                                 aria-label={`Go to banner ${index + 1}`}
                             />
@@ -128,9 +389,654 @@ export default function Landing({
                 )}
 
             </section>
+            <section className='container mx-auto md:px-20 px-10'>
+
+            <FeaturedProductsSection
+                products={products}
+                title="Featured Products"
+                titleSize="text-2xl"
+                slidesPerView={4}
+                sectionId="product"
+            />
+            </section>
 
 
+            <section
+                id="categories"
+                className="relative overflow-hidden"
+            >
+                {/* Bagian atas tanpa background khusus */}
+                <div className="relative z-10 py-10">
+                    <div className="mb-6 flex container mx-auto px-10 nd:px-20 flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="space-y-1">
+                            <h1 className='font-inter font-semibold text-2xl'>Top Categories</h1>
+                        </div>
 
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={goToPreviousCategory}
+                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m6 8l-4 4l4 4m-4-4h20" /></svg>
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={goToNextCategory}
+                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Bagian bawah dengan background abu setengah section */}
+                <div
+                    className="relative z-10"
+                    style={{
+                        // Membuat background hanya setengah bagian bawah section, mengikuti pola lengkung atas
+                        background:
+                            "linear-gradient(to bottom, transparent 0%, transparent 40%, #F3F3F3 0%, #F3F3F3 100%)"
+                    }}
+                >
+                    <div className="pt-0 pb-10 md:pb-14"> {/* ruang atas lebih kecil supaya abu hanya setengah bawah */}
+                        <Swiper
+                            modules={[Autoplay]}
+                            onSwiper={(swiperInstance) => {
+                                categorySwiperRef.current = swiperInstance;
+                            }}
+                            onSlideChange={handleCategorySlideChange}
+                            centeredSlides
+                            loop={shouldLoopCategories}
+                            initialSlide={initialCategoryIndex}
+                            slidesPerView={Math.min(categorySlidesPerView, categories.length || 1)}
+                            spaceBetween={20}
+                            speed={650}
+                            autoplay={{
+                                delay: 4200,
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true,
+                            }}
+                            breakpoints={{
+                                0: {
+                                    slidesPerView: Math.min(2, categories.length || 1),
+                                },
+                                640: {
+                                    slidesPerView: Math.min(3, categories.length || 1),
+                                },
+                                1024: {
+                                    slidesPerView: Math.min(4, categories.length || 1),
+                                },
+                                1280: {
+                                    slidesPerView: Math.min(5, categories.length || 1),
+                                },
+                            }}
+                            className="!pb-6"
+                        >
+                            {categories.map((category, index) => {
+                                const offset = offsetFromActiveCategory(index);
+                                const isEdgeCard = Math.abs(offset) >= 2;
+                                const showFooter = !isEdgeCard;
+                                const dimmed = Math.abs(offset) >= 2;
+
+                                return (
+                                    <SwiperSlide key={category.id ?? index} className="!h-auto">
+                                        <CategoryCard
+                                            title={category.title}
+                                            image={category.image}
+                                            showFooter={showFooter}
+                                            isDimmed={dimmed}
+                                        />
+                                    </SwiperSlide>
+                                );
+                            })}
+                        </Swiper>
+                    </div>
+                </div>
+            </section>
+
+            <section className='bg-[#0079C2] mt-10'>
+                <div className="container px-10 md:px-20 mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-12">
+                        <div className="flex items-center space-x-4">
+                            <img src="/assets/box.svg" alt="Discount" width={32} height={32} />
+                            <div>
+                                <div className="text-white font-semibold text-lg">Discount</div>
+                                <div className="text-[#AEE2FF] text-sm">Every week new sales</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <img src="/assets/delivery-truck.svg" alt="Free Delivery" width={32} height={32} />
+                            <div>
+                                <div className="text-white font-semibold text-lg">Free Delivery</div>
+                                <div className="text-[#AEE2FF] text-sm">100% Free for all orders</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <img src="/assets/24-hours.svg" alt="Great Support 24/7" width={32} height={32} />
+                            <div>
+                                <div className="text-white font-semibold text-lg">Great Support 24/7</div>
+                                <div className="text-[#AEE2FF] text-sm">We care your experiences</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <img src="/assets/shield.svg" alt="Secure Payment" width={32} height={32} />
+                            <div>
+                                <div className="text-white font-semibold text-lg">Secure Payment</div>
+                                <div className="text-[#AEE2FF] text-sm">1100% Secure Payment Method</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+            <section className='grid grid-cols-1 md:grid-cols-2'>
+
+                <div className="bg-[#F3F3F3] flex justify-center items-center">
+                    <div className="grid grid-cols-3 gap-10">
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                    </div>
+                </div>
+                <div>
+                    <h1 className="text-center mt-10 font-bebas-neue font-normal text-4xl">TOP BRANDS</h1>
+                    <p className='font-inter font-2xl mb-10 mt-5 text-center font-light'>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                    <div className="bg-[#0079C2] flex justify-center items-center ml-10 p-10">
+                        <div className="grid grid-cols-3 gap-4">
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className='container mx-auto px-10 md:px-20 py-20'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Card Kiri (Hot Deals) */}
+                    <div className="bg-[#DADADA] text-[#0079C2] flex flex-col md:flex-row items-stretch justify-start relative md:h-80 overflow-visible">
+                        {/* Konten Text */}
+                        <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 md:pr-16 md:py-0">
+                            <h2 className="font-bold text-2xl md:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
+                            <p className=" mb-4 text-sm md:text-base max-w-[375px]">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                            <button className="bg-white hover: text-[#0079C2] px-6 py-2 rounded font-semibold transition  self-end flex items-center gap-2">
+                                Shop Now
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                            </button>
+                            {/* Gambar: Mobile tampil di bawah, desktop offset ke kiri */}
+                            <img
+                                src="/assets/sound.png"
+                                alt="Sound"
+                                className="block md:hidden mt-6 h-44 w-auto object-contain"
+                            />
+                        </div>
+                        <div className="hidden md:block absolute left-0 md:-left-16 top-1/2 -translate-y-1/2 z-0">
+                            <img
+                                src="/assets/sound.png"
+                                alt="Sound"
+                                className="h-72 object-contain"
+                                style={{
+                                    transform: 'translateX(-30%)',
+                                }}
+                            />
+                        </div>
+                    </div>
+                    {/* Card Kanan (Services) */}
+                    <div className="bg-[#0079C2] flex flex-col md:flex-row items-stretch justify-end relative md:h-80 overflow-visible">
+                        {/* Konten Text */}
+                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 md:pl-16 md:py-0">
+                            <h2 className="font-bold text-2xl md:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
+                            <p className="text-white/80 mb-4 text-sm md:text-base max-w-[375px]">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                            <button className="bg-white hover:bg-gray-200 text-[#0079C2] px-6 py-2 rounded font-semibold transition self-start flex items-center gap-2">
+                                Shop Now
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                            </button>
+                            {/* Gambar: Mobile tampil di bawah, desktop offset ke kanan */}
+                            <img
+                                src="/assets/cctv.png"
+                                alt="CCTV"
+                                className="block md:hidden mt-6 h-44 w-auto object-contain"
+                            />
+                        </div>
+                        <div className="hidden md:block absolute right-0 md:-right-6 top-1/2 -translate-y-1/2 z-0">
+                            <img
+                                src="/assets/cctv.png"
+                                alt="CCTV"
+                                className="h-72 object-contain"
+                                style={{
+                                    transform: 'translateX(30%) translateY(-20%)',
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <section id='shop-by-category' className='bg-[#F3F3F3]'>
+                <div className="container md:px-20 px-10 mx-auto">
+                    <div className="mb-6 flex container mx-auto py-10 px-10 nd:px-20 flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="space-y-1">
+                            <h1 className='font-inter font-bebas-neue font-bold text-5xl'>Shop by Category</h1>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={goToPreviousShop}
+                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m6 8l-4 4l4 4m-4-4h20" />
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={goToNextShop}
+                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex mt-10 items-center gap-4">
+                        <div className="w-2/10 flex justify-center">
+                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
+                        </div>
+                        <div className="w-8/10">
+                            <Swiper
+                                modules={[Autoplay]}
+                                onSwiper={(swiperInstance) => {
+                                    shopSwiper1Ref.current = swiperInstance;
+                                }}
+                                loop={true}
+                                slidesPerView={4}
+                                spaceBetween={40}
+                                speed={650}
+                                autoplay={{
+                                    delay: 4200,
+                                    disableOnInteraction: false,
+                                    pauseOnMouseEnter: true,
+                                }}
+                                breakpoints={{
+                                    0: {
+                                        slidesPerView: 1,
+                                        spaceBetween: 20,
+                                    },
+                                    768: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 30,
+                                    },
+                                    1024: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 40,
+                                    },
+                                }}
+                            >
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                            </Swiper>
+                        </div>
+                    </div>
+                    <div className="flex mt-10 items-center gap-4">
+                        <div className="w-2/10 flex justify-center">
+                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
+                        </div>
+                        <div className="w-8/10">
+                            <Swiper
+                                modules={[Autoplay]}
+                                onSwiper={(swiperInstance) => {
+                                    shopSwiper2Ref.current = swiperInstance;
+                                }}
+                                loop={true}
+                                slidesPerView={4}
+                                spaceBetween={40}
+                                speed={650}
+                                autoplay={{
+                                    delay: 4200,
+                                    disableOnInteraction: false,
+                                    pauseOnMouseEnter: true,
+                                }}
+                                breakpoints={{
+                                    0: {
+                                        slidesPerView: 1,
+                                        spaceBetween: 20,
+                                    },
+                                    768: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 30,
+                                    },
+                                    1024: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 40,
+                                    },
+                                }}
+                            >
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                            </Swiper>
+                        </div>
+                    </div>
+                    <div className="flex mt-10 items-center gap-4 pb-10">
+                        <div className="w-2/10 flex justify-center">
+                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
+                        </div>
+                        <div className="w-8/10">
+                            <Swiper
+                                modules={[Autoplay]}
+                                onSwiper={(swiperInstance) => {
+                                    shopSwiper3Ref.current = swiperInstance;
+                                }}
+                                loop={true}
+                                slidesPerView={4}
+                                spaceBetween={40}
+                                speed={650}
+                                autoplay={{
+                                    delay: 4200,
+                                    disableOnInteraction: false,
+                                    pauseOnMouseEnter: true,
+                                }}
+                                breakpoints={{
+                                    0: {
+                                        slidesPerView: 1,
+                                        spaceBetween: 20,
+                                    },
+                                    768: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 30,
+                                    },
+                                    1024: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 40,
+                                    },
+                                }}
+                            >
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                    </div>
+                                </SwiperSlide>
+                            </Swiper>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className="w-full mt-20 bg-gray-100 flex flex-col md:flex-row">
+                {/* Left Column */}
+                <div className="bg-[#0079C2] flex-1 flex flex-col justify-center px-20 py-10 text-white">
+                    <h2 className="text-3xl font-bold mb-6 ">Contact Information</h2>
+                    <p className="mb-7  text-lg">Say something to start a live chat!</p>
+                    <div className="flex flex-col gap-6 ">
+                        <div className='flex'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}><path fill="currentColor" fillOpacity={0} strokeDasharray={64} strokeDashoffset={64} d="M8 3c0.5 0 2.5 4.5 2.5 5c0 1 -1.5 2 -2 3c-0.5 1 0.5 2 1.5 3c0.39 0.39 2 2 3 1.5c1 -0.5 2 -2 3 -2c0.5 0 5 2 5 2.5c0 2 -1.5 3.5 -3 4c-1.5 0.5 -2.5 0.5 -4.5 0c-2 -0.5 -3.5 -1 -6 -3.5c-2.5 -2.5 -3 -4 -3.5 -6c-0.5 -2 -0.5 -3 0 -4.5c0.5 -1.5 2 -3 4 -3Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"></animate><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"></animate></path><path strokeDasharray={4} strokeDashoffset={4} d="M15.76 8.28c-0.5 -0.51 -1.1 -0.93 -1.76 -1.24M15.76 8.28c0.49 0.49 0.9 1.08 1.2 1.72"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.2s" dur="0.3s" values="4;0"></animate></path><path strokeDasharray={6} strokeDashoffset={6} d="M18.67 5.35c-1 -1 -2.26 -1.73 -3.67 -2.1M18.67 5.35c0.99 1 1.72 2.25 2.08 3.65"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.4s" dur="0.3s" values="6;0"></animate></path></g></svg>
+                            <div className="text-lg font-medium mb-1 ml-10">+1012 3456 789</div>
+                        </div>
+                        <div className='flex'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M2 20V4h20v16zm10-7l8-5V6l-8 5l-8-5v2z"></path></svg>
+                            <div className="text-lg font-medium mb-1 ml-10">demo@gmail.com</div>
+                        </div>
+                        <div className="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M11.291 21.706L12 21zM12 21l.708.706a1 1 0 0 1-1.417 0l-.006-.007l-.017-.017l-.062-.063a48 48 0 0 1-1.04-1.106a50 50 0 0 1-2.456-2.908c-.892-1.15-1.804-2.45-2.497-3.734C4.535 12.612 4 11.248 4 10c0-4.539 3.592-8 8-8s8 3.461 8 8c0 1.248-.535 2.612-1.213 3.87c-.693 1.286-1.604 2.585-2.497 3.735a50 50 0 0 1-3.496 4.014l-.062.063l-.017.017l-.006.006zm0-8a3 3 0 1 0 0-6a3 3 0 0 0 0 6" clipRule="evenodd"></path></svg>
+                            <div className="ml-10">
+                                <div className="text-base">132 Dartmouth Street</div>
+                                <div className="text-base">Boston, Massachusetts 02156</div>
+                                <div className="text-base">United States</div>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <div className="bg-black rounded-full p-2 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.2 4.2 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.52 8.52 0 0 1-5.33 1.84q-.51 0-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23"></path></svg>
+                            </div>
+                            <div className="bg-white text-black rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Right Column (Form) */}
+                <div className="flex-1 bg-white px-8 py-10">
+                    <form className="space-y-6">
+                        <div className="flex flex-col md:flex-row gap-6">
+                            <div className="flex-1">
+                                <label className="block mb-2 text-gray-700" htmlFor="firstName">
+                                    First Name
+                                </label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="block mb-2 text-gray-700" htmlFor="lastName">
+                                    Last Name
+                                </label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-6">
+                            <div className='flex-1'>
+                                <label className="block mb-2 text-gray-700" htmlFor="email">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <div className='flex-1'>
+                                <label className="block mb-2 text-gray-700" htmlFor="phone">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block mb-3 text-gray-700">Select Subject?</label>
+                            <div className="flex flex-row gap-3">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="subject"
+                                        value="General Inquiry 1"
+                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
+                                        defaultChecked
+                                    />
+                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="subject"
+                                        value="General Inquiry 2"
+                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
+                                    />
+                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="subject"
+                                        value="General Inquiry 3"
+                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
+                                    />
+                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="subject"
+                                        value="General Inquiry 4"
+                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
+                                    />
+                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block mb-2 text-gray-700" htmlFor="message">
+                                Message
+                            </label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows={4}
+                                className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2 resize-none"
+                            ></textarea>
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                className=" bg-[#0079C2] text-white font-noral px-10 py-3 rounded-lg hover:bg-[#005C92] transition"
+                            >
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
             <Footer landingPageData={landingPageData} />
         </div>
     );

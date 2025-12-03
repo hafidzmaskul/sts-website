@@ -19,6 +19,8 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/about-us', 'about')->name('about');
     Route::get('/contact-us', 'contact')->name('contact');
     Route::get('/company-handbook', 'companyHandbook')->name('company-handbook');
+    Route::get('/cart', 'cart')->name('cart');
+    Route::get('/liked-products', 'likedProducts')->name('liked-products');
     Route::get('/payment/{slug}', 'payment')->name('payment');
 });
 
