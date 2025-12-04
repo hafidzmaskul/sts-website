@@ -34,7 +34,7 @@ export default function FeaturedProductsSection({
     <>
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <h1 className={`font-inter font-semibold ${titleSize}`}>{title}</h1>
+          <h1 className={`font-inter font-semibold uppercase ${titleSize}`}>{title}</h1>
         </div>
         <div className="flex items-center gap-2 overflow-x-auto">
           <button
