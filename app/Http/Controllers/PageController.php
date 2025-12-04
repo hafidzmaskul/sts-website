@@ -97,9 +97,9 @@ class PageController
         ]);
     }
 
-    public function companyHandbook(): Response
+    public function configuration(): Response
     {
-        return Inertia::render('CompanyHandbook');
+        return Inertia::render('Configuration');
     }
 
     public function products(): Response

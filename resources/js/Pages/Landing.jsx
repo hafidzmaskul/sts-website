@@ -389,7 +389,7 @@ export default function Landing({
                 )}
 
             </section>
-            <section className='container mx-auto md:px-20 px-10'>
+            <section className='container mx-auto md:px-20 px-10 py-10'>
 
             <FeaturedProductsSection
                 products={products}

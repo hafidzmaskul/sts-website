@@ -30,7 +30,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="bg-[#F7F8FC] font-inter pt-8 pb-4 px-4">
+        <footer className="bg-[#fff] border-t font-inter pt-8 pb-4 px-4">
             {/* Baris 1 */}
             <div className="container md:px-20 px-10 mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-gray-200">
                 {/* Kiri: Text dan Sosmed */}

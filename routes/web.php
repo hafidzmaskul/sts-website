@@ -9,6 +9,7 @@ use Livewire\Volt\Volt;
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
     Route::get('/', 'landing')->name('home');
     Route::get('/services', 'services')->name('services');
+    Route::get('/configuration', 'configuration')->name('configuration');
     Route::get('/services/{slug}', 'serviceDetail')->name('services.detail');
     Route::get('/products', 'products')->name('products');
     Route::get('/products/{slug}', 'productDetail')->name('products.detail');

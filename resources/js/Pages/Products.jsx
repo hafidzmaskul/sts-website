@@ -529,7 +529,7 @@ export default function Products() {
                     <FeaturedProductsSection
                         products={featuredProducts}
                         title="Other Products"
-                        titleSize="text-2xl"
+                        titleSize="text-4xl font-bebas-neue"
                         slidesPerView={5}
                         sectionId="other-product"
                     />

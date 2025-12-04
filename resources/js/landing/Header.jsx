@@ -20,7 +20,7 @@ export default function Header() {
     ];
 
     return (
-        <header className="w-full bg-white border-b border-gray-100 text-[#232323] font-sans">
+        <header className="w-full bg-white  border-gray-100 text-[#232323] font-sans">
             {/* Baris 1 */}
             <div className="bg-[#0079C2] font-inter font-light text-[#fff]">
             <div className="container mx-auto flex justify-between items-center py-4 px-10 md:px-20 text-sm ">
@@ -110,7 +110,7 @@ export default function Header() {
             </div>
             </div>
             {/* Baris 3 */}
-            <div className="container mx-auto flex justify-between items-center font-inter py-5 px-10 md:px-20 border-t border-gray-200 text-base font-semibold">
+            <div className="container mx-auto flex justify-between items-center font-inter py-5 px-10 md:px-20  text-base font-semibold">
                 <div className="flex items-center space-x-4">
                     {/* Categories Dropdown */}
                     <div className="relative">

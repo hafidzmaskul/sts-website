@@ -49,12 +49,12 @@ export default function ProductListingCard({
                 </button>
                     </div>
 
-                    <button
-                        type="button"
-                        className="w-full rounded-lg border border-[#0079C2] bg-[#F0F2F3] px-3 py-2 text-xs font-semibold text-[#0079C2] hover:bg-[#E1E6E8]"
+                    <a
+                        href="/products/123"
+                        className="w-full text-center rounded-lg border border-[#0079C2] bg-[#F0F2F3] px-3 py-2 text-xs font-semibold text-[#0079C2] hover:bg-[#E1E6E8]"
                     >
                         View Details
-                    </button>
+                    </a>
             </div>
         </article>
     );
