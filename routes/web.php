@@ -53,8 +53,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/banners', \App\Livewire\Admin\Banners\Index::class)->name('admin.banners.index');
         Route::get('/admin/news-categories', \App\Livewire\Admin\NewsCategories\Index::class)->name('admin.news-categories.index');
         Route::get('/admin/news', \App\Livewire\Admin\News\Index::class)->name('admin.news.index');
+        Route::get('/admin/product-categories', \App\Livewire\Admin\ProductCategories\Index::class)->name('admin.product-categories.index');
 
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

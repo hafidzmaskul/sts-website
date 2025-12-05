@@ -63,6 +63,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'products.edit',
             'products.delete',
 
+            // 7b. Product Categories
+            'product-categories.view',
+            'product-categories.create',
+            'product-categories.edit',
+            'product-categories.delete',
+
             // 8. Transactions (Sales)
             'transactions.view',
 

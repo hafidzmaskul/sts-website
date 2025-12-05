@@ -34,10 +34,13 @@
             </flux:navlist.group>
 
             <!-- Catalog Group -->
-            @canany(['services.view', 'products.view'])
+            @canany(['services.view', 'products.view', 'product-categories.view'])
                 <flux:navlist.group :heading="__('Catalog')" class="grid">
-
-
+                    @can('product-categories.view')
+                        <flux:navlist.item icon="tag" :href="route('admin.product-categories.index')"
+                            :current="request()->routeIs('admin.product-categories.*')" wire:navigate>{{ __('Categories') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             @endcanany
 
