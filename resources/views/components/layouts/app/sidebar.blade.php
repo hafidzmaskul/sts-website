@@ -44,7 +44,7 @@
                 </flux:navlist.group>
             @endcanany
 
-            @canany(['news.view', 'news-categories.view'])
+            @canany(['news.view', 'news-categories.view', 'newsletter-subscriptions.view'])
                 <flux:navlist.group :heading="__('News')" class="grid">
                     @can('news-categories.view')
                         <flux:navlist.item icon="newspaper" :href="route('admin.news-categories.index')"
@@ -55,6 +55,12 @@
                     @can('news.view')
                         <flux:navlist.item icon="document-text" :href="route('admin.news.index')"
                             :current="request()->routeIs('admin.news.*')" wire:navigate>{{ __('Articles') }}
+                        </flux:navlist.item>
+                    @endcan
+
+                    @can('newsletter-subscriptions.view')
+                        <flux:navlist.item icon="envelope" :href="route('admin.newsletter.index')"
+                            :current="request()->routeIs('admin.newsletter.*')" wire:navigate>{{ __('Newsletter') }}
                         </flux:navlist.item>
                     @endcan
                 </flux:navlist.group>
