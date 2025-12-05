@@ -9,18 +9,19 @@ export default function AboutArticleCard({
   additionnal
 }) {
   return (
-    <article className="flex flex-col min-h-screen w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-sm">
+    <div className="flex flex-col w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-sm h-[700px] md:h-[800px] lg:h-[900px]">
       {/* Atas: Image as Background */}
       <div
-        className="flex-1 w-full bg-gray-100 flex items-center justify-center relative  bg-center bg-no-repeat bg-cover"
+        className="w-full bg-gray-100 flex items-center justify-center relative bg-center bg-no-repeat bg-cover"
         style={{
           backgroundImage: `url(${image})`,
+          height: '45%',
         }}
         aria-label={title}
         role="img"
       />
       {/* Bawah: Text */}
-      <div className="flex-1 flex flex-col space-y-4 px-6 py-6 md:px-10 md:py-8 bg-[#0079C2]">
+      <div className="flex flex-col space-y-4 px-6 py-6 md:px-10 md:py-8 bg-[#0079C2] flex-1" style={{ minHeight: '40%' }}>
         <h2 className="font-inter text-2xl md:text-3xl font-semibold text-white">
           {title}
         </h2>
@@ -42,7 +43,7 @@ export default function AboutArticleCard({
           </div>
         )}
       </div>
-    </article>
+    </div>
   );
 }
 

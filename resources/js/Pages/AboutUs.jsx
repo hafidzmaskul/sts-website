@@ -120,7 +120,7 @@ export default function AboutUs({ teamMembers = [] }) {
                 <section className='py-10'>
                     <div className="container mx-auto px-6 md:px-10 lg:px-20 py-10">
                         <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className=" justify-center">
+
                                 <div className=" bg-[#0079C2] flex p-5 rounded-xl">
                                     <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
                                         <h2 className="font-bold text-2xl mb-2">Company Headlines</h2>
@@ -133,8 +133,7 @@ export default function AboutUs({ teamMembers = [] }) {
                                         <img src="/assets/company.svg" alt="Company" className="max-w-full h-auto" />
                                     </div>
                                 </div>
-                            </div>
-                            <div className=" justify-center">
+
                                 <div className=" bg-[#0079C2] flex p-5 rounded-xl">
                                     <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
                                         <h2 className="font-bold text-2xl mb-2">Solutions</h2>
@@ -147,7 +146,6 @@ export default function AboutUs({ teamMembers = [] }) {
                                         <img src="/assets/solution.svg" alt="Company" className="max-w-full h-auto" />
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </section>

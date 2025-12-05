@@ -565,11 +565,11 @@ export default function Landing({
             <section className='container mx-auto px-10 md:px-20 py-20'>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Card Kiri (Hot Deals) */}
-                    <div className="bg-[#DADADA] text-[#0079C2] flex flex-col md:flex-row items-stretch justify-start relative md:h-80 overflow-visible">
+                    <div className="bg-[#DADADA] text-[#0079C2] flex flex-col lg:flex-row items-stretch justify-start relative lg:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 md:pr-16 md:py-0">
-                            <h2 className="font-bold text-2xl md:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
-                            <p className=" mb-4 text-sm md:text-base max-w-[375px]">
+                        <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0">
+                            <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
+                            <p className=" mb-4 text-sm lg:text-base max-w-[375px]">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                             </p>
                             <button className="bg-white hover: text-[#0079C2] px-6 py-2 rounded font-semibold transition  self-end flex items-center gap-2">
@@ -580,10 +580,10 @@ export default function Landing({
                             <img
                                 src="/assets/sound.png"
                                 alt="Sound"
-                                className="block md:hidden mt-6 h-44 w-auto object-contain"
+                                className="block lg:hidden mt-6 h-44 w-auto object-contain"
                             />
                         </div>
-                        <div className="hidden md:block absolute left-0 md:-left-16 top-1/2 -translate-y-1/2 z-0">
+                        <div className="hidden lg:block absolute left-0 lg:-left-16 top-1/2 -translate-y-1/2 z-0">
                             <img
                                 src="/assets/sound.png"
                                 alt="Sound"
@@ -595,11 +595,11 @@ export default function Landing({
                         </div>
                     </div>
                     {/* Card Kanan (Services) */}
-                    <div className="bg-[#0079C2] flex flex-col md:flex-row items-stretch justify-end relative md:h-80 overflow-visible">
+                    <div className="bg-[#0079C2] flex flex-col lg:flex-row items-stretch justify-end relative lg:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 md:pl-16 md:py-0">
-                            <h2 className="font-bold text-2xl md:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
-                            <p className="text-white/80 mb-4 text-sm md:text-base max-w-[375px]">
+                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-16 lg:py-0">
+                            <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
+                            <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                             </p>
                             <button className="bg-white hover:bg-gray-200 text-[#0079C2] px-6 py-2 rounded font-semibold transition self-start flex items-center gap-2">
@@ -610,10 +610,10 @@ export default function Landing({
                             <img
                                 src="/assets/cctv.png"
                                 alt="CCTV"
-                                className="block md:hidden mt-6 h-44 w-auto object-contain"
+                                className="block lg:hidden mt-6 h-44 w-auto object-contain"
                             />
                         </div>
-                        <div className="hidden md:block absolute right-0 md:-right-6 top-1/2 -translate-y-1/2 z-0">
+                        <div className="hidden lg:block absolute right-0 lg:-right-6 top-1/2 -translate-y-1/2 z-0">
                             <img
                                 src="/assets/cctv.png"
                                 alt="CCTV"
@@ -688,43 +688,59 @@ export default function Landing({
                                 }}
                             >
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                             </Swiper>
@@ -765,43 +781,59 @@ export default function Landing({
                                 }}
                             >
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                             </Swiper>
@@ -842,43 +874,59 @@ export default function Landing({
                                 }}
                             >
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="rounded-xl bg-white hover:bg-[#0079C2] transition cursor-pointer">
+                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
                                         <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
+                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
+                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
                                     </div>
                                 </SwiperSlide>
                             </Swiper>
