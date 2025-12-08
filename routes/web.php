@@ -28,7 +28,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::view('dashboard', 'dashboard')
+    Route::get('/dashboard', \App\Livewire\Dashboard::class)
         ->middleware(['verified'])
         ->name('dashboard');
 
@@ -55,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/news', \App\Livewire\Admin\News\Index::class)->name('admin.news.index');
         Route::get('/admin/newsletter', \App\Livewire\Admin\Newsletter\Index::class)->name('admin.newsletter.index');
         Route::get('/admin/product-categories', \App\Livewire\Admin\ProductCategories\Index::class)->name('admin.product-categories.index');
+        Route::get('/admin/products', \App\Livewire\Admin\Products\Index::class)->name('admin.products.index');
+        Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create');
+        Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit');
+        Route::get('/admin/products/{product}', \App\Livewire\Admin\Products\Show::class)->name('admin.products.show');
 
     });
 });

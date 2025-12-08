@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Livewire\Admin\Products;
+
+use App\Models\Product;
+use App\Models\ProductCategory;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+
+class Create extends Component
+{
+    use WithFileUploads;
+
+    // Form Fields
+    public $brand_name = '';
+    public $title = '';
+    public $slug = '';
+    public $is_sign_up_for_pricing = false;
+    public $base_price = null;
+    public $status = 'active';
+    public $is_exclusive = false;
+
+    // Rich Text Fields
+    public $key_feature = '';
+    public $product_overview = '';
+    public $main_feature = '';
+    public $information = '';
+
+    // SEO
+    public $seo_title = '';
+    public $seo_description = '';
+    public $seo_keywords = '';
+
+    // Relations
+    public $selectedCategories = [];
+
+    // Dynamic Image Management
+    public $newImages = []; // Array of ['image' => file, 'sequence' => int, 'key' => unique_id]
+    public $storedImages = []; // Not used in create but kept for compatibility with form partial
+
+    public function mount()
+    {
+        // Add one empty image slot by default? No, let user add.
+    }
+
+    public function addImage()
+    {
+        $this->newImages[] = [
+            'image' => null,
+            'sequence' => count($this->newImages) + 1,
+            'key' => Str::random(10),
+        ];
+    }
+
+    public function removeNewImage($index)
+    {
+        unset($this->newImages[$index]);
+        $this->newImages = array_values($this->newImages);
+    }
+
+    public function rules()
+    {
+        return [
+            'brand_name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
+            'base_price' => 'nullable|numeric|min:0',
+            'status' => 'required|in:active,inactive',
+            'selectedCategories' => 'array',
+
+            // New Image Validation
+            'newImages.*.image' => 'required|image|max:2048',
+            'newImages.*.sequence' => 'required|integer|min:0',
+
+            'is_sign_up_for_pricing' => 'boolean',
+            'is_exclusive' => 'boolean',
+            'key_feature' => 'nullable|string',
+            'product_overview' => 'nullable|string',
+            'main_feature' => 'nullable|string',
+            'information' => 'nullable|string',
+            'seo_title' => 'nullable|string|max:255',
+            'seo_description' => 'nullable|string',
+            'seo_keywords' => 'nullable|string',
+        ];
+    }
+
+    public function updatedTitle($value)
+    {
+        $this->slug = Str::slug($value);
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        $data = [
+            'brand_name' => $this->brand_name,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
+            'base_price' => $this->base_price,
+            'status' => $this->status,
+            'is_exclusive' => $this->is_exclusive,
+            'key_feature' => $this->key_feature,
+            'product_overview' => $this->product_overview,
+            'main_feature' => $this->main_feature,
+            'information' => $this->information,
+            'seo_title' => $this->seo_title,
+            'seo_description' => $this->seo_description,
+            'seo_keywords' => $this->seo_keywords,
+            'created_by' => auth()->id(),
+        ];
+
+        $product = Product::create($data);
+        $product->categories()->sync($this->selectedCategories);
+
+        foreach ($this->newImages as $imgData) {
+            if ($imgData['image']) {
+                $path = $imgData['image']->store('products', 'public');
+                $product->images()->create([
+                    'image_path' => $path,
+                    'sequence' => $imgData['sequence'],
+                ]);
+            }
+        }
+
+        session()->flash('success', 'Product created successfully.');
+        return redirect()->route('admin.products.index');
+    }
+
+    public function deleteImage($id)
+    {
+        // No-op for create
+    }
+
+    public function render()
+    {
+        return view('livewire.admin.products.create', [
+            'categories' => ProductCategory::all(),
+        ])->title('Create Product');
+    }
+}
