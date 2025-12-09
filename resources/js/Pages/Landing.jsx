@@ -71,45 +71,48 @@ const fallbackProducts = [
 const fallbackCategories = [
     {
         id: 1,
-        title: 'Security Systems',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Security Systems',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 2,
-        title: 'Access Control',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Access Control',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 3,
-        title: 'Video Surveillance',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Video Surveillance',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 4,
-        title: 'Networking',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Networking',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 5,
-        title: 'Smart Office',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Smart Office',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 6,
-        title: 'Home Automation',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Home Automation',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
     {
         id: 7,
-        title: 'Audio Visual',
-        image: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
+        name: 'Audio Visual',
+        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
     },
 ];
 
 export default function Landing({
     banners = [],
     landingPageData = {},
+    featured = [],
+    categories =[]
 }) {
+    // console.log(featured)
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const [activeProductIndex, setActiveProductIndex] = useState(0);
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
@@ -156,20 +159,39 @@ export default function Landing({
     const goNext = () => goToSlide(currentBannerIndex + 1);
     const goPrevious = () => goToSlide(currentBannerIndex - 1);
 
-    const products = useMemo(() => {
-        const normalizedProducts = (landingPageData.products ?? []).map((product, index) => ({
-            id: product.id ?? index,
-            title: product.name ?? `Product ${index + 1}`,
-            price: product.price ?? product.formatted_price ?? null,
-            image: product.image_url
-                ?? product.image
-                ?? (product.file_path ? `/storage/${product.file_path}` : null)
-                ?? fallbackProducts[index % fallbackProducts.length].image,
-            badge: product.badge ?? (product.is_new ? 'New' : 'Sale'),
-        }));
+    const transformFeaturedProduct = (product, index) => {
+        const imagePath = product.images?.[0]?.image_path;
+        const image = imagePath
+            ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
+            : fallbackProducts[index % fallbackProducts.length].image;
 
-        return normalizedProducts.length > 0 ? normalizedProducts : fallbackProducts;
-    }, [landingPageData.products]);
+        let basePrice = null;
+        if (product.base_price) {
+            const cleanedPrice = product.base_price.toString().replace(/[^\d.-]/g, '');
+            const parsedPrice = parseFloat(cleanedPrice);
+            if (!Number.isNaN(parsedPrice)) {
+                basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+            }
+        }
+
+        const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
+
+        return {
+            id: product.id ?? index,
+            title: product.title ?? `Product ${index + 1}`,
+            price: basePrice,
+            image,
+            badge: product.badge ?? badge,
+        };
+    };
+
+    const products = useMemo(() => {
+        if (featured.length > 0) {
+            const normalizedProducts = featured.map((product, index) => transformFeaturedProduct(product, index));
+            return normalizedProducts;
+        }
+        return fallbackProducts;
+    }, [featured]);
 
     const visibleSlides = useMemo(() => {
         if (products.length >= 4) {
@@ -187,7 +209,21 @@ export default function Landing({
         return 1;
     }, [products.length]);
 
-    const shouldLoopProducts = products.length > visibleSlides;
+    // Duplicate products if needed for infinite loop
+    const loopedProducts = useMemo(() => {
+        if (products.length === 0) {
+            return [];
+        }
+        // If we don't have enough slides for loop, duplicate them
+        const minSlidesForLoop = visibleSlides * 2;
+        if (products.length < minSlidesForLoop) {
+            const multiplier = Math.ceil(minSlidesForLoop / products.length);
+            return Array(multiplier).fill(products).flat();
+        }
+        return products;
+    }, [products, visibleSlides]);
+
+    const shouldLoopProducts = loopedProducts.length > 0;
 
     useEffect(() => {
         setActiveProductIndex(0);
@@ -221,22 +257,45 @@ export default function Landing({
         productSwiperRef.current?.slidePrev();
     };
 
-    const categories = useMemo(() => {
-        const normalizedCategories = (landingPageData.categories ?? []).map((category, index) => ({
-            id: category.id ?? index,
-            title: category.name ?? category.title ?? `Category ${index + 1}`,
-            image: category.image_url
-                ?? category.thumbnail_url
-                ?? (category.file_path ? `/storage/${category.file_path}` : null)
-                ?? fallbackCategories[index % fallbackCategories.length].image,
-        }));
+    const transformedCategories = useMemo(() => {
+        if (categories.length > 0) {
+            const normalizedCategories = categories.map((category, index) => {
+                const imagePath = category.image_path;
+                const image = imagePath
+                    ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
+                    : fallbackCategories[index % fallbackCategories.length].image_path;
 
-        return normalizedCategories.length > 0 ? normalizedCategories : fallbackCategories;
-    }, [landingPageData.categories]);
+                return {
+                    id: category.id ?? index,
+                    name: category.name ?? `Category ${index + 1}`,
+                    image_path: image,
+                    products_count: category.products_count ?? 0,
+                };
+            });
+
+            return normalizedCategories;
+        }
+        return fallbackCategories;
+    }, [categories]);
 
     const categorySlidesPerView = 5;
-    const shouldLoopCategories = categories.length > 1;
-    const initialCategoryIndex = categories.length >= 3 ? 2 : Math.max(0, categories.length - 1);
+
+    // Duplicate categories if needed for infinite loop
+    const loopedCategories = useMemo(() => {
+        if (transformedCategories.length === 0) {
+            return [];
+        }
+        // If we don't have enough slides for loop, duplicate them
+        const minSlidesForLoop = categorySlidesPerView * 2;
+        if (transformedCategories.length < minSlidesForLoop) {
+            const multiplier = Math.ceil(minSlidesForLoop / transformedCategories.length);
+            return Array(multiplier).fill(transformedCategories).flat();
+        }
+        return transformedCategories;
+    }, [transformedCategories, categorySlidesPerView]);
+
+    const shouldLoopCategories = loopedCategories.length > 0;
+    const initialCategoryIndex = transformedCategories.length >= 3 ? 2 : Math.max(0, transformedCategories.length - 1);
 
     useEffect(() => {
         setActiveCategoryIndex(initialCategoryIndex);
@@ -247,7 +306,7 @@ export default function Landing({
                 categorySwiperRef.current.slideTo(initialCategoryIndex);
             }
         }
-    }, [categories.length, initialCategoryIndex, shouldLoopCategories]);
+    }, [loopedCategories.length, initialCategoryIndex, shouldLoopCategories]);
 
     const handleCategorySlideChange = (swiperInstance) => {
         setActiveCategoryIndex(swiperInstance.realIndex ?? swiperInstance.activeIndex ?? 0);
@@ -287,7 +346,7 @@ export default function Landing({
     };
 
     const offsetFromActiveCategory = (index) => {
-        const total = categories.length;
+        const total = transformedCategories.length;
 
         if (total === 0) {
             return 0;
@@ -321,7 +380,7 @@ export default function Landing({
                 }}
             >
                 <div className="container mx-auto px-6 md:px-10 lg:px-20 relative z-10">
-                    <div className=" flex flex-col md:flex-row items-center gap-10">
+                    <div className=" flex flex-col md:flex-row items-center gap-5">
                         <div className="w-full md:w-1/2 space-y-6">
                             <p className='text-white text-2xl font-light'>Welcome to STS</p>
                             <h1 className="font-bebas-neue text-white text-5xl md:text-6xl leading-[1.1]">
@@ -451,7 +510,7 @@ export default function Landing({
                             centeredSlides
                             loop={shouldLoopCategories}
                             initialSlide={initialCategoryIndex}
-                            slidesPerView={Math.min(categorySlidesPerView, categories.length || 1)}
+                            slidesPerView={Math.min(categorySlidesPerView, loopedCategories.length || 1)}
                             spaceBetween={20}
                             speed={650}
                             autoplay={{
@@ -461,33 +520,34 @@ export default function Landing({
                             }}
                             breakpoints={{
                                 0: {
-                                    slidesPerView: Math.min(2, categories.length || 1),
+                                    slidesPerView: Math.min(2, loopedCategories.length || 1),
                                 },
                                 640: {
-                                    slidesPerView: Math.min(3, categories.length || 1),
+                                    slidesPerView: Math.min(3, loopedCategories.length || 1),
                                 },
                                 1024: {
-                                    slidesPerView: Math.min(4, categories.length || 1),
+                                    slidesPerView: Math.min(4, loopedCategories.length || 1),
                                 },
                                 1280: {
-                                    slidesPerView: Math.min(5, categories.length || 1),
+                                    slidesPerView: Math.min(5, loopedCategories.length || 1),
                                 },
                             }}
                             className="!pb-6"
                         >
-                            {categories.map((category, index) => {
+                            {loopedCategories.map((category, index) => {
                                 const offset = offsetFromActiveCategory(index);
                                 const isEdgeCard = Math.abs(offset) >= 2;
                                 const showFooter = !isEdgeCard;
                                 const dimmed = Math.abs(offset) >= 2;
 
                                 return (
-                                    <SwiperSlide key={category.id ?? index} className="!h-auto">
+                                    <SwiperSlide key={`${category.id ?? 'category'}-${index}`} className="!h-auto">
                                         <CategoryCard
-                                            title={category.title}
-                                            image={category.image}
+                                            title={category.name}
+                                            image={category.image_path}
                                             showFooter={showFooter}
                                             isDimmed={dimmed}
+                                            productsCount={category.products_count}
                                         />
                                     </SwiperSlide>
                                 );
@@ -537,13 +597,15 @@ export default function Landing({
 
                 <div className="bg-[#F3F3F3] flex justify-center items-center">
                     <div className="grid grid-cols-3 gap-10">
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/42ee325c8d4f3f8e36f3ac85a6e5dd1187b451a2.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/e0035d056ad3c88d4b1a3fd03dfcde28119a604f.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/ad054e766ecba134b5274ba3fd49187dd5fe9cc8.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/e0035d056ad3c88d4b1a3fd03dfcde28119a604f.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/ad054e766ecba134b5274ba3fd49187dd5fe9cc8.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
                     </div>
                 </div>
                 <div>
@@ -551,13 +613,13 @@ export default function Landing({
                     <p className='font-inter font-2xl mb-10 mt-5 text-center font-light'>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                     <div className="bg-[#0079C2] flex justify-center items-center ml-10 p-10">
                         <div className="grid grid-cols-3 gap-4">
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='h-15 mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                            <img src="/assets/dummmy/95afe41b6a234b7ab7899f5ce91b9737a351e249.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                            <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                            <img src="/assets/dummmy/95afe41b6a234b7ab7899f5ce91b9737a351e249.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                            <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+
                         </div>
                     </div>
                 </div>

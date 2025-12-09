@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function CategoryCard({ title, image, showFooter, isDimmed }) {
+export default function CategoryCard({ title, image, showFooter, isDimmed, productsCount = 0 }) {
   const baseHeight = showFooter ? 'h-[380px]' : 'h-[340px]';
   const dimClasses = isDimmed ? 'scale-[0.95] opacity-60 blur-[1.5px]' : 'scale-100 opacity-100';
 
@@ -22,7 +22,7 @@ export default function CategoryCard({ title, image, showFooter, isDimmed }) {
             <div className="">
 
           <span className="text-lg font-semibold text-white">{title}</span> <br />
-          <span className="text-xs font-inter font-light text-white">200 product</span>
+          <span className="text-xs font-inter font-light text-white">{productsCount} product{productsCount !== 1 ? 's' : ''}</span>
             </div>
         </div>
       ) : (
