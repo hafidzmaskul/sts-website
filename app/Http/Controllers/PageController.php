@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use App\Models\News;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,15 +25,33 @@ class PageController
                 'cta_url',
             ]);
 
+        $featured = Product::with(['images' => function ($query) {
+            $query->orderBy('sequence');
+        }])->get()->map(function ($product) {
+            // Ambil image_path dari gambar dengan sequence == 1 (atau null jika tidak ada)
+            $mainImage = $product->images->firstWhere('sequence', 1);
+            $product->images = $mainImage ? $mainImage->image_path : null;
+            return $product;
+        });
+        $categories = DB::table('product_categories as pc')
+            ->leftJoin('product_category_product as pcp', 'pc.id', '=', 'pcp.product_category_id')
+            ->select('pc.*', DB::raw('COUNT(pcp.product_id) as products_count'))
+            ->groupBy('pc.id')
+            ->get();
+
         return Inertia::render('Landing', [
             'banners' => $banners,
+            'featured' => $featured,
+            'categories' => $categories
         ]);
     }
 
     public function services(): Response
     {
+        $articles = News::with('categories')->where('status', 'Published')->get();
         return Inertia::render('Service', [
-            'services' => [],
+            'services' => $articles,
+
         ]);
     }
 
@@ -104,73 +125,27 @@ class PageController
 
     public function products(): Response
     {
-        $products = [
-            [
-                'id' => 1,
-                'name' => 'Smart CCTV Camera Pro',
-                'slug' => 'smart-cctv-camera-pro',
-                'price' => 'Rp 1.250.000',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Access Control Door Lock',
-                'slug' => 'access-control-door-lock',
-                'price' => 'Rp 1.850.000',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Network Switch 24 Port',
-                'slug' => 'network-switch-24-port',
-                'price' => 'Rp 2.150.000',
-            ],
-            [
-                'id' => 4,
-                'name' => 'Smart Office Starter Kit',
-                'slug' => 'smart-office-starter-kit',
-                'price' => 'Rp 3.500.000',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Smart Office Starter Kit',
-                'slug' => 'smart-office-starter-kit',
-                'price' => 'Rp 3.500.000',
-            ],
-            [
-                'id' => 6,
-                'name' => 'Smart Office Starter Kit',
-                'slug' => 'smart-office-starter-kit',
-                'price' => 'Rp 3.500.000',
-            ],
-            [
-                'id' => 7,
-                'name' => 'Smart Office Starter Kit',
-                'slug' => 'smart-office-starter-kit',
-                'price' => 'Rp 3.500.000',
-            ],
-            [
-                'id' => 8,
-                'name' => 'Smart Office Starter Kit',
-                'slug' => 'smart-office-starter-kit',
-                'price' => 'Rp 3.500.000',
-            ],
-        ];
-
+        $products =  Product::with('images')->get();
+        $baseProducts =  Product::with('images')->get();
+        // $categories =
         return Inertia::render('Products', [
             'products' => $products,
+            'baseProducts' => $baseProducts
         ]);
     }
 
     public function productDetail(string $slug): Response
     {
+        $product = Product::with('images')->where('slug', $slug)->firstOrFail();
+        $relatedProducts = Product::with('images')
+            ->where('id', '!=', $product->id)
+            ->where('status', 'active')
+            ->limit(8)
+            ->get();
+
         return Inertia::render('ProductDetail', [
-            'product' => [
-                'id' => 1,
-                'name' => 'Smart CCTV Camera Pro',
-                'slug' => $slug,
-                'description' => 'Dummy product description.',
-                'price' => 'Rp 1.250.000',
-            ],
-            'products' => [],
+            'product' => $product,
+            'products' => $relatedProducts,
         ]);
     }
 

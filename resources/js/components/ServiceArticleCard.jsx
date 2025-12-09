@@ -8,14 +8,14 @@ export default function ServiceArticleCard({
     buttonHref = '#',
     additionnal
 }) {
-    // Membatasi text hanya 50 karakter
+    // Membatasi text hanya 200 karakter
     const limitedText = text && text.length > 200 ? text.slice(0, 200) + '...' : text;
 
     return (
         <div className="flex flex-col h-full">
             {/* Atas: Image as Background */}
             <img
-                src={image}
+                src={image ? `/storage/${image}` : 'https://placehold.co/600x400?text=No+Image'}
                 alt={title}
                 className="flex-1 w-full object-cover bg-gray-100"
             />
@@ -24,9 +24,10 @@ export default function ServiceArticleCard({
                 <h2 className="font-inter text-2xl md:text-3xl font-bold ">
                     {title}
                 </h2>
-                <p className="font-inter text-base md:text-md font-medium  ">
-                    {limitedText}
-                </p>
+                <span
+                    className="font-inter text-base md:text-md font-medium rich-text"
+                    dangerouslySetInnerHTML={{ __html: limitedText }}
+                />
             </div>
             <div className="px-4 py-4  md:py-6">
                 <a

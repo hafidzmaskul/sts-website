@@ -16,76 +16,6 @@ const sliderImages = [
 ];
 
 const PRODUCT_PAGE_SIZE = 28;
-const TOTAL_PRODUCTS = 100;
-
-const baseProducts = [
-    {
-        id: 1,
-        name: 'Smart CCTV Camera Pro',
-        slug: 'smart-cctv-camera-pro',
-        price: 1250000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-CCTV-100',
-        categoryId: 'security-systems',
-        subCategoryId: 'cctv',
-    },
-    {
-        id: 2,
-        name: 'Access Control Door Lock',
-        slug: 'access-control-door-lock',
-        price: 1850000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-ACCESS-210',
-        categoryId: 'access-control',
-        subCategoryId: 'door-lock',
-    },
-    {
-        id: 3,
-        name: 'Network Switch 24 Port',
-        slug: 'network-switch-24-port',
-        price: 2150000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-NET-24',
-        categoryId: 'networking',
-        subCategoryId: 'switch',
-    },
-    {
-        id: 4,
-        name: 'Smart Office Starter Kit',
-        slug: 'smart-office-starter-kit',
-        price: 3500000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-OFFICE-01',
-        categoryId: 'smart-office',
-        subCategoryId: 'office-kit',
-    },
-    {
-        id: 5,
-        name: 'IP Camera Outdoor 4K',
-        slug: 'ip-camera-outdoor-4k',
-        price: 2750000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-IP-4K',
-        categoryId: 'security-systems',
-        subCategoryId: 'ip-camera',
-    },
-    {
-        id: 6,
-        name: 'Video Door Phone Set',
-        slug: 'video-door-phone-set',
-        price: 2250000,
-        image: '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-        brand: 'STS',
-        series: 'Model STS-VDP-01',
-        categoryId: 'access-control',
-        subCategoryId: 'video-door-phone',
-    },
-];
 
 const filterCategories = [
     {
@@ -128,26 +58,47 @@ const formatPrice = (amount) => new Intl.NumberFormat('id-ID', {
     maximumFractionDigits: 0,
 }).format(amount);
 
-const buildProducts = (total) => {
-    const products = [];
+const transformProduct = (product, index = 0) => {
+    const imagePath = product.images?.[0]?.image_path;
+    const image = imagePath
+        ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
+        : sliderImages[index % sliderImages.length];
 
-    for (let index = 0; index < total; index += 1) {
-        const base = baseProducts[index % baseProducts.length];
-        const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
-
-        products.push({
-            ...base,
-            id: index + 1,
-            name: `${base.name} ${index + 1}`,
-            badge,
-        });
+    let basePrice = 0;
+    if (product.base_price) {
+        const cleanedPrice = product.base_price.toString().replace(/[^\d.-]/g, '');
+        const parsedPrice = parseFloat(cleanedPrice);
+        if (!Number.isNaN(parsedPrice)) {
+            basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+        }
     }
 
-    return products;
+    const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
+
+    return {
+        id: product.id,
+        title: product.title || '',
+        name: product.title || '',
+        slug: product.slug || '',
+        price: basePrice,
+        image,
+        brand_name: product.brand_name || 'STS',
+        brand: product.brand_name || 'STS',
+        series: product.series || `Model ${product.slug || product.id}`,
+        categoryId: product.categoryId || null,
+        subCategoryId: product.subCategoryId || null,
+        badge,
+    };
 };
 
-export default function Products() {
-    const allProducts = useMemo(() => buildProducts(TOTAL_PRODUCTS), []);
+export default function Products({products = [], baseProducts = []}) {
+    const allProducts = useMemo(() => {
+        const sourceProducts = products.length > 0 ? products : baseProducts;
+        const transformedProducts = sourceProducts.map(
+            (product, index) => transformProduct(product, index),
+        );
+        return transformedProducts;
+    }, [products, baseProducts]);
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('featured');
     const [expandedCategories, setExpandedCategories] = useState(
@@ -159,7 +110,13 @@ export default function Products() {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
 
     const featuredProducts = useMemo(
-        () => allProducts.slice(0, 8),
+        () => allProducts.slice(0, 8).map((product) => ({
+            id: product.id,
+            title: product.title || product.name,
+            price: product.price,
+            image: product.image,
+            badge: product.badge,
+        })),
         [allProducts],
     );
 
@@ -183,9 +140,9 @@ export default function Products() {
         if (searchQuery.trim() !== '') {
             const query = searchQuery.trim().toLowerCase();
             products = products.filter((product) => (
-                product.name.toLowerCase().includes(query)
-                || product.brand.toLowerCase().includes(query)
-                || product.series.toLowerCase().includes(query)
+                (product.name || product.title || '').toLowerCase().includes(query)
+                || (product.brand || product.brand_name || '').toLowerCase().includes(query)
+                || (product.series || '').toLowerCase().includes(query)
             ));
         }
 
@@ -198,11 +155,11 @@ export default function Products() {
         const sorted = [...products];
 
         if (sortBy === 'price-asc') {
-            sorted.sort((a, b) => a.price - b.price);
+            sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
         } else if (sortBy === 'price-desc') {
-            sorted.sort((a, b) => b.price - a.price);
+            sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
         } else if (sortBy === 'name-asc') {
-            sorted.sort((a, b) => a.name.localeCompare(b.name));
+            sorted.sort((a, b) => (a.name || a.title || '').localeCompare(b.name || b.title || ''));
         }
 
         return sorted;
@@ -279,7 +236,7 @@ export default function Products() {
                         {sliderProducts.map((product, index) => {
                             const imageUrl = product.image
                                 ?? sliderImages[index % sliderImages.length];
-                            const title = product.name ?? 'Product';
+                            const title = product.title || product.name || 'Product';
 
                             return (
                                 <SwiperSlide key={`${product.slug ?? product.id}-${index}`}>
@@ -486,11 +443,12 @@ export default function Products() {
                                                     <ProductListingCard
                                                         key={product.id}
                                                         image={product.image}
-                                                        name={product.name}
-                                                        brand={product.brand}
+                                                        name={product.title}
+                                                        brand={product.brand_name}
                                                         series={product.series}
                                                         badge={product.badge}
                                                         priceLabel={formatPrice(product.price)}
+                                                        slug={product.slug}
                                                     />
                                                 ))}
                                             </div>
