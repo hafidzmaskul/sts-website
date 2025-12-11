@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import ProductCard from './ProductCard';
@@ -14,7 +14,20 @@ export default function FeaturedProductsSection({
   const productSwiperRef = useRef(null);
 
   const maxSlidesPerView = Math.max(1, slidesPerView);
-  const shouldLoopProducts = products.length > maxSlidesPerView;
+
+  // Duplicate products if needed for infinite loop
+  const loopedProducts = useMemo(() => {
+    if (products.length === 0) {
+      return [];
+    }
+    // If we don't have enough slides for loop, duplicate them
+    const minSlidesForLoop = maxSlidesPerView * 2;
+    if (products.length < minSlidesForLoop) {
+      const multiplier = Math.ceil(minSlidesForLoop / products.length);
+      return Array(multiplier).fill(products).flat();
+    }
+    return products;
+  }, [products, maxSlidesPerView]);
 
   useEffect(() => {
     if (productSwiperRef.current) {
@@ -79,7 +92,7 @@ export default function FeaturedProductsSection({
         onSwiper={(swiperInstance) => {
           productSwiperRef.current = swiperInstance;
         }}
-        loop={shouldLoopProducts}
+        loop={loopedProducts.length > 0}
         slidesPerView={maxSlidesPerView}
         spaceBetween={18}
         speed={650}
@@ -101,8 +114,8 @@ export default function FeaturedProductsSection({
         }}
         className="!pb-4"
       >
-        {products.map((product, index) => (
-          <SwiperSlide key={product.id ?? index} className="!h-auto">
+        {loopedProducts.map((product, index) => (
+          <SwiperSlide key={`${product.id ?? 'product'}-${index}`} className="!h-auto">
             <ProductCard
               title={product.title}
               price={product.price}

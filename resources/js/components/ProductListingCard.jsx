@@ -7,6 +7,7 @@ export default function ProductListingCard({
     series,
     badge,
     priceLabel,
+    slug
 }) {
     return (
         <article className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white relative">
@@ -50,7 +51,7 @@ export default function ProductListingCard({
                     </div>
 
                     <a
-                        href="/products/123"
+                        href={`/products/${slug}`}
                         className="w-full text-center rounded-lg border border-[#0079C2] bg-[#F0F2F3] px-3 py-2 text-xs font-semibold text-[#0079C2] hover:bg-[#E1E6E8]"
                     >
                         View Details
