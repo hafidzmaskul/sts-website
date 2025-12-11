@@ -54,14 +54,42 @@
     <!-- Categories -->
     <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-2">Categories</label>
-        <div
-            class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto border rounded-lg p-3 dark:bg-zinc-800 dark:border-zinc-700">
-            @foreach($categories as $category)
-                <label class="flex items-center gap-2 dark:text-zinc-100">
-                    <input type="checkbox" wire:model="selectedCategories" value="{{ $category->id }}"
-                        class="dark:accent-zinc-700">
-                    <span class="text-sm">{{ $category->name }}</span>
-                </label>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto border rounded-lg p-3 dark:bg-zinc-800 dark:border-zinc-700">
+            @php
+                $groupedCategories = $categories->groupBy('parent_id');
+                $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
+            @endphp
+
+            @foreach($parents as $parent)
+                <div class="col-span-full">
+                    <label class="flex items-center gap-2 font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-zinc-700/50 p-1 rounded">
+                        <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}" class="dark:accent-zinc-700">
+                        <span class="text-sm font-semibold">{{ $parent->name }}</span>
+                    </label>
+                    
+                    @if($children = $groupedCategories->get($parent->id))
+                        <div class="ml-6 mt-1 grid grid-cols-2 gap-2">
+                            @foreach($children as $child)
+                                <label class="flex items-center gap-2 dark:text-zinc-100">
+                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}" class="dark:accent-zinc-700">
+                                    <span class="text-sm">{{ $child->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+            
+            <!-- Orphaned children (safety check) -->
+             @foreach($groupedCategories as $parentId => $children)
+                @if($parentId && !$categories->contains('id', $parentId))
+                     @foreach($children as $child)
+                        <label class="flex items-center gap-2 dark:text-zinc-100">
+                            <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}" class="dark:accent-zinc-700">
+                            <span class="text-sm">{{ $child->name }}</span>
+                        </label>
+                    @endforeach
+                @endif
             @endforeach
         </div>
     </div>

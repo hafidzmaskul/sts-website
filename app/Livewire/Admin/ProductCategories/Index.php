@@ -20,6 +20,7 @@ class Index extends Component
 
     public string $name = '';
     public string $slug = '';
+    public ?int $parent_id = null;
     public $image;
 
     public ?string $seo_title = null;
@@ -31,6 +32,15 @@ class Index extends Component
         return [
             'name' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('product_categories', 'slug')->ignore($this->editingId)],
+            'parent_id' => [
+                'nullable',
+                'exists:product_categories,id',
+                function ($attribute, $value, $fail) {
+                    if ($this->editingId && $value == $this->editingId) {
+                        $fail('A category cannot be its own parent.');
+                    }
+                }
+            ],
             'image' => ['nullable', 'image', 'max:2048'], // 2MB Max
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
@@ -64,6 +74,7 @@ class Index extends Component
         $this->editingId = $category->id;
         $this->name = $category->name;
         $this->slug = $category->slug;
+        $this->parent_id = $category->parent_id;
         $this->seo_title = $category->seo_title;
         $this->seo_description = $category->seo_description;
         $this->seo_keywords = $category->seo_keywords;
@@ -84,6 +95,7 @@ class Index extends Component
 
         $category->name = $this->name;
         $category->slug = Str::slug($this->slug);
+        $category->parent_id = $this->parent_id;
         $category->seo_title = $this->seo_title;
         $category->seo_description = $this->seo_description;
         $category->seo_keywords = $this->seo_keywords;
@@ -130,6 +142,7 @@ class Index extends Component
         $this->editingId = null;
         $this->name = '';
         $this->slug = '';
+        $this->parent_id = null;
         $this->image = null;
         $this->seo_title = null;
         $this->seo_description = null;
@@ -142,7 +155,7 @@ class Index extends Component
         $this->authorize('product-categories.view');
 
         $categories = ProductCategory::query()
-            ->with('creator')
+            ->with(['creator', 'parent'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('slug', 'like', '%' . $this->search . '%');
@@ -150,8 +163,17 @@ class Index extends Component
             ->orderByDesc('created_at')
             ->paginate(10);
 
+        // For the dropdown (exclude self if editing, avoid deep recursion logic for now)
+        $parentCandidates = ProductCategory::query()
+            ->when($this->editingId, function ($q) {
+                $q->where('id', '!=', $this->editingId);
+            })
+            ->orderBy('name')
+            ->get();
+
         return view('livewire.admin.product-categories.index', [
             'categories' => $categories,
+            'parentCandidates' => $parentCandidates,
         ])->title('Product Categories');
     }
 }

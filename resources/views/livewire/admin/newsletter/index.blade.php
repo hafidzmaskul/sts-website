@@ -1,6 +1,16 @@
 <div class="p-6 space-y-6 dark:bg-zinc-900">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center bg-transparent">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Newsletter Subscriptions</h1>
+        <button wire:click="exportCsv" wire:loading.attr="disabled"
+            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+            </svg>
+            <span wire:loading.remove wire:target="exportCsv">Export CSV</span>
+            <span wire:loading wire:target="exportCsv">Exporting...</span>
+        </button>
     </div>
 
     <!-- Search -->
@@ -25,7 +35,8 @@
                     <tr class="dark:text-zinc-100">
                         <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $subscription->email }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
-                            {{ $subscription->source ?? '-' }}</td>
+                            {{ $subscription->source ?? '-' }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
                             {{ $subscription->created_at->format('M d, Y H:i') }}
                         </td>

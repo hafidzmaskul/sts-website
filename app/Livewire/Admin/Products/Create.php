@@ -138,7 +138,7 @@ class Create extends Component
     public function render()
     {
         return view('livewire.admin.products.create', [
-            'categories' => ProductCategory::all(),
+            'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
         ])->title('Create Product');
     }
 }

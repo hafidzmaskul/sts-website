@@ -32,6 +32,20 @@
                         @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
+                    <!-- Parent Category -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Parent
+                            Category</label>
+                        <select wire:model="parent_id"
+                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                            <option value="">None (Top Level)</option>
+                            @foreach($parentCandidates as $candidate)
+                                <option value="{{ $candidate->id }}">{{ $candidate->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('parent_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
                     <!-- Image -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Image</label>
@@ -119,6 +133,7 @@
                     <tr>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider">Image</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider">Parent</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider">Slug</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider">SEO Title</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider">Actions</th>
@@ -135,6 +150,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $category->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                                {{ $category->parent?->name ?? '-' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">{{ $category->slug }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
                                 {{ Str::limit($category->seo_title, 30) ?: '-' }}

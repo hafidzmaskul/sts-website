@@ -58,6 +58,9 @@
                             @forelse($product->categories as $category)
                                 <span
                                     class="px-2 py-0.5 rounded text-xs bg-gray-100 text-gray-700 dark:bg-zinc-800 dark:text-zinc-300">
+                                    @if($category->parent)
+                                        <span class="text-gray-400 dark:text-zinc-500">{{ $category->parent->name }} ></span>
+                                    @endif
                                     {{ $category->name }}
                                 </span>
                             @empty

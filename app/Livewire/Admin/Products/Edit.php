@@ -199,7 +199,7 @@ class Edit extends Component
     public function render()
     {
         return view('livewire.admin.products.edit', [
-            'categories' => ProductCategory::all(),
+            'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
         ])->title('Edit Product');
     }
 }
