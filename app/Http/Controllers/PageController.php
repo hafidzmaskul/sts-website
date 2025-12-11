@@ -166,4 +166,29 @@ class PageController
             'vat' => null,
         ]);
     }
+
+    public function becomeCustomer()
+    {
+        return Inertia::render('BecomeCustomer');
+    }
+    public function signUp()
+    {
+        return Inertia::render('SignUp');
+    }
+    public function contactUs()
+    {
+        return Inertia::render('ContactUs');
+    }
+    public function training()
+    {
+        return Inertia::render('Training');
+    }
+    public function commisioning()
+    {
+        return Inertia::render('Commisioning');
+    }
+    public function systemDesign()
+    {
+        return Inertia::render('SystemDesign');
+    }
 }
