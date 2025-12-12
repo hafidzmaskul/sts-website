@@ -48,17 +48,16 @@ const whyChooseItems = [
     { image: '/assets/dummmy/d8e28c8e8bb0aa44e6cf5c0d1c450b1de67a8b91.png', text: 'Trusted' },
 ];
 
-export default function Commisioning({ services = [] }) {
+export default function SystemDesign({ services = [] }) {
     return (
         <div className="min-h-screen flex flex-col">
             <Head title="Services" />
             <Header />
             <HeroSection
-                bgUrl="/assets/bg-commisioning.png"
-                title="Commisioning"
+                bgUrl="/assets/bg-sistem-design.png"
+                title="System Design"
                 text="Lorem ipsum dolor sit amet consectetur. Feugiat suspendisse diam mauris nec odio sed feugiat sollicitudin rutrum aliquam."
-                textColor="text-black"
-                textAlign="end"
+                textColor="text-white"
                 textSize='text-5xl'
             />
             <main className="flex-1 ">
