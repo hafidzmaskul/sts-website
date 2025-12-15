@@ -132,19 +132,24 @@
             <!-- Content Group -->
             @can('banner.view')
                 <flux:navlist.group :heading="__('Content')" class="grid">
-                    <flux:navlist.item icon="photo" :href="route('admin.banners.index')"
-                        :current="request()->routeIs('admin.banners.*')" wire:navigate>{{ __('Banners') }}
-                    </flux:navlist.item>
-                    @can('contact-submissions.view')
-                        <flux:navlist.item icon="chat-bubble-left-right" :href="route('admin.contact-submissions.index')"
-                            :current="request()->routeIs('admin.contact-submissions.*')" wire:navigate>{{ __('Messages') }}
-                        </flux:navlist.item>
-                    @endcan
-                    <flux:navlist.item icon="photo" :href="route('admin.banners.index')"
-                        :current="request()->routeIs('admin.banners.*')" wire:navigate
+                    <flux:navlist.item
+                        icon="photo"
+                        :href="route('admin.banners.index')"
+                        :current="request()->routeIs('admin.banners.*')"
+                        wire:navigate
                         :class="request()->routeIs('admin.banners.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Banners') }}
                     </flux:navlist.item>
+                    @can('contact-submissions.view')
+                        <flux:navlist.item
+                            icon="chat-bubble-left-right"
+                            :href="route('admin.contact-submissions.index')"
+                            :current="request()->routeIs('admin.contact-submissions.*')"
+                            wire:navigate
+                            :class="request()->routeIs('admin.contact-submissions.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Messages') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             @endcan
 

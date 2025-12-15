@@ -3,16 +3,32 @@ import HeroSection from '../components/HeroSection'
 import Header from '../landing/Header'
 import { Head } from '@inertiajs/react'
 import Footer from '../landing/Footer'
+import CountrySelect from '../components/CountrySelect'
+
+// CountrySelect component with API and logic inside
+
 
 export default class ContactUs extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            selectedCountry: '',
+        }
+    }
+
+    handleCountryChange = (e) => {
+        this.setState({ selectedCountry: e.target.value });
+    }
+
     render() {
+        const { selectedCountry } = this.state;
+
         return (
             <div className="min-h-screen flex flex-col">
                 <Head title="Become Customer" />
                 <Header />
 
                 <main className="">
-
                     <HeroSection
                         bgUrl="/assets/bg-contact-us.png"
                         title="Contact Us"
@@ -92,10 +108,12 @@ export default class ContactUs extends Component {
                                             <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
                                                 Country <span className="text-red-500">*</span>
                                             </label>
-                                            <input
-                                                type="text"
+                                            {/* Country Dropdown component (handles its own API) */}
+                                            <CountrySelect
                                                 className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 focus:outline-none focus:border-b-2 focus:border-[#000000] bg-transparent"
-                                                required
+                                                required={true}
+                                                value={selectedCountry}
+                                                onChange={this.handleCountryChange}
                                             />
                                         </div>
                                     </div>
