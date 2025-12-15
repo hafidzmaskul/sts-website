@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Header from '../landing/Header';
@@ -8,6 +8,7 @@ import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
 import 'swiper/css';
+import axios from 'axios';
 
 const fallbackProducts = [
     {
@@ -121,6 +122,18 @@ export default function Landing({
     const shopSwiper1Ref = useRef(null);
     const shopSwiper2Ref = useRef(null);
     const shopSwiper3Ref = useRef(null);
+
+    // Form state
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        subject: 'General Inquiry 1',
+        message: ''
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const heroDescription = landingPageData.hero_description ?? 'Discover personalised HR and employment law support crafted for ambitious teams and growing organisations.';
 
@@ -366,10 +379,57 @@ export default function Landing({
         return rawOffset;
     };
 
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const response = await axios.post('/api/contact-submissions', formData);
+
+            setIsSubmitting(false);
+            setShowSuccessAlert(true);
+            // Reset form
+            setFormData({
+                first_name: '',
+                last_name: '',
+                email: '',
+                phone: '',
+                subject: 'General Inquiry 1',
+                message: ''
+            });
+            // Hide alert after 5 seconds
+            setTimeout(() => setShowSuccessAlert(false), 5000);
+        } catch (error) {
+            setIsSubmitting(false);
+            console.error('Form submission error:', error);
+            // You might want to show an error message to the user here
+        }
+    };
+
     return (
         <div className="min-h-screen  ">
             <Head title="Home - Absolutely Human Resources" />
             <Header />
+
+            {/* Success Alert */}
+            {showSuccessAlert && (
+                <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="mr-2">
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Your message has been sent successfully!
+                </div>
+            )}
 
             <section
                 className="relative"
@@ -422,7 +482,7 @@ export default function Landing({
                                 onClick={goNext}
                                 className="pointer-events-auto inline-flex items-start gap-2  border-none  bg-white px-10 py-2 font-semibold text-[#0079C2] transition hover:bg-[#0079C2] hover:text-white"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -1030,30 +1090,36 @@ export default function Landing({
                 </div>
                 {/* Right Column (Form) */}
                 <div className="flex-1 bg-white px-8 py-10">
-                    <form className="space-y-6">
+                    <form className="space-y-6" id='contact-submission' onSubmit={handleSubmit}>
                         <div className="flex flex-col md:flex-row gap-6">
                             <div className="flex-1">
-                                <label className="block mb-2 text-gray-700" htmlFor="firstName">
+                                <label className="block mb-2 text-gray-700" htmlFor="first_name">
                                     First Name
                                 </label>
                                 <input
                                     type="text"
-                                    id="firstName"
-                                    name="firstName"
+                                    id="first_name"
+                                    name="first_name"
+                                    value={formData.first_name}
+                                    onChange={handleInputChange}
                                     className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
                                     autoComplete="off"
+                                    required
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block mb-2 text-gray-700" htmlFor="lastName">
+                                <label className="block mb-2 text-gray-700" htmlFor="last_name">
                                     Last Name
                                 </label>
                                 <input
                                     type="text"
-                                    id="lastName"
-                                    name="lastName"
+                                    id="last_name"
+                                    name="last_name"
+                                    value={formData.last_name}
+                                    onChange={handleInputChange}
                                     className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
                                     autoComplete="off"
+                                    required
                                 />
                             </div>
                         </div>
@@ -1066,8 +1132,11 @@ export default function Landing({
                                     type="email"
                                     id="email"
                                     name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
                                     className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
                                     autoComplete="off"
+                                    required
                                 />
                             </div>
                             <div className='flex-1'>
@@ -1078,6 +1147,8 @@ export default function Landing({
                                     type="tel"
                                     id="phone"
                                     name="phone"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
                                     className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2"
                                     autoComplete="off"
                                 />
@@ -1091,8 +1162,9 @@ export default function Landing({
                                         type="radio"
                                         name="subject"
                                         value="General Inquiry 1"
+                                        checked={formData.subject === "General Inquiry 1"}
+                                        onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
-                                        defaultChecked
                                     />
                                     <span className="ml-2 text-gray-700">General Inquiry</span>
                                 </label>
@@ -1101,6 +1173,8 @@ export default function Landing({
                                         type="radio"
                                         name="subject"
                                         value="General Inquiry 2"
+                                        checked={formData.subject === "General Inquiry 2"}
+                                        onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
                                     <span className="ml-2 text-gray-700">General Inquiry</span>
@@ -1110,6 +1184,8 @@ export default function Landing({
                                         type="radio"
                                         name="subject"
                                         value="General Inquiry 3"
+                                        checked={formData.subject === "General Inquiry 3"}
+                                        onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
                                     <span className="ml-2 text-gray-700">General Inquiry</span>
@@ -1119,6 +1195,8 @@ export default function Landing({
                                         type="radio"
                                         name="subject"
                                         value="General Inquiry 4"
+                                        checked={formData.subject === "General Inquiry 4"}
+                                        onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
                                     <span className="ml-2 text-gray-700">General Inquiry</span>
@@ -1132,16 +1210,30 @@ export default function Landing({
                             <textarea
                                 id="message"
                                 name="message"
+                                value={formData.message}
+                                onChange={handleInputChange}
                                 rows={4}
                                 className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#0079C2] outline-none py-2 resize-none"
+                                required
                             ></textarea>
                         </div>
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className=" bg-[#0079C2] text-white font-noral px-10 py-3 rounded-lg hover:bg-[#005C92] transition"
+                                disabled={isSubmitting}
+                                className=" bg-[#0079C2] text-white font-noral px-10 py-3 rounded-lg hover:bg-[#005C92] transition flex items-center gap-2"
                             >
-                                Send Message
+                                {isSubmitting ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Sending...
+                                    </>
+                                ) : (
+                                    'Send Message'
+                                )}
                             </button>
                         </div>
                     </form>

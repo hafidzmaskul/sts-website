@@ -163,7 +163,18 @@ export default function ProductDetail({ product, products = [] }) {
 
     return (
         <div className="min-h-screen flex flex-col ">
-            <Head title={data.title ?? 'Product Detail'} />
+           <Head>
+                {/* The title will be managed by Inertia */}
+                <title>{data.seo_title ?? 'Product Detail'}</title>
+
+                {/* Add your dynamic SEO meta tags */}
+                <meta name="description" content={data.seo_description} />
+                <meta name="keywords" content={data.seo_keywords} />
+
+                {/* You can even add Open Graph tags for social sharing */}
+                <meta property="og:title" content={data.seo_title ?? 'Product Detail'} />
+                <meta property="og:description" content={data.seo_description} />
+            </Head>
             <Header />
 
             <main>
