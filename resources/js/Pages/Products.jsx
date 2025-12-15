@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
@@ -17,48 +17,18 @@ const sliderImages = [
 
 const PRODUCT_PAGE_SIZE = 28;
 
-const filterCategories = [
-    {
-        id: 'security-systems',
-        name: 'Security Systems',
-        children: [
-            { id: 'cctv', name: 'CCTV Camera' },
-            { id: 'ip-camera', name: 'IP Camera' },
-        ],
-    },
-    {
-        id: 'access-control',
-        name: 'Access Control',
-        children: [
-            { id: 'door-lock', name: 'Door Lock' },
-            { id: 'video-door-phone', name: 'Video Door Phone' },
-        ],
-    },
-    {
-        id: 'networking',
-        name: 'Networking',
-        children: [
-            { id: 'switch', name: 'Switch' },
-            { id: 'router', name: 'Router' },
-        ],
-    },
-    {
-        id: 'smart-office',
-        name: 'Smart Office',
-        children: [
-            { id: 'office-kit', name: 'Office Kit' },
-            { id: 'meeting-room', name: 'Meeting Room' },
-        ],
-    },
-];
-
-const formatPrice = (amount) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-}).format(amount);
+const formatPrice = (amount) =>
+    new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(amount);
 
 const transformProduct = (product, index = 0) => {
+    if (!product || typeof product !== 'object') {
+        return null;
+    }
+
     const imagePath = product.images?.[0]?.image_path;
     const image = imagePath
         ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
@@ -66,14 +36,18 @@ const transformProduct = (product, index = 0) => {
 
     let basePrice = 0;
     if (product.base_price) {
-        const cleanedPrice = product.base_price.toString().replace(/[^\d.-]/g, '');
+        const cleanedPrice = String(product.base_price).replace(/[^\d.-]/g, '');
         const parsedPrice = parseFloat(cleanedPrice);
-        if (!Number.isNaN(parsedPrice)) {
+        if (!Number.isNaN(parsedPrice) && isFinite(parsedPrice)) {
             basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
         }
     }
 
     const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
+
+    const categoryIds = Array.isArray(product.categories) 
+        ? product.categories.map(cat => cat?.id).filter(Boolean)
+        : [];
 
     return {
         id: product.id,
@@ -85,45 +59,63 @@ const transformProduct = (product, index = 0) => {
         brand_name: product.brand_name || 'STS',
         brand: product.brand_name || 'STS',
         series: product.series || `Model ${product.slug || product.id}`,
-        categoryId: product.categoryId || null,
-        subCategoryId: product.subCategoryId || null,
+        categoryIds,
         badge,
     };
 };
 
-export default function Products({products = [], baseProducts = []}) {
+export default function Products({ products = [], baseProducts = [], productCategory = [] }) {
     const allProducts = useMemo(() => {
-        const sourceProducts = products.length > 0 ? products : baseProducts;
-        const transformedProducts = sourceProducts.map(
-            (product, index) => transformProduct(product, index),
-        );
+        const sourceProducts = Array.isArray(products) && products.length > 0 
+            ? products 
+            : (Array.isArray(baseProducts) ? baseProducts : []);
+        
+        const transformedProducts = sourceProducts
+            .map((product, index) => transformProduct(product, index))
+            .filter(Boolean);
+        
         return transformedProducts;
     }, [products, baseProducts]);
+
     const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('featured');
-    const [expandedCategories, setExpandedCategories] = useState(
-        filterCategories.map((category) => category.id),
+    const [expandedCategories, setExpandedCategories] = useState(() => 
+        Array.isArray(productCategory) 
+            ? productCategory.map((category) => category?.id).filter(Boolean)
+            : []
     );
     const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [visibleCount, setVisibleCount] = useState(PRODUCT_PAGE_SIZE);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
     const featuredProducts = useMemo(
-        () => allProducts.slice(0, 8).map((product) => ({
-            id: product.id,
-            title: product.title || product.name,
-            price: product.price,
-            image: product.image,
-            badge: product.badge,
-        })),
+        () =>
+            allProducts.slice(0, 8).map((product) => ({
+                id: product.id,
+                title: product.title || product.name,
+                price: product.price,
+                image: product.image,
+                badge: product.badge,
+            })),
         [allProducts],
     );
 
     const baseSlidesPerView = 6;
-    const sliderProducts = allProducts.length > baseSlidesPerView
-        ? allProducts
-        : [...allProducts, ...allProducts];
+    const sliderProducts =
+        allProducts.length > baseSlidesPerView
+            ? allProducts
+            : [...allProducts, ...allProducts];
     const loopEnabled = sliderProducts.length > baseSlidesPerView;
 
     useEffect(() => {
@@ -134,61 +126,99 @@ export default function Products({products = [], baseProducts = []}) {
         return () => clearTimeout(timeout);
     }, []);
 
+    // FILTERING PRODUCTS
     const filteredProducts = useMemo(() => {
-        let products = allProducts;
+        let productsResult = allProducts;
 
-        if (searchQuery.trim() !== '') {
-            const query = searchQuery.trim().toLowerCase();
-            products = products.filter((product) => (
-                (product.name || product.title || '').toLowerCase().includes(query)
-                || (product.brand || product.brand_name || '').toLowerCase().includes(query)
-                || (product.series || '').toLowerCase().includes(query)
-            ));
+        // Search
+        if (debouncedSearchQuery.trim() !== '') {
+            const query = debouncedSearchQuery.trim().toLowerCase();
+            productsResult = productsResult.filter((product) => {
+                const name = String(product.name || product.title || '').toLowerCase();
+                const brand = String(product.brand || product.brand_name || '').toLowerCase();
+                const series = String(product.series || '').toLowerCase();
+                return name.includes(query) || brand.includes(query) || series.includes(query);
+            });
         }
 
-        if (selectedSubCategories.length > 0) {
-            products = products.filter(
-                (product) => selectedSubCategories.includes(product.subCategoryId),
-            );
+        // Category filtering (parent + child) - Optimized with Set for O(1) lookups
+        if (selectedCategories.length > 0 || selectedSubCategories.length > 0) {
+            const parentSet = new Set(selectedCategories);
+            const childSet = new Set(selectedSubCategories);
+            
+            productsResult = productsResult.filter((product) => {
+                const productCategoryIds = product.categoryIds || [];
+                
+                if (productCategoryIds.length === 0) {
+                    return false;
+                }
+                
+                const matchesParent = parentSet.size === 0 || 
+                    productCategoryIds.some(catId => parentSet.has(catId));
+                
+                const matchesChild = childSet.size === 0 || 
+                    productCategoryIds.some(subCatId => childSet.has(subCatId));
+                
+                return matchesParent && matchesChild;
+            });
         }
 
-        const sorted = [...products];
+        // Sort
+        if (productsResult.length === 0) {
+            return [];
+        }
 
+        const sorted = [...productsResult];
         if (sortBy === 'price-asc') {
             sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
         } else if (sortBy === 'price-desc') {
             sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
         } else if (sortBy === 'name-asc') {
-            sorted.sort((a, b) => (a.name || a.title || '').localeCompare(b.name || b.title || ''));
+            sorted.sort((a, b) => {
+                const nameA = String(a.name || a.title || '');
+                const nameB = String(b.name || b.title || '');
+                return nameA.localeCompare(nameB);
+            });
         }
 
         return sorted;
-    }, [allProducts, searchQuery, selectedSubCategories, sortBy]);
+    }, [allProducts, debouncedSearchQuery, selectedCategories, selectedSubCategories, sortBy]);
 
     useEffect(() => {
         setVisibleCount(PRODUCT_PAGE_SIZE);
-    }, [searchQuery, selectedSubCategories, sortBy]);
+    }, [debouncedSearchQuery, selectedCategories, selectedSubCategories, sortBy]);
 
     const totalProducts = filteredProducts.length;
     const visibleProducts = filteredProducts.slice(0, visibleCount);
 
-    const handleToggleCategory = (categoryId) => {
-        setExpandedCategories((current) => (
+    // Expand/collapse logic
+    const handleToggleCategoryExpand = useCallback((categoryId) => {
+        setExpandedCategories((current) =>
             current.includes(categoryId)
                 ? current.filter((id) => id !== categoryId)
                 : [...current, categoryId]
-        ));
-    };
+        );
+    }, []);
 
-    const handleToggleSubCategory = (subCategoryId) => {
-        setSelectedSubCategories((current) => (
-            current.includes(subCategoryId)
-                ? current.filter((id) => id !== subCategoryId)
-                : [...current, subCategoryId]
-        ));
-    };
+    // Select parent (category) logic
+    const handleToggleCategorySelect = useCallback((categoryId) => {
+        setSelectedCategories((selected) =>
+            selected.includes(categoryId)
+                ? selected.filter((id) => id !== categoryId)
+                : [...selected, categoryId]
+        );
+    }, []);
 
-    const handleLoadMore = () => {
+    // Select child (subcategory) logic
+    const handleToggleSubCategorySelect = useCallback((subCategoryId) => {
+        setSelectedSubCategories((selected) =>
+            selected.includes(subCategoryId)
+                ? selected.filter((id) => id !== subCategoryId)
+                : [...selected, subCategoryId]
+        );
+    }, []);
+
+    const handleLoadMore = useCallback(() => {
         if (visibleCount >= totalProducts) {
             return;
         }
@@ -196,13 +226,31 @@ export default function Products({products = [], baseProducts = []}) {
         setIsLoadingMore(true);
 
         setTimeout(() => {
-            setVisibleCount((current) => Math.min(
-                current + PRODUCT_PAGE_SIZE,
-                totalProducts,
-            ));
+            setVisibleCount((current) =>
+                Math.min(current + PRODUCT_PAGE_SIZE, totalProducts),
+            );
             setIsLoadingMore(false);
         }, 500);
-    };
+    }, [visibleCount, totalProducts]);
+
+    // Determine if all children are checked for a parent
+    const isCategoryFullyChecked = useCallback((category) => {
+        if (!category?.children || !Array.isArray(category.children) || category.children.length === 0) {
+            return false;
+        }
+        return category.children.every((child) => child?.id && selectedSubCategories.includes(child.id));
+    }, [selectedSubCategories]);
+
+    // Determine partial check for parent
+    const isCategoryPartiallyChecked = useCallback((category) => {
+        if (!category?.children || !Array.isArray(category.children) || category.children.length === 0) {
+            return false;
+        }
+        return (
+            category.children.some((child) => child?.id && selectedSubCategories.includes(child.id)) &&
+            !isCategoryFullyChecked(category)
+        );
+    }, [selectedSubCategories, isCategoryFullyChecked]);
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -278,7 +326,7 @@ export default function Products({products = [], baseProducts = []}) {
                                         Filter
                                     </h2>
                                     <div className="inline-flex h-9 w-9 items-center justify-center  text-[#0079C2]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 16 16"><path fill="currentColor" d="M6 1a3 3 0 0 0-2.83 2H0v2h3.17a3.001 3.001 0 0 0 5.66 0H16V3H8.83A3 3 0 0 0 6 1M5 4a1 1 0 1 1 2 0a1 1 0 0 1-2 0m5 5a3 3 0 0 0-2.83 2H0v2h7.17a3.001 3.001 0 0 0 5.66 0H16v-2h-3.17A3 3 0 0 0 10 9m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 16 16"><path fill="currentColor" d="M6 1a3 3 0 0 0-2.83 2H0v2h3.17a3.001 3.001 0 0 0 5.66 0H16V3H8.83A3 3 0 0 0 6 1M5 4a1 1 0 1 1 2 0a1 1 0 0 1-2 0m5 5a3 3 0 0 0-2.83 2H0v2h7.17a3.001 3.001 0 0 0 5.66 0H16v-2h-3.17A3 3 0 0 0 10 9m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0"></path></svg>
                                     </div>
                                 </div>
 
@@ -310,39 +358,62 @@ export default function Products({products = [], baseProducts = []}) {
                                 </div>
 
                                 <div className="mt-6 space-y-4">
-                                    {filterCategories.map((category) => {
-                                        const isExpanded = expandedCategories.includes(category.id);
+                                    {Array.isArray(productCategory) && productCategory.length > 0 ? (
+                                        productCategory.map((category) => {
+                                            if (!category || !category.id) {
+                                                return null;
+                                            }
 
-                                        return (
-                                            <div
-                                                key={category.id}
-                                                className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0"
-                                            >
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleToggleCategory(category.id)}
-                                                    className="flex w-full items-center justify-between text-left text-sm font-medium text-[#232323]"
+                                            const isExpanded = expandedCategories.includes(category.id);
+                                            const isParentChecked = selectedCategories.includes(category.id);
+                                            const isPartialChecked = isCategoryPartiallyChecked(category);
+
+                                            return (
+                                                <div
+                                                    key={category.id}
+                                                    className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0"
                                                 >
-                                                    <span>{category.name}</span>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 24 24"
-                                                        className={`h-4 w-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                                                    >
-                                                        <path
-                                                            fill="currentColor"
-                                                            d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
+                                                <div className="flex items-center justify-between">
+                                                    <label className="flex items-center gap-2 text-sm font-medium text-[#232323]">
+                                                        {/* Parent category checkbox */}
+                                                        <input
+                                                            type="checkbox"
+                                                            className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
+                                                            checked={isParentChecked}
+                                                            ref={el => {
+                                                                if (el) {
+                                                                    el.indeterminate = isPartialChecked;
+                                                                }
+                                                            }}
+                                                            onChange={() => handleToggleCategorySelect(category.id)}
                                                         />
-                                                    </svg>
-                                                </button>
-
-                                                {isExpanded && (
-                                                    <div className="mt-3 space-y-2">
+                                                        <span>{category.name}</span>
+                                                    </label>
+                                                    {/* Show chevron & expand only if there are children */}
+                                                    {category.children && category.children.length > 0 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleToggleCategoryExpand(category.id)}
+                                                            className="ml-2"
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24"
+                                                                className={`h-4 w-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                                            >
+                                                                <path
+                                                                    fill="currentColor"
+                                                                    d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
+                                                                />
+                                                            </svg>
+                                                        </button>
+                                                    )}
+                                                </div>
+                                                {/* Children (subcategories) */}
+                                                {isExpanded && category.children && category.children.length > 0 && (
+                                                    <div className="mt-3 space-y-2 ml-4">
                                                         {category.children.map((child) => {
-                                                            const isChecked = selectedSubCategories.includes(
-                                                                child.id,
-                                                            );
-
+                                                            const isChecked = selectedSubCategories.includes(child.id);
                                                             return (
                                                                 <label
                                                                     key={child.id}
@@ -352,9 +423,9 @@ export default function Products({products = [], baseProducts = []}) {
                                                                         type="checkbox"
                                                                         className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
                                                                         checked={isChecked}
-                                                                        onChange={() => handleToggleSubCategory(
-                                                                            child.id,
-                                                                        )}
+                                                                        onChange={() =>
+                                                                            handleToggleSubCategorySelect(child.id)
+                                                                        }
                                                                     />
                                                                     <span>{child.name}</span>
                                                                 </label>
@@ -362,9 +433,12 @@ export default function Products({products = [], baseProducts = []}) {
                                                         })}
                                                     </div>
                                                 )}
-                                            </div>
-                                        );
-                                    })}
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <p className="text-sm text-gray-500">No categories available</p>
+                                    )}
                                 </div>
                             </div>
                         </aside>
