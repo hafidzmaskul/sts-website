@@ -82,6 +82,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'our-team.edit',
             'our-team.delete',
 
+            // 10b. Customers
+            'customers.view',
+            'customers.edit',
+            'customers.delete',
+
+
             // 11. Careers (New)
             'careers.view',
             'careers.create',
@@ -113,6 +119,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'news.delete',
             'news-categories.view',
             'careers.view', // Can view careers
+        ]);
+
+        // Customer Role
+        $customer = Role::firstOrCreate(['name' => 'customer', 'guard_name' => 'web']);
+        $customer->givePermissionTo([
+            // Add basic customer permissions here if needed
         ]);
     }
 }

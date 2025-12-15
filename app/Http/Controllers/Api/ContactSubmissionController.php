@@ -18,8 +18,10 @@ class ContactSubmissionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
@@ -48,7 +50,7 @@ class ContactSubmissionController extends Controller
         } catch (\Exception $e) {
             // Handle potential database errors
             Log::error('Contact Submission Error: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while sending your message. Please try again.',
@@ -63,7 +65,7 @@ class ContactSubmissionController extends Controller
     {
         // Get Admin Email from Database (General Settings)
         $adminEmailSetting = Setting::where('key', 'admin_email')->first();
-        
+
         // Fallback to .env mail_from_address if setting is missing
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
@@ -71,13 +73,16 @@ class ContactSubmissionController extends Controller
             return;
         }
 
+        $fullName = $submission->first_name . ' ' . $submission->last_name;
+
         // Construct Email Body
         $emailBody = implode("\n", [
             "New Contact Form Submission",
             "===========================",
             "",
-            "Name: " . $submission->name,
+            "Name: " . $fullName,
             "Email: " . $submission->email,
+            "Phone: " . ($submission->phone ?? 'N/A'),
             "Subject: " . $submission->subject,
             "",
             "Message:",
@@ -90,10 +95,10 @@ class ContactSubmissionController extends Controller
 
         // Send Email
         try {
-            Mail::raw($emailBody, function ($m) use ($adminEmail, $submission) {
+            Mail::raw($emailBody, function ($m) use ($adminEmail, $submission, $fullName) {
                 $m->to($adminEmail)
-                  ->replyTo($submission->email, $submission->name) // Allow admin to reply directly to user
-                  ->subject('New Contact: ' . $submission->subject);
+                    ->replyTo($submission->email, $fullName) // Allow admin to reply directly to user
+                    ->subject('New Contact: ' . $submission->subject);
             });
         } catch (\Throwable $e) {
             // Log email failure but don't fail the request

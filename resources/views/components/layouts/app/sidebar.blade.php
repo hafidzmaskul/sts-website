@@ -31,6 +31,11 @@
                         :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('User Management') }}
                     </flux:navlist.item>
                 @endcan
+                @can('customers.view')
+                    <flux:navlist.item icon="users" :href="route('admin.customers.index')"
+                        :current="request()->routeIs('admin.customers.*')" wire:navigate>{{ __('Customers') }}
+                    </flux:navlist.item>
+                @endcan
             </flux:navlist.group>
 
             <!-- Catalog Group -->
@@ -78,6 +83,11 @@
                     <flux:navlist.item icon="photo" :href="route('admin.banners.index')"
                         :current="request()->routeIs('admin.banners.*')" wire:navigate>{{ __('Banners') }}
                     </flux:navlist.item>
+                    @can('contact-submissions.view')
+                        <flux:navlist.item icon="chat-bubble-left-right" :href="route('admin.contact-submissions.index')"
+                            :current="request()->routeIs('admin.contact-submissions.*')" wire:navigate>{{ __('Messages') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             @endcan
 

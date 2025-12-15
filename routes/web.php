@@ -23,12 +23,12 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/cart', 'cart')->name('cart');
     Route::get('/liked-products', 'likedProducts')->name('liked-products');
     Route::get('/payment/{slug}', 'payment')->name('payment');
-    Route::get('become-customer','becomeCustomer')->name('become-customer');
-    Route::get('sign-up','signUp')->name('sign-up');
-    Route::get('contact-us','contactUs')->name('contact-us');
-    Route::get('training','training')->name('training');
-    Route::get('commisioning','commisioning')->name('commisioning');
-    Route::get('system-design','systemDesign')->name('system-design');
+    Route::get('become-customer', 'becomeCustomer')->name('become-customer');
+    Route::get('sign-up', 'signUp')->name('sign-up');
+    Route::get('contact-us', 'contactUs')->name('contact-us');
+    Route::get('training', 'training')->name('training');
+    Route::get('commisioning', 'commisioning')->name('commisioning');
+    Route::get('system-design', 'systemDesign')->name('system-design');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -65,6 +65,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/products/create', \App\Livewire\Admin\Products\Create::class)->name('admin.products.create');
         Route::get('/admin/products/{product}/edit', \App\Livewire\Admin\Products\Edit::class)->name('admin.products.edit');
         Route::get('/admin/products/{product}', \App\Livewire\Admin\Products\Show::class)->name('admin.products.show');
+
+        // Customers
+        Route::get('/admin/customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
+        Route::get('/admin/customers/{user}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+        Route::get('/admin/customers/{user}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
+
+        // Contact Submissions
+        Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 
     });
 });
