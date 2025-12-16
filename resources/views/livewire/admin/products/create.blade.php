@@ -1,26 +1,22 @@
-<div class="p-6 space-y-6">
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold" style="color: #000;">Create Product</h1>
-        <a href="{{ route('admin.products.index') }}"
-           class="text-[#0079C2] border border-[#0079C2] bg-white px-3 py-2 rounded-lg font-semibold hover:cursor-pointer transition">
-            &larr; Back to List
-        </a>
+<div class="space-y-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Create Product</h1>
+            <p class="text-sm text-gray-500 mt-1">Add a new product to your catalog</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ route('admin.products.index') }}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </a>
+            <button type="submit" form="product-form"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Create Product
+            </button>
+        </div>
     </div>
 
-    <div class="rounded-xl shadow p-6 border border-gray-200">
-        <form wire:submit.prevent="save">
-            @include('livewire.admin.products.product-form')
-
-            <div class="mt-6 flex justify-end">
-                <a href="{{ route('admin.products.index') }}"
-                   class="mr-3 inline-flex justify-center rounded-lg border border-[#0079C2] text-[#0079C2] px-4 py-2 font-semibold hover:cursor-pointer transition w-full md:w-auto bg-white">
-                    Cancel
-                </a>
-                <button type="submit"
-                    class="inline-flex justify-center w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition font-semibold">
-                    Create Product
-                </button>
-            </div>
-        </form>
-    </div>
+    <form wire:submit.prevent="save" id="product-form">
+        @include('livewire.admin.products.product-form')
+    </form>
 </div>

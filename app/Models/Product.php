@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'brand_name',
+        'brand_id',
         'title',
         'slug',
         'is_sign_up_for_pricing',
@@ -15,6 +15,7 @@ class Product extends Model
         'product_overview',
         'main_feature',
         'information',
+        'specification',
         'base_price',
         'status',
         'is_exclusive',
@@ -28,6 +29,11 @@ class Product extends Model
         'is_sign_up_for_pricing' => 'boolean',
         'is_exclusive' => 'boolean',
     ];
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 
     public function categories()
     {

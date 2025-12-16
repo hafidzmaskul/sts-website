@@ -1,168 +1,273 @@
-<div class="p-6 space-y-6">
+<div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-start">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-bold" style="color: #000;">{{ $product->title }}</h1>
+                <h1 class="text-2xl font-bold text-gray-900">{{ $product->title }}</h1>
                 <span
-                    class="px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->status === 'active' ? 'border border-green-800 text-green-800 bg-white' : 'border border-gray-800 text-gray-800 bg-white' }}">
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                    <span
+                        class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $product->status === 'active' ? 'bg-green-600' : 'bg-gray-500' }}"></span>
                     {{ ucfirst($product->status) }}
                 </span>
             </div>
-            <p class="text-sm text-gray-500 mt-1">{{ $product->brand_name }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $product->brand->name ?? '-' }}</p>
         </div>
         <div class="flex gap-3">
             <a href="{{ route('admin.products.index') }}"
-                class="px-4 py-2 bg-white border-2 border-[#0079C2] text-[#0079C2] rounded-lg hover:cursor-pointer hover:bg-[#0079C2] hover:text-white transition">
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                 Back to List
             </a>
             <a href="{{ route('admin.products.edit', $product->id) }}"
-                class="flex items-center justify-center px-4 py-2 bg-white border-2 border-black text-black rounded-lg hover:cursor-pointer transition" style="height: 40px; width: 40px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 1200 1200" style="color:#000000;">
-                    <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
+                Edit Product
             </a>
         </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column (Details) -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 space-y-8">
 
             <!-- Basic Details Card -->
-            <div class="rounded-xl shadow p-6 border border-gray-200">
-                <h2 class="text-lg font-semibold mb-4" style="color: #000;">Basic Information</h2>
-                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">Slug</dt>
-                        <dd class="mt-1 text-sm text-black">{{ $product->slug }}</dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">Price</dt>
-                        <dd class="mt-1 text-sm text-black">
-                            @if($product->is_sign_up_for_pricing)
-                                <span class="italic">Sign up for pricing</span>
-                            @else
-                                {{ $product->base_price ? '£' . number_format($product->base_price, 2) : 'N/A' }}
-                            @endif
-                        </dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">Exclusivity</dt>
-                        <dd class="mt-1 text-sm text-black">
-                            {{ $product->is_exclusive ? 'Exclusive Product' : 'Standard' }}
-                        </dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">Categories</dt>
-                        <dd class="mt-1 flex flex-wrap gap-2">
-                            @forelse($product->categories as $category)
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Basic Information</h2>
+                </div>
+                <div class="p-6">
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Slug</dt>
+                            <dd class="mt-1 text-sm text-gray-900 flex items-center">
                                 <span
-                                    class="px-2 py-0.5 rounded text-xs border border-gray-300 text-black bg-white">
-                                    @if($category->parent)
-                                        <span style="color:#AEAEAE;">{{ $category->parent->name }} ></span>
-                                    @endif
-                                    {{ $category->name }}
-                                </span>
-                            @empty
-                                <span class="text-gray-400 italic">No categories</span>
-                            @endforelse
-                        </dd>
-                    </div>
-                </dl>
+                                    class="bg-gray-100 rounded px-2 py-0.5 font-mono text-xs">{{ $product->slug }}</span>
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Price (GBP)</dt>
+                            <dd class="mt-1 text-sm text-gray-900 font-semibold">
+                                {{ $product->base_price ? '£' . number_format($product->base_price, 2) : 'N/A' }}
+                                @if($product->is_sign_up_for_pricing)
+                                    <span
+                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                        Sign up for pricing
+                                    </span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Exclusivity</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                @if($product->is_exclusive)
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                        Exclusive Product
+                                    </span>
+                                @else
+                                    <span class="text-gray-500">Standard</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Categories</dt>
+                            <dd class="mt-1 flex flex-wrap gap-2">
+                                @forelse($product->categories as $category)
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                        @if($category->parent)
+                                            <span class="text-gray-500 mr-1">{{ $category->parent->name }} ›</span>
+                                        @endif
+                                        {{ $category->name }}
+                                    </span>
+                                @empty
+                                    <span class="text-gray-400 italic text-xs">No categories</span>
+                                @endforelse
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
             </div>
 
             <!-- Rich Text Content Sections -->
-            <div class="rounded-xl shadow p-6 border border-gray-200 space-y-8">
-                @if($product->product_overview)
-                    <div>
-                        <h3 class="text-md font-semibold mb-2" style="color: #000;">Product Overview</h3>
-                        <div class="prose max-w-none text-sm text-black">
-                            {!! $product->product_overview !!}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="divide-y divide-gray-200">
+                    @if($product->product_overview)
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Overview</h3>
+                            <div class="prose prose-sm max-w-none text-gray-700">
+                                {!! $product->product_overview !!}
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
 
-                @if($product->key_feature)
-                    <div class="border-t pt-6 border-gray-200">
-                        <h3 class="text-md font-semibold mb-2" style="color: #000;">Key Features</h3>
-                        <div class="prose max-w-none text-sm text-black">
-                            {!! $product->key_feature !!}
+                    @if($product->key_feature)
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Key Features</h3>
+                            <div class="prose prose-sm max-w-none text-gray-700">
+                                {!! $product->key_feature !!}
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
 
-                @if($product->main_feature)
-                    <div class="border-t pt-6 border-gray-200">
-                        <h3 class="text-md font-semibold mb-2" style="color: #000;">Main Features</h3>
-                        <div class="prose max-w-none text-sm text-black">
-                            {!! $product->main_feature !!}
+                    @if($product->main_feature)
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Main Features</h3>
+                            <div class="prose prose-sm max-w-none text-gray-700">
+                                {!! $product->main_feature !!}
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
 
-                @if($product->information)
-                    <div class="border-t pt-6 border-gray-200">
-                        <h3 class="text-md font-semibold mb-2" style="color: #000;">Information</h3>
-                        <div class="prose max-w-none text-sm text-black">
-                            {!! $product->information !!}
+                    @if($product->specification)
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Specification</h3>
+                            <div class="prose prose-sm max-w-none text-gray-700">
+                                {!! $product->specification !!}
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
+
+                    @if($product->information)
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
+                            <div class="prose prose-sm max-w-none text-gray-700">
+                                {!! $product->information !!}
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(!$product->product_overview && !$product->key_feature && !$product->main_feature && !$product->specification && !$product->information)
+                        <div class="p-8 text-center text-gray-500">
+                            No detailed content available.
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <!-- SEO Card -->
-            <div class="rounded-xl shadow p-6 border border-gray-200">
-                <h2 class="text-lg font-semibold mb-4" style="color: #000;">SEO Metadata</h2>
-                <dl class="space-y-4">
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">SEO Title</dt>
-                        <dd class="mt-1 text-sm text-black">{{ $product->seo_title ?? '-' }}</dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">SEO Description</dt>
-                        <dd class="mt-1 text-sm text-black">{{ $product->seo_description ?? '-' }}
-                        </dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-medium" style="color:#AEAEAE;">SEO Keywords</dt>
-                        <dd class="mt-1 text-sm text-black">{{ $product->seo_keywords ?? '-' }}
-                        </dd>
-                    </div>
-                </dl>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">SEO Metadata</h2>
+                </div>
+                <div class="p-6">
+                    <dl class="space-y-4">
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Title</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $product->seo_title ?? '-' }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Description</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $product->seo_description ?? '-' }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Keywords</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                @if(!empty($product->seo_keywords))
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach(explode(',', $product->seo_keywords) as $keyword)
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                {{ trim($keyword) }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    -
+                                @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
             </div>
         </div>
 
         <!-- Right Column (Images) -->
-        <div class="lg:col-span-1">
-            <div class="rounded-xl shadow p-6 border border-gray-200 sticky top-6">
-                <h2 class="text-lg font-semibold mb-4" style="color: #000;">Product Images</h2>
-                @if($product->images->isNotEmpty())
-                    <div class="space-y-4">
-                        <!-- Main Image -->
-                        <div
-                            class="aspect-square w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                            <img src="{{ Storage::url($product->images->first()->image_path) }}"
-                                class="w-full h-full object-cover">
+        <div class="lg:col-span-1 border-l lg:border-l-0 lg:pl-0">
+            <!-- The sticky container needs to be relative to the viewport or parent, make sure parent is tall enough -->
+            <div class="space-y-6 sticky top-6">
+                <!-- Brand Information Card -->
+                @if($product->brand)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-900">Brand Information</h2>
                         </div>
-
-                        <!-- Thumbnail Grid -->
-                        @if($product->images->count() > 1)
-                            <div class="grid grid-cols-3 gap-2">
-                                @foreach($product->images->skip(1) as $image)
-                                    <div class="aspect-square rounded overflow-hidden border border-gray-200 bg-gray-100">
-                                        <img src="{{ Storage::url($image->image_path) }}" class="w-full h-full object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center gap-4 mb-4">
+                                @if($product->brand->image)
+                                    <div class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <img src="{{ Storage::url($product->brand->image) }}" alt="{{ $product->brand->name }}" class="h-full w-full object-contain">
                                     </div>
-                                @endforeach
+                                @else
+                                    <div class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center text-gray-400">
+                                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                        </svg>
+                                    </div>
+                                @endif
+                                <div>
+                                    <h3 class="text-base font-medium text-gray-900">{{ $product->brand->name }}</h3>
+                                    @if($product->brand->website)
+                                        <a href="{{ $product->brand->website }}" target="_blank" class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline inline-flex items-center">
+                                            Visit Website
+                                            <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($product->brand->description)
+                                <div class="text-sm text-gray-600 line-clamp-4">
+                                    {{ $product->brand->description }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Product Images</h2>
+                    </div>
+                    <div class="p-6">
+                        @if($product->images->isNotEmpty())
+                            <div class="space-y-4">
+                                <!-- Main Image (First one) -->
+                                <div
+                                    class="aspect-square w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50 group relative">
+                                    <img src="{{ Storage::url($product->images->first()->image_path) }}"
+                                        class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                </div>
+
+                                <!-- Grid for remaining -->
+                                @if($product->images->count() > 1)
+                                    <div class="grid grid-cols-4 gap-2">
+                                        @foreach($product->images->skip(1) as $image)
+                                            <div
+                                                class="aspect-square rounded-md overflow-hidden border border-gray-200 bg-gray-50 cursor-pointer hover:ring-2 hover:ring-indigo-500 transition-all">
+                                                <img src="{{ Storage::url($image->image_path) }}"
+                                                    class="w-full h-full object-cover">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="mt-2 text-sm text-gray-500">No images available.</p>
                             </div>
                         @endif
                     </div>
-                @else
-                    <div class="text-center py-8 rounded-lg bg-[#F8F8F8]">
-                        <p class="text-gray-500 text-sm">No images available.</p>
-                    </div>
-                @endif
+                </div>
             </div>
         </div>
     </div>

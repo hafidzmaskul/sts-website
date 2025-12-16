@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Products;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Brand;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
@@ -14,7 +15,7 @@ class Create extends Component
     use WithFileUploads;
 
     // Form Fields
-    public $brand_name = '';
+    public $brand_id = null;
     public $title = '';
     public $slug = '';
     public $is_sign_up_for_pricing = false;
@@ -27,6 +28,7 @@ class Create extends Component
     public $product_overview = '';
     public $main_feature = '';
     public $information = '';
+    public $specification = '';
 
     // SEO
     public $seo_title = '';
@@ -63,7 +65,7 @@ class Create extends Component
     public function rules()
     {
         return [
-            'brand_name' => 'required|string|max:255',
+            'brand_id' => 'required|exists:brands,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
             'base_price' => 'nullable|numeric|min:0',
@@ -80,6 +82,7 @@ class Create extends Component
             'product_overview' => 'nullable|string',
             'main_feature' => 'nullable|string',
             'information' => 'nullable|string',
+            'specification' => 'nullable|string',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string',
@@ -96,7 +99,7 @@ class Create extends Component
         $this->validate();
 
         $data = [
-            'brand_name' => $this->brand_name,
+            'brand_id' => $this->brand_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
@@ -107,6 +110,7 @@ class Create extends Component
             'product_overview' => $this->product_overview,
             'main_feature' => $this->main_feature,
             'information' => $this->information,
+            'specification' => $this->specification,
             'seo_title' => $this->seo_title,
             'seo_description' => $this->seo_description,
             'seo_keywords' => $this->seo_keywords,
@@ -139,6 +143,7 @@ class Create extends Component
     {
         return view('livewire.admin.products.create', [
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
+            'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
         ])->title('Create Product');
     }
 }

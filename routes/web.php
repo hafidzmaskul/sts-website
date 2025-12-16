@@ -72,8 +72,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/customers/{user}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
 
         // Contact Submissions
-        Route::get('/admin/contact-submissions', \App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
+        Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 
+        // Brands
+        Route::get('/admin/brands', App\Livewire\Admin\Brands\Index::class)->name('admin.brands.index');
+        Route::get('/admin/brands/create', App\Livewire\Admin\Brands\Create::class)->name('admin.brands.create');
+        Route::get('/admin/brands/{brand}/edit', App\Livewire\Admin\Brands\Edit::class)->name('admin.brands.edit');
     });
 });
 

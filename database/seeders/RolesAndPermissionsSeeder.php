@@ -87,6 +87,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'customers.edit',
             'customers.delete',
 
+            // 10c. Brands
+            'brands.view',
+            'brands.create',
+            'brands.edit',
+            'brands.delete',
+
 
             // 11. Careers (New)
             'careers.view',

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Products;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
+use App\Models\Brand;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -18,7 +19,7 @@ class Edit extends Component
     public $productId;
 
     // Form Fields
-    public $brand_name = '';
+    public $brand_id = null;
     public $title = '';
     public $slug = '';
     public $is_sign_up_for_pricing = false;
@@ -31,6 +32,7 @@ class Edit extends Component
     public $product_overview = '';
     public $main_feature = '';
     public $information = '';
+    public $specification = '';
 
     // SEO
     public $seo_title = '';
@@ -47,7 +49,7 @@ class Edit extends Component
     public function mount(Product $product)
     {
         $this->productId = $product->id;
-        $this->brand_name = $product->brand_name;
+        $this->brand_id = $product->brand_id;
         $this->title = $product->title;
         $this->slug = $product->slug;
         $this->is_sign_up_for_pricing = $product->is_sign_up_for_pricing;
@@ -58,6 +60,7 @@ class Edit extends Component
         $this->product_overview = $product->product_overview;
         $this->main_feature = $product->main_feature;
         $this->information = $product->information;
+        $this->specification = $product->specification;
         $this->seo_title = $product->seo_title;
         $this->seo_description = $product->seo_description;
         $this->seo_keywords = $product->seo_keywords;
@@ -105,7 +108,7 @@ class Edit extends Component
     public function rules()
     {
         return [
-            'brand_name' => 'required|string|max:255',
+            'brand_id' => 'required|exists:brands,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($this->productId)],
             'base_price' => 'nullable|numeric|min:0',
@@ -123,6 +126,7 @@ class Edit extends Component
             'product_overview' => 'nullable|string',
             'main_feature' => 'nullable|string',
             'information' => 'nullable|string',
+            'specification' => 'nullable|string',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string',
@@ -136,7 +140,7 @@ class Edit extends Component
         $product = Product::findOrFail($this->productId);
 
         $product->update([
-            'brand_name' => $this->brand_name,
+            'brand_id' => $this->brand_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
@@ -147,6 +151,7 @@ class Edit extends Component
             'product_overview' => $this->product_overview,
             'main_feature' => $this->main_feature,
             'information' => $this->information,
+            'specification' => $this->specification,
             'seo_title' => $this->seo_title,
             'seo_description' => $this->seo_description,
             'seo_keywords' => $this->seo_keywords,
@@ -200,6 +205,7 @@ class Edit extends Component
     {
         return view('livewire.admin.products.edit', [
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
+            'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
         ])->title('Edit Product');
     }
 }
