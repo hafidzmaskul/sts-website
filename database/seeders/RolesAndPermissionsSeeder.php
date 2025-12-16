@@ -105,6 +105,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'banner.create',
             'banner.edit',
             'banner.delete',
+
+            // 13. Quotes
+            'quotes.view',
+            'quotes.delete',
         ];
 
         // Create permissions

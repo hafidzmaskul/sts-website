@@ -78,6 +78,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/brands', App\Livewire\Admin\Brands\Index::class)->name('admin.brands.index');
         Route::get('/admin/brands/create', App\Livewire\Admin\Brands\Create::class)->name('admin.brands.create');
         Route::get('/admin/brands/{brand}/edit', App\Livewire\Admin\Brands\Edit::class)->name('admin.brands.edit');
+
+        // Quotes
+        Route::get('/admin/quotes', \App\Livewire\Admin\Quotes\Index::class)->name('admin.quotes.index');
+        Route::get('/admin/quotes/{quote}', \App\Livewire\Admin\Quotes\Show::class)->name('admin.quotes.show');
     });
 });
 

@@ -152,6 +152,13 @@
                             {{ __('Messages') }}
                         </flux:navlist.item>
                     @endcan
+                    @can('quotes.view')
+                        <flux:navlist.item icon="currency-dollar" :href="route('admin.quotes.index')"
+                            :current="request()->routeIs('admin.quotes.*')" wire:navigate
+                            :class="request()->routeIs('admin.quotes.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Quotes') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             @endcan
 
