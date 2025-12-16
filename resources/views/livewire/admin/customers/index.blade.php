@@ -41,95 +41,143 @@
             </div>
         </div>
     </div>
+{{-- //<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"></div> --}}
+    <!-- Customers Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <!-- Card header: search + filter -->
+        <div class="flex flex-col md:flex-row md:items-center gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <div class="w-full md:flex-1">
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                        <!-- Magnifier Icon -->
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="7" class="stroke-current"></circle>
+                            <path d="M21 21l-3.5-3.5" stroke-linecap="round" class="stroke-current"></path>
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        class="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition"
+                        placeholder="Search customers..." />
+                </div>
+            </div>
+            <div class="w-full md:w-auto">
+                <select wire:model.live="status"
+                    class="w-full md:w-auto rounded-lg border border-gray-200 bg-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+            </div>
+        </div>
 
-    <!-- Search -->
-    <!-- Filters -->
-    <div class="flex items-center gap-3">
-        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search customers..."
-            class="w-full md:w-80 rounded-lg border px-3 py-2"
-            style="border: 1px solid #AEAEAE; color: #000; background-color: transparent;"
-            placeholder="Search customers..." onfocus="this.placeholder=''" onblur="this.placeholder='Search customers...'">
-
-        <select wire:model.live="status"
-            class="rounded-lg border px-3 py-2"
-            style="border: 1px solid #AEAEAE; color: #000; background-color: transparent;">
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-        </select>
-    </div>
-
-    <!-- Table -->
-    <div class="overflow-x-auto rounded-xl border">
-        <table class="min-w-full text-sm">
-            <thead style="background: #fff;">
-                <tr>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Name</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Email</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Phone</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Status</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Joined</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse($customers as $user)
+        <!-- Table Container -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap font-medium text-black">{{ $user->name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black">{{ $user->email }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black">
-                            {{ $user->customer?->phone ?? '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                                style="
-                                    {{ ($user->customer?->status === 'active')
-                                    ? 'border: 1px solid #13B469; color: #13B469; background: transparent;'
-                                    : 'border: 1px solid #E02424; color: #E02424; background: transparent;' }}">
-                                {{ ucfirst($user->customer?->status ?? 'Active') }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-black">
-                            {{ $user->created_at->format('M d, Y') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2 flex items-center">
-                            @can('customers.view')
-                                <a href="{{ route('admin.customers.show', $user) }}"
-                                    class="border border-[#0079C2] text-[#0079C2] px-2 py-1 rounded-lg bg-white hover:bg-[#0079C2] hover:text-white transition">View</a>
-                            @endcan
-                            @can('customers.edit')
-                                <a href="{{ route('admin.customers.edit', $user) }}"
-                                    class="flex items-center justify-center border border-[#0079C2] text-[#0079C2] px-2 py-1 rounded-lg bg-white hover:bg-[#0079C2] hover:text-white transition" title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 1200 1200" style="color:#000000;">
-                                        <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
+                        <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-400">Name</th>
+                        <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-400">Email</th>
+                        <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-400">Phone</th>
+                        <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-400">Status</th>
+                        <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-400">Joined</th>
+                        <th class="px-6 py-3 text-right uppercase text-xs font-semibold tracking-wider text-gray-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($customers as $user)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                    {{ $user->customer?->phone ?? '-' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @php
+                                    $status = strtolower($user->customer?->status ?? 'active');
+                                    $statusMap = [
+                                        'active' => ['bg-green-50','text-green-600','dot' => 'bg-green-500'],
+                                        'suspended' => ['bg-red-50','text-red-600','dot' => 'bg-red-500'],
+                                    ];
+                                    $label = ucfirst($status);
+                                    $style = $statusMap[$status] ?? ['bg-gray-50', 'text-gray-500', 'dot' => 'bg-gray-400'];
+                                @endphp
+                                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium {{ $style[0] }} {{ $style[1] }}">
+                                    <span class="w-2 h-2 rounded-full {{ $style['dot'] }} inline-block mr-2"></span>
+                                    {{ $label }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ $user->created_at->format('M d, Y') }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <div class="flex justify-end gap-2">
+                                    @can('customers.view')
+                                        <a href="{{ route('admin.customers.show', $user) }}"
+                                            class="inline-flex items-center rounded-lg bg-gray-50 text-blue-600 hover:bg-blue-50 hover:text-blue-700 p-2 transition"
+                                            title="View">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0A9 9 0 11.993 12.007 9 9 0 0121 12z" />
+                                            </svg>
+                                        </a>
+                                    @endcan
+                                    @can('customers.edit')
+                                        <a href="{{ route('admin.customers.edit', $user) }}"
+                                            class="inline-flex items-center rounded-lg bg-gray-50 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 p-2 transition"
+                                            title="Edit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15.232 5.232l-10 10M18 2l-2 2m0 0L14 4l4 4m0 0l-4-4M10 10v.01" />
+                                            </svg>
+                                        </a>
+                                    @endcan
+                                    @can('customers.delete')
+                                        <form action="{{ route('admin.customers.destroy', $user) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                onclick="return confirm('Are you sure you want to delete this customer?')"
+                                                class="inline-flex items-center rounded-lg bg-gray-50 text-red-600 hover:bg-red-50 hover:text-red-700 p-2 transition"
+                                                title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M6 8v8m4-8v8m4-8v8M3 6h14m-1 0l1-2m-2 2V3a1 1 0 00-1-1h-4a1 1 0 00-1 1v3" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-10">
+                                <div class="flex flex-col items-center justify-center gap-4">
+                                    <svg class="w-16 h-16 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                                        <circle cx="24" cy="24" r="22" stroke-width="4" stroke="currentColor" fill="none" />
+                                        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 30a8 8 0 0116 0"/>
+                                        <circle cx="24" cy="18" r="4" fill="currentColor" />
                                     </svg>
-                                </a>
-                            @endcan
-                            @can('customers.delete')
-                                <form action="{{ route('admin.customers.destroy', $user) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="flex items-center justify-center border border-[#E02424] text-[#E02424] px-2 py-1 rounded-lg bg-white hover:bg-[#E02424] hover:text-white transition" title="Delete">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 12 12" style="color:#000000;">
-                                            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                            <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                        </svg>
-                                    </button>
-                                </form>
-                            @endcan
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-center" style="color:#AEAEAE;">No customers found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                                    <div class="text-lg font-semibold text-gray-500">No customers found</div>
+                                    <div class="text-sm text-gray-400">Try adjusting your search or filters.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="mt-4">
-        {{ $customers->links() }}
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+            {{ $customers->links() }}
+        </div>
     </div>
 </div>

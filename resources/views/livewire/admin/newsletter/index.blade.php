@@ -14,82 +14,113 @@
         </button>
     </div>
 
-    <!-- Search -->
-    <div class="flex items-center gap-3">
-        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search emails..."
-            class="w-full md:w-80 rounded-lg border px-3 py-2"
-            style="border:1px solid #AEAEAE; color: #AEAEAE; background: #fff; placeholder-color:#D2D2D2;"
-            placeholder="Search emails..."
-            onfocus="this.style.borderColor='#AEAEAE'"
-            onblur="this.style.borderColor='#AEAEAE'">
-        <style>
-            input::placeholder {
-                color: #D2D2D2;
-            }
-        </style>
-    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <!-- Card header with search -->
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <div class="relative w-full md:w-80">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"/>
+                    </svg>
+                </span>
+                <input
+                    type="text"
+                    wire:model.live.debounce.300ms="search"
+                    placeholder="Search emails..."
+                    class="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-400 transition"
+                >
+            </div>
+        </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto rounded-xl border">
-        <table class="min-w-full text-sm">
-            <thead style="background: #fff;">
-                <tr>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Email</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Source</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Subscribed At</th>
-                    <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse($subscriptions as $subscription)
+        <!-- Table container -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y">
+                <!-- Table header -->
+                <thead class="bg-gray-50">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap font-medium" style="color:#000000;">{{ $subscription->email }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap" style="color:#000000;">
-                            {{ $subscription->source ?? '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap" style="color:#000000;">
-                            {{ $subscription->created_at->format('M d, Y H:i') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2">
-                            @can('newsletter-subscriptions.edit')
-                                <button
-                                    class="inline-flex items-center justify-center border border-[#0079C2] text-[#0079C2] bg-white px-2 py-1 rounded hover:cursor-pointer transition"
-                                    title="Edit"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="16" height="16" viewBox="0 0 1200 1200"
-                                         style="color:#000000; display: inline;">
-                                        <path fill="currentColor"
-                                              d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                    </svg>
-                                </button>
-                            @endcan
-                            @can('newsletter-subscriptions.delete')
-                                <button wire:confirm="Are you sure you want to delete this subscription?"
-                                    wire:click="delete({{ $subscription->id }})"
-                                    class="inline-flex items-center justify-center border border-red-600 text-red-600 bg-white px-2 py-1 rounded hover:cursor-pointer transition"
-                                    title="Delete"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="14" height="14" viewBox="0 0 12 12"
-                                         style="color:#000000; display: inline;">
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                        <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                    </svg>
-                                </button>
-                            @endcan
-                        </td>
+                        <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 text-left">Email</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 text-left">Source</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 text-left">Subscribed At</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 text-right">Actions</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-center" style="color: #000;">No subscriptions found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <!-- Table body -->
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($subscriptions as $subscription)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $subscription->email }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($subscription->source)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        {{ $subscription->source }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
+                                        -
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $subscription->created_at->format('M d, Y H:i') }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <div class="flex justify-end gap-2">
+                                    @can('newsletter-subscriptions.edit')
+                                        <button
+                                            title="Edit"
+                                            class="inline-flex items-center justify-center p-1 rounded hover:bg-blue-50 text-blue-600 transition"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="w-5 h-5"
+                                                 fill="none" viewBox="0 0 24 24"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13.5V19h5.5l6.364-6.364a2 2 0 000-2.828l-5.672-5.672a2 2 0 00-2.828 0L3 13.5V19h5.5l6.364-6.364z"/>
+                                            </svg>
+                                        </button>
+                                    @endcan
+                                    @can('newsletter-subscriptions.delete')
+                                        <button
+                                            wire:confirm="Are you sure you want to delete this subscription?"
+                                            wire:click="delete({{ $subscription->id }})"
+                                            title="Delete"
+                                            class="inline-flex items-center justify-center p-1 rounded hover:bg-red-50 text-red-600 transition"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="w-5 h-5"
+                                                 fill="none" viewBox="0 0 24 24"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-12">
+                                <div class="flex flex-col items-center justify-center">
+                                    <svg class="w-16 h-16 text-gray-200 mb-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <rect width="20" height="14" x="2" y="5" rx="2" fill="none" stroke="currentColor"/>
+                                        <path stroke-linecap="round" d="M2 5l10 7l10-7"/>
+                                    </svg>
+                                    <div class="text-lg font-semibold text-gray-700 mb-1">No subscriptions found.</div>
+                                    <div class="text-sm text-gray-500">Try adjusting your search or filters to find results.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="mt-4">
-        {{ $subscriptions->links() }}
+        <!-- Pagination Footer -->
+        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
+            {{ $subscriptions->links() }}
+        </div>
     </div>
 </div>

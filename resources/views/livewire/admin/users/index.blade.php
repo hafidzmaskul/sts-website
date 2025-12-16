@@ -5,72 +5,111 @@
         <button wire:click="create" class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">New User</button>
         @endcan
     </div>
+    
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <!-- Card Header: Search -->
+        <div class="px-4 py-4 border-b bg-gray-50 rounded-t-xl">
+            <div class="max-w-xl w-full">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-3.5-3.5"/>
+                        </svg>
+                    </span>
+                    <input type="text"
+                        wire:model.live="search"
+                        class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="Search name or email..." />
+                </div>
+            </div>
+        </div>
 
-    <div class="flex items-center gap-3">
-        <input type="text" wire:model.live="search" placeholder="Search name or email..."
-               class="w-full md:w-96 rounded-lg border border-[#D2D2D2] px-3 py-2" style="color:#000; border-color:#D2D2D2;" placeholder="Search name or email..." />
-    </div>
-
-    <div class="overflow-x-auto rounded-xl border border-[#D2D2D2]">
-        <table class="min-w-full text-sm bg-white">
-            <thead style="background: #fff;">
-                <tr>
-                    <th class="px-4 py-3" style="color:#AEAEAE">Name</th>
-                    <th class="px-4 py-3" style="color:#AEAEAE">Email</th>
-                    <th class="px-4 py-3" style="color:#AEAEAE">Roles</th>
-                    <th class="px-4 py-3" style="color:#AEAEAE">Direct Perms</th>
-                    <th class="px-4 py-3 w-44" style="color:#AEAEAE">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($users as $u)
-                    <tr class="border-t" style="border-color: #D2D2D2;">
-                        <td class="px-4 py-3 font-medium" style="color:#000">{{ $u->name }}</td>
-                        <td class="px-4 py-3" style="color:#000">{{ $u->email }}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($u->roles as $r)
-                                    <span class="px-2 py-0.5 rounded border border-[#D2D2D2] text-xs" style="color:#000;">{{ $r->name }}</span>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($u->permissions as $p)
-                                    <span class="px-2 py-0.5 rounded border border-[#D2D2D2] text-xs" style="color:#000;">{{ $p->name }}</span>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center gap-2">
-                                @can('users.edit')
-                                <button wire:click="edit({{ $u->id }})" class="px-2 py-2 rounded border border-[#0079C2] text-[#0079C2] bg-white hover:cursor-pointer transition flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 1200 1200" style="color:#000;">
-                                        <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                    </svg>
-                                </button>
-                                @endcan
-                                @can('users.delete')
-                                <button wire:click="delete({{ $u->id }})"
-                                        onclick="return confirm('Delete this user?')"
-                                        class="px-2 py-2 rounded border border-[#000000] text-[#000000] bg-white hover:cursor-pointer transition flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12" style="color:#000;">
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                        <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                    </svg>
-                                </button>
-                                @endcan
-                            </div>
-                        </td>
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Name</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Email</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Roles</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Direct Perms</th>
+                        <th class="px-4 py-3 text-right uppercase text-xs tracking-wider text-gray-500 w-44">Actions</th>
                     </tr>
-                @empty
-                    <tr><td colspan="5" class="px-4 py-6 text-center" style="color:#AEAEAE;">No users found.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($users as $u)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $u->name }}</div>
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ $u->email }}</div>
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($u->roles as $r)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                            {{ $r->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($u->permissions as $p)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                            {{ $p->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-right">
+                                <div class="flex justify-end gap-2">
+                                    @can('users.edit')
+                                    <button wire:click="edit({{ $u->id }})"
+                                            class="inline-flex items-center justify-center p-2 rounded hover:bg-blue-50 text-blue-600 hover:text-blue-800 transition"
+                                            title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6zm6.364-6.364a2.121 2.121 0 0 1 3 3L7 21H3v-4L15.364 6.636z" />
+                                        </svg>
+                                    </button>
+                                    @endcan
+                                    @can('users.delete')
+                                    <button wire:click="delete({{ $u->id }})"
+                                            onclick="return confirm('Delete this user?')"
+                                            class="inline-flex items-center justify-center p-2 rounded hover:bg-red-50 text-red-600 hover:text-red-800 transition"
+                                            title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 7V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2m5 4v6m4-6v6"/>
+                                        </svg>
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-12">
+                                <div class="flex flex-col items-center justify-center space-y-4">
+                                    <svg class="w-16 h-16 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                                        <rect width="36" height="24" x="6" y="12" rx="6" fill="none" stroke="currentColor" stroke-width="2" />
+                                        <path d="M18 21a6 6 0 1 1 12 0M6 36c2-4 8-7 18-7s16 3 18 7" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    </svg>
+                                    <div class="text-lg font-semibold text-gray-500">No users found</div>
+                                    <div class="text-sm text-gray-400 text-center">We couldn't find any users matching your search.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination: Card Footer -->
+        <div class="px-4 py-3 border-t bg-gray-50 rounded-b-xl">
+            {{ $users->links() }}
+        </div>
     </div>
-
-    <div>{{ $users->links() }}</div>
 
     {{-- Modal --}}
     @if($showForm)
