@@ -75,82 +75,130 @@
             </form>
         </div>
     @else
-        <!-- Search -->
-        <div class="flex items-center gap-3">
-            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search banners..."
-                class="w-full md:w-80 rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
-                style="color:#000; border-color:#D2D2D2;::placeholder{color:#D2D2D2;}"
-                placeholder="Search banners...">
-        </div>
+        <!-- Card Container -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
 
-        <!-- Table -->
-        <div class="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white">
-            <table class="min-w-full text-sm">
-                <thead style="background-color:#fff;" class="text-left">
-                    <tr>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Image</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Name</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">CTA URL</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Created By</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($banners as $banner)
-                        <tr style="color:#000;" class="text-black">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($banner->file_path)
-                                    <img src="{{ Storage::url($banner->file_path) }}" class="h-12 w-auto object-cover rounded">
-                                @else
-                                    <span class="" style="color:#AEAEAE;">No Image</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $banner->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap" style="color:#000;">
-                                @if($banner->cta_url)
-                                    <a href="{{ $banner->cta_url }}" target="_blank"
-                                        class="truncate max-w-xs block" style="color:#0079C2;">{{ $banner->cta_url }}</a>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap" style="color:#000;">
-                                {{ $banner->creator->name ?? 'Unknown' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2">
-                                @can('banner.edit')
-                                    <button wire:click="edit({{ $banner->id }})"
-                                        class="border border-[#0079C2] text-[#0079C2] rounded flex items-center justify-center p-1 hover:cursor-pointer transition bg-white"
-                                        style="display: inline-flex;align-items:center;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="color:#000;" viewBox="0 0 1200 1200">
-                                            <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                        </svg>
-                                    </button>
-                                @endcan
-                                @can('banner.delete')
-                                    <button wire:confirm="Are you sure you want to delete this banner?"
-                                        wire:click="delete({{ $banner->id }})"
-                                        class="border border-red-600 text-red-600 rounded flex items-center justify-center p-1 hover:cursor-pointer transition bg-white"
-                                        style="display: inline-flex;align-items:center;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="color:#000;" viewBox="0 0 12 12">
-                                            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                            <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                        </svg>
-                                    </button>
-                                @endcan
-                            </td>
-                        </tr>
-                    @empty
+            <!-- Card Header with Search -->
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center gap-3">
+                <div class="w-full sm:max-w-xs relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <!-- Search Icon -->
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-2-2" />
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="Search banners..."
+                        class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white text-gray-900 placeholder-gray-400 text-sm transition"
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center" style="color:#AEAEAE;">No banners found.</td>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Image</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Name</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">CTA URL</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Created By</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 text-right">Actions</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($banners as $banner)
+                            <tr class="hover:bg-gray-50 transition">
+                                <!-- Image cell -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($banner->file_path)
+                                        <span class="inline-flex items-center rounded-md overflow-hidden">
+                                            <img src="{{ Storage::url($banner->file_path) }}" class="h-12 w-16 object-cover rounded-md border border-gray-200" alt="Banner Image">
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 bg-gray-100 text-xs text-gray-400">No Image</span>
+                                    @endif
+                                </td>
+                                <!-- Name cell -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ $banner->name }}</div>
+                                </td>
+                                <!-- CTA URL cell -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($banner->cta_url)
+                                        <a href="{{ $banner->cta_url }}" target="_blank" class="text-xs text-blue-700 hover:underline truncate max-w-[160px] block transition">
+                                            {{ $banner->cta_url }}
+                                        </a>
+                                    @else
+                                        <span class="inline-flex rounded-full bg-gray-100 text-gray-400 text-xs px-2 py-0.5">-</span>
+                                    @endif
+                                </td>
+                                <!-- Created By cell -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $banner->creator->name ?? '-' }}
+                                    </div>
+                                </td>
+                                <!-- Actions cell -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex justify-end gap-2">
+                                        @can('banner.edit')
+                                            <button wire:click="edit({{ $banner->id }})"
+                                                class="inline-flex items-center justify-center p-2 rounded-full bg-white text-blue-600 border border-blue-100 hover:text-blue-800 hover:bg-blue-50 transition"
+                                                title="Edit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" d="M4 21v-3.9c0-.28.11-.53.29-.71l10.1-10.1 4.6 4.6-10.1 10.1a1 1 0 0 1-.71.29H4zm13.71-12.29a1 1 0 0 0 0-1.42l-2-2a1 1 0 0 0-1.42 0l-1.34 1.34 4.6 4.6z"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                        @can('banner.delete')
+                                            <button
+                                                wire:confirm="Are you sure you want to delete this banner?"
+                                                wire:click="delete({{ $banner->id }})"
+                                                class="inline-flex items-center justify-center p-2 rounded-full bg-white text-red-600 border border-red-100 hover:text-red-800 hover:bg-red-50 transition"
+                                                title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="w-4 h-4" fill="none" viewBox="0 0 16 16">
+                                                    <path fill="currentColor" d="M5.77 3.5v-.25A1.25 1.25 0 0 1 7.02 2h1.96A1.25 1.25 0 0 1 10.23 3.25v.25h3a.75.75 0 0 1 0 1.5h-.38l-.5 8.03A2 2 0 0 1 10.36 15H5.64a2 2 0 0 1-1.99-1.97l-.5-8.03H2.75a.75.75 0 0 1 0-1.5zm1.73-.25v.25h1V3.25a.25.25 0 0 0-.25-.25H7.02a.25.25 0 0 0-.25.25zm4.12 1.5H4.38l.5 8a.5.5 0 0 0 .5.5h4.72a.5.5 0 0 0 .5-.5z"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-12">
+                                    <div class="flex flex-col items-center justify-center text-center gap-4">
+                                        <span class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-gray-100 text-gray-300">
+                                            <!-- Banner icon SVG -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <rect width="18" height="14" x="3" y="5" rx="2" fill="currentColor" class="text-gray-200"/>
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M3 19l5.299-7.582a1.5 1.5 0 0 1 2.39-.034l2.573 3.515a1.5 1.5 0 0 0 2.39.03L21 8"/>
+                                            </svg>
+                                        </span>
+                                        <div class="text-lg font-semibold text-gray-500">No banners found</div>
+                                        <div class="text-sm text-gray-400">Try adjusting your search or add new banners.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="mt-4">
-            {{ $banners->links() }}
+            <!-- Pagination Footer -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-between items-center">
+                <div>
+                    {{-- You may display count/page info here if desired --}}
+                </div>
+                <div>
+                    {{ $banners->links() }}
+                </div>
+            </div>
         </div>
     @endif
 </div>

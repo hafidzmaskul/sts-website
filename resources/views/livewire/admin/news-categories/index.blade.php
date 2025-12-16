@@ -112,70 +112,126 @@
             </form>
         </div>
     @else
-        <!-- Search -->
-        <div class="flex items-center gap-3">
-            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search categories..."
-                class="w-full md:w-80 rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
-                style="border-color:#D2D2D2; color:#000; placeholder-color:#D2D2D2;">
-        </div>
+        <!-- Main Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Card Header with Search -->
+            <div class="px-4 py-4 border-b border-gray-100 bg-gray-50 flex items-center">
+                <div class="relative w-full md:w-80">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M21 21l-4.35-4.35M18 11A7 7 0 1 1 4 11a7 7 0 0 1 14 0z"/>
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="Search categories..."
+                        class="block w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition text-sm"
+                    />
+                </div>
+            </div>
 
-        <!-- Table -->
-        <div class="overflow-x-auto rounded-xl border border-zinc-200">
-            <table class="min-w-full text-sm">
-                <thead style="background-color: #fff;">
-                    <tr>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color: #000;">Name</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color: #000;">Slug</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color: #000;">Parent</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color: #000;">SEO Title</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color: #000;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($categories as $category)
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-black">{{ $category->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-black">{{ $category->slug }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-black">
-                                {{ $category->parent->name ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-black">
-                                {{ Str::limit($category->seo_title, 30) ?: '-' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2 flex items-center">
-                                @can('news-categories.edit')
-                                    <button wire:click="edit({{ $category->id }})"
-                                        class="border border-black px-1.5 py-1 rounded hover:cursor-pointer text-black bg-white flex items-center justify-center"
-                                        style="height:32px;width:32px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="color:#000000;" viewBox="0 0 1200 1200">
-                                            <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                        </svg>
-                                    </button>
-                                @endcan
-                                @can('news-categories.delete')
-                                    <button wire:confirm="Are you sure you want to delete this category?"
-                                        wire:click="delete({{ $category->id }})"
-                                        class="border border-black px-1.5 py-1 rounded hover:cursor-pointer text-black bg-white flex items-center justify-center"
-                                        style="height:32px;width:32px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="color:#000000;" viewBox="0 0 12 12">
-	                                            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-	                                            <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                        </svg>
-                                    </button>
-                                @endcan
-                            </td>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Name</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Slug</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Parent</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">SEO Title</th>
+                            <th class="px-6 py-3 text-right uppercase text-xs font-semibold tracking-wider text-gray-700">Actions</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-black">No categories found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($categories as $category)
+                            <tr class="hover:bg-gray-50 transition">
+                                <!-- Name -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
+                                    @if($category->status ?? null)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-medium mt-1">
+                                            <span class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                                            Active
+                                        </span>
+                                    @endif
+                                </td>
+                                <!-- Slug -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-xs text-gray-700">{{ $category->slug }}</div>
+                                </td>
+                                <!-- Parent -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($category->parent)
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-100 text-gray-800 text-xs font-medium">{{ $category->parent->name }}</span>
+                                    @else
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-gray-500 text-xs">-</span>
+                                    @endif
+                                </td>
+                                <!-- SEO Title -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($category->seo_title)
+                                        <div class="text-xs text-gray-700">{{ \Illuminate\Support\Str::limit($category->seo_title, 30) }}</div>
+                                    @else
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-gray-400 text-xs">-</span>
+                                    @endif
+                                </td>
+                                <!-- Actions -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex justify-end gap-2">
+                                        @can('news-categories.edit')
+                                            <button wire:click="edit({{ $category->id }})"
+                                                class="p-2 rounded hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition"
+                                                aria-label="Edit"
+                                                title="Edit"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                          d="M17.414 2.586a2 2 0 0 1 0 2.828l-9.193 9.193-3.515.439.438-3.515 9.192-9.193a2 2 0 0 1 2.83 0zm0 0L15 5m-7 12h10"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                        @can('news-categories.delete')
+                                            <button
+                                                wire:confirm="Are you sure you want to delete this category?"
+                                                wire:click="delete({{ $category->id }})"
+                                                class="p-2 rounded hover:bg-red-50 text-gray-600 hover:text-red-600 transition"
+                                                aria-label="Delete"
+                                                title="Delete"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                        d="M6 8v8m4-8v8m4-10v10m-5-4h4m-1-4h5m-7-4h6.5a1 1 0 0 1 1 1V5m2 0a1 1 0 0 1 1 1v1M12.73 5l1.364-1.364a2 2 0 1 0-2.828-2.828L9.9 2.172"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-12">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <svg class="w-16 h-16 text-gray-200 mb-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 48 48">
+                                            <rect x="6" y="12" width="36" height="26" rx="3" fill="#F3F4F6"></rect>
+                                            <path d="M6 37c5-8 11.5-8 16 0s11.5 8 16 0" stroke="#D1D5DB" stroke-width="2" />
+                                            <circle cx="24" cy="22" r="6" fill="#E5E7EB" />
+                                        </svg>
+                                        <div class="text-lg font-semibold text-gray-700 mb-1">No categories found</div>
+                                        <div class="text-sm text-gray-500">Try adjusting your search or create a new category.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="mt-4">
-            {{ $categories->links() }}
+            <!-- Pagination Footer -->
+            <div class="border-t border-gray-100 px-4 py-3 bg-gray-50">
+                {{ $categories->links() }}
+            </div>
         </div>
     @endif
 </div>
