@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import HeroSection from '../components/HeroSection';
 import BenefitCard from '../components/BenefitCard';
-
-
+import QuoteForm from '../components/QuoteForm'; // Import the new component
 
 const aboutbenefits = [
     {
@@ -56,7 +55,6 @@ export default function Configuration({ services = [] }) {
                                 <h1 className='font-inter text-[#0079C2] font-bold text-2xl mb-2'>
                                     Have your order pre-built and configured prior to delivery
                                 </h1>
-
                                 <span className='font-poppins text-base'>
                                     From our central support centre your order can be pre-built and configured prior to delivery, eliminating risk with out-of-box failures and saving time and money on site. <br /><br />
                                     Built and configured in a safe and isolated environment, our team can <br />
@@ -76,7 +74,6 @@ export default function Configuration({ services = [] }) {
                         <h1 className='font-nunito-sans font-bold text-white text-3xl'>Services include:</h1>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 justify-center h-full  text-white">
                             <div className="flex items-center">
-
                                 <ul className="list-disc ml-6 space-y-1 font-medium text-base">
                                     <li>Configuration of IP settings on all network devices</li>
                                     <li>Installation and configuration of software on all equipment</li>
@@ -86,7 +83,6 @@ export default function Configuration({ services = [] }) {
                                 </ul>
                             </div>
                             <div className="flex items-center">
-
                                 <ul className="list-disc ml-6 space-y-1 font-medium text-base">
                                     <li>Create and install custom firmware</li>
                                     <li>Testing for out-of-box failures</li>
@@ -100,7 +96,6 @@ export default function Configuration({ services = [] }) {
                             </div>
                         </div>
                     </div>
-
                 </section>
                 <section className='bg-[#F0F2F3] my-20 py-20'>
                     <h1 className='font-inter font-bold text-3xl text-center mt-10 mb-15 text-[#002856]'>Benefits of pre-build and configuration</h1>
@@ -113,9 +108,8 @@ export default function Configuration({ services = [] }) {
                     </div>
                 </section>
                 <section className='container md:px-20 px-10 mx-auto'>
-
                     <h1 className='  font-inter font-bold text-3xl text-center mt-10 mb-15 text-[#002856]'>Pre-configuration services</h1>
-                    <p className=' text-center font-poppins font-normal'> Whether you are working on a small project, a complex integrated solution or require a bespoke install, ADI’s pre-build and configuration service can save you time and money. See below for our levels of pre-configuration services: </p>
+                    <p className=' text-center font-poppins font-normal'> Whether you are working on a small project, a complex integrated solution or require a bespoke install, ADI's pre-build and configuration service can save you time and money. See below for our levels of pre-configuration services: </p>
                     <div className="mt-12 flex justify-center pt-10 pb-20">
                         <table className="min-w-max w-full font-nunito-sans text-left border-collapse ">
                             <thead>
@@ -125,7 +119,6 @@ export default function Configuration({ services = [] }) {
                                     <th className="py-3 text-center px-6 border border-[#9F9F9F] text-white" style={{ background: '#9F9F9F' }}>SILVER</th>
                                     <th className="py-3 text-center px-6 border border-[#9F9F9F] text-white" style={{ background: '#E0CB07' }}>GOLD</th>
                                 </tr>
-
                             </thead>
                             <tbody className="bg-white ">
                                 {[
@@ -141,7 +134,6 @@ export default function Configuration({ services = [] }) {
                                     "Set recording schedule (recorder)",
                                     "Client workstation configuration"
                                 ].map((label, idx) => {
-                                    // Kebijakan feature setiap package
                                     const bronzeFeatures = [
                                         "Program IP address",
                                         "Program subnet mask",
@@ -157,7 +149,6 @@ export default function Configuration({ services = [] }) {
                                         "Install and configure HDD (recorder)",
                                         "Camera name (recorder)"
                                     ];
-                                    // gold: semua fitur
                                     return (
                                         <tr key={idx} className="">
                                             <td className="py-3 px-6 border border-[#9F9F9F] font-medium text-gray-800">
@@ -217,7 +208,7 @@ export default function Configuration({ services = [] }) {
                         <img src="/assets/resource-cofig.png" className='h-full' alt="" />
                     </div>
                 </section>
-                <section className="container md:px-20 px-10 mx-auto flex flex-row  my-10">
+                <section id='form-quote' className="container md:px-20 px-10 mx-auto flex flex-row  my-10">
                     {/* Kolom pertama: lebar 10/12 */}
                     <div className="w-full md:w-1/2 flex flex-col  h-auto">
                         <div className="flex flex-col items-center text-center px-4">
@@ -250,115 +241,19 @@ export default function Configuration({ services = [] }) {
                             </div>
                         </div>
                     </div>
-                    {/* Kolom kedua: lebar 2/12 */}
-                    <div className="w-full md:w-1/2 bg-[#F0F2F3]" >
-                        <h1 className='text-2xl md:text-3xl font-bold mt-20 mb-10 text-center'>Get Quote</h1>
-                        <div className=" p-10">
-                            <form className="px-8 pt-6 pb-8 mb-4 bg-white">
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        First Name<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your first name"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Surname<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your surname"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Company Name<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your company name"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Email Address<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="email"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your email address"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Phone Number<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your phone number"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Country<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your country"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Postal Code<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your postal code"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Details of your Project<span className="text-red-500">*</span>
-                                    </label>
-                                    <textarea
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none resize-none"
-                                        rows={3}
-                                        placeholder="Enter project details"
-                                    />
-                                </div>
-                                <div className="flex items-center mb-6">
-                                    <input
-                                        type="checkbox"
-                                        id="opt_in"
-                                        className="mr-2"
-                                    />
-                                    <label htmlFor="opt_in" className="text-gray-700 text-sm">
-                                        Opt-in to STS Marketing Emails
-                                    </label>
-                                </div>
-                                <div className="flex items-center justify-start mt-8">
-                                    <button
-                                        type="submit"
-                                        className="bg-[#0069A9] hover:bg-[#005885] text-white font-normal py-2 px-20 rounded focus:outline-none focus:shadow-outline"
-                                    >
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    {/* Kolom kedua: lebar 2/12 - Replace with QuoteForm component */}
+                    <div className="w-full md:w-1/2 bg-[#F0F2F3]">
+                        <QuoteForm
+                            title="Get Quote"
+                            submitEndpoint="/api/quotes"
+                            successMessage="Thank you! Your quote request has been submitted."
+                            showTitle={true}
+                            className=""
+                            formId="quote"
+                        />
                     </div>
                 </section>
             </main>
-
             <Footer />
         </div>
     );

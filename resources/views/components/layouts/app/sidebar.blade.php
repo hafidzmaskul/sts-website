@@ -75,7 +75,9 @@
                 @endcan
                 @can('customers.view')
                     <flux:navlist.item icon="users" :href="route('admin.customers.index')"
-                        :current="request()->routeIs('admin.customers.*')" wire:navigate>{{ __('Customers') }}
+                        :current="request()->routeIs('admin.customers.*')" wire:navigate
+                        :class="request()->routeIs('admin.customers.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Customers') }}
                     </flux:navlist.item>
                 @endcan
             </flux:navlist.group>
