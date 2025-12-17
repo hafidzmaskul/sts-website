@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Customers;
 
-use App\Models\User;
+use App\Models\Customer;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +12,7 @@ class Index extends Component
 
     public string $search = '';
     public string $status = '';
+    public string $isRegistered = '';
 
     public function updatingSearch()
     {
@@ -23,30 +24,43 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function updatingIsRegistered()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $this->authorize('customers.view');
 
-        $customers = User::role('customer')
-            ->with('customer')
+        $customers = Customer::with('user')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                    $q->whereHas('user', function ($u) {
+                        $u->where('name', 'like', '%' . $this->search . '%')
+                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                    });
+                    $q->orWhere('phone', 'like', '%' . $this->search . '%')
+                        ->orWhere('city', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->status, function ($query) {
-                $query->whereHas('customer', function ($q) {
-                    $q->where('status', $this->status);
-                });
+                $query->where('status', $this->status);
+            })
+            ->when($this->isRegistered !== '', function ($query) {
+                if ($this->isRegistered === 'yes') {
+                    $query->whereNotNull('user_id');
+                } else {
+                    $query->whereNull('user_id');
+                }
             })
             ->latest()
             ->paginate(10);
 
         $stats = [
-            'total' => User::role('customer')->count(),
-            'active' => \App\Models\Customer::where('status', 'active')->count(),
-            'suspended' => \App\Models\Customer::where('status', 'suspended')->count(),
+            'total' => Customer::count(),
+            'active' => Customer::where('status', 'active')->count(),
+            'suspended' => Customer::where('status', 'suspended')->count(),
         ];
 
         return view('livewire.admin.customers.index', [

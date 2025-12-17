@@ -17,6 +17,8 @@ class Customer extends Model
         'postal_code',
         'country',
         'status',
+        'account_number',
+        'job_title',
     ];
 
     public function user(): BelongsTo

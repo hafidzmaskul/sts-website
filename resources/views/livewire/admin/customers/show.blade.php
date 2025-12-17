@@ -32,6 +32,18 @@
             <h2 class="text-lg font-semibold mb-4 dark:text-white">Profile Information</h2>
             <dl class="grid grid-cols-1 gap-4">
                 <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-zinc-400">Account Number</dt>
+                    <dd class="col-span-2 text-sm text-gray-900 dark:text-zinc-200">
+                        {{ $user->customer?->account_number ?? '-' }}
+                    </dd>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-zinc-400">Job Title</dt>
+                    <dd class="col-span-2 text-sm text-gray-900 dark:text-zinc-200">
+                        {{ $user->customer?->job_title ?? '-' }}
+                    </dd>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
                     <dt class="text-sm font-medium text-gray-500 dark:text-zinc-400">Phone</dt>
                     <dd class="col-span-2 text-sm text-gray-900 dark:text-zinc-200">
                         {{ $user->customer?->phone ?? '-' }}

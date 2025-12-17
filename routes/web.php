@@ -25,6 +25,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/payment/{slug}', 'payment')->name('payment');
     Route::get('become-customer', 'becomeCustomer')->name('become-customer');
     Route::get('sign-up', 'signUp')->name('sign-up');
+    Route::post('sign-up', [\App\Http\Controllers\CustomerRegistrationController::class, 'store'])->name('sign-up.store');
     Route::get('contact-us', 'contactUs')->name('contact-us');
     Route::get('training', 'training')->name('training');
     Route::get('commisioning', 'commisioning')->name('commisioning');
