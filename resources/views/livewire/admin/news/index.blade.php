@@ -170,89 +170,143 @@
             </form>
         </div>
     @else
-        <!-- Search -->
-        <div class="flex items-center gap-3">
-            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search news..."
-                class="w-full md:w-80 rounded-lg border px-3 py-2"
-                style="border:1px solid #D2D2D2; color:#000; placeholder-color: #D2D2D2;">
-        </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Card Header - Search -->
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <div class="relative w-full max-w-md">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="gray" stroke-width="2"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/>
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="Search news..."
+                        class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white text-black placeholder-gray-400 transition"
+                    >
+                </div>
+            </div>
 
-        <!-- Table -->
-        <div class="overflow-x-auto rounded-xl border">
-            <table class="min-w-full text-sm">
-                <thead class="text-left">
-                    <tr>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Image</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Title</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Status</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Categories</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Published At</th>
-                        <th class="px-6 py-3 font-medium uppercase tracking-wider" style="color:#AEAEAE;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($news as $article)
-                        <tr style="color:#000;">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($article->image_path)
-                                    <img src="{{ Storage::url($article->image_path) }}" class="h-12 w-auto object-cover rounded">
-                                @else
-                                    <span style="color:#D2D2D2;">No Image</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium">{{ Str::limit($article->title, 40) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 py-1 text-xs rounded-full
-                                        @if($article->status === 'published') bg-green-100 text-green-800
-                                        @elseif($article->status === 'draft') bg-gray-100 text-gray-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                    {{ ucfirst($article->status) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap" style="color:#000;">
-                                <div class="flex flex-wrap gap-1">
-                                    @foreach($article->categories as $cat)
-                                        <span
-                                            class="px-2 py-0.5 text-xs bg-gray-100 rounded">{{ $cat->name }}</span>
-                                    @endforeach
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap" style="color:#000;">
-                                {{ $article->published_at ? $article->published_at->format('M d, Y H:i') : '-' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2 flex items-center">
-                                @can('news.edit')
-                                    <button wire:click="edit({{ $article->id }})"
-                                        class="border border-[#AEAEAE] bg-white rounded p-1 flex items-center justify-center"
-                                        style="width:28px;height:28px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#000000;" viewBox="0 0 1200 1200"><path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path></svg>
-                                    </button>
-                                @endcan
-                                @can('news.delete')
-                                    <button wire:confirm="Are you sure you want to delete this article?"
-                                        wire:click="delete({{ $article->id }})"
-                                        class="border border-[#AEAEAE] bg-white rounded p-1 flex items-center justify-center"
-                                        style="width:28px;height:28px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#000000;" viewBox="0 0 12 12">
-                                            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                            <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                        </svg>
-                                    </button>
-                                @endcan
-                            </td>
-                        </tr>
-                    @empty
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y text-sm">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center" style="color:#D2D2D2;">No news articles found.</td>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Image</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Title</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Status</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Categories</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Published At</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold text-right">Actions</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($news as $article)
+                            <tr class="hover:bg-gray-50 transition">
+                                <!-- Image -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($article->image_path)
+                                        <img src="{{ Storage::url($article->image_path) }}" alt="" class="h-12 w-12 object-cover rounded-lg bg-gray-100" />
+                                    @else
+                                        <span class="inline-flex items-center h-12 w-12 justify-center rounded-lg bg-gray-100 text-gray-400 text-xs">
+                                            <svg class="w-6 h-6" fill="none" stroke="gray" stroke-width="1.5" viewBox="0 0 24 24">
+                                              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5A2.5 2.5 0 015.5 3h13A2.5 2.5 0 0121 5.5v13a2.5 2.5 0 01-2.5 2.5h-13A2.5 2.5 0 013 18.5v-13z" />
+                                              <path stroke-linecap="round" stroke-linejoin="round" d="M3 17.5l7-7a2.121 2.121 0 012.828 0l8.672 8.672m-14.5-1.172v1.5a.5.5 0 00.5.5h1.5M15 11.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                                            </svg>
+                                        </span>
+                                    @endif
+                                </td>
+                                <!-- Title -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-black">
+                                        {{ Str::limit($article->title, 40) }}
+                                    </div>
+                                    {{-- Optional subtitle/info --}}
+                                    {{-- <div class="text-xs text-gray-500">{{ $article->slug }}</div> --}}
+                                </td>
+                                <!-- Status -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium
+                                        @if($article->status === 'published') bg-green-100 text-black
+                                        @elseif($article->status === 'draft') bg-gray-100 text-black
+                                        @else bg-red-100 text-black @endif">
+                                        <span class="inline-block w-2 h-2 rounded-full mr-1
+                                            @if($article->status === 'published') bg-green-500
+                                            @elseif($article->status === 'draft') bg-gray-400
+                                            @else bg-red-500 @endif">
+                                        </span>
+                                        {{ ucfirst($article->status) }}
+                                    </span>
+                                </td>
+                                <!-- Categories -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($article->categories as $cat)
+                                            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-black rounded text-xs font-medium">
+                                                {{ $cat->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <!-- Published At -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-black">
+                                        {{ $article->published_at ? $article->published_at->format('M d, Y H:i') : '-' }}
+                                    </div>
+                                    {{-- <div class="text-xs text-gray-500">Additional info</div> --}}
+                                </td>
+                                <!-- Actions -->
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex justify-end gap-2">
+                                        @can('news.edit')
+                                            <button wire:click="edit({{ $article->id }})"
+                                                class="inline-flex items-center justify-center p-1.5 rounded bg-white border border-gray-200 hover:bg-blue-50 hover:text-blue-600 transition"
+                                                title="Edit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" stroke="gray" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M16.862 4.487a2.063 2.063 0 0 1 2.92 2.92l-9.228 9.23-4.184 1.264 1.264-4.183 9.228-9.23z"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                        @can('news.delete')
+                                            <button wire:confirm="Are you sure you want to delete this article?"
+                                                wire:click="delete({{ $article->id }})"
+                                                class="inline-flex items-center justify-center p-1.5 rounded bg-white border border-gray-200 hover:bg-red-50 hover:text-red-600 transition"
+                                                title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="gray" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 7v12a2 2 0 002 2h8a2 2 0 002-2V7M4 7h16M10 11v6M14 11v6M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                                </svg>
+                                            </button>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6">
+                                    <div class="flex flex-col items-center justify-center py-16">
+                                        <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="gray" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 8v4l3 3m7 1a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <div class="text-lg font-semibold text-black mb-1">No news articles found</div>
+                                        <div class="text-sm text-black">Try adjusting your search or filter to find results.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="mt-4">
-            {{ $news->links() }}
+            <!-- Pagination Footer -->
+            <div class="px-6 py-3 border-t bg-gray-50 rounded-b-xl">
+                {{ $news->links() }}
+            </div>
         </div>
     @endif
 </div>

@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import QuoteForm from '../components/QuoteForm';
 
 
 
@@ -209,7 +210,7 @@ export default function Commisioning({ services = [] }) {
                         <img src="/assets/resource-cofig.png" className='h-full' alt="" />
                     </div>
                 </section>
-                <section className="container mx-auto flex flex-row  my-10">
+                <section id='form-quote' className="container md:px-20 px-10 mx-auto flex flex-row  my-10">
                     {/* Kolom pertama: lebar 10/12 */}
                     <div className="w-full md:w-1/2 flex flex-col  h-auto">
                         <div className="flex flex-col items-center text-center px-4">
@@ -242,111 +243,16 @@ export default function Commisioning({ services = [] }) {
                             </div>
                         </div>
                     </div>
-                    {/* Kolom kedua: lebar 2/12 */}
-                    <div className="w-full md:w-1/2 bg-[#F0F2F3]" >
-                        <h1 className='text-2xl md:text-3xl font-bold mt-20 mb-10 text-center'>Get Quote</h1>
-                        <div className=" p-10">
-                            <form className="px-8 pt-6 pb-8 mb-4 bg-white">
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        First Name<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your first name"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Surname<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your surname"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Company Name<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your company name"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Email Address<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="email"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your email address"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Phone Number<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your phone number"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Country<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your country"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Postal Code<span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-                                        placeholder="Enter your postal code"
-                                    />
-                                </div>
-                                <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Details of your Project<span className="text-red-500">*</span>
-                                    </label>
-                                    <textarea
-                                        className="appearance-none bg-transparent border-b w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none resize-none"
-                                        rows={3}
-                                        placeholder="Enter project details"
-                                    />
-                                </div>
-                                <div className="flex items-center mb-6">
-                                    <input
-                                        type="checkbox"
-                                        id="opt_in"
-                                        className="mr-2"
-                                    />
-                                    <label htmlFor="opt_in" className="text-gray-700 text-sm">
-                                        Opt-in to STS Marketing Emails
-                                    </label>
-                                </div>
-                                <div className="flex items-center justify-start mt-8">
-                                    <button
-                                        type="submit"
-                                        className="bg-[#0069A9] hover:bg-[#005885] text-white font-normal py-2 px-20 rounded focus:outline-none focus:shadow-outline"
-                                    >
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    {/* Kolom kedua: lebar 2/12 - Replace with QuoteForm component */}
+                    <div className="w-full md:w-1/2 bg-[#F0F2F3]">
+                        <QuoteForm
+                            title="Get Quote"
+                            submitEndpoint="/api/quotes"
+                            successMessage="Thank you! Your quote request has been submitted."
+                            showTitle={true}
+                            className=""
+                            formId="quote"
+                        />
                     </div>
                 </section>
             </main>

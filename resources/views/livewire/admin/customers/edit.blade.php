@@ -1,39 +1,41 @@
-<div class="p-6 space-y-6 dark:bg-zinc-900">
+<div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Customer</h1>
+        <h1 class="text-2xl font-bold text-[#000]">Edit Customer</h1>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow dark:bg-zinc-900 dark:border dark:border-zinc-700">
+    <div class="p-6 rounded-2xl shadow">
         <form wire:submit.prevent="save" class="space-y-5">
-            <h2 class="text-lg font-semibold border-b pb-2 mb-4 dark:text-white dark:border-zinc-700">User Account</h2>
+            <h2 class="text-lg font-semibold border-b border-[#AEAEAE] pb-2 mb-4 text-[#AEAEAE]">User Account</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Name</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Name</label>
                     <input type="text" wire:model="name"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Name">
                     @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Email -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Email</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Email</label>
                     <input type="email" wire:model="email"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Email">
                     @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 
-            <h2 class="text-lg font-semibold border-b pb-2 mb-4 mt-8 dark:text-white dark:border-zinc-700">Profile
+            <h2 class="text-lg font-semibold border-b border-[#AEAEAE] pb-2 mb-4 mt-8 text-[#AEAEAE]">Profile
                 Details</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Status -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Status</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Status</label>
                     <select wire:model="status"
-                        class="w-full md:w-1/2 rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full md:w-1/2 rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]">
                         <option value="active">Active</option>
                         <option value="suspended">Suspended</option>
                     </select>
@@ -42,50 +44,55 @@
 
                 <!-- Phone -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Phone</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Phone</label>
                     <input type="text" wire:model="phone"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Phone">
                     @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Postal Code -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Postal Code</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Postal Code</label>
                     <input type="text" wire:model="postal_code"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Postal Code">
                     @error('postal_code') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Address -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Address</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Address</label>
                     <textarea wire:model="address" rows="2"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"></textarea>
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Address"></textarea>
                     @error('address') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- City -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">City</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">City</label>
                     <input type="text" wire:model="city"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="City">
                     @error('city') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Country -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-zinc-100 mb-1">Country</label>
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Country</label>
                     <input type="text" wire:model="country"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                        class="w-full rounded-lg border border-[#AEAEAE] px-3 py-2 text-[#000] placeholder-[#000]"
+                        placeholder="Country">
                     @error('country') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 
             <div class="mt-8 flex justify-end space-x-3">
                 <a href="{{ route('admin.customers.index') }}"
-                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100">Cancel</a>
+                    class="px-4 py-2 border border-[#0079C2] rounded-lg text-[#0079C2] bg-white hover:bg-[#f0f8ff] transition w-full md:w-auto text-center">Cancel</a>
                 <button type="submit"
-                    class="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 dark:bg-white dark:text-zinc-900">Save
+                    class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">Save
                     Changes</button>
             </div>
         </form>

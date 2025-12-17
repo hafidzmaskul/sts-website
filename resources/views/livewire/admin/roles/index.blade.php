@@ -10,74 +10,115 @@
         @endcan
     </div>
 
-    <div class="flex items-center gap-3">
-        <input
-            type="text"
-            wire:model.live="search"
-            placeholder="Search roles..."
-            class="w-full md:w-80 rounded-lg border border-[#D2D2D2] px-3 py-2 placeholder-[#D2D2D2] focus:outline-none"
-        />
-    </div>
-
-    <div class="overflow-x-auto rounded-xl border border-[#D2D2D2]">
-        <table class="min-w-full text-sm">
-            <thead style="color: #000;" class="text-left">
-                <tr>
-                    <th class="px-4 py-3">Name</th>
-                    <th class="px-4 py-3">Permissions</th>
-                    <th class="px-4 py-3 w-40">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($roles as $role)
-                    <tr class="border-t border-[#D2D2D2]">
-                        <td class="px-4 py-3 font-medium text-black">{{ $role->name }}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($role->permissions as $p)
-                                    <span class="px-2 py-0.5 rounded border border-[#D2D2D2] text-xs text-black">{{ $p->name }}</span>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center gap-2">
-                                @can('roles.edit')
-                                <button
-                                    wire:click="edit({{ $role->id }})"
-                                    class="px-2 py-1 rounded border border-[#0079C2] text-[#0079C2] bg-transparent flex items-center hover:cursor-pointer transition"
-                                    title="Edit"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#000000" viewBox="0 0 1200 1200">
-                                        <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                    </svg>
-                                </button>
-                                @endcan
-                                @can('roles.delete')
-                                <button
-                                    wire:click="delete({{ $role->id }})"
-                                    onclick="return confirm('Delete this role?')"
-                                    class="px-2 py-1 rounded border border-red-600 text-red-600 bg-transparent flex items-center hover:cursor-pointer transition"
-                                    title="Delete"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#000000" viewBox="0 0 12 12">
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                        <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                    </svg>
-                                </button>
-                                @endcan
-                            </div>
-                        </td>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <!-- Header: Search -->
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <div class="relative max-w-full md:max-w-xs">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <!-- Search Icon SVG -->
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </span>
+                <input
+                    type="text"
+                    wire:model.live="search"
+                    placeholder="Search roles..."
+                    class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition"
+                />
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th scope="col" class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                            Permissions
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap text-right w-40">
+                            Actions
+                        </th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="px-4 py-6 text-center" style="color: #000;">No roles found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($roles as $role)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ $role->name }}</div>
+                                {{-- Optionally subtext here --}}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($role->permissions as $p)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
+                                            {{ $p->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <div class="flex justify-end gap-2">
+                                    @can('roles.edit')
+                                    <button
+                                        wire:click="edit({{ $role->id }})"
+                                        class="inline-flex items-center p-2 rounded-full text-blue-600 hover:bg-blue-50 transition"
+                                        title="Edit"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828A2 2 0 019 17v0a2 2 0 01-2-2v0a2 2 0 012-2zm0 0L5 19" />
+                                        </svg>
+                                    </button>
+                                    @endcan
+                                    @can('roles.delete')
+                                    <button
+                                        wire:click="delete({{ $role->id }})"
+                                        onclick="return confirm('Delete this role?')"
+                                        class="inline-flex items-center p-2 rounded-full text-red-600 hover:bg-red-50 transition"
+                                        title="Delete"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-12">
+                                <div class="flex flex-col items-center justify-center">
+                                    <svg class="w-16 h-16 text-gray-200 mb-4" fill="none" stroke="currentColor" stroke-width="1.5"
+                                        viewBox="0 0 64 64">
+                                        <rect x="12" y="20" width="40" height="28" rx="4" fill="currentColor" />
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                                              d="M24 28h16M24 36h10"/>
+                                    </svg>
+                                    <div class="text-lg font-semibold text-gray-700 mb-1">No roles found</div>
+                                    <div class="text-sm text-gray-400">Try adjusting your search or create a new role.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination/ Footer -->
+        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
+            {{ $roles->links() }}
+        </div>
     </div>
-
-    <div>{{ $roles->links() }}</div>
 
     {{-- Modal --}}
     @if($showForm)
