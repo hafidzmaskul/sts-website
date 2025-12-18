@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Brand;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,11 +40,13 @@ class PageController
             ->select('pc.*', DB::raw('COUNT(pcp.product_id) as products_count'))
             ->groupBy('pc.id')
             ->get();
+        $brand =  Brand::get(); //is_active
 
         return Inertia::render('Landing', [
             'banners' => $banners,
             'featured' => $featured,
-            'categories' => $categories
+            'categories' => $categories,
+            'brand' => $brand
         ]);
     }
 
@@ -132,7 +136,9 @@ class PageController
         return Inertia::render('Products', [
             'products' => $products,
             'baseProducts' => $baseProducts,
-            'productCategory' => $productCategory
+            'productCategory' => $productCategory,
+            'logged' => Auth::check(),
+
         ]);
     }
 
@@ -148,6 +154,8 @@ class PageController
         return Inertia::render('ProductDetail', [
             'product' => $product,
             'products' => $relatedProducts,
+            'logged' => Auth::check(),
+
         ]);
     }
 

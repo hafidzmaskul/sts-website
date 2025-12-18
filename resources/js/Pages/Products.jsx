@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Header from '../landing/Header';
@@ -61,11 +61,13 @@ const transformProduct = (product, index = 0) => {
         series: product.series || `Model ${product.slug || product.id}`,
         categoryIds,
         badge,
+        is_sign_up_for_pricing: product.is_sign_up_for_pricing,
     };
 };
 
-export default function Products({ products = [], baseProducts = [], productCategory = [] }) {
-    console.log(products)
+export default function Products({ products = [], baseProducts = [], productCategory = [], logged }) {
+    console.log(logged)
+    console.log('DEBUG PRODUCTS:', products);
     const allProducts = useMemo(() => {
         const sourceProducts = Array.isArray(products) && products.length > 0
             ? products
@@ -374,66 +376,66 @@ export default function Products({ products = [], baseProducts = [], productCate
                                                     key={category.id}
                                                     className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0"
                                                 >
-                                                <div className="flex items-center justify-between">
-                                                    <label className="flex items-center gap-2 text-sm font-medium text-[#232323]">
-                                                        {/* Parent category checkbox */}
-                                                        <input
-                                                            type="checkbox"
-                                                            className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
-                                                            checked={isParentChecked}
-                                                            ref={el => {
-                                                                if (el) {
-                                                                    el.indeterminate = isPartialChecked;
-                                                                }
-                                                            }}
-                                                            onChange={() => handleToggleCategorySelect(category.id)}
-                                                        />
-                                                        <span>{category.name}</span>
-                                                    </label>
-                                                    {/* Show chevron & expand only if there are children */}
-                                                    {category.children && category.children.length > 0 && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleToggleCategoryExpand(category.id)}
-                                                            className="ml-2"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 0 24 24"
-                                                                className={`h-4 w-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                                    <div className="flex items-center justify-between">
+                                                        <label className="flex items-center gap-2 text-sm font-medium text-[#232323]">
+                                                            {/* Parent category checkbox */}
+                                                            <input
+                                                                type="checkbox"
+                                                                className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
+                                                                checked={isParentChecked}
+                                                                ref={el => {
+                                                                    if (el) {
+                                                                        el.indeterminate = isPartialChecked;
+                                                                    }
+                                                                }}
+                                                                onChange={() => handleToggleCategorySelect(category.id)}
+                                                            />
+                                                            <span>{category.name}</span>
+                                                        </label>
+                                                        {/* Show chevron & expand only if there are children */}
+                                                        {category.children && category.children.length > 0 && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleToggleCategoryExpand(category.id)}
+                                                                className="ml-2"
                                                             >
-                                                                <path
-                                                                    fill="currentColor"
-                                                                    d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
-                                                                />
-                                                            </svg>
-                                                        </button>
-                                                    )}
-                                                </div>
-                                                {/* Children (subcategories) */}
-                                                {isExpanded && category.children && category.children.length > 0 && (
-                                                    <div className="mt-3 space-y-2 ml-4">
-                                                        {category.children.map((child) => {
-                                                            const isChecked = selectedSubCategories.includes(child.id);
-                                                            return (
-                                                                <label
-                                                                    key={child.id}
-                                                                    className="flex cursor-pointer items-center gap-2 text-sm text-gray-700"
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 24 24"
+                                                                    className={`h-4 w-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                                                                 >
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
-                                                                        checked={isChecked}
-                                                                        onChange={() =>
-                                                                            handleToggleSubCategorySelect(child.id)
-                                                                        }
+                                                                    <path
+                                                                        fill="currentColor"
+                                                                        d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
                                                                     />
-                                                                    <span>{child.name}</span>
-                                                                </label>
-                                                            );
-                                                        })}
+                                                                </svg>
+                                                            </button>
+                                                        )}
                                                     </div>
-                                                )}
+                                                    {/* Children (subcategories) */}
+                                                    {isExpanded && category.children && category.children.length > 0 && (
+                                                        <div className="mt-3 space-y-2 ml-4">
+                                                            {category.children.map((child) => {
+                                                                const isChecked = selectedSubCategories.includes(child.id);
+                                                                return (
+                                                                    <label
+                                                                        key={child.id}
+                                                                        className="flex cursor-pointer items-center gap-2 text-sm text-gray-700"
+                                                                    >
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
+                                                                            checked={isChecked}
+                                                                            onChange={() =>
+                                                                                handleToggleSubCategorySelect(child.id)
+                                                                            }
+                                                                        />
+                                                                        <span>{child.name}</span>
+                                                                    </label>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             );
                                         })
@@ -524,6 +526,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                                         badge={product.badge}
                                                         priceLabel={formatPrice(product.price)}
                                                         slug={product.slug}
+                                                        showPricing={product.is_sign_up_for_pricing && !logged}
                                                     />
                                                 ))}
                                             </div>
