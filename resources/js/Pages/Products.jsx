@@ -45,7 +45,7 @@ const transformProduct = (product, index = 0) => {
 
     const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
 
-    const categoryIds = Array.isArray(product.categories) 
+    const categoryIds = Array.isArray(product.categories)
         ? product.categories.map(cat => cat?.id).filter(Boolean)
         : [];
 
@@ -65,23 +65,24 @@ const transformProduct = (product, index = 0) => {
 };
 
 export default function Products({ products = [], baseProducts = [], productCategory = [] }) {
+    console.log(products)
     const allProducts = useMemo(() => {
-        const sourceProducts = Array.isArray(products) && products.length > 0 
-            ? products 
+        const sourceProducts = Array.isArray(products) && products.length > 0
+            ? products
             : (Array.isArray(baseProducts) ? baseProducts : []);
-        
+
         const transformedProducts = sourceProducts
             .map((product, index) => transformProduct(product, index))
             .filter(Boolean);
-        
+
         return transformedProducts;
     }, [products, baseProducts]);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('featured');
-    const [expandedCategories, setExpandedCategories] = useState(() => 
-        Array.isArray(productCategory) 
+    const [expandedCategories, setExpandedCategories] = useState(() =>
+        Array.isArray(productCategory)
             ? productCategory.map((category) => category?.id).filter(Boolean)
             : []
     );
@@ -145,20 +146,20 @@ export default function Products({ products = [], baseProducts = [], productCate
         if (selectedCategories.length > 0 || selectedSubCategories.length > 0) {
             const parentSet = new Set(selectedCategories);
             const childSet = new Set(selectedSubCategories);
-            
+
             productsResult = productsResult.filter((product) => {
                 const productCategoryIds = product.categoryIds || [];
-                
+
                 if (productCategoryIds.length === 0) {
                     return false;
                 }
-                
-                const matchesParent = parentSet.size === 0 || 
+
+                const matchesParent = parentSet.size === 0 ||
                     productCategoryIds.some(catId => parentSet.has(catId));
-                
-                const matchesChild = childSet.size === 0 || 
+
+                const matchesChild = childSet.size === 0 ||
                     productCategoryIds.some(subCatId => childSet.has(subCatId));
-                
+
                 return matchesParent && matchesChild;
             });
         }

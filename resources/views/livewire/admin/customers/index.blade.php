@@ -257,7 +257,7 @@
                                         </a>
                                     @endcan
                                     @can('customers.delete')
-                                        <form action="{{ route('admin.customers.destroy', $user) }}" method="POST" class="inline">
+                                        {{-- <form action="{{ route('admin.customers.destroy', $user) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -269,7 +269,7 @@
                                                         d="M6 8v8m4-8v8m4-8v8M3 6h14m-1 0l1-2m-2 2V3a1 1 0 00-1-1h-4a1 1 0 00-1 1v3" />
                                                 </svg>
                                             </button>
-                                        </form>
+                                        </form> --}}
                                     @endcan
                                 </div>
                             </td>

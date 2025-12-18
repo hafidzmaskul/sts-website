@@ -30,6 +30,8 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('training', 'training')->name('training');
     Route::get('commisioning', 'commisioning')->name('commisioning');
     Route::get('system-design', 'systemDesign')->name('system-design');
+    Route::get('login-page', 'login')->name('login-page');
+
 });
 
 Route::middleware(['auth'])->group(function () {
