@@ -15,3 +15,14 @@ Route::post('/sign-up', [\App\Http\Controllers\CustomerRegistrationController::c
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 
+// Authentication Routes
+Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
+    Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+});
+
+
