@@ -22,34 +22,47 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     public bool $remember = false;
 
+    public bool $loading = false;
+    public string $error = '';
+
     /**
      * Handle an incoming authentication request.
      */
     public function login(): void
     {
-        $this->validate();
+        $this->loading = true;
+        $this->error = '';
 
-        $this->ensureIsNotRateLimited();
+        try {
+            $this->validate();
 
-        $user = $this->validateCredentials();
+            $this->ensureIsNotRateLimited();
 
-        if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
-            Session::put([
-                'login.id' => $user->getKey(),
-                'login.remember' => $this->remember,
-            ]);
+            $user = $this->validateCredentials();
 
-            $this->redirect(route('two-factor.login'), navigate: true);
+            if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
+                Session::put([
+                    'login.id' => $user->getKey(),
+                    'login.remember' => $this->remember,
+                ]);
 
-            return;
+                $this->redirect(route('two-factor.login'), navigate: true);
+                $this->loading = false;
+                return;
+            }
+
+            Auth::login($user, $this->remember);
+
+            RateLimiter::clear($this->throttleKey());
+            Session::regenerate();
+
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        } catch (ValidationException $e) {
+            $this->error = $e->validator->errors()->first();
+            // Optional: handle showing error
+        } finally {
+            $this->loading = false;
         }
-
-        Auth::login($user, $this->remember);
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 
     /**
@@ -106,6 +119,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
+    @if($error)
+        <div class="text-center text-red-500 text-sm">{{ $error }}</div>
+    @endif
+
     <form method="POST" wire:submit="login" class="flex flex-col gap-6">
         <!-- Email Address -->
         <flux:input
@@ -116,6 +133,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             autofocus
             autocomplete="email"
             placeholder="email@example.com"
+            :disabled="$loading"
         />
 
         <!-- Password -->
@@ -128,6 +146,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 autocomplete="current-password"
                 :placeholder="__('Password')"
                 viewable
+                :disabled="$loading"
             />
 
             @if (Route::has('password.request'))
@@ -138,11 +157,18 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
+        <flux:checkbox wire:model="remember" :label="__('Remember me')" :disabled="$loading" />
 
         <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
-                {{ __('Log in') }}
+            <flux:button
+                variant="primary"
+                type="submit"
+                class="w-full"
+                data-test="login-button"
+                :disabled="$loading"
+                :loading="$loading"
+            >
+                {{ $loading ? __('Logging in...') : __('Log in') }}
             </flux:button>
         </div>
     </form>
