@@ -6,14 +6,26 @@ const formatPrice = (price) => {
   }
 
   if (typeof price === 'number') {
-    return new Intl.NumberFormat('id-ID', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'IDR',
+      currency: 'USD',
       maximumFractionDigits: 0,
     }).format(price);
   }
 
   return price;
+};
+
+// Fungsi untuk menentukan warna badge berdasarkan nilai badge
+const getBadgeBgColor = (badge) => {
+  if (typeof badge === 'string') {
+    if (badge.toLowerCase() === 'new') {
+      return '#01AD5A';
+    } else if (badge.toLowerCase() === 'sales') {
+      return '#F5813F';
+    }
+  }
+  return '#0F172A'; // default
 };
 
 export default function ProductCard({
@@ -22,9 +34,14 @@ export default function ProductCard({
   image,
   badge = 'New',
 }) {
+  const badgeBgColor = getBadgeBgColor(badge);
+
   return (
     <article className="group relative h-full overflow-hidden rounded-3xl bg-white px-5  pb-6 pt-5 transition-transform duration-500 hover:-translate-y-2">
-      <div className="absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+      <div
+        className="absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
+        style={{ backgroundColor: badgeBgColor }}
+      >
         {badge}
       </div>
 

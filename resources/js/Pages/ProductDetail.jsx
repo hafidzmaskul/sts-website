@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
+import LoginModal from '../components/LoginModal';
 
 const formatPrice = (price) => {
     if (!price) {
@@ -63,7 +64,10 @@ const ImageZoom = ({ src, alt, className }) => {
     );
 };
 
-export default function ProductDetail({ product, products = [] }) {
+export default function ProductDetail({ product, products = [], logged }) {
+
+
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     if (!product || !product.id) {
         return (
             <div className="min-h-screen flex flex-col">
@@ -97,12 +101,21 @@ export default function ProductDetail({ product, products = [] }) {
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [openAccordion, setOpenAccordion] = useState('description');
 
+    // Set specs with price conditional
     const specs = useMemo(() => [
         { label: 'Brand', value: data.brand_name || '-' },
         { label: 'Status', value: data.status === 'active' ? 'Ready Stock' : 'Unavailable' },
-        { label: 'Harga', value: formatPrice(data.base_price) },
+        {
+            label: 'Harga',
+            value:
+                data.is_sign_up_for_pricing
+                    ? (logged
+                        ? formatPrice(data.base_price)
+                        : <span className="italic text-gray-400">Login untuk melihat harga</span>)
+                    : formatPrice(data.base_price),
+        },
         { label: 'Exclusive', value: data.is_exclusive ? 'Yes' : 'No' },
-    ], [data.brand_name, data.status, data.base_price, data.is_exclusive]);
+    ], [data.brand_name, data.status, data.base_price, data.is_exclusive, data.is_sign_up_for_pricing, logged]);
 
     const accordionItems = useMemo(() => [
         {
@@ -163,7 +176,11 @@ export default function ProductDetail({ product, products = [] }) {
 
     return (
         <div className="min-h-screen flex flex-col ">
-           <Head>
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+            />
+            <Head>
                 {/* The title will be managed by Inertia */}
                 <title>{data.seo_title ?? 'Product Detail'}</title>
 
@@ -249,15 +266,30 @@ export default function ProductDetail({ product, products = [] }) {
                                 </h1>
                             </div>
                             <div className="space-y-3">
-                                <p className="text-md md:text-xl font-semibold font-inter">
-                                    {formatPrice(data.base_price)}
-                                </p>
+                                {/* Harga: show logic for login and is_sign_up_for_pricing */}
+                                {data.is_sign_up_for_pricing ? (
+                                    logged ? (
+                                        <p className="text-md md:text-xl font-semibold font-inter">
+                                            {formatPrice(data.base_price)}
+                                        </p>
+                                    ) : (
+                                        <p className="text-md  font-semibold font-inter text-black">
+                                            Sign in for your Pricing
+                                        </p>
+                                    )
+                                ) : (
+                                    <p className="text-md md:text-xl font-semibold font-inter">
+                                        {formatPrice(data.base_price)}
+                                    </p>
+                                )}
                             </div>
-                            {data.is_sign_up_for_pricing && (
+                            {/* Show Sign In button only if is_sign_up_for_pricing=true and not logged in */}
+                            {data.is_sign_up_for_pricing && !logged && (
                                 <div className="flex flex-wrap gap-3">
                                     <button
                                         type="button"
                                         className="inline-flex items-center justify-center rounded-xl bg-[#0079C2] px-20 py-3 text-sm font-light text-white hover:bg-[#005a91] transition"
+                                        onClick={() => setIsLoginModalOpen(true)}
                                     >
                                         Sign In
                                     </button>
@@ -345,7 +377,9 @@ export default function ProductDetail({ product, products = [] }) {
                                                             {item.content.map((spec) => (
                                                                 <div key={spec.label} className="flex flex-col">
                                                                     <dt className="text-gray-500">{spec.label}</dt>
-                                                                    <dd className="font-medium text-[#232323]">{spec.value}</dd>
+                                                                    <dd className="font-medium text-[#232323]">
+                                                                        {spec.value}
+                                                                    </dd>
                                                                 </div>
                                                             ))}
                                                         </dl>

@@ -3,15 +3,15 @@
         <h1 class="text-2xl font-bold" style="color: #000;">Edit Brand</h1>
     </div>
 
-    <div class="rounded-xl shadow p-6 border border-gray-200 bg-white dark:bg-zinc-800 dark:border-zinc-700">
+    <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
         <form wire:submit="update" class="space-y-6">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <!-- Name -->
                 <div class="col-span-1">
                     <label for="name" class="block text-sm font-medium mb-1" style="color:#000;">Name</label>
                     <input type="text" wire:model.live.debounce.500ms="name" id="name"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-900 dark:text-zinc-100"
-                        style="border: 1px solid #D2D2D2;" placeholder="Brand Name">
+                        class="w-full rounded-lg border px-3 py-2"
+                        style="border: 1px solid #D2D2D2; color: #000;" placeholder="Brand Name">
                     @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -19,8 +19,8 @@
                 <div class="col-span-1">
                     <label for="slug" class="block text-sm font-medium mb-1" style="color:#000;">Slug</label>
                     <input type="text" wire:model="slug" id="slug"
-                        class="w-full rounded-lg border px-3 py-2 bg-gray-50 dark:bg-zinc-800 dark:text-zinc-400"
-                        style="border: 1px solid #D2D2D2;" readonly>
+                        class="w-full rounded-lg border px-3 py-2 bg-gray-50"
+                        style="border: 1px solid #D2D2D2; color: #000;" readonly>
                     @error('slug') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -30,20 +30,20 @@
                     <div class="mt-1 flex items-center space-x-4">
                         @if ($image)
                             <img src="{{ $image->temporaryUrl() }}"
-                                class="h-20 w-20 object-cover rounded-md border border-gray-300 dark:border-zinc-600">
+                                class="h-20 w-20 object-cover rounded-md border border-gray-300">
                         @elseif($existingImage)
                             <img src="{{ Storage::url($existingImage) }}"
-                                class="h-20 w-20 object-cover rounded-md border border-gray-300 dark:border-zinc-600">
+                                class="h-20 w-20 object-cover rounded-md border border-gray-300">
                         @else
                             <div
-                                class="h-20 w-20 rounded-md border-2 border-dashed border-gray-300 dark:border-zinc-600 flex items-center justify-center text-gray-400">
+                                class="h-20 w-20 rounded-md border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400">
                                 <span>Preview</span>
                             </div>
                         @endif
 
                         <div class="relative">
                             <input type="file" wire:model="image"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-zinc-700 dark:file:text-zinc-300">
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                             <div wire:loading wire:target="image"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3">
                                 <span class="text-indigo-500 text-xs">Uploading...</span>
@@ -58,8 +58,8 @@
                     <label for="description" class="block text-sm font-medium mb-1"
                         style="color:#000;">Description</label>
                     <textarea wire:model="description" id="description" rows="3"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-900 dark:text-zinc-100"
-                        style="border: 1px solid #D2D2D2;"></textarea>
+                        class="w-full rounded-lg border px-3 py-2"
+                        style="border: 1px solid #D2D2D2; color: #000;"></textarea>
                     @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -67,8 +67,8 @@
                 <div class="col-span-2">
                     <label for="website" class="block text-sm font-medium mb-1" style="color:#000;">Website URL</label>
                     <input type="url" wire:model="website" id="website"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-900 dark:text-zinc-100"
-                        style="border: 1px solid #D2D2D2;" placeholder="https://example.com">
+                        class="w-full rounded-lg border px-3 py-2"
+                        style="border: 1px solid #D2D2D2; color: #000;" placeholder="https://example.com">
                     @error('website') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -77,8 +77,8 @@
                     <label for="sort_order" class="block text-sm font-medium mb-1" style="color:#000;">Sort
                         Order</label>
                     <input type="number" wire:model="sort_order" id="sort_order"
-                        class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-900 dark:text-zinc-100"
-                        style="border: 1px solid #D2D2D2;">
+                        class="w-full rounded-lg border px-3 py-2"
+                        style="border: 1px solid #D2D2D2; color: #000;">
                     @error('sort_order') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -86,8 +86,8 @@
                 <div class="col-span-1 flex items-end pb-2">
                     <div class="flex items-center h-10">
                         <input wire:model="is_active" id="is_active" type="checkbox"
-                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded dark:border-zinc-700 dark:bg-zinc-900">
-                        <label for="is_active" class="ml-2 block text-sm font-medium text-gray-700 dark:text-zinc-300">
+                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <label for="is_active" class="ml-2 block text-sm font-medium text-gray-700">
                             Active
                         </label>
                     </div>
@@ -96,7 +96,7 @@
 
             <div class="flex justify-end gap-2 pt-4">
                 <a href="{{ route('admin.brands.index') }}"
-                    class="mr-3 inline-flex justify-center rounded-lg border border-[#0079C2] text-[#0079C2] px-4 py-2 font-semibold hover:cursor-pointer transition w-full md:w-auto bg-white dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600">
+                    class="mr-3 inline-flex justify-center rounded-lg border border-[#0079C2] text-[#0079C2] px-4 py-2 font-semibold hover:cursor-pointer transition w-full md:w-auto bg-white">
                     Cancel
                 </a>
                 <button type="submit"
