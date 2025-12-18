@@ -111,6 +111,26 @@
                 </flux:navlist.group>
             @endcanany
 
+            <!-- Sales Group -->
+            @canany(['quotes.view', 'transactions.view'])
+                <flux:navlist.group :heading="__('Sales')" class="grid">
+                    @can('quotes.view')
+                        <flux:navlist.item icon="currency-dollar" :href="route('admin.quotes.index')"
+                            :current="request()->routeIs('admin.quotes.*')" wire:navigate
+                            :class="request()->routeIs('admin.quotes.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Quotes') }}
+                        </flux:navlist.item>
+                    @endcan
+                    {{-- @can('transactions.view') --}}
+                    <flux:navlist.item icon="banknotes" :href="route('admin.transactions.index')"
+                        :current="request()->routeIs('admin.transactions.*')" wire:navigate
+                        :class="request()->routeIs('admin.transactions.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Transactions') }}
+                    </flux:navlist.item>
+                    {{-- @endcan --}}
+                </flux:navlist.group>
+            @endcanany
+
             @canany(['news.view', 'news-categories.view', 'newsletter-subscriptions.view'])
                 <flux:navlist.group :heading="__('News')" class="grid">
                     @can('news-categories.view')
@@ -152,13 +172,6 @@
                             :current="request()->routeIs('admin.contact-submissions.*')" wire:navigate
                             :class="request()->routeIs('admin.contact-submissions.*') ? 'custom-navitem-active' : 'custom-navitem'">
                             {{ __('Messages') }}
-                        </flux:navlist.item>
-                    @endcan
-                    @can('quotes.view')
-                        <flux:navlist.item icon="currency-dollar" :href="route('admin.quotes.index')"
-                            :current="request()->routeIs('admin.quotes.*')" wire:navigate
-                            :class="request()->routeIs('admin.quotes.*') ? 'custom-navitem-active' : 'custom-navitem'">
-                            {{ __('Quotes') }}
                         </flux:navlist.item>
                     @endcan
                 </flux:navlist.group>
