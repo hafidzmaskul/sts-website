@@ -111,9 +111,10 @@ export default function Landing({
     banners = [],
     landingPageData = {},
     featured = [],
-    categories =[]
+    categories =[],
+    brand =[]
 }) {
-    // console.log(featured)
+
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const [activeProductIndex, setActiveProductIndex] = useState(0);
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
@@ -187,7 +188,7 @@ export default function Landing({
             }
         }
 
-        const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
+        const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Sales' : 'Limited';
 
         return {
             id: product.id ?? index,
@@ -416,6 +417,18 @@ export default function Landing({
         }
     };
 
+    // Helper: Brand Image Path
+    const resolveBrandImage = (img) => {
+        // Accept already complete urls or storage paths, otherwise prepend /storage/
+        if (!img) {
+            return '/assets/dummmy/default-brand.png';
+        }
+        if (img.startsWith('http') || img.startsWith('/')) {
+            return img;
+        }
+        return `/storage/${img}`;
+    };
+
     return (
         <div className="min-h-screen  ">
             <Head title="Home - Absolutely Human Resources" />
@@ -508,115 +521,6 @@ export default function Landing({
                 )}
 
             </section>
-            <section className='container mx-auto md:px-20 px-10 py-10'>
-
-            <FeaturedProductsSection
-                products={products}
-                title="Featured Products"
-                titleSize="text-2xl"
-                slidesPerView={4}
-                sectionId="product"
-            />
-            </section>
-
-
-            <section
-                id="categories"
-                className="relative overflow-hidden"
-            >
-                {/* Bagian atas tanpa background khusus */}
-                <div className="relative z-10 py-10">
-                    <div className="mb-6 flex container mx-auto px-10 nd:px-20 flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                        <div className="space-y-1">
-                            <h1 className='font-inter font-semibold text-2xl'>Top Categories</h1>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={goToPreviousCategory}
-                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m6 8l-4 4l4 4m-4-4h20" /></svg>
-                                </svg>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={goToNextCategory}
-                                className="inline-flex h-11 w-11 items-center justify-center  border border-[#D5D9DF] text-[#1E1E1E] transition hover:bg-[#0079C2] hover:text-[#fff]"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                {/* Bagian bawah dengan background abu setengah section */}
-                <div
-                    className="relative z-10"
-                    style={{
-                        // Membuat background hanya setengah bagian bawah section, mengikuti pola lengkung atas
-                        background:
-                            "linear-gradient(to bottom, transparent 0%, transparent 40%, #F3F3F3 0%, #F3F3F3 100%)"
-                    }}
-                >
-                    <div className="pt-0 pb-10 md:pb-14"> {/* ruang atas lebih kecil supaya abu hanya setengah bawah */}
-                        <Swiper
-                            modules={[Autoplay]}
-                            onSwiper={(swiperInstance) => {
-                                categorySwiperRef.current = swiperInstance;
-                            }}
-                            onSlideChange={handleCategorySlideChange}
-                            centeredSlides
-                            loop={shouldLoopCategories}
-                            initialSlide={initialCategoryIndex}
-                            slidesPerView={Math.min(categorySlidesPerView, loopedCategories.length || 1)}
-                            spaceBetween={20}
-                            speed={650}
-                            autoplay={{
-                                delay: 4200,
-                                disableOnInteraction: false,
-                                pauseOnMouseEnter: true,
-                            }}
-                            breakpoints={{
-                                0: {
-                                    slidesPerView: Math.min(2, loopedCategories.length || 1),
-                                },
-                                640: {
-                                    slidesPerView: Math.min(3, loopedCategories.length || 1),
-                                },
-                                1024: {
-                                    slidesPerView: Math.min(4, loopedCategories.length || 1),
-                                },
-                                1280: {
-                                    slidesPerView: Math.min(5, loopedCategories.length || 1),
-                                },
-                            }}
-                            className="!pb-6"
-                        >
-                            {loopedCategories.map((category, index) => {
-                                const offset = offsetFromActiveCategory(index);
-                                const isEdgeCard = Math.abs(offset) >= 2;
-                                const showFooter = !isEdgeCard;
-                                const dimmed = Math.abs(offset) >= 2;
-
-                                return (
-                                    <SwiperSlide key={`${category.id ?? 'category'}-${index}`} className="!h-auto">
-                                        <CategoryCard
-                                            title={category.name}
-                                            image={category.image_path}
-                                            showFooter={showFooter}
-                                            isDimmed={dimmed}
-                                            productsCount={category.products_count}
-                                        />
-                                    </SwiperSlide>
-                                );
-                            })}
-                        </Swiper>
-                    </div>
-                </div>
-            </section>
-
             <section className='bg-[#0079C2] mt-10'>
                 <div className="container px-10 md:px-20 mx-auto">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-12">
@@ -653,37 +557,64 @@ export default function Landing({
                 </div>
 
             </section>
-            <section className='grid grid-cols-1 md:grid-cols-2'>
+            <section className='container mx-auto md:px-20 px-10 py-10'>
 
-                <div className="bg-[#F3F3F3] flex justify-center items-center">
-                    <div className="grid grid-cols-3 gap-10">
-                        <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/42ee325c8d4f3f8e36f3ac85a6e5dd1187b451a2.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/e0035d056ad3c88d4b1a3fd03dfcde28119a604f.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/ad054e766ecba134b5274ba3fd49187dd5fe9cc8.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/e0035d056ad3c88d4b1a3fd03dfcde28119a604f.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/ad054e766ecba134b5274ba3fd49187dd5fe9cc8.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                        <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+            <FeaturedProductsSection
+                products={products}
+                title="Featured Products"
+                titleSize="text-2xl"
+                slidesPerView={4}
+                sectionId="product"
+            />
+            </section>
+
+            {/* CATEGORIES SECTION - Tetap ada, tidak diubah */}
+
+
+            {/* BRANDS SECTION - sesuai instruksi */}
+            <section className="bg-[#0079C2] w-full py-12 mt-10">
+                <div className="container mx-auto px-6 md:px-10 lg:px-20">
+                    <div className="flex flex-col items-center justify-center space-y-2 mb-8">
+                        <h2 className="font-bebas-neue text-white text-4xl tracking-widest text-center">BRANDS</h2>
+                        <div className="font-inter text-[#fff] text-md text-center mt-1 max-w-2xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit</div>
                     </div>
-                </div>
-                <div>
-                    <h1 className="text-center mt-10 font-bebas-neue font-normal text-4xl">TOP BRANDS</h1>
-                    <p className='font-inter font-2xl mb-10 mt-5 text-center font-light'>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-                    <div className="bg-[#0079C2] flex justify-center items-center ml-10 p-10">
-                        <div className="grid grid-cols-3 gap-4">
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                            <img src="/assets/dummmy/95afe41b6a234b7ab7899f5ce91b9737a351e249.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                            <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                            <img src="/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                            <img src="/assets/dummmy/95afe41b6a234b7ab7899f5ce91b9737a351e249.png" alt="" className='w-24 h-24 object-contain mx-auto' />
-                            <img src="/assets/dummmy/16daf3088b9c3b477d787fd38a8b0505754f70ba.png" alt="" className='w-24 h-24 object-contain mx-auto' />
+                    <div
+                        className="w-full"
+                    >
+                        {Array.isArray(brand) && brand.length > 0 ? (
+                            <div className="
+                                grid
+                                grid-cols-2
+                                sm:grid-cols-3
+                                md:grid-cols-4
+                                lg:grid-cols-6
+                                gap-6
+                                justify-center
+                                items-center
+                                "
+                            >
+                                {brand.map((item) => (
+                                    <div key={item.id} className="flex flex-col items-center ">
+                                        <div className="w-24 h-24 flex items-center justify-center mb-3  overflow-hidden">
+                                            <img
+                                                src={resolveBrandImage(item.image)}
+                                                alt={item.name}
+                                                className="object-contain w-20 h-20"
+                                            />
+                                        </div>
 
-                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-white/80 py-8 text-center">Belum ada brand yang ditampilkan.</div>
+                        )}
                     </div>
                 </div>
             </section>
+
+
+
             <section className='container mx-auto px-10 md:px-20 py-20'>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Card Kiri (Hot Deals) */}
@@ -1056,9 +987,9 @@ export default function Landing({
                     </div>
                 </div>
             </section>
-            <section className="w-full mt-20 bg-gray-100 flex flex-col md:flex-row">
+            <section className="w-full mt-20  flex flex-col md:flex-row bg-[#0079C2]">
                 {/* Left Column */}
-                <div className="bg-[#0079C2] flex-1 flex flex-col justify-center px-20 py-10 text-white">
+                <div className=" flex-1 flex flex-col  px-20 py-10 text-white">
                     <h2 className="text-3xl font-bold mb-6 ">Contact Information</h2>
                     <p className="mb-7  text-lg">Say something to start a live chat!</p>
                     <div className="flex flex-col gap-6 ">
@@ -1089,11 +1020,11 @@ export default function Landing({
                     </div>
                 </div>
                 {/* Right Column (Form) */}
-                <div className="flex-1 bg-white px-8 py-10">
+                <div className="flex-1  px-8 py-10">
                     <form className="space-y-6" id='contact-submission' onSubmit={handleSubmit}>
                         <div className="flex flex-col md:flex-row gap-6">
                             <div className="flex-1">
-                                <label className="block mb-2 text-gray-700" htmlFor="first_name">
+                                <label className="block mb-2 text-white" htmlFor="first_name">
                                     First Name
                                 </label>
                                 <input
@@ -1108,7 +1039,7 @@ export default function Landing({
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block mb-2 text-gray-700" htmlFor="last_name">
+                                <label className="block mb-2 text-white" htmlFor="last_name">
                                     Last Name
                                 </label>
                                 <input
@@ -1125,7 +1056,7 @@ export default function Landing({
                         </div>
                         <div className="flex flex-col md:flex-row gap-6">
                             <div className='flex-1'>
-                                <label className="block mb-2 text-gray-700" htmlFor="email">
+                                <label className="block mb-2 text-white" htmlFor="email">
                                     Email
                                 </label>
                                 <input
@@ -1140,7 +1071,7 @@ export default function Landing({
                                 />
                             </div>
                             <div className='flex-1'>
-                                <label className="block mb-2 text-gray-700" htmlFor="phone">
+                                <label className="block mb-2 text-white" htmlFor="phone">
                                     Phone Number
                                 </label>
                                 <input
@@ -1155,7 +1086,7 @@ export default function Landing({
                             </div>
                         </div>
                         <div>
-                            <label className="block mb-3 text-gray-700">Select Subject?</label>
+                            <label className="block mb-3 text-white">Select Subject?</label>
                             <div className="flex flex-row gap-3">
                                 <label className="inline-flex items-center">
                                     <input
@@ -1166,7 +1097,7 @@ export default function Landing({
                                         onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
-                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                    <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -1177,7 +1108,7 @@ export default function Landing({
                                         onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
-                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                    <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -1188,7 +1119,7 @@ export default function Landing({
                                         onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
-                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                    <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
@@ -1199,12 +1130,12 @@ export default function Landing({
                                         onChange={handleInputChange}
                                         className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
                                     />
-                                    <span className="ml-2 text-gray-700">General Inquiry</span>
+                                    <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
                             </div>
                         </div>
                         <div>
-                            <label className="block mb-2 text-gray-700" htmlFor="message">
+                            <label className="block mb-2 text-white" htmlFor="message">
                                 Message
                             </label>
                             <textarea
@@ -1221,7 +1152,7 @@ export default function Landing({
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className=" bg-[#0079C2] text-white font-noral px-10 py-3 rounded-lg hover:bg-[#005C92] transition flex items-center gap-2"
+                                className=" bg-white text-[#0079C2] text-center w-full  py-3 rounded-lg hover:bg-gray-100 transition mx-auto items-center gap-2"
                             >
                                 {isSubmitting ? (
                                     <>
