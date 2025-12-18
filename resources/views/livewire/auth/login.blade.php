@@ -130,7 +130,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                         required
                         autofocus
                         autocomplete="email"
-                        :disabled="$loading"
+                        @disabled($loading)
                     />
                     <label
                         for="email"
@@ -145,7 +145,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             </div>
 
             <div class="w-full mb-5">
-                <div class="relative">
+                <div class="relative" x-data="{ showPassword: false }">
                     <input
                         :type="showPassword ? 'text' : 'password'"
                         id="password"
@@ -156,9 +156,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                         class="w-full px-3 pt-6 pb-2 pr-12 border outline-none transition-colors duration-200 focus:border-[#212121] border-[#E0E0E0] peer rounded"
                         required
                         autocomplete="current-password"
-                        :disabled="$loading"
-                        x-data
-                        x-bind:type="showPassword ? 'text' : 'password'"
+                        @disabled($loading)
                     />
                     <label
                         for="password"
@@ -170,7 +168,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
                         type="button"
                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#212121] transition-colors flex items-center"
                         tabindex="-1"
-                        x-data="{ showPassword: false }"
                         @click="showPassword = !showPassword"
                         style="background: transparent;"
                     >
@@ -191,7 +188,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                         class="form-checkbox  mr-2"
                         id="remember"
                         name="remember"
-                        :disabled="$loading"
+                        @disabled($loading)
                     />
                     <span class="text-sm text-gray-700 select-none">Remember me</span>
                 </label>
@@ -210,7 +207,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 <button
                     type="submit"
                     class="bg-[#039BE5] text-white w-full py-3 rounded-lg font-semibold text-lg disabled:opacity-50 shadow"
-                    :disabled="$loading"
+                    @disabled($loading)
                 >
                     {{ $loading ? __('Signing in...') : __('Sign in') }}
                 </button>
