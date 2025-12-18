@@ -193,4 +193,8 @@ class PageController
     {
         return Inertia::render('SystemDesign');
     }
+    public function login()
+    {
+        return Inertia::render('Login');
+    }
 }
