@@ -19,6 +19,13 @@ class Brand extends Model
         'sort_order',
     ];
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
+    }
+
     protected $casts = [
         'is_active' => 'boolean',
     ];

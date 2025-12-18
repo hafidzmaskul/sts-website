@@ -14,6 +14,8 @@ Route::post('/sign-up', [\App\Http\Controllers\CustomerRegistrationController::c
 
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
+
 
 // Authentication Routes
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);

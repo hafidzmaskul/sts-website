@@ -17,6 +17,14 @@ class ProductCategory extends Model
         'created_by',
     ];
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image_path ? url('storage/' . $this->image_path) : null;
+    }
+
+
     public function parent()
     {
         return $this->belongsTo(ProductCategory::class, 'parent_id');

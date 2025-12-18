@@ -12,6 +12,14 @@ class ProductImage extends Model
         'sequence',
     ];
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image_path ? url('storage/' . $this->image_path) : null;
+    }
+
+
     public function product()
     {
         return $this->belongsTo(Product::class);
