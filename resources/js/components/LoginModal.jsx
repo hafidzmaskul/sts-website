@@ -21,19 +21,19 @@ export default function LoginModal({ isOpen, onClose }) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-start justify-end p-4 sm:p-6" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-[100] flex items-start justify-end " role="dialog" aria-modal="true">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
+                className="fixed inset-0 bg-[#1976D2E5] backdrop-blur-sm transition-opacity"
                 onClick={onClose}
                 aria-hidden="true"
             ></div>
 
             {/* Modal Panel - Top Right */}
-            <div className="relative w-full max-w-sm transform overflow-hidden rounded-xl bg-white p-6 text-left shadow-2xl transition-all sm:w-full sm:max-w-md border border-gray-100">
+            <div className="relative w-full max-w-sm transform overflow-hidden  bg-white p-6 text-left shadow-2xl transition-all sm:w-full sm:max-w-md border border-gray-100">
                 <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-bold text-[#232323] font-inter">
-                        Log In to STS
+                    <h3 className="text-lg font-bold text-[#039BE5] font-inter">
+                        Sign In to STS
                     </h3>
                     <button
                         onClick={onClose}
@@ -56,7 +56,7 @@ export default function LoginModal({ isOpen, onClose }) {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             placeholder=" "
-                            className="w-full px-3 pt-5 pb-2 border border-[#E0E0E0] rounded-lg outline-none transition-all duration-200 focus:border-[#212121] focus:ring-0 peer text-sm"
+                            className="w-full px-3 pt-5 pb-2 border border-[#E0E0E0]  outline-none transition-all duration-200 focus:border-[#212121] focus:ring-0 peer text-sm"
                         />
                         <label
                             htmlFor="modal-email"
@@ -78,7 +78,7 @@ export default function LoginModal({ isOpen, onClose }) {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder=" "
-                            className="w-full px-3 pt-5 pb-2 pr-10 border border-[#E0E0E0] rounded-lg outline-none transition-all duration-200 focus:border-[#212121] focus:ring-0 peer text-sm"
+                            className="w-full px-3 pt-5 pb-2 pr-10 border border-[#E0E0E0]  outline-none transition-all duration-200 focus:border-[#212121] focus:ring-0 peer text-sm"
                         />
                         <label
                             htmlFor="modal-password"
@@ -106,16 +106,8 @@ export default function LoginModal({ isOpen, onClose }) {
                     </div>
 
                     {/* Remember & Forgot Password */}
-                    <div className="flex items-center justify-between text-sm">
-                        <label className="flex items-center cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={data.remember}
-                                onChange={(e) => setData('remember', e.target.checked)}
-                                className="h-4 w-4 rounded border-gray-300 text-[#0079C2] focus:ring-[#0079C2]"
-                            />
-                            <span className="ml-2 text-gray-600">Remember me</span>
-                        </label>
+                    <div className="flex items-start justify-start text-sm">
+
                         <a href="/forgot-password" className="text-[#0079C2] hover:underline font-medium">
                             Forgot password?
                         </a>
@@ -125,18 +117,26 @@ export default function LoginModal({ isOpen, onClose }) {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full rounded-lg bg-[#0079C2] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#005a91] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0079C2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                        className="w-full  bg-[#0079C2] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#005a91] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0079C2] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                     >
                         {processing ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
-                    Don't have an account?{' '}
-                    <a href="/register" className="font-semibold text-[#0079C2] hover:text-[#005a91]">
-                        Sign up
+                <div className=" text-center py-10 text-sm text-black">
+                    <p>New To STS</p>
+                     <a href="/become-customer" className="font-semibold text-[#0079C2] hover:text-[#005a91]">
+                        Become a Customer
                     </a>
                 </div>
+                <hr />
+                <div className=" text-center py-10 text-sm text-black">
+                    <p>Need an online login?</p>
+                     <a href="#" className="font-semibold text-[#0079C2] hover:text-[#005a91]">
+                     Request here
+                    </a>
+                </div>
+
             </div>
         </div>
     );
