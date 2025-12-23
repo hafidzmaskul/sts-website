@@ -9,13 +9,12 @@ export default function Cart() {
             <Head title="Cart" />
             <Header />
 
-            <main className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10">
-                <h1 className="font-bebas-neue text-4xl md:text-5xl mb-4 text-[#232323]">
-                    Cart
+            <main className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10 flex flex-col items-center justify-center">
+                <h1 className="font-bebas-neue text-4xl md:text-5xl mb-4 text-[#232323] text-center">
+                    Under Construction
                 </h1>
-                <p className="text-gray-700">
-                    Ini adalah tampilan dasar keranjang belanja. Nantinya Anda dapat
-                    menambahkan daftar produk, ringkasan harga, dan tombol checkout.
+                <p className="text-gray-700 text-center">
+                    We are currently working on this page. Please check back later!
                 </p>
             </main>
 
@@ -23,4 +22,3 @@ export default function Cart() {
         </div>
     );
 }
-
