@@ -136,5 +136,17 @@ class RolesAndPermissionsSeeder extends Seeder
         $customer->givePermissionTo([
             // Add basic customer permissions here if needed
         ]);
+
+        // Fixed Roles requested by user
+        $fixedRoles = [
+            'guest',
+            'trade account',
+            'credit facilities account',
+            'child'
+        ];
+
+        foreach ($fixedRoles as $roleName) {
+            Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+        }
     }
 }

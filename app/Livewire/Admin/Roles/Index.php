@@ -24,7 +24,10 @@ class Index extends Component
         'selectedPermissions.*' => 'integer',
     ];
 
-    public function updatingSearch() { $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function create()
     {
@@ -37,9 +40,15 @@ class Index extends Component
     {
         $this->authorize('roles.edit');
         $role = Role::findOrFail($id);
+
+        if ($this->isFixedRole($role->name)) {
+            $this->dispatch('notify', type: 'error', message: 'This role cannot be modified.');
+            return;
+        }
+
         $this->editingId = $role->id;
         $this->name = $role->name;
-        $this->selectedPermissions = $role->permissions()->pluck('id')->map(fn($v)=>(int)$v)->toArray();
+        $this->selectedPermissions = $role->permissions()->pluck('id')->map(fn($v) => (int) $v)->toArray();
         $this->showForm = true;
     }
 
@@ -48,9 +57,15 @@ class Index extends Component
         $this->authorize($this->editingId ? 'roles.edit' : 'roles.create');
         $this->validate();
 
-        $role = $this->editingId
-            ? Role::findOrFail($this->editingId)
-            : new Role(['guard_name' => 'web']);
+        if ($this->editingId) {
+            $role = Role::findOrFail($this->editingId);
+            if ($this->isFixedRole($role->name)) {
+                $this->dispatch('notify', type: 'error', message: 'This role cannot be modified.');
+                return;
+            }
+        } else {
+            $role = new Role(['guard_name' => 'web']);
+        }
 
         $role->name = $this->name;
         $role->save();
@@ -59,17 +74,31 @@ class Index extends Component
         $role->syncPermissions($perms);
 
         $this->resetForm();
-        $this->dispatch('notify', type:'success', message:'Role saved.');
+        $this->dispatch('notify', type: 'success', message: 'Role saved.');
         $this->showForm = false;
     }
 
     public function delete(int $id)
     {
         $this->authorize('roles.delete');
-        if ($id === 1) return; // optional safeguard if you treat id=1 as super-admin
-        Role::findOrFail($id)->delete();
-        $this->dispatch('notify', type:'success', message:'Role deleted.');
-        if ($this->editingId === $id) $this->resetForm();
+        // if ($id === 1) return; // optional safeguard if you treat id=1 as super-admin
+
+        $role = Role::findOrFail($id);
+
+        if ($this->isFixedRole($role->name)) {
+            $this->dispatch('notify', type: 'error', message: 'This role cannot be deleted.');
+            return;
+        }
+
+        $role->delete();
+        $this->dispatch('notify', type: 'success', message: 'Role deleted.');
+        if ($this->editingId === $id)
+            $this->resetForm();
+    }
+
+    protected function isFixedRole(string $name): bool
+    {
+        return in_array($name, ['admin', 'guest', 'trade account', 'credit facilities account', 'child']);
     }
 
     public function resetForm()
@@ -83,12 +112,12 @@ class Index extends Component
     {
         $this->authorize('roles.view');
         $roles = Role::query()
-            ->when($this->search, fn($q)=>$q->where('name','like',"%{$this->search}%"))
+            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->orderBy('name')
             ->paginate(10);
 
-        $permissions = Permission::orderBy('name')->get(['id','name']);
-        return view('livewire.admin.roles.index', compact('roles','permissions'))
+        $permissions = Permission::orderBy('name')->get(['id', 'name']);
+        return view('livewire.admin.roles.index', compact('roles', 'permissions'))
             ->title('Role Management');
     }
 }
