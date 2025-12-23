@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use function Livewire\Volt\with;
+
 class PageController
 {
     public function landing(): Response
@@ -144,7 +146,7 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::with('images')->where('slug', $slug)->firstOrFail();
+        $product = Product::with('images')->where('slug', $slug)->with('categories')->firstOrFail();
         $relatedProducts = Product::with('images')
             ->where('id', '!=', $product->id)
             ->where('status', 'active')
@@ -204,5 +206,9 @@ class PageController
     public function login()
     {
         return Inertia::render('Login');
+    }
+
+    public function quoteBuilder(){
+        return Inertia::render('QuoteBuilder');
     }
 }

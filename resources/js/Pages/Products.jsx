@@ -18,9 +18,9 @@ const sliderImages = [
 const PRODUCT_PAGE_SIZE = 28;
 
 const formatPrice = (amount) =>
-    new Intl.NumberFormat('id-ID', {
+    new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'IDR',
+        currency: 'USD',
         maximumFractionDigits: 0,
     }).format(amount);
 

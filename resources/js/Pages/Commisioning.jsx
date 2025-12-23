@@ -51,9 +51,23 @@ const whyChooseItems = [
 
 export default function Commisioning({ services = [] }) {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="flex flex-col">
+
             <Head title="Services" />
             <Header />
+            <div className="container md:px-10">
+
+                <nav className="text-xs md:text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+                    <ol className="flex flex-wrap items-center gap-1">
+                        <li><Link href='/home' className="hover:text-[#0079C2]">Home</Link></li>
+                        <li className="mx-1 text-gray-400">/</li>
+                        <li><Link href='#' className="hover:text-[#0079C2]">Service</Link></li>
+                        <li className="mx-1 text-gray-400">/</li>
+                        <li className="text-gray-700">Commisioning</li>
+                    </ol>
+                </nav>
+            </div>
+
             <HeroSection
                 bgUrl="/assets/bg-commisioning.png"
                 title="Commisioning"
@@ -63,6 +77,7 @@ export default function Commisioning({ services = [] }) {
                 textSize='text-5xl'
             />
             <main className="flex-1 ">
+
                 <section className="flex py-20 flex-col md:flex-row w-full rounded-lg overflow-hidden  mb-16">
                     <div
                         className="w-full md:w-2/5 p-8 flex flex-col  justify-center "
@@ -93,38 +108,38 @@ export default function Commisioning({ services = [] }) {
 
                 <section className="w-full bg-[#0079C2] py-8 overflow-hidden ">
                     <div className="container mx-auto">
-                    <div className="px-4 flex flex-row justify-between gap-2 mb-8">
-                        {/* Left: Title */}
-                        <div className="flex-1 flex items-start">
-                            <h2 className="text-white font-bold text-xl md:text-2xl text-left whitespace-nowrap">
-                                Why Choose STS
-                            </h2>
+                        <div className="px-4 flex flex-row justify-between gap-2 mb-8">
+                            {/* Left: Title */}
+                            <div className="flex-1 flex items-start">
+                                <h2 className="text-white font-bold text-xl md:text-2xl text-left whitespace-nowrap">
+                                    Why Choose STS
+                                </h2>
+                            </div>
+                            {/* Right: Bulleted List */}
+                            <div className="flex-1 flex justify-end">
+                                <ul className="list-disc list-inside text-white text-xs font-medium space-y-0 text-left">
+                                    <li>
+                                        We have the widest range of security products in the UK: 250 brands, 25,000 products.
+                                    </li>
+                                    <li>
+                                        We have an experienced, fully accredited Technical Support team.
+                                    </li>
+                                    <li>
+                                        A dedicated project manager will look after your project from inception to completion.
+                                    </li>
+                                    <li>
+                                        We provide inventory management so stock can be called off, just when required.
+                                    </li>
+                                    <li>
+                                        Operating in 28 locations across the UK, we’re never too far from where you do business.
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        {/* Right: Bulleted List */}
-                        <div className="flex-1 flex justify-end">
-                            <ul className="list-disc list-inside text-white text-xs font-medium space-y-0 text-left">
-                                <li>
-                                    We have the widest range of security products in the UK: 250 brands, 25,000 products.
-                                </li>
-                                <li>
-                                    We have an experienced, fully accredited Technical Support team.
-                                </li>
-                                <li>
-                                    A dedicated project manager will look after your project from inception to completion.
-                                </li>
-                                <li>
-                                    We provide inventory management so stock can be called off, just when required.
-                                </li>
-                                <li>
-                                    Operating in 28 locations across the UK, we’re never too far from where you do business.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div className="carousel-why-choose text-white">
-                        <style>
-                            {`
+                        <div className="carousel-why-choose text-white">
+                            <style>
+                                {`
                                 .swiper-pagination-bullet {
                                     background: #FFFFFF;
 ;
@@ -136,51 +151,51 @@ export default function Commisioning({ services = [] }) {
                                     opacity: 1;
                                 }
                             `}
-                        </style>
-                        <Swiper
-                            modules={[Pagination, Autoplay]}
-                            spaceBetween={30}
-                            slidesPerView={1}
-                            centeredSlides={true}
-                            loop={true}
-                            autoplay={{ delay: 3000, disableOnInteraction: false }}
-                            pagination={{ clickable: true }}
-                            breakpoints={{
-                                640: {
-                                    slidesPerView: 3,
-                                }
-                            }}
-                            className="w-full pb-12"
-                        >
-                            {whyChooseItems.map((item, index) => (
-                                <SwiperSlide key={index}>
-                                    {({ isActive }) => (
-                                        <div className={`relative pb-20 flex flex-col items-center transition-all duration-300 ${isActive ? ' z-10' : ' opacity-80'}`}>
-                                            <div className="w-full aspect-[4/3] relative  overflow-hidden bg-gray-200">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.text}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                {/* Overlay for non-active slides */}
-                                                {!isActive && (
-                                                    <div className="absolute inset-0 bg-[#0079C2E0] transition-colors duration-300"></div>
-                                                )}
+                            </style>
+                            <Swiper
+                                modules={[Pagination, Autoplay]}
+                                spaceBetween={30}
+                                slidesPerView={1}
+                                centeredSlides={true}
+                                loop={true}
+                                autoplay={{ delay: 3000, disableOnInteraction: false }}
+                                pagination={{ clickable: true }}
+                                breakpoints={{
+                                    640: {
+                                        slidesPerView: 3,
+                                    }
+                                }}
+                                className="w-full pb-12"
+                            >
+                                {whyChooseItems.map((item, index) => (
+                                    <SwiperSlide key={index}>
+                                        {({ isActive }) => (
+                                            <div className={`relative pb-20 flex flex-col items-center transition-all duration-300 ${isActive ? ' z-10' : ' opacity-80'}`}>
+                                                <div className="w-full aspect-[4/3] relative  overflow-hidden bg-gray-200">
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.text}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    {/* Overlay for non-active slides */}
+                                                    {!isActive && (
+                                                        <div className="absolute inset-0 bg-[#0079C2E0] transition-colors duration-300"></div>
+                                                    )}
+                                                </div>
+                                                <div className="w-full bg-white py-4  flex items-center justify-center">
+                                                    <p className="text-[#0079C2] font-bold text-lg tracking-wide">
+                                                        {item.text}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="w-full bg-white py-4  flex items-center justify-center">
-                                                <p className="text-[#0079C2] font-bold text-lg tracking-wide">
-                                                    {item.text}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-                    </div>
+                                        )}
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
                     </div>
                 </section>
-                 <section className='bg-[#F0F2F3] py-20'>
+                <section className='bg-[#F0F2F3] py-20'>
                     <h1 className='font-inter font-bold text-3xl text-center mt-10 mb-15 text-[#002856]'>Benefits of pre-build and configuration</h1>
                     <div className="container mx-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-center benefit">

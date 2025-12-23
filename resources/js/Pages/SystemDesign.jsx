@@ -54,6 +54,18 @@ export default function SystemDesign({ services = [] }) {
         <div className="min-h-screen flex flex-col">
             <Head title="Services" />
             <Header />
+            <div className="container md:px-10">
+
+                <nav className="text-xs md:text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+                    <ol className="flex flex-wrap items-center gap-1">
+                        <li><Link href='/home' className="hover:text-[#0079C2]">Home</Link></li>
+                        <li className="mx-1 text-gray-400">/</li>
+                        <li><Link href='#' className="hover:text-[#0079C2]">Service</Link></li>
+                        <li className="mx-1 text-gray-400">/</li>
+                        <li className="text-gray-700">System Design</li>
+                    </ol>
+                </nav>
+            </div>
             <HeroSection
                 bgUrl="/assets/bg-sistem-design.png"
                 title="System Design"
