@@ -11,15 +11,26 @@ class Customer extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'first_name',
+        'last_name',
+        'email',
+        'role_applied',
         'phone',
         'address',
         'city',
         'postal_code',
         'country',
         'status',
+        'status_review',
+        'review_note',
         'account_number',
         'job_title',
     ];
+
+    public function scopePending($query)
+    {
+        return $query->where('status_review', 'pending');
+    }
 
     public function user(): BelongsTo
     {

@@ -70,8 +70,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Customers
         Route::get('/admin/customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
-        Route::get('/admin/customers/{user}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
-        Route::get('/admin/customers/{user}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
+        Route::get('/admin/customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+        Route::get('/admin/customers/{customer}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
 
         // Contact Submissions
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
