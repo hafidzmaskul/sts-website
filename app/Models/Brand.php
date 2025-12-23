@@ -17,6 +17,7 @@ class Brand extends Model
         'website',
         'is_active',
         'sort_order',
+        'pricing_formula_id',
     ];
 
     protected $appends = ['image_url'];
@@ -29,4 +30,9 @@ class Brand extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function pricingFormula()
+    {
+        return $this->belongsTo(PricingFormula::class);
+    }
 }

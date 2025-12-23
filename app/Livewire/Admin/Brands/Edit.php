@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
+use App\Models\PricingFormula;
+
+use Livewire\Attributes\Title;
+
+#[Title('Edit Brand')]
 class Edit extends Component
 {
     use WithFileUploads;
@@ -23,6 +28,7 @@ class Edit extends Component
     public $website = '';
     public $is_active = true;
     public $sort_order = 0;
+    public $pricing_formula_id = null;
 
     public function mount(Brand $brand)
     {
@@ -34,6 +40,7 @@ class Edit extends Component
         $this->website = $brand->website;
         $this->is_active = $brand->is_active;
         $this->sort_order = $brand->sort_order;
+        $this->pricing_formula_id = $brand->pricing_formula_id;
     }
 
     public function updatedName($value)
@@ -51,6 +58,7 @@ class Edit extends Component
             'website' => 'nullable|url|max:255',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
         ];
     }
 
@@ -65,6 +73,7 @@ class Edit extends Component
             'website' => $this->website,
             'is_active' => $this->is_active,
             'sort_order' => $this->sort_order,
+            'pricing_formula_id' => $this->pricing_formula_id,
         ];
 
         if ($this->image) {
@@ -80,6 +89,8 @@ class Edit extends Component
 
     public function render()
     {
-        return view('livewire.admin.brands.edit')->title('Edit Brand');
+        return view('livewire.admin.brands.edit', [
+            'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+        ]);
     }
 }

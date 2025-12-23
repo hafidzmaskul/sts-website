@@ -53,4 +53,19 @@ class PricingFormula extends Model
             'value' => $this->value,
         ]);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

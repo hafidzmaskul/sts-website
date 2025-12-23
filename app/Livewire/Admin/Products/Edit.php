@@ -12,6 +12,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 
+use App\Models\PricingFormula;
+
+use Livewire\Attributes\Title;
+
+#[Title('Edit Product')]
 class Edit extends Component
 {
     use WithFileUploads;
@@ -20,6 +25,7 @@ class Edit extends Component
 
     // Form Fields
     public $brand_id = null;
+    public $pricing_formula_id = null;
     public $title = '';
     public $slug = '';
     public $is_sign_up_for_pricing = false;
@@ -50,6 +56,7 @@ class Edit extends Component
     {
         $this->productId = $product->id;
         $this->brand_id = $product->brand_id;
+        $this->pricing_formula_id = $product->pricing_formula_id;
         $this->title = $product->title;
         $this->slug = $product->slug;
         $this->is_sign_up_for_pricing = $product->is_sign_up_for_pricing;
@@ -109,6 +116,7 @@ class Edit extends Component
     {
         return [
             'brand_id' => 'required|exists:brands,id',
+            'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($this->productId)],
             'base_price' => 'nullable|numeric|min:0',
@@ -141,6 +149,7 @@ class Edit extends Component
 
         $product->update([
             'brand_id' => $this->brand_id,
+            'pricing_formula_id' => $this->pricing_formula_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
@@ -206,6 +215,7 @@ class Edit extends Component
         return view('livewire.admin.products.edit', [
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
-        ])->title('Edit Product');
+            'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+        ]);
     }
 }

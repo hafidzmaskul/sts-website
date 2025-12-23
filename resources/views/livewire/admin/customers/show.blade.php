@@ -66,6 +66,16 @@
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Pricing Formula</dt>
+                    <dd class="col-span-2 text-sm text-gray-900">
+                        @if($customer->user && $customer->user->pricingFormula)
+                            <div class="font-medium">{{ $customer->user->pricingFormula->label }}</div>
+                        @else
+                            -
+                        @endif
+                    </dd>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
                     <dt class="text-sm font-medium text-gray-500">Account Number</dt>
                     <dd class="col-span-2 text-sm text-gray-900">
                         {{ $customer->account_number ?? '-' }}
