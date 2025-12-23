@@ -116,31 +116,263 @@ export default function BecomeCustomer() {
                         <form className="flex-1">
                             <h2 className="text-2xl font-bold text-[#002856] mb-4">Sign In</h2>
                             <span>*Please enter information in required fields. </span>
-                            <div className=" mt-10 bg-white p-10 space-y-6 md:max-h-[360px] md:h-[360px] overflow-auto">
+                            <div className="mt-10 bg-white p-10 space-y-6 overflow-auto">
+
+                                {/* Company Name, Company Registration No */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Company Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Company Registration No:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Trading Name (If applicable), Company Address */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Trading Name (If applicable)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Company Address
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Trading Name (If applicable), VAT Registration No */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Trading Name (If applicable):
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            VAT Registration No:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Telephone No, Fax No */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Telephone No
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Fax No
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Brief details of company's main activities */}
                                 <div>
                                     <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
-                                        User Name <span className="text-red-500">*</span>
+                                        Brief details of your company’s main activities
                                     </label>
                                     <input
                                         type="text"
                                         className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
-                                        required
                                     />
                                 </div>
+
+                                {/* Garis height:10 */}
+                                <div className="w-full bg-[#E8E7E7] opacity-100" style={{ height: 10 }} />
+
+                                {/* Purchasing Contact */}
                                 <div>
                                     <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
-                                        Password <span className="text-red-500">*</span>
+                                        Purchasing Contact
                                     </label>
                                     <input
-                                        type="password"
+                                        type="text"
                                         className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
-                                        required
                                     />
                                 </div>
-                                <div className="flex justify-start mt-8">
-                                    <button className="bg-[#0079C2] text-white px-20 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2">
-                                        Sign In
-                                    </button>
+
+                                {/* Telephone No, Email */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Telephone No
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Garis height:10 */}
+                                <div className="w-full bg-[#E8E7E7] opacity-100" style={{ height: 10 }} />
+
+                                {/* Bank Name, Address */}
+                                <div>
+                                    <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                        Bank Name, Address
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                    />
+                                </div>
+
+                                {/* Sort Code, Account Number */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Sort Code
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Account Number
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Garis height:10 */}
+                                <div className="w-full bg-[#E8E7E7] opacity-100" style={{ height: 10 }} />
+
+                                {/* Trade Reference 1 Name & Address */}
+                                <div>
+                                    <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                        Name & Address of Trade Reference 1
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                    />
+                                </div>
+                                {/* Telephone No, Email */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Telephone No
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Garis height:10 */}
+                                <div className="w-full bg-[#E8E7E7] opacity-100" style={{ height: 10 }} />
+
+                                {/* Trade Reference 2 Name & Address */}
+                                <div>
+                                    <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                        Name & Address of Trade Reference 2
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                    />
+                                </div>
+                                {/* Telephone No, Email */}
+                                <div className="flex flex-col md:flex-row md:space-x-8">
+                                    <div className="flex-1">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Telephone No
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                    <div className="flex-1 mt-6 md:mt-0">
+                                        <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="text-xs text-[#000] font-poppins mt-2">
+                                    * Please Note: References must reflect your required credit limit.
+                                </div>
+
+                                {/* Credit Limit Required */}
+                                <div>
+                                    <label className="block mb-2 text-xs font-normal font-poppins text-[#000000]">
+                                        Credit Limit Required
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full border-0 border-b border-[#000000] text-[#000000] font-poppins text-xs font-normal px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000000]"
+                                    />
                                 </div>
                             </div>
                         </form>
