@@ -61,6 +61,20 @@
                             </dd>
                         </div>
                         <div>
+                            <dt class="text-sm font-medium text-gray-500">Pricing Formula</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                @if($product->pricingFormula)
+                                    <div class="font-medium">{{ $product->pricingFormula->label }}</div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ $product->pricingFormula->type->label() }}
+                                        {{ $product->pricingFormula->value }}
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 italic">None</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div>
                             <dt class="text-sm font-medium text-gray-500">Exclusivity</dt>
                             <dd class="mt-1 text-sm text-gray-900">
                                 @if($product->is_exclusive)
@@ -200,22 +214,32 @@
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-4">
                                 @if($product->brand->image)
-                                    <div class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden">
-                                        <img src="{{ Storage::url($product->brand->image) }}" alt="{{ $product->brand->name }}" class="h-full w-full object-contain">
+                                    <div
+                                        class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <img src="{{ Storage::url($product->brand->image) }}" alt="{{ $product->brand->name }}"
+                                            class="h-full w-full object-contain">
                                     </div>
                                 @else
-                                    <div class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center text-gray-400">
+                                    <div
+                                        class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center text-gray-400">
                                         <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                            </path>
                                         </svg>
                                     </div>
                                 @endif
                                 <div>
                                     <h3 class="text-base font-medium text-gray-900">{{ $product->brand->name }}</h3>
                                     @if($product->brand->website)
-                                        <a href="{{ $product->brand->website }}" target="_blank" class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline inline-flex items-center">
+                                        <a href="{{ $product->brand->website }}" target="_blank"
+                                            class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline inline-flex items-center">
                                             Visit Website
-                                            <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                </path>
+                                            </svg>
                                         </a>
                                     @endif
                                 </div>

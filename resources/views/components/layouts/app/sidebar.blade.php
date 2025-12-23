@@ -117,6 +117,14 @@
                             {{ __('Brands') }}
                         </flux:navlist.item>
                     @endcan
+
+                    @can('pricing-formulas.view')
+                        <flux:navlist.item icon="calculator" :href="route('admin.pricing-formulas.index')"
+                            :current="request()->routeIs('admin.pricing-formulas.*')" wire:navigate
+                            :class="request()->routeIs('admin.pricing-formulas.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Pricing Formulas') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             @endcanany
 

@@ -7,6 +7,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 
+use App\Models\PricingFormula;
+
+use Livewire\Attributes\Title;
+
+#[Title('Create Brand')]
 class Create extends Component
 {
     use WithFileUploads;
@@ -18,6 +23,7 @@ class Create extends Component
     public $website = '';
     public $is_active = true;
     public $sort_order = 0;
+    public $pricing_formula_id = null;
 
     public function updatedName($value)
     {
@@ -32,6 +38,7 @@ class Create extends Component
         'website' => 'nullable|url|max:255',
         'is_active' => 'boolean',
         'sort_order' => 'integer',
+        'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
     ];
 
     public function save()
@@ -48,6 +55,7 @@ class Create extends Component
             'website' => $this->website,
             'is_active' => $this->is_active,
             'sort_order' => $this->sort_order,
+            'pricing_formula_id' => $this->pricing_formula_id,
         ]);
 
         return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully.');
@@ -55,6 +63,8 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.admin.brands.create')->title('Create Brand');
+        return view('livewire.admin.brands.create', [
+            'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+        ]);
     }
 }

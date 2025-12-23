@@ -74,7 +74,8 @@
                         <input type="hidden" id="main_feature_input" wire:model="main_feature">
                     </div>
 
-                    <div wire:ignore x-data x-init="$nextTick(() => window.initCKEditor('specification_editor', 'specification_input', 'specification'))">
+                    <div wire:ignore x-data
+                        x-init="$nextTick(() => window.initCKEditor('specification_editor', 'specification_input', 'specification'))">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Specification</label>
                         <div id="specification_editor" class="prose max-w-none border-[#D2D2D2] rounded-lg"></div>
                         <input type="hidden" id="specification_input" wire:model="specification">
@@ -151,6 +152,21 @@
                                 placeholder="0.00">
                         </div>
                         @error('base_price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pricing Formula</label>
+                        <div class="text-xs text-gray-500 mb-2">Select a pricing formula to apply automatically.</div>
+                        <select wire:model="pricing_formula_id"
+                            class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">None (Use Base Price)</option>
+                            @foreach($pricingFormulas as $formula)
+                                <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
+                                    {{ $formula->value }})</option>
+                            @endforeach
+                        </select>
+                        @error('pricing_formula_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="space-y-3 pt-2">

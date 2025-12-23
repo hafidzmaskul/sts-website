@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+use App\Models\PricingFormula;
+use Livewire\Attributes\Title;
+
+#[Title('User Management')]
 class Index extends Component
 {
     use WithPagination;
@@ -23,24 +27,30 @@ class Index extends Component
     public ?string $password = null;   // set when creating or resetting
     public array $roleIds = [];
     public array $permissionIds = [];
+    public ?int $pricing_formula_id = null;
 
     protected function rules()
     {
         $uniqueEmail = 'unique:users,email';
-        if ($this->editingId) $uniqueEmail .= ',' . $this->editingId;
+        if ($this->editingId)
+            $uniqueEmail .= ',' . $this->editingId;
 
         return [
-            'name'  => 'required|string|min:2|max:100',
+            'name' => 'required|string|min:2|max:100',
             'email' => 'required|email|' . $uniqueEmail,
             'password' => $this->editingId ? 'nullable|min:6' : 'required|min:6',
             'roleIds' => 'array',
             'roleIds.*' => 'integer',
             'permissionIds' => 'array',
             'permissionIds.*' => 'integer',
+            'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
         ];
     }
 
-    public function updatingSearch(){ $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function create()
     {
@@ -57,8 +67,9 @@ class Index extends Component
         $this->name = $u->name;
         $this->email = $u->email;
         $this->password = null;
-        $this->roleIds = $u->roles()->pluck('id')->map(fn($v)=>(int)$v)->toArray();
-        $this->permissionIds = $u->permissions()->pluck('id')->map(fn($v)=>(int)$v)->toArray();
+        $this->roleIds = $u->roles()->pluck('id')->map(fn($v) => (int) $v)->toArray();
+        $this->permissionIds = $u->permissions()->pluck('id')->map(fn($v) => (int) $v)->toArray();
+        $this->pricing_formula_id = $u->pricing_formula_id;
         $this->showForm = true;
     }
 
@@ -70,6 +81,7 @@ class Index extends Component
         $user = $this->editingId ? User::findOrFail($this->editingId) : new User();
         $user->name = $data['name'];
         $user->email = $data['email'];
+        $user->pricing_formula_id = $data['pricing_formula_id'];
 
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);
@@ -87,16 +99,17 @@ class Index extends Component
         $user->syncPermissions($perms);
 
         $this->resetForm();
-        $this->dispatch('notify', type:'success', message:'User saved.');
+        $this->dispatch('notify', type: 'success', message: 'User saved.');
         $this->showForm = false;
     }
 
     public function delete(int $id)
     {
         $this->authorize('users.delete');
-        if (auth()->id() === $id) return; // prevent self-delete
+        if (auth()->id() === $id)
+            return; // prevent self-delete
         User::findOrFail($id)->delete();
-        $this->dispatch('notify', type:'success', message:'User deleted.');
+        $this->dispatch('notify', type: 'success', message: 'User deleted.');
     }
 
     public function resetForm()
@@ -107,6 +120,7 @@ class Index extends Component
         $this->password = null;
         $this->roleIds = [];
         $this->permissionIds = [];
+        $this->pricing_formula_id = null;
     }
 
     public function render()
@@ -115,18 +129,18 @@ class Index extends Component
 
         $users = User::query()
             ->when($this->search, function ($q) {
-                $q->where(function($w){
-                    $w->where('name','like',"%{$this->search}%")
-                      ->orWhere('email','like',"%{$this->search}%");
+                $q->where(function ($w) {
+                    $w->where('name', 'like', "%{$this->search}%")
+                        ->orWhere('email', 'like', "%{$this->search}%");
                 });
             })
             ->orderBy('name')
             ->paginate(10);
 
-        $roles = Role::orderBy('name')->get(['id','name']);
-        $permissions = Permission::orderBy('name')->get(['id','name']);
+        $roles = Role::orderBy('name')->get(['id', 'name']);
+        $permissions = Permission::orderBy('name')->get(['id', 'name']);
+        $pricingFormulas = PricingFormula::orderBy('label')->get();
 
-        return view('livewire.admin.users.index', compact('users','roles','permissions'))
-            ->title('User Management');
+        return view('livewire.admin.users.index', compact('users', 'roles', 'permissions', 'pricingFormulas'));
     }
 }

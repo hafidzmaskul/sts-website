@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'parent_id',
+        'pricing_formula_id',
     ];
 
     /**
@@ -85,5 +86,10 @@ class User extends Authenticatable
     public function scopeIsChildOf($query, $parentId)
     {
         return $query->where('parent_id', $parentId);
+    }
+
+    public function pricingFormula()
+    {
+        return $this->belongsTo(PricingFormula::class);
     }
 }

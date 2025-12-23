@@ -71,8 +71,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Customers
         Route::get('/admin/customers', \App\Livewire\Admin\Customers\Index::class)->name('admin.customers.index');
-        Route::get('/admin/customers/{user}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
-        Route::get('/admin/customers/{user}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
+        Route::get('/admin/customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
+        Route::get('/admin/customers/{customer}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
 
         // Contact Submissions
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
@@ -90,6 +90,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
+
+        // Pricing Formulas
+        Route::get('/admin/pricing-formulas', \App\Livewire\Admin\PricingFormulas\Index::class)->name('admin.pricing-formulas.index');
+        Route::get('/admin/pricing-formulas/create', \App\Livewire\Admin\PricingFormulas\Create::class)->name('admin.pricing-formulas.create');
+        Route::get('/admin/pricing-formulas/{pricingFormula}/edit', \App\Livewire\Admin\PricingFormulas\Edit::class)->name('admin.pricing-formulas.edit');
     });
 
     // Parent User Management

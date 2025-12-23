@@ -23,6 +23,7 @@ class Product extends Model
         'seo_description',
         'seo_keywords',
         'created_by',
+        'pricing_formula_id',
     ];
 
     protected $casts = [
@@ -33,6 +34,11 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function pricingFormula()
+    {
+        return $this->belongsTo(PricingFormula::class);
     }
 
     public function categories()

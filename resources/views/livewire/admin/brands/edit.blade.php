@@ -10,16 +10,15 @@
                 <div class="col-span-1">
                     <label for="name" class="block text-sm font-medium mb-1" style="color:#000;">Name</label>
                     <input type="text" wire:model.live.debounce.500ms="name" id="name"
-                        class="w-full rounded-lg border px-3 py-2"
-                        style="border: 1px solid #D2D2D2; color: #000;" placeholder="Brand Name">
+                        class="w-full rounded-lg border px-3 py-2" style="border: 1px solid #D2D2D2; color: #000;"
+                        placeholder="Brand Name">
                     @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Slug -->
                 <div class="col-span-1">
                     <label for="slug" class="block text-sm font-medium mb-1" style="color:#000;">Slug</label>
-                    <input type="text" wire:model="slug" id="slug"
-                        class="w-full rounded-lg border px-3 py-2 bg-gray-50"
+                    <input type="text" wire:model="slug" id="slug" class="w-full rounded-lg border px-3 py-2 bg-gray-50"
                         style="border: 1px solid #D2D2D2; color: #000;" readonly>
                     @error('slug') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
@@ -66,10 +65,25 @@
                 <!-- Website -->
                 <div class="col-span-2">
                     <label for="website" class="block text-sm font-medium mb-1" style="color:#000;">Website URL</label>
-                    <input type="url" wire:model="website" id="website"
-                        class="w-full rounded-lg border px-3 py-2"
+                    <input type="url" wire:model="website" id="website" class="w-full rounded-lg border px-3 py-2"
                         style="border: 1px solid #D2D2D2; color: #000;" placeholder="https://example.com">
                     @error('website') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+
+                <!-- Pricing Formula -->
+                <div class="col-span-2">
+                    <label for="pricing_formula_id" class="block text-sm font-medium mb-1" style="color:#000;">Pricing
+                        Formula</label>
+                    <div class="text-xs text-gray-500 mb-2">Select a pricing formula to apply automatically.</div>
+                    <select wire:model="pricing_formula_id" id="pricing_formula_id"
+                        class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">None</option>
+                        @foreach($pricingFormulas as $formula)
+                            <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
+                                {{ $formula->value }})</option>
+                        @endforeach
+                    </select>
+                    @error('pricing_formula_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Sort Order -->
@@ -77,8 +91,7 @@
                     <label for="sort_order" class="block text-sm font-medium mb-1" style="color:#000;">Sort
                         Order</label>
                     <input type="number" wire:model="sort_order" id="sort_order"
-                        class="w-full rounded-lg border px-3 py-2"
-                        style="border: 1px solid #D2D2D2; color: #000;">
+                        class="w-full rounded-lg border px-3 py-2" style="border: 1px solid #D2D2D2; color: #000;">
                     @error('sort_order') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 

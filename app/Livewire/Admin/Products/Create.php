@@ -10,12 +10,18 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
+use App\Models\PricingFormula;
+
+use Livewire\Attributes\Title;
+
+#[Title('Create Product')]
 class Create extends Component
 {
     use WithFileUploads;
 
     // Form Fields
     public $brand_id = null;
+    public $pricing_formula_id = null;
     public $title = '';
     public $slug = '';
     public $is_sign_up_for_pricing = false;
@@ -66,6 +72,7 @@ class Create extends Component
     {
         return [
             'brand_id' => 'required|exists:brands,id',
+            'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
             'base_price' => 'nullable|numeric|min:0',
@@ -100,6 +107,7 @@ class Create extends Component
 
         $data = [
             'brand_id' => $this->brand_id,
+            'pricing_formula_id' => $this->pricing_formula_id,
             'title' => $this->title,
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
@@ -144,6 +152,7 @@ class Create extends Component
         return view('livewire.admin.products.create', [
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
-        ])->title('Create Product');
+            'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+        ]);
     }
 }

@@ -12,6 +12,7 @@ class Index extends Component
 
     public string $search = '';
     public string $status = '';
+    public string $statusReview = '';
     public string $isRegistered = '';
 
     public function updatingSearch()
@@ -20,6 +21,11 @@ class Index extends Component
     }
 
     public function updatingStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStatusReview()
     {
         $this->resetPage();
     }
@@ -40,12 +46,18 @@ class Index extends Component
                         $u->where('name', 'like', '%' . $this->search . '%')
                             ->orWhere('email', 'like', '%' . $this->search . '%');
                     });
-                    $q->orWhere('phone', 'like', '%' . $this->search . '%')
+                    $q->orWhere('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhere('phone', 'like', '%' . $this->search . '%')
                         ->orWhere('city', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->status, function ($query) {
                 $query->where('status', $this->status);
+            })
+            ->when($this->statusReview, function ($query) {
+                $query->where('status_review', $this->statusReview);
             })
             ->when($this->isRegistered !== '', function ($query) {
                 if ($this->isRegistered === 'yes') {
@@ -60,7 +72,7 @@ class Index extends Component
         $stats = [
             'total' => Customer::count(),
             'active' => Customer::where('status', 'active')->count(),
-            'suspended' => Customer::where('status', 'suspended')->count(),
+            'pending' => Customer::where('status_review', 'pending')->count(),
         ];
 
         return view('livewire.admin.customers.index', [

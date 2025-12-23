@@ -32,16 +32,16 @@
         <div class="p-6 rounded-2xl shadow border">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium" style="color: #AEAEAE;">Suspended</p>
-                    <p class="text-3xl font-bold text-black mt-1">{{ $stats['suspended'] }}</p>
+                    <p class="text-sm font-medium" style="color: #AEAEAE;">Pending Review</p>
+                    <p class="text-3xl font-bold text-black mt-1">{{ $stats['pending'] }}</p>
                 </div>
-                <div class="p-3 rounded-xl" style="background-color: #FEF2F2;">
-                    <flux:icon.x-circle class="w-6 h-6" style="color: #E02424;" />
+                <div class="p-3 rounded-xl" style="background-color: #FEF9C3;">
+                    <flux:icon.clock class="w-6 h-6" style="color: #CA8A04;" />
                 </div>
             </div>
         </div>
     </div>
-    {{-- //<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"></div> --}}
+
     <!-- Customers Card -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <!-- Card header: search + filter -->
@@ -60,12 +60,13 @@
                         placeholder="Search customers..." />
                 </div>
             </div>
-            <div class="w-full md:w-auto">
-                <select wire:model.live="status"
+            <div class="w-full md:w-auto flex gap-2">
+                <select wire:model.live="statusReview"
                     class="w-full md:w-auto rounded-lg border border-gray-200 bg-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition">
-                    <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
+                    <option value="">All Review Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="declined">Declined</option>
                 </select>
             </div>
         </div>
@@ -82,19 +83,16 @@
                             Email</th>
                         <th
                             class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
-                            Account</th>
+                            Review Status</th>
+                        <th
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            Role Applied</th>
                         <th
                             class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
                             Job Title</th>
                         <th
                             class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
                             Phone</th>
-                        <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
-                            Status</th>
-                        <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
-                            Already User</th>
                         <th
                             class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
                             Joined</th>
@@ -107,13 +105,21 @@
                     @forelse($customers as $customer)
                         <tr class="hover:bg-gray-50 transition-colors dark:hover:bg-zinc-800/50">
                             <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                {{ $customer->user->name ?? '-' }}
+                                {{ $customer->user_id ? $customer->user->name : ($customer->first_name . ' ' . $customer->last_name) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
-                                {{ $customer->user->email ?? '-' }}
+                                {{ $customer->user_id ? $customer->user->email : $customer->email }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        @if($customer->status_review === 'approved') bg-green-100 text-green-800 
+                                        @elseif($customer->status_review === 'declined') bg-red-100 text-red-800 
+                                        @else bg-yellow-100 text-yellow-800 @endif">
+                                    {{ ucfirst($customer->status_review) }}
+                                </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
-                                {{ $customer->account_number ?? '-' }}
+                                {{ ucfirst($customer->role_applied) ?? '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
                                 {{ $customer->job_title ?? '-' }}
@@ -121,37 +127,19 @@
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
                                 {{ $customer->phone ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ ($customer->status === 'active') ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
-                                    {{ ucfirst($customer->status ?? 'Active') }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $customer->user_id ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }}">
-                                    {{ $customer->user_id ? 'Yes' : 'No' }}
-                                </span>
-                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
                                 {{ $customer->created_at->format('M d, Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2">
-                                @if($customer->user)
-                                    @can('customers.view')
-                                        <a href="{{ route('admin.customers.show', $customer->user) }}"
-                                            class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">View</a>
-                                    @endcan
-                                    @can('customers.edit')
-                                        <a href="{{ route('admin.customers.edit', $customer->user) }}"
-                                            class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</a>
-                                    @endcan
-                                @endif
+                                @can('customers.view')
+                                    <a href="{{ route('admin.customers.show', $customer->id) }}"
+                                        class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">View</a>
+                                @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-500 dark:text-zinc-400">
                                     <flux:icon.users class="w-12 h-12 mb-4 text-gray-300 dark:text-zinc-600" />
                                     <p class="text-lg font-medium">No customers found</p>

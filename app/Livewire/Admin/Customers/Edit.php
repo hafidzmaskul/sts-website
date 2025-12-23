@@ -7,6 +7,11 @@ use App\Models\Customer;
 use Livewire\Component;
 use Illuminate\Validation\Rule;
 
+use App\Models\PricingFormula;
+
+use Livewire\Attributes\Title;
+
+#[Title('Edit Customer')]
 class Edit extends Component
 {
     public User $user;
@@ -19,6 +24,7 @@ class Edit extends Component
     public $postal_code;
     public $country;
     public $status;
+    public $pricing_formula_id;
 
     public function mount(User $user)
     {
@@ -26,6 +32,7 @@ class Edit extends Component
 
         $this->name = $this->user->name;
         $this->email = $this->user->email;
+        $this->pricing_formula_id = $this->user->pricing_formula_id;
 
         $customerProfile = $this->user->customer;
 
@@ -48,6 +55,7 @@ class Edit extends Component
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
             'status' => 'required|in:active,suspended',
+            'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
         ];
     }
 
@@ -59,6 +67,7 @@ class Edit extends Component
         $this->user->update([
             'name' => $this->name,
             'email' => $this->email,
+            'pricing_formula_id' => $this->pricing_formula_id,
         ]);
 
         // Create or update customer profile
@@ -83,6 +92,8 @@ class Edit extends Component
     {
         $this->authorize('customers.edit');
 
-        return view('livewire.admin.customers.edit')->title('Edit Customer');
+        return view('livewire.admin.customers.edit', [
+            'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+        ]);
     }
 }
