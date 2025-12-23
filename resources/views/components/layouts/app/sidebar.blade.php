@@ -59,6 +59,15 @@
                     wire:navigate :class="request()->routeIs('dashboard') ? 'custom-navitem-active' : 'custom-navitem'">
                     {{ __('Dashboard') }}
                 </flux:navlist.item>
+
+                @if(auth()->user()->hasAnyRole(['trade account', 'credit facilities account']))
+                    <flux:navlist.item icon="users" :href="route('dashboard.users.index')"
+                        :current="request()->routeIs('dashboard.users.*')" wire:navigate
+                        :class="request()->routeIs('dashboard.users.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Manage Users') }}
+                    </flux:navlist.item>
+                @endif
+
                 @can('roles.view')
                     <flux:navlist.item icon="users" :href="route('admin.roles.index')"
                         :current="request()->routeIs('admin.roles.*')" wire:navigate

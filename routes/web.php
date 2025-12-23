@@ -88,7 +88,11 @@ Route::middleware(['auth'])->group(function () {
         // Transactions
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
+        Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
     });
+
+    // Parent User Management
+    Route::get('/dashboard/users', \App\Livewire\FixedRole\ChildUsers\Index::class)->name('dashboard.users.index');
 });
 
 require __DIR__ . '/auth.php';
