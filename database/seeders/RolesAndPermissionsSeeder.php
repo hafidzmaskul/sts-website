@@ -109,6 +109,12 @@ class RolesAndPermissionsSeeder extends Seeder
             // 13. Quotes
             'quotes.view',
             'quotes.delete',
+
+            // 14. Pricing Formulas
+            'pricing-formulas.view',
+            'pricing-formulas.create',
+            'pricing-formulas.edit',
+            'pricing-formulas.delete',
         ];
 
         // Create permissions
