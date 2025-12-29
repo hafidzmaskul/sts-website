@@ -205,6 +205,45 @@
                     </dl>
                 </div>
             </div>
+
+            <!-- Advance Pricing Card -->
+            @if($product->customerPrices->isNotEmpty())
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Advance Pricing</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                            Customer</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                            Price (GBP)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    @foreach($product->customerPrices as $customer)
+                                        <tr>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                {{ $customer->name }}
+                                                <span
+                                                    class="block text-xs text-gray-500 font-normal">{{ $customer->email }}</span>
+                                            </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                £{{ number_format($customer->pivot->price, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Right Column (Images) -->

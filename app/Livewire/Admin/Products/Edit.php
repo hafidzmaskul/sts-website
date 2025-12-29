@@ -32,6 +32,10 @@ class Edit extends Component
     public $base_price = null;
     public $special_price = null;
     public $status = 'active';
+
+    public $showAdvancePricing = false;
+    public $customerPrices = [];
+
     public $is_exclusive = false;
 
     // Rich Text Fields
@@ -86,6 +90,21 @@ class Edit extends Component
                 ];
             })
             ->toArray();
+
+        // Populate Advance Pricing
+        $this->customerPrices = $product->customerPrices()
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'user_id' => $user->id,
+                    'price' => $user->pivot->price,
+                ];
+            })
+            ->toArray();
+
+        if (count($this->customerPrices) > 0) {
+            $this->showAdvancePricing = true;
+        }
     }
 
     public function addImage()
@@ -112,6 +131,17 @@ class Edit extends Component
     {
         unset($this->newImages[$index]);
         $this->newImages = array_values($this->newImages);
+    }
+
+    public function addCustomerPrice()
+    {
+        $this->customerPrices[] = ['user_id' => null, 'price' => null];
+    }
+
+    public function removeCustomerPrice($index)
+    {
+        unset($this->customerPrices[$index]);
+        $this->customerPrices = array_values($this->customerPrices);
     }
 
     public function rules()
@@ -141,6 +171,11 @@ class Edit extends Component
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string',
+
+            // Advance Pricing Validation
+            'customerPrices' => 'array',
+            'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id',
+            'customerPrices.*.price' => 'required_with:customerPrices.*.user_id|numeric|min:0',
         ];
     }
 
@@ -171,6 +206,17 @@ class Edit extends Component
         ]);
 
         $product->categories()->sync($this->selectedCategories);
+
+        // Sync Advance Pricing
+        $syncData = [];
+        if ($this->showAdvancePricing && !empty($this->customerPrices)) {
+            foreach ($this->customerPrices as $cp) {
+                if (!empty($cp['user_id']) && $cp['price'] !== null) {
+                    $syncData[$cp['user_id']] = ['price' => $cp['price']];
+                }
+            }
+        }
+        $product->customerPrices()->sync($syncData);
 
         // Update sequences for existing images
         foreach ($this->storedImages as $imgData) {
@@ -220,6 +266,7 @@ class Edit extends Component
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
             'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+            'customers' => \App\Models\User::role('customer')->orderBy('name')->get(),
         ]);
     }
 }

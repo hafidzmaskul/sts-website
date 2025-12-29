@@ -29,6 +29,9 @@ class Create extends Component
     public $special_price = null;
     public $status = 'active';
 
+    public $showAdvancePricing = false;
+    public $customerPrices = []; // [['user_id' => 1, 'price' => 100]]
+
     public $is_exclusive = false;
 
     // Rich Text Fields
@@ -96,12 +99,28 @@ class Create extends Component
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string',
+
+            // Advance Pricing Validation
+            'customerPrices' => 'array',
+            'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id', // Removed distinct for now to avoid complexity, but it's good practice
+            'customerPrices.*.price' => 'required_with:customerPrices.*.user_id|numeric|min:0',
         ];
     }
 
     public function updatedTitle($value)
     {
         $this->slug = Str::slug($value);
+    }
+
+    public function addCustomerPrice()
+    {
+        $this->customerPrices[] = ['user_id' => null, 'price' => null];
+    }
+
+    public function removeCustomerPrice($index)
+    {
+        unset($this->customerPrices[$index]);
+        $this->customerPrices = array_values($this->customerPrices);
     }
 
     public function save()
@@ -132,6 +151,15 @@ class Create extends Component
         $product = Product::create($data);
         $product->categories()->sync($this->selectedCategories);
 
+        // Attach Advance Pricing
+        if ($this->showAdvancePricing && !empty($this->customerPrices)) {
+            foreach ($this->customerPrices as $cp) {
+                if (!empty($cp['user_id']) && $cp['price'] !== null) {
+                    $product->customerPrices()->attach($cp['user_id'], ['price' => $cp['price']]);
+                }
+            }
+        }
+
         foreach ($this->newImages as $imgData) {
             if ($imgData['image']) {
                 $path = $imgData['image']->store('products', 'public');
@@ -157,6 +185,7 @@ class Create extends Component
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
             'pricingFormulas' => PricingFormula::orderBy('label')->get(),
+            'customers' => \App\Models\User::role('customer')->orderBy('name')->get(),
         ]);
     }
 }

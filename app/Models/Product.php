@@ -56,4 +56,11 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function customerPrices()
+    {
+        return $this->belongsToMany(User::class, 'product_user_prices')
+            ->withPivot('price')
+            ->withTimestamps();
+    }
 }
