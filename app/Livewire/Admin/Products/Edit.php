@@ -30,6 +30,7 @@ class Edit extends Component
     public $slug = '';
     public $is_sign_up_for_pricing = false;
     public $base_price = null;
+    public $special_price = null;
     public $status = 'active';
     public $is_exclusive = false;
 
@@ -61,6 +62,7 @@ class Edit extends Component
         $this->slug = $product->slug;
         $this->is_sign_up_for_pricing = $product->is_sign_up_for_pricing;
         $this->base_price = $product->base_price;
+        $this->special_price = $product->special_price;
         $this->status = $product->status;
         $this->is_exclusive = $product->is_exclusive;
         $this->key_feature = $product->key_feature;
@@ -120,6 +122,7 @@ class Edit extends Component
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($this->productId)],
             'base_price' => 'nullable|numeric|min:0',
+            'special_price' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'selectedCategories' => 'array',
 
@@ -154,6 +157,7 @@ class Edit extends Component
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
             'base_price' => $this->base_price,
+            'special_price' => $this->special_price,
             'status' => $this->status,
             'is_exclusive' => $this->is_exclusive,
             'key_feature' => $this->key_feature,

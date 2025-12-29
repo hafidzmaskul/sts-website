@@ -26,7 +26,9 @@ class Create extends Component
     public $slug = '';
     public $is_sign_up_for_pricing = false;
     public $base_price = null;
+    public $special_price = null;
     public $status = 'active';
+
     public $is_exclusive = false;
 
     // Rich Text Fields
@@ -76,6 +78,7 @@ class Create extends Component
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
             'base_price' => 'nullable|numeric|min:0',
+            'special_price' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'selectedCategories' => 'array',
 
@@ -112,6 +115,7 @@ class Create extends Component
             'slug' => $this->slug,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
             'base_price' => $this->base_price,
+            'special_price' => $this->special_price,
             'status' => $this->status,
             'is_exclusive' => $this->is_exclusive,
             'key_feature' => $this->key_feature,

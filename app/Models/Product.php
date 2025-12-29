@@ -17,6 +17,7 @@ class Product extends Model
         'information',
         'specification',
         'base_price',
+        'special_price',
         'status',
         'is_exclusive',
         'seo_title',

@@ -155,6 +155,19 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Special Price (GBP)</label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                                <span class="text-gray-500 sm:text-sm">£</span>
+                            </div>
+                            <input type="number" step="0.01" wire:model="special_price"
+                                class="w-full rounded-lg border pl-7 pr-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                                placeholder="0.00">
+                        </div>
+                        @error('special_price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pricing Formula</label>
                         <div class="text-xs text-gray-500 mb-2">Select a pricing formula to apply automatically.</div>
                         <select wire:model="pricing_formula_id"
@@ -162,7 +175,8 @@
                             <option value="">None (Use Base Price)</option>
                             @foreach($pricingFormulas as $formula)
                                 <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
-                                    {{ $formula->value }})</option>
+                                    {{ $formula->value }})
+                                </option>
                             @endforeach
                         </select>
                         @error('pricing_formula_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
