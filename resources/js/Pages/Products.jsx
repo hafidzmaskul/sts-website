@@ -517,9 +517,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                         <>
                                             <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                                 {visibleProducts.map((product) => (
-                                                    <a
-                                                        href={`/products/${product.slug}`}
-                                                    >
+
                                                         <ProductListingCard
                                                             key={product.id}
                                                             image={product.image}
@@ -531,7 +529,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                                             slug={product.slug}
                                                             showPricing={product.is_sign_up_for_pricing && !logged}
                                                         />
-                                                    </a>
+                                                    
 
                                                 ))}
                                             </div>
