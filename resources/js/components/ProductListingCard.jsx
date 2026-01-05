@@ -73,13 +73,7 @@ export default function ProductListingCard({
                             </span>
                         </div>
                     )}
-                    <a
-                        href={`/products/${slug}`}
-                        className="inline-block rounded-lg bg-[#0079C2] px-3 py-2 text-xs font-semibold text-white hover:bg-[#005F99] transition-colors text-center mt-2"
-                    >
-                        View Details
-                    </a>
-
+                   
                     {/* View Details link - separate from login logic if needed, or maybe user wanted REPLACEMENT?
                         Request said: "apabila showPricing is true maka ubah tombol menjadi tombol login... apabila false maka lanngsung tammpilkan priceLabel"
 

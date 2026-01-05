@@ -295,6 +295,15 @@ export default function ProductDetail({ product, products = [], logged }) {
                                     </button>
                                 </div>
                             )}
+                            <div className="flex flex-wrap gap-3">
+                                    <button
+                                        type="button"
+                                        className="inline-flex items-center justify-center rounded-xl bg-[#0079C2] px-20 py-3 text-sm font-normal text-white hover:bg-[#005a91] transition"
+
+                                    >
+                                        Add To Cart
+                                    </button>
+                                </div>
 
                             {/* Key Feature */}
                             <div>
