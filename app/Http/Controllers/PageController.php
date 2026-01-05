@@ -139,7 +139,7 @@ class PageController
             'products' => $products,
             'baseProducts' => $baseProducts,
             'productCategory' => $productCategory,
-            'logged' => Auth::check(),
+
 
         ]);
     }
@@ -156,7 +156,7 @@ class PageController
         return Inertia::render('ProductDetail', [
             'product' => $product,
             'products' => $relatedProducts,
-            'logged' => Auth::check(),
+
 
         ]);
     }
@@ -208,7 +208,8 @@ class PageController
         return Inertia::render('Login');
     }
 
-    public function quoteBuilder(){
+    public function quoteBuilder()
+    {
         return Inertia::render('QuoteBuilder');
     }
 }
