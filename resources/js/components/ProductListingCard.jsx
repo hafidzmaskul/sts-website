@@ -40,15 +40,18 @@ export default function ProductListingCard({
                     <span className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-2">
                         {brand}
                     </span>
-                    <span className="text-sm font-semibold text-[#232323] mb-2">
-                        {name}
-                    </span>
+                     <a href={`/products/${slug}`} >
+                        <span className="text-sm font-semibold text-[#232323] mb-2">
+                            {name}
+                        </span>
                     <span className="text-xs text-gray-500">
                         STS: {series}
                     </span>
                     <span className="text-xs text-gray-500">
                         Model : {series}
                     </span>
+                    </a>
+
                     <div className="">
                         <button
                             type="button"
@@ -73,7 +76,7 @@ export default function ProductListingCard({
                             </span>
                         </div>
                     )}
-                   
+
                     {/* View Details link - separate from login logic if needed, or maybe user wanted REPLACEMENT?
                         Request said: "apabila showPricing is true maka ubah tombol menjadi tombol login... apabila false maka lanngsung tammpilkan priceLabel"
 

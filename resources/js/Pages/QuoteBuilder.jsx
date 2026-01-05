@@ -5,7 +5,7 @@ import Footer from '../landing/Footer';
 
 export default function Cart() {
     return (
-        <div className="min-h-screen flex flex-col bg-[#F3F3F3]">
+        <div className="min-h-screen flex flex-col bg-white">
             <Head title="Cart" />
             <Header />
 
@@ -16,51 +16,76 @@ export default function Cart() {
                         <li className="mx-1 text-gray-400">/</li>
                         <li><Link href='/products' className="hover:text-[#0079C2]">Products</Link></li>
                         <li className="mx-1 text-gray-400">/</li>
-                        <li className="text-gray-700">title</li>
+                        <li className="text-gray-700">Quote Builder</li>
                     </ol>
                 </nav>
-                <div className="flex md:flex-row flex-col">
-                    {/* Breadcrumb */}
 
-
-                    {/* Kiri: Gambar */}
-                    <div className="md:w-2/3 flex items-center justify-center p-8">
-                        <img
-                            src="/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png"
-                            alt="Product"
-                            className="w-full h-full object-contain"
-                        />
+                {/* Page Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                    <h1 className="text-3xl font-bold text-gray-800">Quote Builder</h1>
+                    <div className="flex flex-col gap-2 w-full md:w-auto">
+                        <button className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-semibold py-2 px-6 rounded-md shadow-sm transition">
+                            ADD TO CART
+                        </button>
+                        <button className="bg-[#FF3333] hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-md shadow-sm transition">
+                            DELETE
+                        </button>
                     </div>
-                    {/* Kanan: Dropdowns & Summary */}
-                    <div className="md:w-1/3 w-full flex flex-col justify-between p-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                            {[...Array(10)].map((_, idx) => (
-                                <div key={idx} className="flex flex-col">
-                                    <label className="font-semibold text-gray-700 mb-1" htmlFor={`dropdown${idx}`}>
-                                        Pilihan #{idx + 1}
-                                    </label>
-                                    <select
-                                        id={`dropdown${idx}`}
-                                        className="border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    >
-                                        <option value="">Pilih opsi...</option>
-                                        <option value="opsi1">Opsi 1</option>
-                                        <option value="opsi2">Opsi 2</option>
-                                    </select>
-                                </div>
-                            ))}
+                </div>
+
+                {/* Quote Card */}
+                <div className="bg-[#F5F5F5] rounded-xl p-6 shadow-sm">
+                    {/* Card Header */}
+                    <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                            <input type="checkbox" className="w-5 h-5 text-[#0079C2] rounded focus:ring-[#0079C2]" />
+                            <span className="font-semibold text-lg text-gray-700">Quote #1</span>
                         </div>
-                        {/* Summary & Button */}
-                        <div className="border-t pt-6 mt-auto">
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-lg font-bold text-gray-800">Summary</span>
-                                <span className="text-xl font-extrabold text-[#0079C2]">Rp 0</span>
+                        <button className="text-gray-400 hover:text-red-500 transition">
+                            {/* Trash Icon */}
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        {/* Scrollable Product List */}
+                        <div className="flex-1 overflow-x-auto">
+                            <div className="flex gap-4 pb-4 min-w-min">
+                                {/* Dummy Products */}
+                                {[...Array(5)].map((_, i) => (
+                                    <div key={i} className="min-w-[220px] bg-white rounded-lg border border-gray-200 p-4 relative shrink-0">
+                                        <div className="absolute top-3 left-3">
+                                            <input type="checkbox" className="w-4 h-4 text-[#0079C2] rounded focus:ring-[#0079C2]" />
+                                        </div>
+                                        <button className="absolute top-3 right-3 text-gray-400 hover:text-red-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                        <div className="h-40 flex items-center justify-center mt-4">
+                                            <img
+                                                src="/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png"
+                                                alt="Product"
+                                                className="max-h-full max-w-full object-contain"
+                                            />
+                                        </div>
+                                        <div className="mt-2 text-center">
+                                            <p className="text-sm font-medium text-gray-600">Product Name {i + 1}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                            <button
-                                className="w-full bg-[#0079C2] hover:bg-blue-700 text-white font-bold py-3 rounded-md transition duration-200"
-                                type="button"
-                            >
-                                Add Quote
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="w-full lg:w-64 flex flex-col gap-3 shrink-0 justify-center">
+                            <button className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-bold py-3 px-4 rounded-md shadow-sm text-center transition">
+                                PROCEED TO CHECKOUT
+                            </button>
+                            <button className="bg-[#0079C2] hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-md shadow-sm text-center transition">
+                                MODIFY QUOTE
                             </button>
                         </div>
                     </div>

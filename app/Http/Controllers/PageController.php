@@ -212,4 +212,7 @@ class PageController
     {
         return Inertia::render('QuoteBuilder');
     }
+    public function invoice(){
+        return Inertia::render('Invoice');
+    }
 }
