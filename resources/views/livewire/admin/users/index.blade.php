@@ -21,7 +21,7 @@
                         </svg>
                     </span>
                     <input type="text" wire:model.live="search"
-                        class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                         placeholder="Search name or email..." />
                 </div>
             </div>
@@ -32,11 +32,11 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Name</th>
-                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Email</th>
-                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Roles</th>
-                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-500">Direct Perms</th>
-                        <th class="px-4 py-3 text-right uppercase text-xs tracking-wider text-gray-500 w-44">Actions
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Name</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Email</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Roles</th>
+                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Direct Perms</th>
+                        <th class="px-4 py-3 text-right uppercase text-xs tracking-wider text-gray-800 w-44">Actions
                         </th>
                     </tr>
                 </thead>
@@ -44,10 +44,10 @@
                     @forelse($users as $u)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $u->name }}</div>
+                                <div class="text-sm font-medium text-black">{{ $u->name }}</div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $u->email }}</div>
+                                <div class="text-sm text-black">{{ $u->email }}</div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <div class="flex flex-wrap gap-2">
@@ -100,15 +100,15 @@
                         <tr>
                             <td colspan="5" class="px-4 py-12">
                                 <div class="flex flex-col items-center justify-center space-y-4">
-                                    <svg class="w-16 h-16 text-gray-200" fill="none" stroke="currentColor"
+                                    <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor"
                                         viewBox="0 0 48 48">
                                         <rect width="36" height="24" x="6" y="12" rx="6" fill="none" stroke="currentColor"
                                             stroke-width="2" />
                                         <path d="M18 21a6 6 0 1 1 12 0M6 36c2-4 8-7 18-7s16 3 18 7" stroke="currentColor"
                                             stroke-width="2" fill="none" />
                                     </svg>
-                                    <div class="text-lg font-semibold text-gray-500">No users found</div>
-                                    <div class="text-sm text-gray-400 text-center">We couldn't find any users matching your
+                                    <div class="text-lg font-semibold text-gray-700">No users found</div>
+                                    <div class="text-sm text-gray-600 text-center">We couldn't find any users matching your
                                         search.</div>
                                 </div>
                             </td>

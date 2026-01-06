@@ -1,6 +1,6 @@
 <div class="p-6 space-y-6 w-full">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold" style="color: #000;">Edit Brand</h1>
+        <h1 class="text-2xl font-bold text-black">Edit Brand</h1>
     </div>
 
     <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
@@ -8,24 +8,24 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <!-- Name -->
                 <div class="col-span-1">
-                    <label for="name" class="block text-sm font-medium mb-1" style="color:#000;">Name</label>
+                    <label for="name" class="block text-sm font-medium mb-1 text-black">Name</label>
                     <input type="text" wire:model.live.debounce.500ms="name" id="name"
-                        class="w-full rounded-lg border px-3 py-2" style="border: 1px solid #D2D2D2; color: #000;"
+                        class="w-full rounded-lg border px-3 py-2 text-black" style="border: 1px solid #D2D2D2;"
                         placeholder="Brand Name">
                     @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Slug -->
                 <div class="col-span-1">
-                    <label for="slug" class="block text-sm font-medium mb-1" style="color:#000;">Slug</label>
-                    <input type="text" wire:model="slug" id="slug" class="w-full rounded-lg border px-3 py-2 bg-gray-50"
-                        style="border: 1px solid #D2D2D2; color: #000;" readonly>
+                    <label for="slug" class="block text-sm font-medium mb-1 text-black">Slug</label>
+                    <input type="text" wire:model="slug" id="slug" class="w-full rounded-lg border px-3 py-2 bg-gray-50 text-black"
+                        style="border: 1px solid #D2D2D2;" readonly>
                     @error('slug') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Image -->
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium mb-1" style="color:#000;">Image</label>
+                    <label class="block text-sm font-medium mb-1 text-black">Image</label>
                     <div class="mt-1 flex items-center space-x-4">
                         @if ($image)
                             <img src="{{ $image->temporaryUrl() }}"
@@ -54,26 +54,26 @@
 
                 <!-- Description -->
                 <div class="col-span-2">
-                    <label for="description" class="block text-sm font-medium mb-1"
-                        style="color:#000;">Description</label>
+                    <label for="description" class="block text-sm font-medium mb-1 text-black">Description</label>
                     <textarea wire:model="description" id="description" rows="3"
-                        class="w-full rounded-lg border px-3 py-2"
-                        style="border: 1px solid #D2D2D2; color: #000;"></textarea>
+                        class="w-full rounded-lg border px-3 py-2 text-black"
+                        style="border: 1px solid #D2D2D2;"></textarea>
                     @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Website -->
                 <div class="col-span-2">
-                    <label for="website" class="block text-sm font-medium mb-1" style="color:#000;">Website URL</label>
-                    <input type="url" wire:model="website" id="website" class="w-full rounded-lg border px-3 py-2"
-                        style="border: 1px solid #D2D2D2; color: #000;" placeholder="https://example.com">
+                    <label for="website" class="block text-sm font-medium mb-1 text-black">Website URL</label>
+                    <input type="url" wire:model="website" id="website" class="w-full rounded-lg border px-3 py-2 text-black"
+                        style="border: 1px solid #D2D2D2;" placeholder="https://example.com">
                     @error('website') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Pricing Formula -->
                 <div class="col-span-2">
-                    <label for="pricing_formula_id" class="block text-sm font-medium mb-1" style="color:#000;">Pricing
-                        Formula</label>
+                    <label for="pricing_formula_id" class="block text-sm font-medium mb-1 text-black">
+                        Pricing Formula
+                    </label>
                     <div class="text-xs text-gray-500 mb-2">Select a pricing formula to apply automatically.</div>
                     <select wire:model="pricing_formula_id" id="pricing_formula_id"
                         class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500">
@@ -88,10 +88,9 @@
 
                 <!-- Sort Order -->
                 <div class="col-span-1">
-                    <label for="sort_order" class="block text-sm font-medium mb-1" style="color:#000;">Sort
-                        Order</label>
+                    <label for="sort_order" class="block text-sm font-medium mb-1 text-black">Sort Order</label>
                     <input type="number" wire:model="sort_order" id="sort_order"
-                        class="w-full rounded-lg border px-3 py-2" style="border: 1px solid #D2D2D2; color: #000;">
+                        class="w-full rounded-lg border px-3 py-2 text-black" style="border: 1px solid #D2D2D2;">
                     @error('sort_order') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -100,7 +99,7 @@
                     <div class="flex items-center h-10">
                         <input wire:model="is_active" id="is_active" type="checkbox"
                             class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                        <label for="is_active" class="ml-2 block text-sm font-medium text-gray-700">
+                        <label for="is_active" class="ml-2 block text-sm font-medium text-black">
                             Active
                         </label>
                     </div>

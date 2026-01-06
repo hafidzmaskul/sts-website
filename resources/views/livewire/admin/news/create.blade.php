@@ -18,7 +18,7 @@
                                 type="text"
                                 wire:model="title"
                                 style="color: #000; border-color: #D2D2D2;"
-                                class="w-full rounded-lg border px-3 py-2 placeholder-[#D2D2D2] text-[#AEAEAE]"
+                                class="w-full rounded-lg border px-3 py-2 placeholder-[#D2D2D2] text-black"
                                 placeholder="Title"
                             >
                             @error('title') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror

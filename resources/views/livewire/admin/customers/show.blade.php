@@ -6,20 +6,20 @@
                 <h1 class="text-2xl font-bold text-black">
                     {{ $customer->user_id ? $customer->user->name : $customer->first_name . ' ' . $customer->last_name }}
                 </h1>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium 
-                    @if($customer->status_review === 'approved') bg-green-100 text-green-800 
-                    @elseif($customer->status_review === 'declined') bg-red-100 text-red-800 
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium
+                    @if($customer->status_review === 'approved') bg-green-100 text-green-800
+                    @elseif($customer->status_review === 'declined') bg-red-100 text-red-800
                     @else bg-yellow-100 text-yellow-800 @endif">
                     {{ ucfirst($customer->status_review) }}
                 </span>
             </div>
-            <p class="text-sm text-gray-400 mt-1">
+            <p class="text-sm text-black mt-1">
                 {{ $customer->user_id ? $customer->user->email : $customer->email }}
             </p>
         </div>
         <div class="flex gap-3">
             <a href="{{ route('admin.customers.index') }}"
-                class="px-4 py-2 border border-gray-700 rounded-lg text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-center">
+                class="px-4 py-2 border border-gray-700 rounded-lg text-black bg-white hover:bg-gray-50 flex items-center justify-center">
                 Back to List
             </a>
 
@@ -57,17 +57,17 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Profile Details -->
         <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
-            <h2 class="text-lg font-semibold mb-4 text-gray-400">Application Information</h2>
+            <h2 class="text-lg font-semibold mb-4 text-black">Application Information</h2>
             <dl class="grid grid-cols-1 gap-4">
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Role Applied</dt>
-                    <dd class="col-span-2 text-sm text-gray-900 font-semibold">
+                    <dt class="text-sm font-medium text-black">Role Applied</dt>
+                    <dd class="col-span-2 text-sm text-black font-semibold">
                         {{ ucfirst($customer->role_applied) ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Pricing Formula</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Pricing Formula</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         @if($customer->user && $customer->user->pricingFormula)
                             <div class="font-medium">{{ $customer->user->pricingFormula->label }}</div>
                         @else
@@ -76,38 +76,38 @@
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Account Number</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Account Number</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->account_number ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Job Title</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Job Title</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->job_title ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Phone</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Phone</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->phone ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">City</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">City</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->city ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Address</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Address</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->address ?? '-' }}
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-gray-500">Joined Date</dt>
-                    <dd class="col-span-2 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-black">Joined Date</dt>
+                    <dd class="col-span-2 text-sm text-black">
                         {{ $customer->created_at->format('M d, Y H:i') }}
                     </dd>
                 </div>
@@ -128,17 +128,17 @@
     @if($showDeclineModal)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Decline Application</h3>
-                <p class="text-sm text-gray-500 mb-4">Please provide a reason for declining this application.</p>
+                <h3 class="text-lg font-semibold text-black mb-4">Decline Application</h3>
+                <p class="text-sm text-black mb-4">Please provide a reason for declining this application.</p>
 
                 <textarea wire:model="reviewNote" rows="4"
-                    class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
                     placeholder="Enter reason here..."></textarea>
                 @error('reviewNote') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
 
                 <div class="flex justify-end gap-3 mt-4">
                     <button wire:click="$set('showDeclineModal', false)"
-                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-black hover:bg-gray-50">
                         Cancel
                     </button>
                     <button wire:click="decline" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">

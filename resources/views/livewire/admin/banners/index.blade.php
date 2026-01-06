@@ -1,6 +1,6 @@
 <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold" style="color:#000;">Banner Management</h1>
+        <h1 class="text-2xl font-bold text-black">Banner Management</h1>
         @can('banner.create')
             <button wire:click="create"
                 class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
@@ -11,13 +11,13 @@
 
     @if($showForm)
         <div class="p-6 rounded-2xl shadow border border-[#e5e7eb]">
-            <h2 class="text-xl font-semibold mb-4" style="color:#000;">{{ $editingId ? 'Edit Banner' : 'Create Banner' }}</h2>
+            <h2 class="text-xl font-semibold mb-4 text-black">{{ $editingId ? 'Edit Banner' : 'Create Banner' }}</h2>
 
             <form wire:submit.prevent="save" class="space-y-5">
                 <div class="grid grid-cols-1 gap-6">
                     <!-- Name -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Name</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-700">Name</label>
                         <input type="text" wire:model="name"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
                             placeholder="Name"
@@ -27,7 +27,7 @@
 
                     <!-- CTA URL -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">CTA URL (Optional)</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-700">CTA URL (Optional)</label>
                         <input type="url" wire:model="cta_url"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
                             style="border-color:#D2D2D2; color:#000;"
@@ -37,17 +37,16 @@
 
                     <!-- File Upload -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Banner Image</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-700">Banner Image</label>
                         <input type="file" wire:model="file"
-                            class="block w-full text-sm text-[#AEAEAE] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            style="color:#AEAEAE;">
+                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         @error('file') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-                        <div wire:loading wire:target="file" class="text-sm text-[#AEAEAE] mt-1">Uploading...</div>
+                        <div wire:loading wire:target="file" class="text-sm text-gray-700 mt-1">Uploading...</div>
 
                         @if ($file)
                             <div class="mt-2">
-                                <p class="text-sm mb-1" style="color:#AEAEAE;">Preview:</p>
+                                <p class="text-sm mb-1 text-gray-700">Preview:</p>
                                 <img src="{{ $file->temporaryUrl() }}"
                                     class="h-32 w-auto object-cover rounded border"/>
                             </div>
@@ -57,7 +56,7 @@
                             @endphp
                             @if($currentBanner && $currentBanner->file_path)
                                 <div class="mt-2">
-                                    <p class="text-sm mb-1" style="color:#AEAEAE;">Current Image:</p>
+                                    <p class="text-sm mb-1 text-gray-700">Current Image:</p>
                                     <img src="{{ Storage::url($currentBanner->file_path) }}"
                                         class="h-32 w-auto object-cover rounded border">
                                 </div>
@@ -92,7 +91,7 @@
                         type="text"
                         wire:model.live.debounce.300ms="search"
                         placeholder="Search banners..."
-                        class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white text-gray-900 placeholder-gray-400 text-sm transition"
+                        class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 bg-white text-black placeholder-gray-400 text-sm transition"
                         autocomplete="off"
                     >
                 </div>
@@ -103,11 +102,11 @@
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Image</th>
-                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Name</th>
-                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">CTA URL</th>
-                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Created By</th>
-                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 text-right">Actions</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-700">Image</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-700">Name</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-700">CTA URL</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-700">Created By</th>
+                            <th class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-700 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -125,7 +124,7 @@
                                 </td>
                                 <!-- Name cell -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $banner->name }}</div>
+                                    <div class="text-sm font-medium text-black">{{ $banner->name }}</div>
                                 </td>
                                 <!-- CTA URL cell -->
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -139,7 +138,7 @@
                                 </td>
                                 <!-- Created By cell -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-black">
                                         {{ $banner->creator->name ?? '-' }}
                                     </div>
                                 </td>

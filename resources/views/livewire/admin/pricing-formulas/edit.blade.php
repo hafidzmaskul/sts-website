@@ -33,56 +33,56 @@
             </div>
 
             <div class="flex justify-end gap-2 pt-4">
-                <a href="{{ route('admin.pricing-formulas.index') }}" wire:navigate 
+                <a href="{{ route('admin.pricing-formulas.index') }}" wire:navigate
                     class="px-4 py-2 rounded-lg border border-[#0079C2] text-[#0079C2] bg-transparent transition hover:bg-blue-50">
                     Cancel
                 </a>
-                <button type="submit" 
+                <button type="submit"
                     class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
                     Update Formula
                 </button>
             </div>
         </form>
     </div>
-    
+
     <div class="mt-8">
         <h2 class="text-lg font-semibold mb-4 text-black">History</h2>
         <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Label</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Value</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Date</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">User</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Label</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Type</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Value</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($pricingFormula->histories()->with('user')->latest()->get() as $history)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 {{ $history->created_at->format('M d, Y H:i') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 <div class="flex items-center gap-2">
                                     @if($history->user)
                                         <img src="{{ $history->user->profile_photo_url }}" class="w-6 h-6 rounded-full" alt="{{ $history->user->name }}">
-                                        <span class="text-sm font-medium text-gray-900">{{ $history->user->name }}</span>
+                                        <span class="text-sm font-medium text-black">{{ $history->user->name }}</span>
                                     @else
-                                        <span class="text-sm text-gray-500">System/Unknown</span>
+                                        <span class="text-sm text-black">System/Unknown</span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
                                 {{ $history->label }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-700">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-black">
                                     {{ $history->type->label() }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 {{ $history->value }}
                             </td>
                         </tr>

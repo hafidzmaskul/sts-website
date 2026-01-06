@@ -1,6 +1,6 @@
 <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-[#000000]">Product Categories</h1>
+        <h1 class="text-2xl font-bold text-black">Product Categories</h1>
         @can('product-categories.create')
             <button wire:click="create"
                 class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
@@ -11,13 +11,12 @@
 
     @if($showForm)
         <div class="p-6 rounded-2xl shadow border">
-            <h2 class="text-xl font-semibold mb-4 text-[#000000]">{{ $editingId ? 'Edit Category' : 'Create Category' }}
-            </h2>
+            <h2 class="text-xl font-semibold mb-4 text-black">{{ $editingId ? 'Edit Category' : 'Create Category' }}</h2>
             <form wire:submit.prevent="save" class="space-y-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Name -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Name</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-500">Name</label>
                         <input type="text" wire:model.live="name"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]"
                             placeholder="Name">
@@ -26,7 +25,7 @@
 
                     <!-- Slug -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Slug</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-500">Slug</label>
                         <input type="text" wire:model="slug"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]"
                             placeholder="Slug">
@@ -35,7 +34,7 @@
 
                     <!-- Parent Category -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Parent Category</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-500">Parent Category</label>
                         <select wire:model="parent_id"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]">
                             <option value="">None (Top Level)</option>
@@ -48,9 +47,9 @@
 
                     <!-- Image -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Image</label>
+                        <label class="block text-sm font-medium mb-1 text-gray-500">Image</label>
                         <input type="file" wire:model="image"
-                            class="block w-full text-sm text-[#000000] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
                         <div wire:loading wire:target="image" class="text-sm text-gray-500 mt-1">Uploading...</div>
@@ -77,11 +76,11 @@
 
                     <!-- SEO Section -->
                     <div class="md:col-span-2 border-t pt-4">
-                        <h3 class="text-lg font-medium mb-3" style="color: #000000">SEO Metadata</h3>
+                        <h3 class="text-lg font-medium mb-3 text-black">SEO Metadata</h3>
                         <div class="space-y-4">
                             <!-- SEO Title -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">SEO Title</label>
+                                <label class="block text-sm font-medium mb-1 text-gray-500">SEO Title</label>
                                 <input type="text" wire:model="seo_title"
                                     class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]"
                                     placeholder="SEO Title">
@@ -90,7 +89,7 @@
 
                             <!-- SEO Description -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">SEO Description</label>
+                                <label class="block text-sm font-medium mb-1 text-gray-500">SEO Description</label>
                                 <textarea wire:model="seo_description" rows="3"
                                     class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]"
                                     placeholder="SEO Description"></textarea>
@@ -99,7 +98,7 @@
 
                             <!-- SEO Keywords -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">SEO Keywords</label>
+                                <label class="block text-sm font-medium mb-1 text-gray-500">SEO Keywords</label>
                                 <input type="text" wire:model="seo_keywords"
                                     class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2]"
                                     placeholder="comma, separated, keywords">
@@ -131,7 +130,7 @@
                         type="text"
                         wire:model.live.debounce.300ms="search"
                         placeholder="Search categories..."
-                        class="block w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm"
+                        class="block w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm"
                     >
                 </div>
             </div>
@@ -167,7 +166,7 @@
 
                                 <!-- Name -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-black">
                                         {{ $category->name }}
                                     </div>
                                     <div class="text-xs text-gray-500">
@@ -190,12 +189,12 @@
 
                                 <!-- Slug -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $category->slug }}</div>
+                                    <div class="text-sm font-medium text-black">{{ $category->slug }}</div>
                                 </td>
 
                                 <!-- SEO Title -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-black">
                                         {{ Str::limit($category->seo_title, 30) ?: '-' }}
                                     </div>
                                 </td>

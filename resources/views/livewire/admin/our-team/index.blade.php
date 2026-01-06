@@ -1,13 +1,13 @@
 <div>
-    <header class="sticky top-0 z-10 border-b border-zinc-200 bg-white/50 backdrop-blur dark:border-zinc-700 dark:bg-zinc-800/50">
+    <header class="sticky top-0 z-10 border-b border-zinc-200 bg-white/50 backdrop-blur">
         <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <h1 class="text-xl font-semibold dark:text-white">
+            <h1 class="text-xl font-semibold text-black">
                 Our Team
             </h1>
             @can('our-team.create')
-            <button 
-                wire:click="create" 
-                class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors"
+            <button
+                wire:click="create"
+                class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors"
             >
                 New Member
             </button>
@@ -16,19 +16,19 @@
     </header>
 
     <div class="mx-auto max-w-7xl space-y-6 px-4 py-12 sm:px-6 lg:px-8">
-        
+
         <div class="flex items-center gap-3">
             <input
                 type="text"
                 wire:model.live="search"
                 placeholder="Search by name or job title..."
-                class="w-full md:w-80 rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                class="w-full md:w-80 rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
             />
         </div>
 
-        <div class="overflow-x-auto rounded-xl border dark:border-zinc-700 dark:bg-zinc-800">
+        <div class="overflow-x-auto rounded-xl border bg-white">
             <table class="min-w-full text-sm">
-                <thead class="bg-zinc-50 text-left dark:bg-zinc-900 dark:text-zinc-200">
+                <thead class="bg-zinc-50 text-left text-black">
                     <tr>
                         <th class="px-4 py-3">Image</th>
                         <th class="px-4 py-3">Name</th>
@@ -41,19 +41,19 @@
                 </thead>
                 <tbody>
                     @forelse($team as $member)
-                        <tr class="border-t dark:border-zinc-700">
+                        <tr class="border-t">
                             <td class="px-4 py-3">
                                 @if($member->image)
                                     <img src="{{ Storage::url($member->image) }}" alt="{{ $member->name }}" class="h-10 w-10 rounded-full object-cover">
                                 @else
-                                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700">
+                                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200">
                                         ?
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 font-medium dark:text-white">{{ $member->name }}</td>
-                            <td class="px-4 py-3 dark:text-zinc-300">{{ $member->job_title }}</td>
-                            <td class="px-4 py-3 dark:text-zinc-300">
+                            <td class="px-4 py-3 font-medium text-black">{{ $member->name }}</td>
+                            <td class="px-4 py-3 text-black">{{ $member->job_title }}</td>
+                            <td class="px-4 py-3 text-black">
                                 <div class="flex flex-col">
                                     <span>{{ $member->email }}</span>
                                     <span>{{ $member->phone }}</span>
@@ -61,29 +61,29 @@
                             </td>
                             <td class="px-4 py-3">
                                 @if($member->status)
-                                    <span class="px-2 py-0.5 rounded border text-xs text-green-700 border-green-400 bg-green-100 dark:bg-green-900 dark:border-green-700 dark:text-green-200">
+                                    <span class="px-2 py-0.5 rounded border text-xs text-green-700 border-green-400 bg-green-100">
                                         Visible
                                     </span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded border text-xs text-zinc-600 border-zinc-400 bg-zinc-100 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-300">
+                                    <span class="px-2 py-0.5 rounded border text-xs text-zinc-600 border-zinc-400 bg-zinc-100">
                                         Hidden
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 dark:text-zinc-300">{{ $member->sequence }}</td>
+                            <td class="px-4 py-3 text-black">{{ $member->sequence }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-2">
                                     @can('our-team.edit')
                                     <button
                                         wire:click="edit({{ $member->id }})"
-                                        class="px-3 py-1.5 rounded border dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                                        class="px-3 py-1.5 rounded border"
                                     >Edit</button>
                                     @endcan
                                     @can('our-team.delete')
                                     <button
                                         wire:click="delete({{ $member->id }})"
                                         wire:confirm="Are you sure you want to delete this team member?"
-                                        class="px-3 py-1.5 rounded border text-red-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-red-400"
+                                        class="px-3 py-1.5 rounded border text-red-600"
                                     >Delete</button>
                                     @endcan
                                 </div>
@@ -91,7 +91,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">No team members found.</td>
+                            <td colspan="7" class="px-4 py-6 text-center text-zinc-500">No team members found.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -102,128 +102,128 @@
 
         @if($showForm)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div class="w-full max-w-3xl rounded-2xl bg-white p-6 dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
-                <h2 class="text-xl font-semibold mb-4 dark:text-white">{{ $editingId ? 'Edit Team Member' : 'New Team Member' }}</h2>
+            <div class="w-full max-w-3xl rounded-2xl bg-white p-6 max-h-[90vh] overflow-y-auto">
+                <h2 class="text-xl font-semibold mb-4 text-black">{{ $editingId ? 'Edit Team Member' : 'New Team Member' }}</h2>
 
                 <form wire:submit.prevent="save" class="space-y-5">
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Name</label>
+                            <label class="block text-sm font-medium mb-1 text-black">Name</label>
                             <input
                                 type="text"
                                 wire:model="name"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                             >
-                            @error('name') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Job Title</label>
+                            <label class="block text-sm font-medium mb-1 text-black">Job Title</label>
                             <input
                                 type="text"
                                 wire:model="job_title"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                             >
-                            @error('job_title') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('job_title') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Email</label>
+                            <label class="block text-sm font-medium mb-1 text-black">Email</label>
                             <input
                                 type="email"
                                 wire:model="email"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                             >
-                            @error('email') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('email') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Phone</label>
+                            <label class="block text-sm font-medium mb-1 text-black">Phone</label>
                             <input
                                 type="text"
                                 wire:model="phone"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                             >
-                            @error('phone') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('phone') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                    
+
                     <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">LinkedIn URL</label>
+                        <label class="block text-sm font-medium mb-1 text-black">LinkedIn URL</label>
                         <input
                             type="url"
                             wire:model="linkedin"
                             placeholder="https://linkedin.com/in/..."
-                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                            class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                         >
-                        @error('linkedin') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                        @error('linkedin') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Description</label>
+                        <label class="block text-sm font-medium mb-1 text-black">Description</label>
                         <textarea
                             wire:model="description"
                             rows="4"
-                            class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                            class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                         ></textarea>
-                        @error('description') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                        @error('description') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Sequence</label>
+                            <label class="block text-sm font-medium mb-1 text-black">Sequence</label>
                             <input
                                 type="number"
                                 wire:model="sequence"
-                                class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                                class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300"
                             >
-                            @error('sequence') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('sequence') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
-                        
+
                         <!-- UPDATED STATUS FIELD (Dropdown) -->
                         <div>
-                            <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Status</label>
-                            <select wire:model="status" class="w-full rounded-lg border px-3 py-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                            <label class="block text-sm font-medium mb-1 text-black">Status</label>
+                            <select wire:model="status" class="w-full rounded-lg border px-3 py-2 bg-white text-black border-zinc-300">
                                 <option value="0">Hidden</option>
                                 <option value="1">Visible</option>
                             </select>
-                            @error('status') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                            @error('status') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1 dark:text-zinc-100">Image</label>
+                        <label class="block text-sm font-medium mb-1 text-black">Image</label>
                         <input
                             type="file"
                             wire:model="image"
-                            class="w-full text-sm dark:text-zinc-100 file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-4 file:py-2 file:text-white file:dark:bg-white file:dark:text-zinc-900"
+                            class="w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-zinc-900 file:px-4 file:py-2 file:text-white"
                         >
-                        <div wire:loading wire:target="image" class="mt-2 text-sm dark:text-zinc-100">Uploading...</div>
+                        <div wire:loading wire:target="image" class="mt-2 text-sm text-black">Uploading...</div>
 
                         @if ($image)
-                            <p class="mt-4 text-sm font-medium dark:text-zinc-100">New Image Preview:</p>
+                            <p class="mt-4 text-sm font-medium text-black">New Image Preview:</p>
                             <img src="{{ $image->temporaryUrl() }}" class="mt-2 h-20 w-20 rounded-full object-cover">
                         @elseif ($existingImage)
-                            <p class="mt-4 text-sm font-medium dark:text-zinc-100">Current Image:</p>
+                            <p class="mt-4 text-sm font-medium text-black">Current Image:</p>
                             <img src="{{ Storage::url($existingImage) }}" class="mt-2 h-20 w-20 rounded-full object-cover">
                         @endif
 
-                        @error('image') <p class="text-sm text-red-600 mt-1 dark:text-red-400">{{ $message }}</p> @enderror
+                        @error('image') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
-                    
+
 
                     <div class="flex items-center justify-end gap-2">
                         <button
                             type="button"
                             wire:click="closeModal"
-                            class="px-4 py-2 rounded-lg border dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                            class="px-4 py-2 rounded-lg border"
                         >Cancel</button>
                         <button
                             type="submit"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors"
+                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors"
                         >Save</button>
                     </div>
                 </form>
