@@ -2,7 +2,7 @@
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-black">Pricing Formulas</h1>
         @can('pricing-formulas.create')
-            <a href="{{ route('admin.pricing-formulas.create') }}" wire:navigate 
+            <a href="{{ route('admin.pricing-formulas.create') }}" wire:navigate
                 class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -25,7 +25,7 @@
                     </svg>
                 </span>
                 <input type="text" wire:model.live.debounce="search" placeholder="Search formulas..."
-                    class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+                    class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition text-black" />
             </div>
         </div>
 
@@ -33,39 +33,39 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-50">
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Label</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Value</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Created By</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Updated</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Label</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Type</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Value</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Created By</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Last Updated</th>
                         <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($formulas as $formula)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
                                 {{ $formula->label }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-700">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-black">
                                     {{ $formula->type->label() }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 {{ $formula->value }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 <div class="flex items-center gap-2">
                                     @if($formula->user)
                                         <img src="{{ $formula->user->profile_photo_url }}" class="w-6 h-6 rounded-full" alt="{{ $formula->user->name }}">
-                                        <span class="text-sm font-medium text-gray-900">{{ $formula->user->name }}</span>
+                                        <span class="text-sm font-medium text-black">{{ $formula->user->name }}</span>
                                     @else
-                                        <span class="text-sm text-gray-500">System</span>
+                                        <span class="text-sm text-black">System</span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 {{ $formula->updated_at->diffForHumans() }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -83,7 +83,7 @@
                                     @endcan
 
                                     @can('pricing-formulas.delete')
-                                        <button wire:click="delete({{ $formula->id }})" 
+                                        <button wire:click="delete({{ $formula->id }})"
                                             onclick="return confirm('Are you sure you want to delete this formula?')"
                                             class="inline-flex items-center p-2 rounded-full text-red-600 hover:bg-red-50 transition"
                                             title="Delete">
@@ -99,7 +99,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-black">
                                 <div class="flex flex-col items-center justify-center">
                                     <svg class="w-16 h-16 text-gray-200 mb-4" fill="none" stroke="currentColor"
                                         stroke-width="1.5" viewBox="0 0 64 64">
@@ -107,7 +107,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
                                             d="M24 28h16M24 36h10" />
                                     </svg>
-                                    <div class="text-lg font-semibold text-gray-700 mb-1">No pricing formulas found</div>
+                                    <div class="text-lg font-semibold text-black mb-1">No pricing formulas found</div>
                                 </div>
                             </td>
                         </tr>

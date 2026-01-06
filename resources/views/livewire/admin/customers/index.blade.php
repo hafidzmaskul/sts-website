@@ -56,13 +56,13 @@
                         </svg>
                     </span>
                     <input type="text" wire:model.live.debounce.300ms="search"
-                        class="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition"
+                        class="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition text-black"
                         placeholder="Search customers..." />
                 </div>
             </div>
             <div class="w-full md:w-auto flex gap-2">
                 <select wire:model.live="statusReview"
-                    class="w-full md:w-auto rounded-lg border border-gray-200 bg-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition">
+                    class="w-full md:w-auto rounded-lg border border-gray-200 bg-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition text-black">
                     <option value="">All Review Status</option>
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
@@ -72,76 +72,76 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-zinc-700">
-                <thead class="bg-gray-50 text-left dark:bg-zinc-800 dark:text-zinc-200">
+            <table class="min-w-full text-sm divide-y divide-gray-200">
+                <thead class="bg-gray-50 text-left">
                     <tr>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Name</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Email</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Review Status</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Role Applied</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Job Title</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Phone</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Joined</th>
                         <th
-                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-gray-500 dark:text-zinc-400">
+                            class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">
                             Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-zinc-700 bg-white dark:bg-zinc-900">
+                <tbody class="divide-y divide-gray-200 bg-white">
                     @forelse($customers as $customer)
-                        <tr class="hover:bg-gray-50 transition-colors dark:hover:bg-zinc-800/50">
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-black">
                                 {{ $customer->user_id ? $customer->user->name : ($customer->first_name . ' ' . $customer->last_name) }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 {{ $customer->user_id ? $customer->user->email : $customer->email }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        @if($customer->status_review === 'approved') bg-green-100 text-green-800 
-                                        @elseif($customer->status_review === 'declined') bg-red-100 text-red-800 
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        @if($customer->status_review === 'approved') bg-green-100 text-green-800
+                                        @elseif($customer->status_review === 'declined') bg-red-100 text-red-800
                                         @else bg-yellow-100 text-yellow-800 @endif">
                                     {{ ucfirst($customer->status_review) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 {{ ucfirst($customer->role_applied) ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 {{ $customer->job_title ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 {{ $customer->phone ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 {{ $customer->created_at->format('M d, Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap font-medium space-x-2">
                                 @can('customers.view')
                                     <a href="{{ route('admin.customers.show', $customer->id) }}"
-                                        class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">View</a>
+                                        class="text-black hover:text-gray-900">View</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="8" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center justify-center text-gray-500 dark:text-zinc-400">
-                                    <flux:icon.users class="w-12 h-12 mb-4 text-gray-300 dark:text-zinc-600" />
+                                <div class="flex flex-col items-center justify-center text-black">
+                                    <flux:icon.users class="w-12 h-12 mb-4 text-gray-300" />
                                     <p class="text-lg font-medium">No customers found</p>
                                     <p class="text-sm">Try adjusting your search terms.</p>
                                 </div>

@@ -24,7 +24,7 @@
                             wire:model.live="name"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
                             placeholder="Enter category name"
-                            style="border-color: #D2D2D2; color:#000; placeholder-color:#D2D2D2;"
+                            style="border-color: #D2D2D2; color:#000;"
                         >
                         @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
@@ -36,7 +36,7 @@
                             type="text"
                             wire:model="slug"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
-                            style="border-color: #D2D2D2; color:#000; placeholder-color:#D2D2D2;"
+                            style="border-color: #D2D2D2; color:#000;"
                             placeholder="Enter slug"
                         >
                         @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -48,7 +48,7 @@
                         <select
                             wire:model="parent_id"
                             class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
-                            style="border-color: #D2D2D2; color:#000; placeholder-color:#D2D2D2;">
+                            style="border-color: #D2D2D2; color:#000;">
                             <option value="">None (Top Level)</option>
                             @foreach($parentOptions as $option)
                                 <option value="{{ $option->id }}">{{ $option->name }}</option>
@@ -67,8 +67,8 @@
                                 <input
                                     type="text"
                                     wire:model="seo_title"
-                                    class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2"
-                                    style="border-color: #D2D2D2; color: #000; placeholder-color:#D2D2D2;"
+                                    class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
+                                    style="border-color: #D2D2D2; color: #000;"
                                     placeholder="SEO Title"
                                 >
                                 @error('seo_title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -81,7 +81,7 @@
                                     wire:model="seo_description"
                                     rows="3"
                                     class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black"
-                                    style="border-color: #D2D2D2; color:#000; placeholder-color:#D2D2D2;"
+                                    style="border-color: #D2D2D2; color:#000;"
                                     placeholder="SEO Description"
                                 ></textarea>
                                 @error('seo_description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -127,7 +127,7 @@
                         type="text"
                         wire:model.live.debounce.300ms="search"
                         placeholder="Search categories..."
-                        class="block w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 text-black placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition text-sm"
+                        class="block w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 text-black placeholder-[#888] bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition text-sm"
                     />
                 </div>
             </div>
@@ -137,11 +137,11 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Name</th>
-                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Slug</th>
-                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">Parent</th>
-                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-gray-700">SEO Title</th>
-                            <th class="px-6 py-3 text-right uppercase text-xs font-semibold tracking-wider text-gray-700">Actions</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-black">Name</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-black">Slug</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-black">Parent</th>
+                            <th class="px-6 py-3 text-left uppercase text-xs font-semibold tracking-wider text-black">SEO Title</th>
+                            <th class="px-6 py-3 text-right uppercase text-xs font-semibold tracking-wider text-black">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -149,7 +149,7 @@
                             <tr class="hover:bg-gray-50 transition">
                                 <!-- Name -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
+                                    <div class="text-sm font-medium text-black">{{ $category->name }}</div>
                                     @if($category->status ?? null)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-medium mt-1">
                                             <span class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mr-1"></span>
@@ -159,22 +159,22 @@
                                 </td>
                                 <!-- Slug -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-xs text-gray-700">{{ $category->slug }}</div>
+                                    <div class="text-xs text-black">{{ $category->slug }}</div>
                                 </td>
                                 <!-- Parent -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($category->parent)
-                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-100 text-gray-800 text-xs font-medium">{{ $category->parent->name }}</span>
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-100 text-black text-xs font-medium">{{ $category->parent->name }}</span>
                                     @else
-                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-gray-500 text-xs">-</span>
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-[#888] text-xs">-</span>
                                     @endif
                                 </td>
                                 <!-- SEO Title -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($category->seo_title)
-                                        <div class="text-xs text-gray-700">{{ \Illuminate\Support\Str::limit($category->seo_title, 30) }}</div>
+                                        <div class="text-xs text-black">{{ \Illuminate\Support\Str::limit($category->seo_title, 30) }}</div>
                                     @else
-                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-gray-400 text-xs">-</span>
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-[#bbb] text-xs">-</span>
                                     @endif
                                 </td>
                                 <!-- Actions -->
@@ -182,7 +182,7 @@
                                     <div class="flex justify-end gap-2">
                                         @can('news-categories.edit')
                                             <button wire:click="edit({{ $category->id }})"
-                                                class="p-2 rounded hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition"
+                                                class="p-2 rounded hover:bg-blue-50 text-black hover:text-blue-600 transition"
                                                 aria-label="Edit"
                                                 title="Edit"
                                             >
@@ -196,7 +196,7 @@
                                             <button
                                                 wire:confirm="Are you sure you want to delete this category?"
                                                 wire:click="delete({{ $category->id }})"
-                                                class="p-2 rounded hover:bg-red-50 text-gray-600 hover:text-red-600 transition"
+                                                class="p-2 rounded hover:bg-red-50 text-black hover:text-red-600 transition"
                                                 aria-label="Delete"
                                                 title="Delete"
                                             >
@@ -218,8 +218,8 @@
                                             <path d="M6 37c5-8 11.5-8 16 0s11.5 8 16 0" stroke="#D1D5DB" stroke-width="2" />
                                             <circle cx="24" cy="22" r="6" fill="#E5E7EB" />
                                         </svg>
-                                        <div class="text-lg font-semibold text-gray-700 mb-1">No categories found</div>
-                                        <div class="text-sm text-gray-500">Try adjusting your search or create a new category.</div>
+                                        <div class="text-lg font-semibold text-black mb-1">No categories found</div>
+                                        <div class="text-sm text-[#888]">Try adjusting your search or create a new category.</div>
                                     </div>
                                 </td>
                             </tr>

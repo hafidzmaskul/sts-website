@@ -1,21 +1,23 @@
-<div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-6">
+<div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-6" style="color: black;">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-bold text-gray-900">{{ $product->title }}</h1>
+                <h1 class="text-2xl font-bold" style="color: black;">{{ $product->title }}</h1>
                 <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->status === 'active' ? 'bg-green-100' : 'bg-gray-100' }} {{ $product->status === 'active' ? 'text-green-800' : 'text-gray-800' }}"
+                    style="color: black;">
                     <span
                         class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $product->status === 'active' ? 'bg-green-600' : 'bg-gray-500' }}"></span>
                     {{ ucfirst($product->status) }}
                 </span>
             </div>
-            <p class="text-sm text-gray-500 mt-1">{{ $product->brand->name ?? '-' }}</p>
+            <p class="text-sm mt-1" style="color: #555;">{{ $product->brand->name ?? '-' }}</p>
         </div>
         <div class="flex gap-3">
             <a href="{{ route('admin.products.index') }}"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                style="color: black;">
                 Back to List
             </a>
             <a href="{{ route('admin.products.edit', $product->id) }}"
@@ -37,75 +39,77 @@
             <!-- Basic Details Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">Basic Information</h2>
+                    <h2 class="text-lg font-semibold" style="color: black;">Basic Information</h2>
                 </div>
                 <div class="p-6">
                     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Slug</dt>
-                            <dd class="mt-1 text-sm text-gray-900 flex items-center">
+                            <dt class="text-sm font-medium" style="color: #555;">Slug</dt>
+                            <dd class="mt-1 text-sm flex items-center" style="color: black;">
                                 <span
-                                    class="bg-gray-100 rounded px-2 py-0.5 font-mono text-xs">{{ $product->slug }}</span>
+                                    class="bg-gray-100 rounded px-2 py-0.5 font-mono text-xs" style="color: black;">{{ $product->slug }}</span>
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Price (GBP)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 font-semibold">
+                            <dt class="text-sm font-medium" style="color: #555;">Price (GBP)</dt>
+                            <dd class="mt-1 text-sm font-semibold" style="color: black;">
                                 {{ $product->base_price ? '£' . number_format($product->base_price, 2) : 'N/A' }}
                                 @if($product->is_sign_up_for_pricing)
                                     <span
-                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100"
+                                        style="color: #1e40af;">
                                         Sign up for pricing
                                     </span>
                                 @endif
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Special Price (GBP)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 font-semibold">
+                            <dt class="text-sm font-medium" style="color: #555;">Special Price (GBP)</dt>
+                            <dd class="mt-1 text-sm font-semibold" style="color: black;">
                                 {{ $product->special_price ? '£' . number_format($product->special_price, 2) : 'N/A' }}
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Pricing Formula</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
+                            <dt class="text-sm font-medium" style="color: #555;">Pricing Formula</dt>
+                            <dd class="mt-1 text-sm" style="color: black;">
                                 @if($product->pricingFormula)
-                                    <div class="font-medium">{{ $product->pricingFormula->label }}</div>
-                                    <div class="text-xs text-gray-500">
+                                    <div class="font-medium" style="color: black;">{{ $product->pricingFormula->label }}</div>
+                                    <div class="text-xs" style="color: #555;">
                                         {{ $product->pricingFormula->type->label() }}
                                         {{ $product->pricingFormula->value }}
                                     </div>
                                 @else
-                                    <span class="text-gray-400 italic">None</span>
+                                    <span class="italic" style="color: #aaa;">None</span>
                                 @endif
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Exclusivity</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
+                            <dt class="text-sm font-medium" style="color: #555;">Exclusivity</dt>
+                            <dd class="mt-1 text-sm" style="color: black;">
                                 @if($product->is_exclusive)
                                     <span
-                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100"
+                                        style="color: #6d28d9;">
                                         Exclusive Product
                                     </span>
                                 @else
-                                    <span class="text-gray-500">Standard</span>
+                                    <span style="color: #555;">Standard</span>
                                 @endif
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Categories</dt>
+                            <dt class="text-sm font-medium" style="color: #555;">Categories</dt>
                             <dd class="mt-1 flex flex-wrap gap-2">
                                 @forelse($product->categories as $category)
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 border border-gray-200" style="color: black;">
                                         @if($category->parent)
-                                            <span class="text-gray-500 mr-1">{{ $category->parent->name }} ›</span>
+                                            <span class="mr-1" style="color: #555;">{{ $category->parent->name }} ›</span>
                                         @endif
                                         {{ $category->name }}
                                     </span>
                                 @empty
-                                    <span class="text-gray-400 italic text-xs">No categories</span>
+                                    <span class="italic text-xs" style="color: #aaa;">No categories</span>
                                 @endforelse
                             </dd>
                         </div>
@@ -118,8 +122,8 @@
                 <div class="divide-y divide-gray-200">
                     @if($product->product_overview)
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Overview</h3>
-                            <div class="prose prose-sm max-w-none text-gray-700">
+                            <h3 class="text-lg font-semibold mb-4" style="color: black;">Product Overview</h3>
+                            <div class="prose prose-sm max-w-none" style="color: black;">
                                 {!! $product->product_overview !!}
                             </div>
                         </div>
@@ -127,8 +131,8 @@
 
                     @if($product->key_feature)
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Key Features</h3>
-                            <div class="prose prose-sm max-w-none text-gray-700">
+                            <h3 class="text-lg font-semibold mb-4" style="color: black;">Key Features</h3>
+                            <div class="prose prose-sm max-w-none" style="color: black;">
                                 {!! $product->key_feature !!}
                             </div>
                         </div>
@@ -136,8 +140,8 @@
 
                     @if($product->main_feature)
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Main Features</h3>
-                            <div class="prose prose-sm max-w-none text-gray-700">
+                            <h3 class="text-lg font-semibold mb-4" style="color: black;">Main Features</h3>
+                            <div class="prose prose-sm max-w-none" style="color: black;">
                                 {!! $product->main_feature !!}
                             </div>
                         </div>
@@ -145,8 +149,8 @@
 
                     @if($product->specification)
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Specification</h3>
-                            <div class="prose prose-sm max-w-none text-gray-700">
+                            <h3 class="text-lg font-semibold mb-4" style="color: black;">Specification</h3>
+                            <div class="prose prose-sm max-w-none" style="color: black;">
                                 {!! $product->specification !!}
                             </div>
                         </div>
@@ -154,15 +158,15 @@
 
                     @if($product->information)
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
-                            <div class="prose prose-sm max-w-none text-gray-700">
+                            <h3 class="text-lg font-semibold mb-4" style="color: black;">Additional Information</h3>
+                            <div class="prose prose-sm max-w-none" style="color: black;">
                                 {!! $product->information !!}
                             </div>
                         </div>
                     @endif
 
                     @if(!$product->product_overview && !$product->key_feature && !$product->main_feature && !$product->specification && !$product->information)
-                        <div class="p-8 text-center text-gray-500">
+                        <div class="p-8 text-center" style="color: #555;">
                             No detailed content available.
                         </div>
                     @endif
@@ -172,27 +176,27 @@
             <!-- SEO Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">SEO Metadata</h2>
+                    <h2 class="text-lg font-semibold" style="color: black;">SEO Metadata</h2>
                 </div>
                 <div class="p-6">
                     <dl class="space-y-4">
                         <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Title</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $product->seo_title ?? '-' }}</dd>
+                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Title</dt>
+                            <dd class="mt-1 text-sm" style="color: black;">{{ $product->seo_title ?? '-' }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Description</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $product->seo_description ?? '-' }}
+                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Description</dt>
+                            <dd class="mt-1 text-sm" style="color: black;">{{ $product->seo_description ?? '-' }}
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Keywords</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
+                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Keywords</dt>
+                            <dd class="mt-1 text-sm" style="color: black;">
                                 @if(!empty($product->seo_keywords))
                                     <div class="flex flex-wrap gap-1">
                                         @foreach(explode(',', $product->seo_keywords) as $keyword)
                                             <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100" style="color: black;">
                                                 {{ trim($keyword) }}
                                             </span>
                                         @endforeach
@@ -210,7 +214,7 @@
             @if($product->customerPrices->isNotEmpty())
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Advance Pricing</h2>
+                        <h2 class="text-lg font-semibold" style="color: black;">Advance Pricing</h2>
                     </div>
                     <div class="p-6">
                         <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
@@ -218,9 +222,9 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col"
-                                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-6" style="color: black;">
                                             Customer</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold" style="color: black;">
                                             Price (GBP)</th>
                                     </tr>
                                 </thead>
@@ -228,12 +232,13 @@
                                     @foreach($product->customerPrices as $customer)
                                         <tr>
                                             <td
-                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6"
+                                                style="color: black;">
                                                 {{ $customer->name }}
                                                 <span
-                                                    class="block text-xs text-gray-500 font-normal">{{ $customer->email }}</span>
+                                                    class="block text-xs font-normal" style="color: #555;">{{ $customer->email }}</span>
                                             </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm" style="color: #555;">
                                                 £{{ number_format($customer->pivot->price, 2) }}
                                             </td>
                                         </tr>
@@ -254,7 +259,7 @@
                 @if($product->brand)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="p-6 border-b border-gray-200">
-                            <h2 class="text-lg font-semibold text-gray-900">Brand Information</h2>
+                            <h2 class="text-lg font-semibold" style="color: black;">Brand Information</h2>
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 mb-4">
@@ -266,7 +271,7 @@
                                     </div>
                                 @else
                                     <div
-                                        class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center text-gray-400">
+                                        class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center" style="color: #aaa;">
                                         <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
@@ -275,10 +280,11 @@
                                     </div>
                                 @endif
                                 <div>
-                                    <h3 class="text-base font-medium text-gray-900">{{ $product->brand->name }}</h3>
+                                    <h3 class="text-base font-medium" style="color: black;">{{ $product->brand->name }}</h3>
                                     @if($product->brand->website)
                                         <a href="{{ $product->brand->website }}" target="_blank"
-                                            class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline inline-flex items-center">
+                                            class="text-sm hover:underline inline-flex items-center"
+                                            style="color: #1e40af;">
                                             Visit Website
                                             <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -290,7 +296,7 @@
                                 </div>
                             </div>
                             @if($product->brand->description)
-                                <div class="text-sm text-gray-600 line-clamp-4">
+                                <div class="text-sm line-clamp-4" style="color: #555;">
                                     {{ $product->brand->description }}
                                 </div>
                             @endif
@@ -300,7 +306,7 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Product Images</h2>
+                        <h2 class="text-lg font-semibold" style="color: black;">Product Images</h2>
                     </div>
                     <div class="p-6">
                         @if($product->images->isNotEmpty())
@@ -327,12 +333,12 @@
                             </div>
                         @else
                             <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" style="color: #aaa;">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p class="mt-2 text-sm text-gray-500">No images available.</p>
+                                <p class="mt-2 text-sm" style="color: #555;">No images available.</p>
                             </div>
                         @endif
                     </div>

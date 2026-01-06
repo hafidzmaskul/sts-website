@@ -1,6 +1,6 @@
 <div class="p-6 space-y-6">
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-black">Roles</h1>
+        <h1 class="text-2xl font-bold" style="color: #000;">Roles</h1>
         @can('roles.create')
             <button wire:click="create"
                 class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
@@ -22,7 +22,7 @@
                     </svg>
                 </span>
                 <input type="text" wire:model.live="search" placeholder="Search roles..."
-                    class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+                    class="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" style="color: #000;" />
             </div>
         </div>
         <!-- Table -->
@@ -31,15 +31,18 @@
                 <thead>
                     <tr class="bg-gray-50">
                         <th scope="col"
-                            class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+                            style="color: #000;">
                             Name
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+                            style="color: #000;">
                             Permissions
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap text-right w-40">
+                            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right w-40"
+                            style="color: #000;">
                             Actions
                         </th>
                     </tr>
@@ -48,14 +51,15 @@
                     @forelse($roles as $role)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $role->name }}</div>
+                                <div class="text-sm font-medium" style="color: #000;">{{ $role->name }}</div>
                                 {{-- Optionally subtext here --}}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($role->permissions as $p)
                                         <span
-                                            class="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
+                                            class="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-xs font-semibold"
+                                            style="color: #000;">
                                             {{ $p->name }}
                                         </span>
                                     @endforeach
@@ -103,8 +107,8 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
                                             d="M24 28h16M24 36h10" />
                                     </svg>
-                                    <div class="text-lg font-semibold text-gray-700 mb-1">No roles found</div>
-                                    <div class="text-sm text-gray-400">Try adjusting your search or create a new role.</div>
+                                    <div class="text-lg font-semibold mb-1" style="color: #000;">No roles found</div>
+                                    <div class="text-sm" style="color: #757575;">Try adjusting your search or create a new role.</div>
                                 </div>
                             </td>
                         </tr>
@@ -122,12 +126,13 @@
     @if($showForm)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div class="w-full max-w-2xl rounded-2xl bg-white p-6">
-                <h2 class="text-xl font-semibold mb-4 text-black">{{ $editingId ? 'Edit Role' : 'New Role' }}</h2>
+                <h2 class="text-xl font-semibold mb-4" style="color: #000;">{{ $editingId ? 'Edit Role' : 'New Role' }}</h2>
                 <form wire:submit.prevent="save" class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Role name</label>
                         <input type="text" wire:model="name"
-                            class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none"
+                            class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 placeholder-[#D2D2D2] focus:outline-none"
+                            style="color: #000;"
                             placeholder="Role name">
                         @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -136,7 +141,7 @@
                         <div
                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-64 overflow-y-auto border border-[#D2D2D2] rounded-lg p-3">
                             @foreach($permissions as $perm)
-                                <label class="flex items-center gap-2 text-black">
+                                <label class="flex items-center gap-2" style="color: #000;">
                                     <input type="checkbox" wire:model="selectedPermissions" value="{{ $perm->id }}" class="" />
                                     <span class="text-sm">{{ $perm->name }}</span>
                                 </label>

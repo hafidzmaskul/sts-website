@@ -1,6 +1,6 @@
-<div class="p-6 space-y-6">
+<div class="p-6 space-y-6 text-black">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold" style="color:#000;">News Articles</h1>
+        <h1 class="text-2xl font-bold">News Articles</h1>
         @can('news.create')
             <button wire:click="create"
                 class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
@@ -12,17 +12,17 @@
     @if($showForm)
         <div x-data x-init="$nextTick(() => window.initCKEditor && window.initCKEditor())"
             class="p-6 rounded-2xl shadow border">
-            <h2 class="text-xl font-semibold mb-4" style="color:#000;">{{ $editingId ? 'Edit Article' : 'Create Article' }}</h2>
+            <h2 class="text-xl font-semibold mb-4">{{ $editingId ? 'Edit Article' : 'Create Article' }}</h2>
             <form wire:submit.prevent="save" class="space-y-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Title -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Title</label>
+                        <label class="block text-sm font-medium mb-1">Title</label>
                         <input
                             type="text"
                             wire:model.live="title"
-                            class="w-full rounded-lg border px-3 py-2"
-                            style="border: 1px solid #AEAEAE; background: none; color: #AEAEAE; placeholder-color: #D2D2D2;"
+                            class="w-full rounded-lg border px-3 py-2 text-black"
+                            style="border: 1px solid #AEAEAE; background: none; color: #000;"
                             placeholder="Title"
                         >
                         @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -30,20 +30,20 @@
 
                     <!-- Slug -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Slug</label>
+                        <label class="block text-sm font-medium mb-1">Slug</label>
                         <input type="text" wire:model="slug"
-                            class="w-full rounded-lg border px-3 py-2"
-                            style="border: 1px solid #D2D2D2; color: #000; background: none;"
+                            class="w-full rounded-lg border px-3 py-2 text-black"
+                            style="border: 1px solid #D2D2D2; background: none;"
                             placeholder="Slug">
                         @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Status -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Status</label>
+                        <label class="block text-sm font-medium mb-1">Status</label>
                         <select wire:model="status"
-                            class="w-full rounded-lg border px-3 py-2"
-                            style="border: 1px solid #D2D2D2; color: #000;">
+                            class="w-full rounded-lg border px-3 py-2 text-black"
+                            style="border: 1px solid #D2D2D2;">
                             <option value="draft">Draft</option>
                             <option value="published">Published</option>
                             <option value="archived">Archived</option>
@@ -53,21 +53,21 @@
 
                     <!-- Published At -->
                     <div>
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Published At</label>
+                        <label class="block text-sm font-medium mb-1">Published At</label>
                         <input type="datetime-local" wire:model="published_at"
-                            class="w-full rounded-lg border px-3 py-2"
-                            style="border: 1px solid #D2D2D2; color: #000;">
+                            class="w-full rounded-lg border px-3 py-2 text-black"
+                            style="border: 1px solid #D2D2D2;">
                         @error('published_at') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Categories -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Categories</label>
+                        <label class="block text-sm font-medium mb-1">Categories</label>
                         <div
-                            class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto border rounded-lg p-3"
+                            class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto border rounded-lg p-3 text-black"
                             style="border:1px solid #D2D2D2;">
                             @foreach($categories as $category)
-                                <label class="flex items-center gap-2" style="color:#000;">
+                                <label class="flex items-center gap-2">
                                     <input type="checkbox" wire:model="selectedCategories" value="{{ $category->id }}">
                                     <span class="text-sm">{{ $category->name }}</span>
                                 </label>
@@ -78,17 +78,16 @@
 
                     <!-- Image -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Featured Image</label>
+                        <label class="block text-sm font-medium mb-1">Featured Image</label>
                         <input type="file" wire:model="image"
-                            class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            style="color:#000;">
+                            class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 text-black">
                         @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
                         <div wire:loading wire:target="image" class="text-sm mt-1">Uploading...</div>
 
                         @if ($image)
                             <div class="mt-2">
-                                <p class="text-sm mb-1" style="color:#D2D2D2;">Preview:</p>
+                                <p class="text-sm mb-1 text-gray-400">Preview:</p>
                                 <img src="{{ $image->temporaryUrl() }}"
                                     class="h-32 w-auto object-cover rounded border">
                             </div>
@@ -98,7 +97,7 @@
                             @endphp
                             @if($currentNews && $currentNews->image_path)
                                 <div class="mt-2">
-                                    <p class="text-sm mb-1" style="color:#D2D2D2;">Current Image:</p>
+                                    <p class="text-sm mb-1 text-gray-400">Current Image:</p>
                                     <img src="{{ Storage::url($currentNews->image_path) }}"
                                         class="h-32 w-auto object-cover rounded border">
                                 </div>
@@ -108,12 +107,12 @@
 
                     <!-- Content -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-1" style="color:#000;">Content</label>
+                        <label class="block text-sm font-medium mb-1">Content</label>
                         <input id="overview_input" type="hidden" wire:model.live="content" value="{{ $content ?? '' }}">
                         <div wire:ignore>
                             <div id="overview_editor"
-                                class="min-h-[260px] rounded-lg border"
-                                style="border:1px solid #D2D2D2; color:#000;">
+                                class="min-h-[260px] rounded-lg border text-black"
+                                style="border:1px solid #D2D2D2;">
                             </div>
                         </div>
                         @error('content') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -121,35 +120,35 @@
 
                     <!-- SEO Section -->
                     <div class="md:col-span-2 border-t pt-4" style="border-top:1px solid #D2D2D2;">
-                        <h3 class="text-lg font-medium mb-3" style="color:#000;">SEO Metadata</h3>
+                        <h3 class="text-lg font-medium mb-3">SEO Metadata</h3>
 
                         <div class="space-y-4">
                             <!-- SEO Title -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#000;">SEO Title</label>
+                                <label class="block text-sm font-medium mb-1">SEO Title</label>
                                 <input type="text" wire:model="seo_title"
-                                    class="w-full rounded-lg border px-3 py-2"
-                                    style="border: 1px solid #D2D2D2; color: #000;"
+                                    class="w-full rounded-lg border px-3 py-2 text-black"
+                                    style="border: 1px solid #D2D2D2;"
                                     placeholder="SEO Title">
                                 @error('seo_title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- SEO Description -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#000;">SEO Description</label>
+                                <label class="block text-sm font-medium mb-1">SEO Description</label>
                                 <textarea wire:model="seo_description" rows="3"
-                                    class="w-full rounded-lg border px-3 py-2"
-                                    style="border:1px solid #D2D2D2; color:#000;"
+                                    class="w-full rounded-lg border px-3 py-2 text-black"
+                                    style="border:1px solid #D2D2D2;"
                                     placeholder="SEO Description"></textarea>
                                 @error('seo_description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- SEO Keywords -->
                             <div>
-                                <label class="block text-sm font-medium mb-1" style="color:#000;">SEO Keywords</label>
+                                <label class="block text-sm font-medium mb-1">SEO Keywords</label>
                                 <input type="text" wire:model="seo_keywords"
-                                    class="w-full rounded-lg border px-3 py-2"
-                                    style="border: 1px solid #D2D2D2; color: #000;"
+                                    class="w-full rounded-lg border px-3 py-2 text-black"
+                                    style="border: 1px solid #D2D2D2;"
                                     placeholder="comma, separated, keywords">
                                 @error('seo_keywords') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
@@ -192,15 +191,15 @@
 
             <!-- Table Container -->
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y text-sm">
+                <table class="min-w-full divide-y text-sm text-black">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Image</th>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Title</th>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Status</th>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Categories</th>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold">Published At</th>
-                            <th class="px-6 py-3 text-xs uppercase tracking-wider text-black font-semibold text-right">Actions</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold">Image</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold">Title</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold">Status</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold">Categories</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold">Published At</th>
+                            <th class="px-6 py-3 text-xs uppercase tracking-wider font-semibold text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -221,7 +220,7 @@
                                 </td>
                                 <!-- Title -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-black">
+                                    <div class="text-sm font-medium">
                                         {{ Str::limit($article->title, 40) }}
                                     </div>
                                     {{-- Optional subtitle/info --}}
@@ -230,9 +229,9 @@
                                 <!-- Status -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium
-                                        @if($article->status === 'published') bg-green-100 text-black
-                                        @elseif($article->status === 'draft') bg-gray-100 text-black
-                                        @else bg-red-100 text-black @endif">
+                                        @if($article->status === 'published') bg-green-100
+                                        @elseif($article->status === 'draft') bg-gray-100
+                                        @else bg-red-100 @endif text-black">
                                         <span class="inline-block w-2 h-2 rounded-full mr-1
                                             @if($article->status === 'published') bg-green-500
                                             @elseif($article->status === 'draft') bg-gray-400
@@ -245,7 +244,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($article->categories as $cat)
-                                            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-black rounded text-xs font-medium">
+                                            <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 rounded text-xs font-medium">
                                                 {{ $cat->name }}
                                             </span>
                                         @endforeach
@@ -253,7 +252,7 @@
                                 </td>
                                 <!-- Published At -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-black">
+                                    <div class="text-sm font-medium">
                                         {{ $article->published_at ? $article->published_at->format('M d, Y H:i') : '-' }}
                                     </div>
                                     {{-- <div class="text-xs text-gray-500">Additional info</div> --}}
@@ -293,8 +292,8 @@
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 8v4l3 3m7 1a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
-                                        <div class="text-lg font-semibold text-black mb-1">No news articles found</div>
-                                        <div class="text-sm text-black">Try adjusting your search or filter to find results.</div>
+                                        <div class="text-lg font-semibold mb-1">No news articles found</div>
+                                        <div class="text-sm">Try adjusting your search or filter to find results.</div>
                                     </div>
                                 </td>
                             </tr>
