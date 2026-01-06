@@ -120,7 +120,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
 <div class=" ">
     <form wire:submit.prevent="login" class=" p-10 w-full bg-white   mx-auto">
-        <h1 class="font-inter text-center text-black font-bold text-2xl mb-10">Log In to STS</h1>
+        <h1 class="font-inter capitalize text-center text-black font-bold text-2xl mb-10">Welcome to admin area</h1>
+        <h1 class="font-inter text-center text-black font-medium text-xl mb-10">Log In to STS</h1>
         <div class="w-full">
             <div class="relative ">
                 <input type="email" id="email" name="email" wire:model="email" placeholder=" " style="height: 52px"
