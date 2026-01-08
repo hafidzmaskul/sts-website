@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\QuoteBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -210,9 +211,13 @@ class PageController
 
     public function quoteBuilder()
     {
-        return Inertia::render('QuoteBuilder');
+        $quote =  QuoteBuilder::with('products.images')->get();
+        return Inertia::render('QuoteBuilder', [
+            'quote' => $quote,
+        ]);
     }
-    public function invoice(){
+    public function invoice()
+    {
         return Inertia::render('Invoice');
     }
 }
