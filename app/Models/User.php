@@ -92,4 +92,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(PricingFormula::class);
     }
+
+    public function quoteBuilders()
+    {
+        return $this->hasMany(QuoteBuilder::class);
+    }
 }

@@ -12,6 +12,18 @@ Route::post('/contact-submissions', [ContactSubmissionController::class, 'store'
 Route::post('/quotes', [\App\Http\Controllers\Api\QuoteController::class, 'store']);
 Route::post('/sign-up', [\App\Http\Controllers\CustomerRegistrationController::class, 'store']);
 
+Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
+    ->middleware(\App\Http\Middleware\SanctumOrBasic::class)
+    ->prefix('quote-builder')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+        Route::post('/{id}/products', 'addProduct');
+        Route::delete('/{id}/products/{productId}', 'removeProduct');
+    });
+
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
