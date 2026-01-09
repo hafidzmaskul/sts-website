@@ -1,13 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import axios from 'axios';
 
 export default function Header() {
     const [showLang, setShowLang] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const [showPages, setShowPages] = useState(false);
     const [showPagesMobile, setShowPagesMobile] = useState(false);
-    const [cartCount] = useState(3);
+    const [cartCount, setCartCount] = useState(0);
     const [sideNavOpen, setSideNavOpen] = useState(false);
+
+    // fetch cart count and listen for cart changes
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            try {
+                const res = await axios.get('/api/cart');
+                const items = res.data.data || res.data || [];
+                const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
+                setCartCount(count);
+            } catch (err) {
+                setCartCount(0);
+            }
+        };
+
+        fetchCartCount();
+
+        const handler = (e) => {
+            if (e?.detail?.count !== undefined) {
+                setCartCount(e.detail.count);
+            } else {
+                fetchCartCount();
+            }
+        };
+
+        window.addEventListener('cart:changed', handler);
+        return () => window.removeEventListener('cart:changed', handler);
+    }, []);
 
     // Get logged status from shared Inertia props
     const { logged: isLoggedIn = false } = usePage().props;
