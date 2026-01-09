@@ -40,6 +40,22 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             $user = $this->validateCredentials();
 
+            // Prevent non-admin users from logging into the admin area
+            if ($user->hasAnyRole(['customer', 'trade account', 'credit facilities account'])) {
+                // If somehow already authenticated, ensure logout
+                try { Auth::logout(); } catch (\Throwable $_) { }
+
+                // Dispatch a browser toast message (matches other Livewire components)
+                $this->dispatch('notify', type: 'error', message: 'You are not admin.');
+
+                // Set an error message for the form as well
+                $this->error = 'You are not admin.';
+
+                // Stop further processing
+                $this->loading = false;
+                return;
+            }
+
             if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
                 Session::put([
                     'login.id' => $user->getKey(),
@@ -121,7 +137,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
 <div class=" ">
     <form wire:submit.prevent="login" class=" p-10 w-full bg-white   mx-auto">
         <h1 class="font-inter capitalize text-center text-black font-bold text-2xl mb-10">Welcome to admin area</h1>
-        <h1 class="font-inter text-center text-black font-medium text-xl mb-10">Log In to STS</h1>
+        @if(!empty($error))
+            <div class="text-red-600 text-sm mb-4 text-center">{{ $error }}</div>
+        @endif
         <div class="w-full">
             <div class="relative ">
                 <input type="email" id="email" name="email" wire:model="email" placeholder=" " style="height: 52px"

@@ -14,6 +14,7 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
     const [editingQuoteId, setEditingQuoteId] = useState(null); // the quote id we're editing
     const [editQuoteName, setEditQuoteName] = useState('');     // value for edit input
     const editInputRefs = useRef({});
+    const saveClickedRef = useRef(false);
 
     useEffect(() => {
         if (Array.isArray(initialQuotes)) {
@@ -197,7 +198,9 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                                     {/* Card Header */}
                                     <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
                                         <div className="flex items-center gap-3">
-                                            <input type="checkbox" className="w-5 h-5 text-[#0079C2] rounded focus:ring-[#0079C2]" />
+                                            {isEditing ? (
+                                                <input type="checkbox" className="w-5 h-5 text-[#0079C2] rounded focus:ring-[#0079C2]" />
+                                            ) : null}
                                             {isEditing ? (
                                                 <input
                                                     ref={(el) => { editInputRefs.current[quote.id] = el; }}
@@ -206,7 +209,7 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                                                     value={editQuoteName}
                                                     onChange={handleEditInputChange}
                                                     onKeyDown={(e) => handleInputKeyDown(e, quote)}
-                                                    onBlur={handleCancelEdit}
+                                                    onBlur={() => { if (saveClickedRef.current || (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.quoteAction === 'save')) { saveClickedRef.current = false; return; } handleCancelEdit(); }}
                                                     style={{ minWidth: 160 }}
                                                 />
                                             ) : (
@@ -215,16 +218,18 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                                                 </span>
                                             )}
                                         </div>
-                                        <button
-                                            onClick={() => handleDeleteQuote(quote.id)}
-                                            className="text-gray-400 hover:text-red-500 transition"
-                                            title="Delete Quote"
-                                            disabled={isEditing}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
+                                        {isEditing ? (
+                                            <button
+                                                onClick={() => handleDeleteQuote(quote.id)}
+                                                className="text-gray-400 hover:text-red-500 transition"
+                                                title="Delete Quote"
+                                                type="button"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        ) : null}
                                     </div>
 
                                     <div className="flex flex-col lg:flex-row gap-6">
@@ -235,13 +240,13 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                                                     quote.products.map((product, i) => (
                                                         <div key={product.id || i} className="min-w-[220px] bg-white rounded-lg border border-gray-200 p-4 relative shrink-0">
                                                             <div className="absolute top-3 left-3">
-                                                                <input type="checkbox" className="w-4 h-4 text-[#0079C2] rounded focus:ring-[#0079C2]" disabled={isEditing} />
+                                                                <input type="checkbox" className={isEditing ? "w-4 h-4 text-[#0079C2] rounded focus:ring-[#0079C2]" : "hidden"} />
                                                             </div>
                                                             <button
                                                                 onClick={() => handleDeleteProduct(quote.id, product.id || product.product_id)}
-                                                                className={`absolute top-3 right-3 text-gray-400 hover:text-red-500 transition${isEditing ? ' hidden' : ''}`}
+                                                                className={`absolute top-3 right-3 text-gray-400 hover:text-red-500 transition ${isEditing ? '' : 'hidden'}`}
                                                                 title="Remove Product"
-                                                                tabIndex={isEditing ? -1 : undefined}
+                                                                tabIndex={isEditing ? undefined : -1}
                                                             >
                                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -279,6 +284,8 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                                             </button>
                                             {isEditing ? (
                                                 <button
+                                                    data-quote-action="save"
+                                                    onMouseDown={() => { saveClickedRef.current = true; }}
                                                     className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md shadow-sm text-center transition"
                                                     onClick={() => handleSaveQuoteName(quote)}
                                                     disabled={isLoading || editQuoteName.trim().length === 0}

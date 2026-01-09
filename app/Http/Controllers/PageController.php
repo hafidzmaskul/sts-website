@@ -211,7 +211,7 @@ class PageController
 
     public function quoteBuilder()
     {
-        $quote =  QuoteBuilder::with('products.images')->get();
+        $quote =  QuoteBuilder::where('user_id', auth()->id())->with('products.images')->get();
         return Inertia::render('QuoteBuilder', [
             'quote' => $quote,
         ]);
