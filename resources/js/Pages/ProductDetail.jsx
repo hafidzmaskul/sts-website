@@ -143,6 +143,8 @@ export default function ProductDetail({ product, products = [], logged }) {
     }, [data.images]);
 
     const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const imageContainerRef = useRef(null);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [openAccordion, setOpenAccordion] = useState('description');
 
     // Set specs with price conditional
@@ -300,6 +302,58 @@ export default function ProductDetail({ product, products = [], logged }) {
             });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+
+    // Cart helpers: animation and add-to-cart
+    const animateAddToCart = () => {
+        const img = imageContainerRef.current?.querySelector('img');
+        if (!img) return;
+        const cartEl = document.querySelector('a[href="/cart"]');
+        const imgRect = img.getBoundingClientRect();
+        const cartRect = cartEl ? cartEl.getBoundingClientRect() : { left: window.innerWidth - 40, top: 20, width: 20, height: 20 };
+        const clone = img.cloneNode();
+        clone.style.position = 'fixed';
+        clone.style.left = `${imgRect.left}px`;
+        clone.style.top = `${imgRect.top}px`;
+        clone.style.width = `${imgRect.width}px`;
+        clone.style.height = `${imgRect.height}px`;
+        clone.style.zIndex = 9999;
+        clone.style.transition = 'transform 700ms ease-in-out, opacity 700ms ease-in-out';
+        document.body.appendChild(clone);
+        requestAnimationFrame(() => {
+            const translateX = cartRect.left + cartRect.width/2 - (imgRect.left + imgRect.width/2);
+            const translateY = cartRect.top + cartRect.height/2 - (imgRect.top + imgRect.height/2);
+            clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.15)`;
+            clone.style.opacity = '0.6';
+        });
+        setTimeout(() => clone.remove(), 800);
+    };
+
+    const refreshCart = async () => {
+        try {
+            const res = await axios.get('/api/cart');
+            const items = res.data.data || res.data || [];
+            const count = items.reduce((s,i)=> s + (i.quantity || 0), 0);
+            window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
+        } catch (e) {
+            // ignore
+        }
+    };
+
+    const handleAddToCart = async () => {
+        setIsAddingToCart(true);
+        animateAddToCart();
+        try {
+            await axios.post('/api/cart', { product_id: data.id, quantity: 1 });
+            setToast({ show: true, message: 'Product added to cart', type: 'success' });
+            await refreshCart();
+        } catch (error) {
+            console.error('Add to cart failed', error);
+            setToast({ show: true, message: error?.response?.data?.message || 'Failed to add to cart', type: 'error' });
+        } finally {
+            setIsAddingToCart(false);
         }
     };
 
@@ -487,7 +541,7 @@ export default function ProductDetail({ product, products = [], logged }) {
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10 items-start">
                         {/* Image Section */}
                         <div className="lg:col-span-2 space-y-4">
-                            <div className="rounded-xl border border-gray-200 bg-gray-50">
+                            <div ref={imageContainerRef} className="rounded-xl border border-gray-200 bg-gray-50">
                                 <ImageZoom
                                     src={productImages[activeImageIndex]}
                                     alt={data.title}
@@ -562,9 +616,11 @@ export default function ProductDetail({ product, products = [], logged }) {
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
                                 <button
                                     type="button"
-                                    className="inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full"
+                                    onClick={handleAddToCart}
+                                    disabled={isAddingToCart}
+                                    className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
                                 >
-                                    Add To Cart
+                                    {isAddingToCart ? 'Adding...' : 'Add To Cart'}
                                 </button>
                                 {logged && (
                                     <button

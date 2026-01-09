@@ -5,8 +5,8 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import Toast from '../components/Toast';
 
-export default function QuoteBuilder({ quote: initialQuotes = [] }) {
-    const [quotes, setQuotes] = useState(Array.isArray(initialQuotes) ? initialQuotes : []);
+export default function QuoteBuilder() {
+    const [quotes, setQuotes] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
@@ -16,11 +16,23 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
     const editInputRefs = useRef({});
     const saveClickedRef = useRef(false);
 
-    useEffect(() => {
-        if (Array.isArray(initialQuotes)) {
-            setQuotes(initialQuotes);
+    const fetchQuotes = async () => {
+        setIsLoading(true);
+        try {
+            const res = await axios.get('/api/quote-builder');
+            setQuotes(res.data.data || res.data || []);
+        } catch (error) {
+            console.error('Failed to fetch quotes', error);
+            setToast({ show: true, message: 'Failed to load quotes', type: 'error' });
+        } finally {
+            setIsLoading(false);
         }
-    }, [initialQuotes]);
+    };
+
+    useEffect(() => {
+        // Fetch fresh data from API on mount
+        fetchQuotes();
+    }, []);
     useEffect(() => {
         if (toast.show) {
             const timer = setTimeout(() => setToast((t) => ({ ...t, show: false })), 4000);
@@ -37,6 +49,8 @@ export default function QuoteBuilder({ quote: initialQuotes = [] }) {
                 message: 'Quote deleted successfully.',
                 type: 'success'
             });
+            // Refresh from server to ensure state is consistent
+            await fetchQuotes();
             // If the edited quote was deleted, exit edit mode
             if (editingQuoteId === quoteId) {
                 setEditingQuoteId(null);

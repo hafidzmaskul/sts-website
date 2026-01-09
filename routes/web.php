@@ -35,7 +35,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('quote-builder', [PageController::class, 'quoteBuilder'])->name('quote-builder');
+    Route::get('quote-builder', [\App\Http\Controllers\PageController::class, 'quoteBuilder'])->name('quote-builder');
 
     Route::redirect('settings', 'settings/profile');
 
