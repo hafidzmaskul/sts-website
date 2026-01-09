@@ -211,7 +211,7 @@ class PageController
 
     public function quoteBuilder()
     {
-
+        
         return Inertia::render('QuoteBuilder');
     }
     public function invoice()

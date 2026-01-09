@@ -15,6 +15,7 @@ export default function QuoteBuilder() {
     const [editQuoteName, setEditQuoteName] = useState('');     // value for edit input
     const editInputRefs = useRef({});
     const saveClickedRef = useRef(false);
+    const deleteClickedRef = useRef(false);
 
     const fetchQuotes = async () => {
         setIsLoading(true);
@@ -223,7 +224,19 @@ export default function QuoteBuilder() {
                                                     value={editQuoteName}
                                                     onChange={handleEditInputChange}
                                                     onKeyDown={(e) => handleInputKeyDown(e, quote)}
-                                                    onBlur={() => { if (saveClickedRef.current || (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.quoteAction === 'save')) { saveClickedRef.current = false; return; } handleCancelEdit(); }}
+                                                    onBlur={() => {
+                                                        if (
+                                                            saveClickedRef.current ||
+                                                            deleteClickedRef.current ||
+                                                            (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.quoteAction === 'save')
+                                                        ) {
+                                                            saveClickedRef.current = false;
+                                                            deleteClickedRef.current = false;
+                                                            return;
+                                                        }
+
+                                                        handleCancelEdit();
+                                                    }}
                                                     style={{ minWidth: 160 }}
                                                 />
                                             ) : (
@@ -234,7 +247,8 @@ export default function QuoteBuilder() {
                                         </div>
                                         {isEditing ? (
                                             <button
-                                                onClick={() => handleDeleteQuote(quote.id)}
+                                                onMouseDown={() => { deleteClickedRef.current = true; }}
+                                                onClick={async () => { await handleDeleteQuote(quote.id); deleteClickedRef.current = false; }}
                                                 className="text-gray-400 hover:text-red-500 transition"
                                                 title="Delete Quote"
                                                 type="button"
