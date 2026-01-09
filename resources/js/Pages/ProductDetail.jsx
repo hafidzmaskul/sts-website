@@ -1,9 +1,11 @@
-import React, { useState, useRef, useMemo } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
+import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
 import LoginModal from '../components/LoginModal';
+import Toast from '../components/Toast';
 
 const formatPrice = (price) => {
     if (!price) {
@@ -64,10 +66,52 @@ const ImageZoom = ({ src, alt, className }) => {
     );
 };
 
+const Modal = ({ isOpen, onClose, title, children }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                {title && <h3 className="text-xl font-bold mb-4">{title}</h3>}
+                {children}
+            </div>
+        </div>
+    );
+};
+
+
 export default function ProductDetail({ product, products = [], logged }) {
 
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    // Toast state
+    const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+    // Quote Builder States
+    const [isQuoteOptionModalOpen, setIsQuoteOptionModalOpen] = useState(false);
+    const [isExistingQuoteModalOpen, setIsExistingQuoteModalOpen] = useState(false);
+    const [isCreateQuoteModalOpen, setIsCreateQuoteModalOpen] = useState(false);
+    const [existingQuotes, setExistingQuotes] = useState([]);
+    const [selectedQuoteIds, setSelectedQuoteIds] = useState([]);
+    const [newQuoteName, setNewQuoteName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Auto-hide toast
+    useEffect(() => {
+        if (toast.show) {
+            const timer = setTimeout(() => setToast((t) => ({ ...t, show: false })), 4000);
+            return () => clearTimeout(timer);
+        }
+    }, [toast.show]);
+
     if (!product || !product.id) {
         return (
             <div className="min-h-screen flex flex-col">
@@ -139,6 +183,127 @@ export default function ProductDetail({ product, products = [], logged }) {
         setOpenAccordion((current) => (current === sectionId ? null : sectionId));
     };
 
+    // Quote Builder Handlers
+    const handleAddToQuoteClick = () => {
+        setIsQuoteOptionModalOpen(true);
+    };
+
+    const handleOpenExistingQuotes = async () => {
+        setIsQuoteOptionModalOpen(false);
+        setIsLoading(true);
+        try {
+            const response = await axios.get('/api/quote-builder');
+            // Assuming response.data.data or response.data contains the list
+            // Adjust based on actual API response structure.
+            // Typically generic Laravel API resource returns { data: [...] }
+            // User didn't specify return structure, assume standard.
+            setExistingQuotes(response.data.data || response.data || []);
+            setIsExistingQuoteModalOpen(true);
+        } catch (error) {
+            console.error('Failed to fetch quotes', error);
+            setToast({
+                show: true,
+                message: 'Failed to load existing quotes.',
+                type: 'error'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleOpenCreateQuote = () => {
+        setIsQuoteOptionModalOpen(false);
+        setIsCreateQuoteModalOpen(true);
+    };
+
+    const handleQuoteCheckboxChange = (quoteId) => {
+        setSelectedQuoteIds(prev => {
+            if (prev.includes(quoteId)) {
+                return prev.filter(id => id !== quoteId);
+            } else {
+                return [...prev, quoteId];
+            }
+        });
+    };
+
+    const handleSaveToExistingQuotes = async () => {
+        if (selectedQuoteIds.length === 0) {
+            setToast({
+                show: true,
+                message: 'Please select at least one quote.',
+                type: 'error'
+            });
+            return;
+        }
+        setIsLoading(true);
+        try {
+            await Promise.all(selectedQuoteIds.map(quoteId =>
+                axios.post(`/api/quote-builder/${quoteId}/products`, {
+                    product_id: data.id
+                })
+            ));
+
+            setIsExistingQuoteModalOpen(false);
+            setSelectedQuoteIds([]);
+            setToast({
+                show: true,
+                message: 'Product added to selected quote(s) successfully!',
+                type: 'success'
+            });
+            setTimeout(() => {
+                router.visit('/quote-builder');
+            }, 1000); // Wait a bit for toast to be seen
+        } catch (error) {
+            console.error('Failed to add product to quotes', error);
+            setToast({
+                show: true,
+                message: 'Failed to add product to some quotes.',
+                type: 'error'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCreateQuote = async () => {
+        if (!newQuoteName.trim()) {
+            setToast({
+                show: true,
+                message: 'Please enter a quote name.',
+                type: 'error'
+            });
+            return;
+        }
+        setIsLoading(true);
+        try {
+            await axios.post('/api/quote-builder', {
+                name: newQuoteName,
+                product_id: [data.id]
+            });
+
+            setIsCreateQuoteModalOpen(false);
+            setNewQuoteName('');
+            setToast({
+                show: true,
+                message: 'New quote created and product added successfully!',
+                type: 'success'
+            });
+            setTimeout(() => {
+                router.visit('/quote-builder');
+            }, 1000);
+        } catch (error) {
+            console.error('Failed to create quote', error);
+            setToast({
+                show: true,
+                message: 'Failed to create new quote.',
+                type: 'error'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
     const featuredProducts = useMemo(() => {
         if (products.length === 0) {
             return [];
@@ -176,10 +341,109 @@ export default function ProductDetail({ product, products = [], logged }) {
 
     return (
         <div className="min-h-screen flex flex-col ">
+            <Toast
+                show={toast.show}
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast((t) => ({ ...t, show: false }))}
+            />
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
             />
+
+            {/* Quote Option Modal */}
+            <Modal
+                isOpen={isQuoteOptionModalOpen}
+                onClose={() => setIsQuoteOptionModalOpen(false)}
+                title="Add to Quote"
+            >
+                <div className="flex flex-col gap-4">
+                    <button
+                        onClick={handleOpenExistingQuotes}
+                        className="w-full py-3 bg-[#0079C2] text-white rounded-lg hover:bg-[#005a91] transition font-medium"
+                    >
+                        Add to Existing Quote
+                    </button>
+                    <button
+                        onClick={handleOpenCreateQuote}
+                        className="w-full py-3 border border-[#0079C2] text-[#0079C2] rounded-lg hover:bg-blue-50 transition font-medium"
+                    >
+                        Create New Quote
+                    </button>
+                </div>
+            </Modal>
+
+            {/* Existing Quote Modal */}
+            <Modal
+                isOpen={isExistingQuoteModalOpen}
+                onClose={() => setIsExistingQuoteModalOpen(false)}
+                title="Select Quote"
+            >
+                {isLoading ? (
+                    <div className="text-center py-4">Loading quotes...</div>
+                ) : (
+                    <div className="flex flex-col gap-4">
+                        <div className="max-h-60 overflow-y-auto space-y-2 border rounded p-2">
+                            {existingQuotes.length > 0 ? (
+                                existingQuotes.map(quote => (
+                                    <label key={quote.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedQuoteIds.includes(quote.id)}
+                                            onChange={() => handleQuoteCheckboxChange(quote.id)}
+                                            className="w-5 h-5 text-[#0079C2] border-gray-300 rounded focus:ring-[#0079C2]"
+                                        />
+                                        <span className="text-gray-700 font-medium">{quote.name || `Quote #${quote.id}`}</span>
+                                    </label>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 text-center py-2">No existing quotes found.</p>
+                            )}
+                        </div>
+                        <button
+                            onClick={handleSaveToExistingQuotes}
+                            disabled={selectedQuoteIds.length === 0}
+                            className={`w-full py-3 rounded-lg text-white font-medium transition ${selectedQuoteIds.length > 0 ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
+                                }`}
+                        >
+                            Save
+                        </button>
+                    </div>
+                )}
+            </Modal>
+
+            {/* Create Quote Modal */}
+            <Modal
+                isOpen={isCreateQuoteModalOpen}
+                onClose={() => setIsCreateQuoteModalOpen(false)}
+                title="Create New Quote"
+            >
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <label htmlFor="quoteName" className="block text-sm font-medium text-gray-700 mb-1">
+                            Quote Name
+                        </label>
+                        <input
+                            type="text"
+                            id="quoteName"
+                            value={newQuoteName}
+                            onChange={(e) => setNewQuoteName(e.target.value)}
+                            placeholder="Enter quote name..."
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                        />
+                    </div>
+                    <button
+                        onClick={handleCreateQuote}
+                        disabled={isLoading || !newQuoteName.trim()}
+                        className={`w-full py-3 rounded-lg text-white font-medium transition ${!isLoading && newQuoteName.trim() ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
+                            }`}
+                    >
+                        {isLoading ? 'Creating...' : 'Create & Add Product'}
+                    </button>
+                </div>
+            </Modal>
+
             <Head>
                 {/* The title will be managed by Inertia */}
                 <title>{data.seo_title ?? 'Product Detail'}</title>
@@ -295,15 +559,23 @@ export default function ProductDetail({ product, products = [], logged }) {
                                     </button>
                                 </div>
                             )}
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
+                                <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full"
+                                >
+                                    Add To Cart
+                                </button>
+                                {logged && (
                                     <button
                                         type="button"
-                                        className="inline-flex items-center justify-center rounded-xl bg-[#0079C2] px-20 py-3 text-sm font-normal text-white hover:bg-[#005a91] transition"
-
+                                        onClick={handleAddToQuoteClick}
+                                        className="inline-flex items-center justify-center rounded-sm bg-[#0079C2] border border-[#0079C2] px-8 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full"
                                     >
-                                        Add To Cart
+                                        Add To Quote
                                     </button>
-                                </div>
+                                )}
+                            </div>
 
                             {/* Key Feature */}
                             <div>

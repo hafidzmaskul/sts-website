@@ -4,9 +4,9 @@ import { usePage } from '@inertiajs/react';
 export default function Header() {
     const [showLang, setShowLang] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
-    const [showPages, setShowPages] = useState(false); // for desktop nav
-    const [showPagesMobile, setShowPagesMobile] = useState(false); // for sidenav/mobile
-    const [cartCount] = useState(3); // static count, replace with real logic if needed
+    const [showPages, setShowPages] = useState(false);
+    const [showPagesMobile, setShowPagesMobile] = useState(false);
+    const [cartCount] = useState(3);
     const [sideNavOpen, setSideNavOpen] = useState(false);
 
     // Get logged status from shared Inertia props
@@ -129,6 +129,15 @@ export default function Header() {
             </div>
             {/* --- End Pages Dropdown Desktop --- */}
             <a href="/about-us" className="text-[#636270]">About</a>
+            {/* Quote Builder nav link: only show if logged in */}
+            {isLoggedIn && (
+                <a
+                    href="/quote-builder"
+                    className="text-[#636270] hover:text-[#007580] px-3 py-2 rounded-xl transition"
+                >
+                    Quote Builder
+                </a>
+            )}
         </>
     );
 
@@ -242,6 +251,7 @@ export default function Header() {
                                         {cartCount}
                                     </div>
                                 </a>
+                                {/* Remove inline quote-builder link from here; now show in nav menu, not topbar */}
                                 <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
                                 </a>
@@ -265,9 +275,8 @@ export default function Header() {
 
             {/* Sidenav */}
             <nav
-                className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${
-                    sideNavOpen ? "translate-x-0" : "-translate-x-full"
-                } md:hidden`}
+                className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${sideNavOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:hidden`}
             >
                 {/* Side nav header */}
                 <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
@@ -390,6 +399,18 @@ export default function Header() {
                     <li>
                         <a href="/about-us" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>About</a>
                     </li>
+                    {/* Quote Builder nav link: only show if logged in */}
+                    {isLoggedIn && (
+                        <li>
+                            <a
+                                href="/quote-builder"
+                                className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]"
+                                onClick={() => setSideNavOpen(false)}
+                            >
+                                Quote Builder
+                            </a>
+                        </li>
+                    )}
                 </ul>
                 {/* Cart user icons */}
                 <div className="flex items-center px-4 space-x-5 mt-6 mb-2">
