@@ -24,6 +24,16 @@ Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
         Route::delete('/{id}/products/{productId}', 'removeProduct');
     });
 
+Route::controller(\App\Http\Controllers\Api\CartController::class)
+    ->middleware(\App\Http\Middleware\SanctumOrBasic::class)
+    ->prefix('cart')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::post('/decrease', 'decrease');
+        Route::delete('/{productId}', 'destroy');
+    });
+
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
