@@ -76,6 +76,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/customers/{customer}', \App\Livewire\Admin\Customers\Show::class)->name('admin.customers.show');
         Route::get('/admin/customers/{customer}/edit', \App\Livewire\Admin\Customers\Edit::class)->name('admin.customers.edit');
 
+        // Companies
+        Route::get('/admin/companies', \App\Livewire\Admin\Companies\Index::class)->name('admin.companies.index');
+        Route::get('/admin/companies/{company}', \App\Livewire\Admin\Companies\Show::class)->name('admin.companies.show');
+
         // Contact Submissions
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 

@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Livewire\Admin\Companies;
+
+use App\Models\Company;
+use Livewire\Component;
+
+class Show extends Component
+{
+    public Company $company;
+
+    public function mount(Company $company)
+    {
+        $this->company = $company->load('customers');
+    }
+
+    public function render()
+    {
+        $this->authorize('customers.view');
+
+        return view('livewire.admin.companies.show')->title('Company Details');
+    }
+}

@@ -15,8 +15,12 @@
     <style>
         /* Custom sidebar background color */
         .custom-sidebar-bg {
-            background-color: {{ $sidebarBg }} !important;
-            border-right: 1px solid {{ $sidebarBorder }} !important;
+            background-color:
+                {{ $sidebarBg }}
+                !important;
+            border-right: 1px solid
+                {{ $sidebarBorder }}
+                !important;
         }
 
         /* Custom nav item color */
@@ -29,7 +33,9 @@
         /* Custom active state for navlist.item */
         .custom-navitem-active {
             background-color: #fff !important;
-            color: {{ $navitemActiveColor }} !important;
+            color:
+                {{ $navitemActiveColor }}
+                !important;
             justify-content: flex-end !important;
             display: flex !important;
         }
@@ -44,7 +50,9 @@
         }
 
         .custom-navitem-active .flux-icon {
-            color: {{ $navitemActiveColor }} !important;
+            color:
+                {{ $navitemActiveColor }}
+                !important;
         }
     </style>
 </head>
@@ -96,6 +104,14 @@
                         :current="request()->routeIs('admin.customers.*')" wire:navigate
                         :class="request()->routeIs('admin.customers.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Customers') }}
+                    </flux:navlist.item>
+                @endcan
+
+                @can('customers.view')
+                    <flux:navlist.item icon="building-office" :href="route('admin.companies.index')"
+                        :current="request()->routeIs('admin.companies.*')" wire:navigate
+                        :class="request()->routeIs('admin.companies.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Companies') }}
                     </flux:navlist.item>
                 @endcan
 
