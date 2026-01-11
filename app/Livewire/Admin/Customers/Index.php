@@ -13,6 +13,7 @@ class Index extends Component
     public string $search = '';
     public string $status = '';
     public string $statusReview = '';
+    public string $role = '';
     public string $isRegistered = '';
 
     public function updatingSearch()
@@ -30,8 +31,19 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function updatingRole()
+    {
+        $this->resetPage();
+    }
+
     public function updatingIsRegistered()
     {
+        $this->resetPage();
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'role', 'statusReview', 'isRegistered', 'status']);
         $this->resetPage();
     }
 
@@ -39,7 +51,7 @@ class Index extends Component
     {
         $this->authorize('customers.view');
 
-        $customers = Customer::with('user')
+        $customers = Customer::with(['user', 'company'])
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->whereHas('user', function ($u) {
@@ -55,6 +67,9 @@ class Index extends Component
             })
             ->when($this->status, function ($query) {
                 $query->where('status', $this->status);
+            })
+            ->when($this->role, function ($query) {
+                $query->where('role_applied', $this->role);
             })
             ->when($this->statusReview, function ($query) {
                 $query->where('status_review', $this->statusReview);

@@ -55,72 +55,225 @@
 
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Profile Details -->
-        <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
-            <h2 class="text-lg font-semibold mb-4 text-black">Application Information</h2>
-            <dl class="grid grid-cols-1 gap-4">
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Role Applied</dt>
-                    <dd class="col-span-2 text-sm text-black font-semibold">
-                        {{ ucfirst($customer->role_applied) ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Pricing Formula</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        @if($customer->user && $customer->user->pricingFormula)
-                            <div class="font-medium">{{ $customer->user->pricingFormula->label }}</div>
-                        @else
-                            -
-                        @endif
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Account Number</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->account_number ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Job Title</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->job_title ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Phone</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->phone ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">City</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->city ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Address</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->address ?? '-' }}
-                    </dd>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <dt class="text-sm font-medium text-black">Joined Date</dt>
-                    <dd class="col-span-2 text-sm text-black">
-                        {{ $customer->created_at->format('M d, Y H:i') }}
-                    </dd>
-                </div>
-
-                @if($customer->status_review === 'declined')
-                    <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
-                        <dt class="text-sm font-medium text-red-600">Decline Reason</dt>
-                        <dd class="col-span-2 text-sm text-red-600">
-                            {{ $customer->review_note }}
+        <!-- Application & Personal Details -->
+        <div class="space-y-6">
+            <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+                <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
+                    <flux:icon.user class="w-5 h-5 text-gray-400" />
+                    Personal & Application Info
+                </h2>
+                <dl class="space-y-3">
+                    <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+                        <dd class="col-span-2 text-sm text-black font-medium">
+                            {{ $customer->first_name }} {{ $customer->last_name }}
                         </dd>
                     </div>
+                    <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <dt class="text-sm font-medium text-gray-500">Email</dt>
+                        <dd class="col-span-2 text-sm text-black">
+                            {{ $customer->email }}
+                        </dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <dt class="text-sm font-medium text-gray-500">Job Title</dt>
+                        <dd class="col-span-2 text-sm text-black">
+                            {{ $customer->job_title ?? '-' }}
+                        </dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <dt class="text-sm font-medium text-gray-500">Role Applied</dt>
+                        <dd class="col-span-2 text-sm text-black font-semibold">
+                            {{ ucfirst($customer->role_applied) ?? '-' }}
+                        </dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <dt class="text-sm font-medium text-gray-500">Application Date</dt>
+                        <dd class="col-span-2 text-sm text-black">
+                            {{ $customer->created_at->format('M d, Y H:i') }}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- Company Details -->
+            <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+                <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
+                    <flux:icon.building-office class="w-5 h-5 text-gray-400" />
+                    Company Details
+                </h2>
+                @if($customer->company)
+                    <dl class="space-y-3">
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Company Name</dt>
+                            <dd class="col-span-2 text-sm text-black font-semibold">{{ $customer->company->name }}</dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Reg Number</dt>
+                            <dd class="col-span-2 text-sm text-black">{{ $customer->company->registration_number ?? '-' }}
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Trading Name</dt>
+                            <dd class="col-span-2 text-sm text-black">{{ $customer->company->trading_name ?? '-' }}</dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">VAT Number</dt>
+                            <dd class="col-span-2 text-sm text-black">{{ $customer->company->vat_number ?? '-' }}</dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Phone / Fax</dt>
+                            <dd class="col-span-2 text-sm text-black">
+                                <div>{{ $customer->company->phone ?? '-' }}</div>
+                                <div class="text-xs text-gray-500">
+                                    {{ $customer->company->fax ? 'Fax: ' . $customer->company->fax : '' }}</div>
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Address</dt>
+                            <dd class="col-span-2 text-sm text-black">
+                                <div class="whitespace-pre-line">{{ $customer->company->address ?? '-' }}</div>
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Trading Address</dt>
+                            <dd class="col-span-2 text-sm text-black">
+                                <div class="whitespace-pre-line">{{ $customer->company->trading_address ?? '-' }}</div>
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Activities</dt>
+                            <dd class="col-span-2 text-sm text-black">
+                                {{ $customer->company->activities_description ?? '-' }}
+                            </dd>
+                        </div>
+                    </dl>
+                @else
+                    <p class="text-sm text-gray-500 italic">No company details linked.</p>
                 @endif
-            </dl>
+            </div>
+        </div>
+
+        <!-- Contacts & Financial -->
+        <div class="space-y-6">
+            <!-- Key Contacts -->
+            <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+                <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
+                    <flux:icon.users class="w-5 h-5 text-gray-400" />
+                    Key Contacts
+                </h2>
+                @if($customer->company)
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-2">Purchasing Contact</h3>
+                            <dl class="space-y-2">
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Name</dt>
+                                    <dd class="text-sm font-medium text-black">
+                                        {{ $customer->company->purchasing_contact_name ?? '-' }}</dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Phone</dt>
+                                    <dd class="text-sm text-black">{{ $customer->company->purchasing_contact_phone ?? '-' }}
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Email</dt>
+                                    <dd class="text-sm text-black">{{ $customer->company->purchasing_contact_email ?? '-' }}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="border-t border-gray-50 pt-4">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-2">Accounts Contact</h3>
+                            <dl class="space-y-2">
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Name</dt>
+                                    <dd class="text-sm font-medium text-black">
+                                        {{ $customer->company->accounts_contact_name ?? '-' }}</dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Phone</dt>
+                                    <dd class="text-sm text-black">{{ $customer->company->accounts_contact_phone ?? '-' }}
+                                    </dd>
+                                </div>
+                                <div class="flex justify-between">
+                                    <dt class="text-sm text-gray-500">Email</dt>
+                                    <dd class="text-sm text-black">{{ $customer->company->accounts_contact_email ?? '-' }}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-500 italic">No contact details linked.</p>
+                @endif
+            </div>
+
+            <!-- Financial Information -->
+            <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+                <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
+                    <flux:icon.banknotes class="w-5 h-5 text-gray-400" />
+                    Financial & Trade Refs
+                </h2>
+                @if($customer->company)
+                    <dl class="space-y-3">
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Bank Name</dt>
+                            <dd class="col-span-2 text-sm text-black font-medium">{{ $customer->company->bank_name ?? '-' }}
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Account No</dt>
+                            <dd class="col-span-2 text-sm text-black">{{ $customer->company->bank_account_number ?? '-' }}
+                            </dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Sort Code</dt>
+                            <dd class="col-span-2 text-sm text-black">{{ $customer->company->bank_sort_code ?? '-' }}</dd>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                            <dt class="text-sm font-medium text-gray-500">Req. Credit Limit</dt>
+                            <dd class="col-span-2 text-sm text-black font-semibold">
+                                {{ $customer->company->requested_credit_limit ? number_format($customer->company->requested_credit_limit, 2) : '-' }}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-6 space-y-4">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">Trade Reference 1</h3>
+                            <p class="text-sm font-medium text-black">{{ $customer->company->trade_ref_1_details ?? '-' }}
+                            </p>
+                            <div class="text-xs text-gray-500 mt-1 flex gap-3">
+                                <span>{{ $customer->company->trade_ref_1_phone ?? '' }}</span>
+                                <span>{{ $customer->company->trade_ref_1_email ?? '' }}</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">Trade Reference 2</h3>
+                            <p class="text-sm font-medium text-black">{{ $customer->company->trade_ref_2_details ?? '-' }}
+                            </p>
+                            <div class="text-xs text-gray-500 mt-1 flex gap-3">
+                                <span>{{ $customer->company->trade_ref_2_phone ?? '' }}</span>
+                                <span>{{ $customer->company->trade_ref_2_email ?? '' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-500 italic">No financial details linked.</p>
+                @endif
+            </div>
+
+            @if($customer->status_review === 'declined')
+                <div class="rounded-xl shadow p-6 border border-red-200 bg-red-50">
+                    <h2 class="text-lg font-semibold mb-2 text-red-800 flex items-center gap-2">
+                        <flux:icon.x-circle class="w-5 h-5 text-red-600" />
+                        Declined Reason
+                    </h2>
+                    <p class="text-sm text-red-700">{{ $customer->review_note }}</p>
+                </div>
+            @endif
         </div>
     </div>
 
