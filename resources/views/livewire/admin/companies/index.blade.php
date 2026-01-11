@@ -71,6 +71,7 @@
                         <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Registration No
                         </th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Contact Email</th>
+                        <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Role</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Customers</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Status</th>
                         <th class="px-6 py-3 font-medium uppercase tracking-wider text-xs text-black">Created At</th>
@@ -93,6 +94,13 @@
                                 {{ $company->purchasing_contact_email ?? ($company->accounts_contact_email ?? '-') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-black">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                            {{ $company->requested_credit_limit ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
+                                    {{ $company->requested_credit_limit ? 'Credit Facilities' : 'Trade Account' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-black">
                                 <div class="flex flex-col gap-1">
                                     @foreach($company->customers as $customer)
                                         <div class="text-sm">
@@ -108,9 +116,9 @@
                                 <div class="flex flex-col gap-1">
                                     @foreach($company->customers as $customer)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium w-fit
-                                                    @if($customer->status_review === 'approved') bg-green-100 text-green-800
-                                                    @elseif($customer->status_review === 'declined') bg-red-100 text-red-800
-                                                    @else bg-yellow-100 text-yellow-800 @endif">
+                                                                    @if($customer->status_review === 'approved') bg-green-100 text-green-800
+                                                                    @elseif($customer->status_review === 'declined') bg-red-100 text-red-800
+                                                                    @else bg-yellow-100 text-yellow-800 @endif">
                                             {{ ucfirst($customer->status_review) }}
                                         </span>
                                     @endforeach
