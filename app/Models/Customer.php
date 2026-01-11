@@ -25,6 +25,7 @@ class Customer extends Model
         'review_note',
         'account_number',
         'job_title',
+        'company_id',
     ];
 
     public function scopePending($query)
@@ -35,5 +36,10 @@ class Customer extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }
