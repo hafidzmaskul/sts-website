@@ -28,6 +28,7 @@ class Edit extends Component
     public $pricing_formula_id = null;
     public $title = '';
     public $slug = '';
+    public $sku = '';
     public $is_sign_up_for_pricing = false;
     public $base_price = null;
     public $special_price = null;
@@ -68,6 +69,7 @@ class Edit extends Component
         $this->pricing_formula_id = $product->pricing_formula_id;
         $this->title = $product->title;
         $this->slug = $product->slug;
+        $this->sku = $product->sku;
         $this->is_sign_up_for_pricing = $product->is_sign_up_for_pricing;
         $this->base_price = $product->base_price;
         $this->special_price = $product->special_price;
@@ -181,6 +183,7 @@ class Edit extends Component
             'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($this->productId)],
+            'sku' => ['nullable', 'string', 'max:255', Rule::unique('products', 'sku')->ignore($this->productId)],
             'base_price' => 'nullable|numeric|min:0',
             'special_price' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
@@ -225,6 +228,7 @@ class Edit extends Component
             'pricing_formula_id' => $this->pricing_formula_id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'sku' => $this->sku,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
             'base_price' => $this->base_price,
             'special_price' => $this->special_price,

@@ -33,17 +33,25 @@
                             @error('slug') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium" style="color: black;">Brand</label>
-                            <select wire:model="brand_id"
+                            <label class="block text-sm font-medium" style="color: black;">SKU</label>
+                            <input type="text" wire:model="sku" placeholder="e.g. SKU-12345"
                                 class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
                                 style="color: black;">
-                                <option value="">Select a Brand</option>
-                                @foreach($brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            @error('sku') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
+                        <select wire:model="brand_id"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
+                            <option value="">Select a Brand</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Key Features (Moved up) -->
@@ -177,23 +185,7 @@
                         @error('special_price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">Pricing Formula</label>
-                        <div class="text-xs mb-2" style="color: #6b7280;">Select a pricing formula to apply
-                            automatically.</div>
-                        <select wire:model="pricing_formula_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
-                            style="color: black;">
-                            <option value="">None (Use Base Price)</option>
-                            @foreach($pricingFormulas as $formula)
-                                <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
-                                    {{ $formula->value }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('pricing_formula_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
+
 
                     <div class="space-y-3 pt-2">
                         <label class="flex items-start cursor-pointer">

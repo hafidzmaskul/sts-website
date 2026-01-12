@@ -10,6 +10,7 @@ class Product extends Model
         'brand_id',
         'title',
         'slug',
+        'sku',
         'is_sign_up_for_pricing',
         'key_feature',
         'product_overview',

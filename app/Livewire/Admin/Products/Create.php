@@ -24,6 +24,7 @@ class Create extends Component
     public $pricing_formula_id = null;
     public $title = '';
     public $slug = '';
+    public $sku = '';
     public $is_sign_up_for_pricing = false;
     public $base_price = null;
     public $special_price = null;
@@ -99,6 +100,7 @@ class Create extends Component
             'pricing_formula_id' => 'nullable|exists:pricing_formulas,id',
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
+            'sku' => ['nullable', 'string', 'max:255', Rule::unique('products', 'sku')],
             'base_price' => 'nullable|numeric|min:0',
             'special_price' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
@@ -155,6 +157,7 @@ class Create extends Component
             'pricing_formula_id' => $this->pricing_formula_id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'sku' => $this->sku,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
             'base_price' => $this->base_price,
             'special_price' => $this->special_price,

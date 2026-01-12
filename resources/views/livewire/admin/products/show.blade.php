@@ -70,18 +70,9 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium" style="color: #555;">Pricing Formula</dt>
-                            <dd class="mt-1 text-sm" style="color: black;">
-                                @if($product->pricingFormula)
-                                    <div class="font-medium" style="color: black;">{{ $product->pricingFormula->label }}
-                                    </div>
-                                    <div class="text-xs" style="color: #555;">
-                                        {{ $product->pricingFormula->type->label() }}
-                                        {{ $product->pricingFormula->value }}
-                                    </div>
-                                @else
-                                    <span class="italic" style="color: #aaa;">None</span>
-                                @endif
+                            <dt class="text-sm font-medium" style="color: #555;">SKU</dt>
+                            <dd class="mt-1 text-sm flex items-center" style="color: black;">
+                                {{ $product->sku ?? '-' }}
                             </dd>
                         </div>
                         <div>
