@@ -35,6 +35,28 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
+    ->prefix('web/quote-builder')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+        Route::post('/{id}/products', 'addProduct');
+        Route::delete('/{id}/products/{productId}', 'removeProduct');
+    });
+
+Route::controller(\App\Http\Controllers\Api\CartController::class)
+    ->prefix('web/cart')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::post('/decrease', 'decrease');
+        Route::delete('/{productId}', 'destroy');
+    });
+
+
     Route::get('quote-builder', [\App\Http\Controllers\PageController::class, 'quoteBuilder'])->name('quote-builder');
 
     Route::redirect('settings', 'settings/profile');

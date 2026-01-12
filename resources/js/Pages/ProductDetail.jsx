@@ -194,7 +194,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsQuoteOptionModalOpen(false);
         setIsLoading(true);
         try {
-            const response = await axios.get('/api/quote-builder');
+            const response = await axios.get('/web/quote-builder');
             // Assuming response.data.data or response.data contains the list
             // Adjust based on actual API response structure.
             // Typically generic Laravel API resource returns { data: [...] }
@@ -240,7 +240,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsLoading(true);
         try {
             await Promise.all(selectedQuoteIds.map(quoteId =>
-                axios.post(`/api/quote-builder/${quoteId}/products`, {
+                axios.post(`/web/quote-builder/${quoteId}/products`, {
                     product_id: data.id
                 })
             ));
@@ -278,7 +278,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         }
         setIsLoading(true);
         try {
-            await axios.post('/api/quote-builder', {
+            await axios.post('/web/quote-builder', {
                 name: newQuoteName,
                 product_id: [data.id]
             });
@@ -333,7 +333,7 @@ export default function ProductDetail({ product, products = [], logged }) {
 
     const refreshCart = async () => {
         try {
-            const res = await axios.get('/api/cart');
+            const res = await axios.get('/web/cart');
             const items = res.data.data || res.data || [];
             const count = items.reduce((s,i)=> s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
@@ -346,7 +346,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsAddingToCart(true);
         animateAddToCart();
         try {
-            await axios.post('/api/cart', { product_id: data.id, quantity: 1 });
+            await axios.post('/web/cart', { product_id: data.id, quantity: 1 });
             setToast({ show: true, message: 'Product added to cart', type: 'success' });
             await refreshCart();
         } catch (error) {
