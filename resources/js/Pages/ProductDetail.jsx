@@ -323,8 +323,8 @@ export default function ProductDetail({ product, products = [], logged }) {
         clone.style.transition = 'transform 700ms ease-in-out, opacity 700ms ease-in-out';
         document.body.appendChild(clone);
         requestAnimationFrame(() => {
-            const translateX = cartRect.left + cartRect.width/2 - (imgRect.left + imgRect.width/2);
-            const translateY = cartRect.top + cartRect.height/2 - (imgRect.top + imgRect.height/2);
+            const translateX = cartRect.left + cartRect.width / 2 - (imgRect.left + imgRect.width / 2);
+            const translateY = cartRect.top + cartRect.height / 2 - (imgRect.top + imgRect.height / 2);
             clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.15)`;
             clone.style.opacity = '0.6';
         });
@@ -335,7 +335,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         try {
             const res = await axios.get('/api/cart');
             const items = res.data.data || res.data || [];
-            const count = items.reduce((s,i)=> s + (i.quantity || 0), 0);
+            const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
         } catch (e) {
             // ignore
