@@ -83,14 +83,9 @@ class Create extends Component
         $this->newAttachments[] = [
             'file' => null,
             'name' => '',
+            'is_public' => false,
             'key' => Str::random(10),
         ];
-    }
-
-    public function removeNewAttachment($index)
-    {
-        unset($this->newAttachments[$index]);
-        $this->newAttachments = array_values($this->newAttachments);
     }
 
     public function rules()
@@ -113,6 +108,7 @@ class Create extends Component
             // Attachment Validation
             'newAttachments.*.file' => 'required|file|max:10240', // 10MB max
             'newAttachments.*.name' => 'required|string|max:255',
+            'newAttachments.*.is_public' => 'boolean',
 
             'is_sign_up_for_pricing' => 'boolean',
             'is_exclusive' => 'boolean',
@@ -127,25 +123,9 @@ class Create extends Component
 
             // Advance Pricing Validation
             'customerPrices' => 'array',
-            'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id', // Removed distinct for now to avoid complexity, but it's good practice
+            'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id',
             'customerPrices.*.price' => 'required_with:customerPrices.*.user_id|numeric|min:0',
         ];
-    }
-
-    public function updatedTitle($value)
-    {
-        $this->slug = Str::slug($value);
-    }
-
-    public function addCustomerPrice()
-    {
-        $this->customerPrices[] = ['user_id' => null, 'price' => null];
-    }
-
-    public function removeCustomerPrice($index)
-    {
-        unset($this->customerPrices[$index]);
-        $this->customerPrices = array_values($this->customerPrices);
     }
 
     public function save()
@@ -203,6 +183,7 @@ class Create extends Component
                 $product->attachments()->create([
                     'name' => $attData['name'],
                     'file_path' => $path,
+                    'is_public' => $attData['is_public'] ?? false,
                 ]);
             }
         }

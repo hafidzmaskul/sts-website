@@ -102,6 +102,131 @@
                 </div>
             </div>
 
+            <!-- Attachments Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Attachments</h2>
+                        <p class="mt-1 text-sm text-gray-500">Manage technical documents and manuals.</p>
+                    </div>
+                </div>
+                <div class="p-6 space-y-6">
+
+                    <!-- Drag & Drop Area for New Attachment -->
+                    <div 
+                        wire:click="addAttachment"
+                        class="cursor-pointer border-2 border-dashed border-indigo-200 rounded-xl p-6 flex flex-col items-center justify-center bg-indigo-50/50 hover:bg-indigo-50 hover:border-indigo-400 transition-all group">
+                        <div class="p-3 bg-white rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
+                             <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-indigo-900">Click to add new attachment</p>
+                        <p class="text-xs text-indigo-500 mt-1">PDF, DOC, DOCX up to 10MB</p>
+                    </div>
+
+                    <!-- New Attachments List -->
+                    @if(count($newAttachments) > 0)
+                        <div class="space-y-4 animate-fade-in-down">
+                            <div class="text-xs font-semibold text-green-600 uppercase tracking-wide px-1">New Uploads</div>
+                            @foreach($newAttachments as $index => $attData)
+                                <div class="group p-5 bg-white border border-indigo-100 shadow-sm rounded-xl relative hover:border-indigo-300 transition-colors"
+                                    wire:key="new-attachment-{{ $attData['key'] }}">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                        <!-- File Input & Name -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Display Name</label>
+                                                <input type="text" wire:model="newAttachments.{{ $index }}.name" placeholder="e.g. User Manual"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400" style="color: black;">
+                                                @error("newAttachments.{$index}.name") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">File</label>
+                                                <input type="file" wire:model="newAttachments.{{ $index }}.file"
+                                                    class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+                                                @error("newAttachments.{$index}.file") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Settings & Actions -->
+                                        <div class="flex flex-col justify-between h-full pt-6 md:pt-0">
+                                            <label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                                                <input type="checkbox" wire:model="newAttachments.{{ $index }}.is_public" 
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                                <div class="flex flex-col">
+                                                    <span class="text-sm font-medium text-gray-900">Publicly Visible</span>
+                                                    <span class="text-xs text-gray-500">Visible to all users on product page</span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <button type="button" wire:click="removeNewAttachment({{ $index }})"
+                                            class="absolute -top-3 -right-3 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1.5 shadow-sm hover:shadow-md transition-all">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- Existing Attachments List -->
+                    @if(count($storedAttachments) > 0)
+                        <div class="space-y-4 pt-4 border-t border-gray-100">
+                             <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide px-1">Saved Attachments</div>
+                            @foreach($storedAttachments as $index => $att)
+                                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 bg-gray-50/50 border border-gray-200 rounded-xl relative group hover:bg-white hover:shadow-sm transition-all">
+                                    
+                                    <!-- Icon -->
+                                    <div class="flex-shrink-0 bg-white p-2 rounded-lg border border-gray-200 text-gray-400">
+                                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+
+                                    <!-- Inputs -->
+                                    <div class="flex-1 min-w-0 w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-500 mb-1">Display Name</label>
+                                            <input type="text" wire:model="storedAttachments.{{ $index }}.name"
+                                                class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-indigo-500 text-sm" style="color: black;">
+                                        </div>
+                                        <div class="flex items-end justify-between gap-4">
+                                             <label class="flex items-center gap-2 cursor-pointer pb-2">
+                                                <input type="checkbox" wire:model="storedAttachments.{{ $index }}.is_public" 
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                                <span class="text-sm text-gray-600 font-medium">Public</span>
+                                            </label>
+                                            
+                                            <div class="flex items-center gap-2 pb-1">
+                                                <a href="{{ Storage::url($att['file_path']) }}" target="_blank" 
+                                                    class="inline-flex items-center px-3 py-1.5 border border-gray-200 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                                                    View File
+                                                </a>
+                                                 <button type="button" wire:confirm="Remove this attachment?"
+                                                    wire:click="deleteAttachment({{ $att['id'] }})"
+                                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                    
+                    @if(empty($newAttachments) && empty($storedAttachments))
+                         <div class="text-center py-8">
+                            <p class="text-sm text-gray-500">No attachments uploaded yet.</p>
+                        </div>
+                    @endif
+
+                </div>
+
             <!-- SEO Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
@@ -492,93 +617,7 @@
                 </div>
             </div>
 
-            <!-- Attachments Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-lg font-semibold" style="color: black;">Attachments</h2>
-                    <button type="button" wire:click="addAttachment"
-                        class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Add Attachment
-                    </button>
-                </div>
-                <div class="p-6 space-y-4">
-                    <!-- Existing Attachments -->
-                    @if(count($storedAttachments) > 0)
-                        <div class="space-y-3">
-                            <div class="text-xs font-medium uppercase tracking-wide" style="color: #6b7280;">Saved Attachments</div>
-                            @foreach($storedAttachments as $index => $att)
-                                <div class="group flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative">
-                                    <div class="flex-1 min-w-0">
-                                        <label class="block text-xs font-medium mb-1" style="color: #6b7280;">Name</label>
-                                        <input type="text" wire:model="storedAttachments.{{ $index }}.name"
-                                            class="block w-full rounded-lg border border-[#D2D2D2] text-xs py-2 px-3 bg-white focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
-                                    </div>
-                                    <div class="pt-5">
-                                        <a href="{{ Storage::url($att['file_path']) }}" target="_blank" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">View File</a>
-                                    </div>
-                                    <button type="button" wire:confirm="Remove this attachment?"
-                                        wire:click="deleteAttachment({{ $att['id'] }})"
-                                        class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors mt-4">
-                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
 
-                    <!-- New Attachments -->
-                    @if(count($newAttachments) > 0)
-                        <div class="space-y-3">
-                            <div class="text-xs font-medium text-green-600 uppercase tracking-wide">New Attachments</div>
-                            @foreach($newAttachments as $index => $attData)
-                                <div class="group p-4 bg-white border border-dashed border-indigo-300 rounded-lg relative"
-                                    wire:key="new-attachment-{{ $attData['key'] }}">
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex-1 min-w-0 space-y-4">
-                                            <div>
-                                                <label class="block text-xs font-medium mb-1" style="color: #6b7280;">Name</label>
-                                                <input type="text" wire:model="newAttachments.{{ $index }}.name" placeholder="e.g. User Manual"
-                                                    class="block w-full rounded-lg border border-[#D2D2D2] text-xs py-2 px-3 bg-white focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
-                                                @error("newAttachments.{$index}.name") <span
-                                                class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
-                                            </div>
-                                            <div>
-                                                <label class="block text-xs font-medium mb-1" style="color: #6b7280;">File</label>
-                                                <input type="file" wire:model="newAttachments.{{ $index }}.file"
-                                                    class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                                                @error("newAttachments.{$index}.file") <span
-                                                class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                        <button type="button" wire:click="removeNewAttachment({{ $index }})"
-                                            class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1 shadow-sm hover:shadow">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if(empty($newAttachments) && empty($storedAttachments))
-                        <div class="text-center py-6 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
-                            <svg class="mx-auto h-8 w-8" style="color: #9ca3af;" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                            </svg>
-                            <p class="mt-1 text-xs" style="color: #6b7280;">No attachments yet.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
 
         </div>
     </div>

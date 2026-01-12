@@ -104,50 +104,10 @@ class Edit extends Component
                     'id' => $att->id,
                     'name' => $att->name,
                     'file_path' => $att->file_path,
+                    'is_public' => $att->is_public,
                 ];
             })
             ->toArray();
-
-        // Populate Advance Pricing
-        $this->customerPrices = $product->customerPrices()
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'user_id' => $user->id,
-                    'price' => $user->pivot->price,
-                ];
-            })
-            ->toArray();
-
-        if (count($this->customerPrices) > 0) {
-            $this->showAdvancePricing = true;
-        }
-    }
-
-    public function addImage()
-    {
-        // Calculate next sequence based on existing and new images
-        $maxSequence = 0;
-
-        if (!empty($this->storedImages)) {
-            $maxSequence = max(array_column($this->storedImages, 'sequence'));
-        }
-
-        if (!empty($this->newImages)) {
-            $maxSequence = max($maxSequence, max(array_column($this->newImages, 'sequence')));
-        }
-
-        $this->newImages[] = [
-            'image' => null,
-            'sequence' => $maxSequence + 1,
-            'key' => Str::random(10),
-        ];
-    }
-
-    public function removeNewImage($index)
-    {
-        unset($this->newImages[$index]);
-        $this->newImages = array_values($this->newImages);
     }
 
     public function addAttachment()
@@ -155,25 +115,9 @@ class Edit extends Component
         $this->newAttachments[] = [
             'file' => null,
             'name' => '',
+            'is_public' => false,
             'key' => Str::random(10),
         ];
-    }
-
-    public function removeNewAttachment($index)
-    {
-        unset($this->newAttachments[$index]);
-        $this->newAttachments = array_values($this->newAttachments);
-    }
-
-    public function addCustomerPrice()
-    {
-        $this->customerPrices[] = ['user_id' => null, 'price' => null];
-    }
-
-    public function removeCustomerPrice($index)
-    {
-        unset($this->customerPrices[$index]);
-        $this->customerPrices = array_values($this->customerPrices);
     }
 
     public function rules()
@@ -197,7 +141,9 @@ class Edit extends Component
             // Attachment Validation
             'newAttachments.*.file' => 'required|file|max:10240',
             'newAttachments.*.name' => 'required|string|max:255',
+            'newAttachments.*.is_public' => 'boolean',
             'storedAttachments.*.name' => 'required|string|max:255',
+            'storedAttachments.*.is_public' => 'boolean',
 
             'is_sign_up_for_pricing' => 'boolean',
             'is_exclusive' => 'boolean',
@@ -273,9 +219,12 @@ class Edit extends Component
             }
         }
 
-        // Update existing attachments (name only)
+        // Update existing attachments
         foreach ($this->storedAttachments as $attData) {
-            \App\Models\ProductAttachment::where('id', $attData['id'])->update(['name' => $attData['name']]);
+            \App\Models\ProductAttachment::where('id', $attData['id'])->update([
+                'name' => $attData['name'],
+                'is_public' => $attData['is_public'] ?? false,
+            ]);
         }
 
         // Add new attachments
@@ -286,6 +235,7 @@ class Edit extends Component
                 $product->attachments()->create([
                     'name' => $attData['name'],
                     'file_path' => $path,
+                    'is_public' => $attData['is_public'] ?? false,
                 ]);
             }
         }
