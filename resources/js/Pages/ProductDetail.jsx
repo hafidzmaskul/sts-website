@@ -614,14 +614,17 @@ export default function ProductDetail({ product, products = [], logged }) {
                                 </div>
                             )}
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
-                                <button
-                                    type="button"
-                                    onClick={handleAddToCart}
-                                    disabled={isAddingToCart}
-                                    className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
-                                >
-                                    {isAddingToCart ? 'Adding...' : 'Add To Cart'}
-                                </button>
+                                {logged && (
+                                    <button
+                                        type="button"
+                                        onClick={handleAddToCart}
+                                        disabled={isAddingToCart}
+                                        className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
+                                    >
+                                        {isAddingToCart ? 'Adding...' : 'Add To Cart'}
+                                    </button>
+                                )}
+
                                 {logged && (
                                     <button
                                         type="button"
