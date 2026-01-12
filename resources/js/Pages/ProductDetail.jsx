@@ -323,8 +323,8 @@ export default function ProductDetail({ product, products = [], logged }) {
         clone.style.transition = 'transform 700ms ease-in-out, opacity 700ms ease-in-out';
         document.body.appendChild(clone);
         requestAnimationFrame(() => {
-            const translateX = cartRect.left + cartRect.width/2 - (imgRect.left + imgRect.width/2);
-            const translateY = cartRect.top + cartRect.height/2 - (imgRect.top + imgRect.height/2);
+            const translateX = cartRect.left + cartRect.width / 2 - (imgRect.left + imgRect.width / 2);
+            const translateY = cartRect.top + cartRect.height / 2 - (imgRect.top + imgRect.height / 2);
             clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.15)`;
             clone.style.opacity = '0.6';
         });
@@ -335,7 +335,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         try {
             const res = await axios.get('/web/cart');
             const items = res.data.data || res.data || [];
-            const count = items.reduce((s,i)=> s + (i.quantity || 0), 0);
+            const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
         } catch (e) {
             // ignore
@@ -614,14 +614,17 @@ export default function ProductDetail({ product, products = [], logged }) {
                                 </div>
                             )}
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
-                                <button
-                                    type="button"
-                                    onClick={handleAddToCart}
-                                    disabled={isAddingToCart}
-                                    className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
-                                >
-                                    {isAddingToCart ? 'Adding...' : 'Add To Cart'}
-                                </button>
+                                {logged && (
+                                    <button
+                                        type="button"
+                                        onClick={handleAddToCart}
+                                        disabled={isAddingToCart}
+                                        className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
+                                    >
+                                        {isAddingToCart ? 'Adding...' : 'Add To Cart'}
+                                    </button>
+                                )}
+
                                 {logged && (
                                     <button
                                         type="button"
