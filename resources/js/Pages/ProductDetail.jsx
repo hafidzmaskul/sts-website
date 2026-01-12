@@ -17,9 +17,9 @@ const formatPrice = (price) => {
         return '-';
     }
     const finalPrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
-    return new Intl.NumberFormat('id-ID', {
+    return new Intl.NumberFormat('en-GB', {
         style: 'currency',
-        currency: 'IDR',
+        currency: 'GBP',
         maximumFractionDigits: 0,
     }).format(finalPrice);
 };
@@ -66,11 +66,18 @@ const ImageZoom = ({ src, alt, className }) => {
     );
 };
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+// Modified Modal to support custom sizes
+const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
     if (!isOpen) return null;
+    // Sizes: md, lg, xl
+    const sizeClasses = {
+        md: "max-w-md",
+        lg: "max-w-3xl",
+        xl: "max-w-5xl"
+    };
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-2 py-6">
+            <div className={`bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} p-6 relative`}>
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -88,7 +95,6 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 
 export default function ProductDetail({ product, products = [], logged }) {
-
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -194,11 +200,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsQuoteOptionModalOpen(false);
         setIsLoading(true);
         try {
-            const response = await axios.get('/api/quote-builder');
-            // Assuming response.data.data or response.data contains the list
-            // Adjust based on actual API response structure.
-            // Typically generic Laravel API resource returns { data: [...] }
-            // User didn't specify return structure, assume standard.
+            const response = await axios.get('/web/quote-builder');
             setExistingQuotes(response.data.data || response.data || []);
             setIsExistingQuoteModalOpen(true);
         } catch (error) {
@@ -240,7 +242,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsLoading(true);
         try {
             await Promise.all(selectedQuoteIds.map(quoteId =>
-                axios.post(`/api/quote-builder/${quoteId}/products`, {
+                axios.post(`/web/quote-builder/${quoteId}/products`, {
                     product_id: data.id
                 })
             ));
@@ -278,7 +280,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         }
         setIsLoading(true);
         try {
-            await axios.post('/api/quote-builder', {
+            await axios.post('/web/quote-builder', {
                 name: newQuoteName,
                 product_id: [data.id]
             });
@@ -304,7 +306,6 @@ export default function ProductDetail({ product, products = [], logged }) {
             setIsLoading(false);
         }
     };
-
 
     // Cart helpers: animation and add-to-cart
     const animateAddToCart = () => {
@@ -333,7 +334,7 @@ export default function ProductDetail({ product, products = [], logged }) {
 
     const refreshCart = async () => {
         try {
-            const res = await axios.get('/api/cart');
+            const res = await axios.get('/web/cart');
             const items = res.data.data || res.data || [];
             const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
@@ -346,7 +347,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         setIsAddingToCart(true);
         animateAddToCart();
         try {
-            await axios.post('/api/cart', { product_id: data.id, quantity: 1 });
+            await axios.post('/web/cart', { product_id: data.id, quantity: 1 });
             setToast({ show: true, message: 'Product added to cart', type: 'success' });
             await refreshCart();
         } catch (error) {
@@ -356,7 +357,6 @@ export default function ProductDetail({ product, products = [], logged }) {
             setIsAddingToCart(false);
         }
     };
-
 
     const featuredProducts = useMemo(() => {
         if (products.length === 0) {
@@ -393,6 +393,21 @@ export default function ProductDetail({ product, products = [], logged }) {
             });
     }, [products, data.id]);
 
+
+    // Helper for product image url
+    const getCoverImage = (product) => {
+        if (Array.isArray(product.images) && product.images.length > 0) {
+            const sorted = [...product.images].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+            const imagePath = sorted[0].image_path;
+            if (imagePath?.startsWith("http")) {
+                return imagePath;
+            }
+            return imagePath ? `/storage/${imagePath}` : "/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png";
+        }
+        return "/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png";
+    };
+
+    // --- RENDER ---
     return (
         <div className="min-h-screen flex flex-col ">
             <Toast
@@ -428,41 +443,95 @@ export default function ProductDetail({ product, products = [], logged }) {
                 </div>
             </Modal>
 
-            {/* Existing Quote Modal */}
+            {/* Existing Quote Modal (BIGGER, with product info displayed) */}
             <Modal
                 isOpen={isExistingQuoteModalOpen}
                 onClose={() => setIsExistingQuoteModalOpen(false)}
                 title="Select Quote"
+                size="lg"
             >
                 {isLoading ? (
-                    <div className="text-center py-4">Loading quotes...</div>
+                    <div className="text-center py-6 text-lg">Loading quotes...</div>
                 ) : (
-                    <div className="flex flex-col gap-4">
-                        <div className="max-h-60 overflow-y-auto space-y-2 border rounded p-2">
-                            {existingQuotes.length > 0 ? (
-                                existingQuotes.map(quote => (
-                                    <label key={quote.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedQuoteIds.includes(quote.id)}
-                                            onChange={() => handleQuoteCheckboxChange(quote.id)}
-                                            className="w-5 h-5 text-[#0079C2] border-gray-300 rounded focus:ring-[#0079C2]"
-                                        />
-                                        <span className="text-gray-700 font-medium">{quote.name || `Quote #${quote.id}`}</span>
-                                    </label>
-                                ))
-                            ) : (
-                                <p className="text-gray-500 text-center py-2">No existing quotes found.</p>
-                            )}
+                    <div className="flex flex-col md:flex-row gap-8">
+                        {/* Product Info Area */}
+                        <div className="w-full md:w-2/5 bg-gray-50 rounded-lg p-4 flex flex-col items-center md:items-start justify-center border border-gray-200">
+                            {/* Product Image */}
+                            <img
+                                src={productImages[activeImageIndex]}
+                                alt={data.title}
+                                className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
+                            />
+                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
+                            <p className="text-gray-500 text-sm mb-1">{data.brand_name}</p>
+                            <p className="text-[#0079C2] text-lg font-bold mb-2">
+                                {data.is_sign_up_for_pricing && !logged
+                                    ? <span className="italic text-gray-400">Login untuk melihat harga</span>
+                                    : formatPrice(data.base_price)
+                                }
+                            </p>
                         </div>
-                        <button
-                            onClick={handleSaveToExistingQuotes}
-                            disabled={selectedQuoteIds.length === 0}
-                            className={`w-full py-3 rounded-lg text-white font-medium transition ${selectedQuoteIds.length > 0 ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
-                                }`}
-                        >
-                            Save
-                        </button>
+                        {/* Quote Selection Area, scrollable */}
+                        <div className="w-full md:w-3/5 flex flex-col gap-4 max-h-[400px] overflow-y-auto">
+                            <div className="space-y-1 border rounded-lg p-2 flex-1">
+                                {existingQuotes.length > 0 ? (
+                                    existingQuotes.map(quote => (
+                                        <div key={quote.id} className="border-b border-dashed border-gray-200 py-3 last:border-none px-1">
+                                            <label className="flex items-center gap-3 cursor-pointer select-none">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedQuoteIds.includes(quote.id)}
+                                                    onChange={() => handleQuoteCheckboxChange(quote.id)}
+                                                    className="w-5 h-5 text-[#0079C2] border-gray-300 rounded focus:ring-[#0079C2]"
+                                                />
+                                                <div className="flex flex-col gap-0">
+                                                    <span className="text-gray-700 font-medium">{quote.name || `Quote #${quote.id}`}</span>
+                                                    <span className="text-xs text-gray-400">
+                                                        {Array.isArray(quote.products)
+                                                            ? `${quote.products.length} product${quote.products.length !== 1 ? "s" : ""} in this quote`
+                                                            : '0 products'
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            {/* Show existing quote's products thumbnails and titles */}
+                                            {quote.products && quote.products.length > 0 && (
+                                                <div className="flex flex-row flex-wrap gap-2 mt-1 mb-2 pl-8">
+                                                    {quote.products.slice(0, 5).map(prod => (
+                                                        <div key={prod.id} className="flex flex-col items-center w-20">
+                                                            <div className="w-10 h-10 overflow-hidden rounded border border-gray-200 bg-white flex items-center justify-center">
+                                                                <img
+                                                                    src={getCoverImage(prod)}
+                                                                    alt={prod.title}
+                                                                    className="w-full h-full object-contain"
+                                                                    loading="lazy"
+                                                                />
+                                                            </div>
+                                                            <span className="mt-1 text-[10px] text-center text-gray-700 line-clamp-2 break-words w-full">{prod.title || prod.name}</span>
+                                                        </div>
+                                                    ))}
+                                                    {quote.products.length > 5 &&
+                                                        <span className="pl-2 text-xs text-gray-400 self-center align-middle">
+                                                            +{quote.products.length - 5} more
+                                                        </span>
+                                                    }
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-gray-500 text-center py-6">No existing quotes found.</p>
+                                )}
+                            </div>
+                            <button
+                                onClick={handleSaveToExistingQuotes}
+                                disabled={selectedQuoteIds.length === 0}
+                                className={`w-full py-3 rounded-lg text-white font-medium transition ${selectedQuoteIds.length > 0 ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
+                                    }`}
+                            >
+                                Save
+                            </button>
+                        </div>
                     </div>
                 )}
             </Modal>

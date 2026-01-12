@@ -10,7 +10,7 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $cartItems = $request->user()->cartItems()->with('product')->get();
+        $cartItems = $request->user()->cartItems()->with('product.images')->get();
 
         return response()->json([
             'data' => $cartItems,

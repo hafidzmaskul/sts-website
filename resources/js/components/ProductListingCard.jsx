@@ -28,12 +28,14 @@ export default function ProductListingCard({
                 )}
                 <div className="p-3 pb-0">
                     <div>
+                    <a href={`/products/${slug}`} >
                         <img
                             src={image}
                             alt={name}
                             className="h-48 w-full rounded-lg object-contain"
                             loading="lazy"
                         />
+                        </a>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col gap-1 px-3 pb-4 pt-4">

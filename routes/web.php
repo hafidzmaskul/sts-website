@@ -24,7 +24,8 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/liked-products', 'likedProducts')->name('liked-products');
     Route::get('/payment/{slug}', 'payment')->name('payment');
     Route::get('become-customer', 'becomeCustomer')->name('become-customer');
-    Route::get('sign-up', 'signUp')->name('sign-up');
+    Route::get('sign-up-customer', 'signUpCustomer')->name('sign-up');
+    Route::get('sign-up-credit-facility', 'signUpFacility')->name('sign-up');
     Route::get('contact-us', 'contactUs')->name('contact-us');
     Route::get('training', 'training')->name('training');
     Route::get('commisioning', 'commisioning')->name('commisioning');
