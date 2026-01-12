@@ -266,7 +266,20 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="font-medium text-sm text-gray-900 truncate" style="color: black;">
-                                            {{ $attachment->name }}
+                                            <div class="flex items-center gap-2">
+                                                {{ $attachment->name }}
+                                                @if($attachment->is_public)
+                                                    <span
+                                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                        Public
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                        Not Public
+                                                    </span>
+                                                @endif
+                                            </div>
                                             <span class="block text-xs font-normal text-gray-500 mt-0.5">
                                                 {{ basename($attachment->file_path) }}
                                             </span>
