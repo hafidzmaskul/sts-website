@@ -57,6 +57,10 @@ class Edit extends Component
     public $newImages = []; // Array of ['image' => file, 'sequence' => int, 'key' => unique_id]
     public $storedImages = []; // Array of existing images, including their sequence
 
+    // Attachments
+    public $newAttachments = []; // Array of ['file' => file, 'name' => string, 'key' => unique_id]
+    public $storedAttachments = []; // Array of existing attachments
+
     public function mount(Product $product)
     {
         $this->productId = $product->id;
@@ -87,6 +91,17 @@ class Edit extends Component
                     'id' => $img->id,
                     'image_path' => $img->image_path,
                     'sequence' => $img->sequence,
+                ];
+            })
+            ->toArray();
+
+        $this->storedAttachments = $product->attachments()
+            ->get()
+            ->map(function ($att) {
+                return [
+                    'id' => $att->id,
+                    'name' => $att->name,
+                    'file_path' => $att->file_path,
                 ];
             })
             ->toArray();
@@ -133,6 +148,21 @@ class Edit extends Component
         $this->newImages = array_values($this->newImages);
     }
 
+    public function addAttachment()
+    {
+        $this->newAttachments[] = [
+            'file' => null,
+            'name' => '',
+            'key' => Str::random(10),
+        ];
+    }
+
+    public function removeNewAttachment($index)
+    {
+        unset($this->newAttachments[$index]);
+        $this->newAttachments = array_values($this->newAttachments);
+    }
+
     public function addCustomerPrice()
     {
         $this->customerPrices[] = ['user_id' => null, 'price' => null];
@@ -160,6 +190,11 @@ class Edit extends Component
             'newImages.*.image' => 'required|image|max:2048',
             'newImages.*.sequence' => 'required|integer|min:0',
             'storedImages.*.sequence' => 'required|integer|min:0',
+
+            // Attachment Validation
+            'newAttachments.*.file' => 'required|file|max:10240',
+            'newAttachments.*.name' => 'required|string|max:255',
+            'storedAttachments.*.name' => 'required|string|max:255',
 
             'is_sign_up_for_pricing' => 'boolean',
             'is_exclusive' => 'boolean',
@@ -234,6 +269,23 @@ class Edit extends Component
             }
         }
 
+        // Update existing attachments (name only)
+        foreach ($this->storedAttachments as $attData) {
+            \App\Models\ProductAttachment::where('id', $attData['id'])->update(['name' => $attData['name']]);
+        }
+
+        // Add new attachments
+        foreach ($this->newAttachments as $attData) {
+            if ($attData['file']) {
+                $originalName = $attData['file']->getClientOriginalName();
+                $path = $attData['file']->storeAs('product-attachments/' . $product->id, $originalName, 'public');
+                $product->attachments()->create([
+                    'name' => $attData['name'],
+                    'file_path' => $path,
+                ]);
+            }
+        }
+
         session()->flash('success', 'Product updated successfully.');
         return redirect()->route('admin.products.index');
     }
@@ -254,6 +306,27 @@ class Edit extends Component
                         'id' => $img->id,
                         'image_path' => $img->image_path,
                         'sequence' => $img->sequence,
+                    ];
+                })
+                ->toArray();
+        }
+    }
+
+    public function deleteAttachment($attachmentId)
+    {
+        $attachment = \App\Models\ProductAttachment::findOrFail($attachmentId);
+        if ($attachment->product_id == $this->productId) {
+            Storage::disk('public')->delete($attachment->file_path);
+            $attachment->delete();
+
+            // Refresh stored list
+            $this->storedAttachments = Product::findOrFail($this->productId)->attachments()
+                ->get()
+                ->map(function ($att) {
+                    return [
+                        'id' => $att->id,
+                        'name' => $att->name,
+                        'file_path' => $att->file_path,
                     ];
                 })
                 ->toArray();

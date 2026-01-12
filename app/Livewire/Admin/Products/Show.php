@@ -15,7 +15,8 @@ class Show extends Component
             'categories',
             'images' => function ($query) {
                 $query->orderBy('sequence');
-            }
+            },
+            'attachments'
         ]);
     }
 

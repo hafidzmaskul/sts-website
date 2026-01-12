@@ -63,4 +63,8 @@ class Product extends Model
             ->withPivot('price')
             ->withTimestamps();
     }
+    public function attachments()
+    {
+        return $this->hasMany(ProductAttachment::class);
+    }
 }

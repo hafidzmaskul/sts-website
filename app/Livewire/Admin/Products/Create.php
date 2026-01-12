@@ -53,6 +53,10 @@ class Create extends Component
     public $newImages = []; // Array of ['image' => file, 'sequence' => int, 'key' => unique_id]
     public $storedImages = []; // Not used in create but kept for compatibility with form partial
 
+    // Attachments
+    public $newAttachments = []; // Array of ['file' => file, 'name' => string, 'key' => unique_id]
+    public $storedAttachments = []; // Not used in create but kept for compatibility
+
     public function mount()
     {
         // Add one empty image slot by default? No, let user add.
@@ -73,6 +77,21 @@ class Create extends Component
         $this->newImages = array_values($this->newImages);
     }
 
+    public function addAttachment()
+    {
+        $this->newAttachments[] = [
+            'file' => null,
+            'name' => '',
+            'key' => Str::random(10),
+        ];
+    }
+
+    public function removeNewAttachment($index)
+    {
+        unset($this->newAttachments[$index]);
+        $this->newAttachments = array_values($this->newAttachments);
+    }
+
     public function rules()
     {
         return [
@@ -88,6 +107,10 @@ class Create extends Component
             // New Image Validation
             'newImages.*.image' => 'required|image|max:2048',
             'newImages.*.sequence' => 'required|integer|min:0',
+
+            // Attachment Validation
+            'newAttachments.*.file' => 'required|file|max:10240', // 10MB max
+            'newAttachments.*.name' => 'required|string|max:255',
 
             'is_sign_up_for_pricing' => 'boolean',
             'is_exclusive' => 'boolean',
@@ -166,6 +189,17 @@ class Create extends Component
                 $product->images()->create([
                     'image_path' => $path,
                     'sequence' => $imgData['sequence'],
+                ]);
+            }
+        }
+
+        foreach ($this->newAttachments as $attData) {
+            if ($attData['file']) {
+                $originalName = $attData['file']->getClientOriginalName();
+                $path = $attData['file']->storeAs('product-attachments/' . $product->id, $originalName, 'public');
+                $product->attachments()->create([
+                    'name' => $attData['name'],
+                    'file_path' => $path,
                 ]);
             }
         }

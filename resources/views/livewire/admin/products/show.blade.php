@@ -46,8 +46,8 @@
                         <div>
                             <dt class="text-sm font-medium" style="color: #555;">Slug</dt>
                             <dd class="mt-1 text-sm flex items-center" style="color: black;">
-                                <span
-                                    class="bg-gray-100 rounded px-2 py-0.5 font-mono text-xs" style="color: black;">{{ $product->slug }}</span>
+                                <span class="bg-gray-100 rounded px-2 py-0.5 font-mono text-xs"
+                                    style="color: black;">{{ $product->slug }}</span>
                             </dd>
                         </div>
                         <div>
@@ -73,7 +73,8 @@
                             <dt class="text-sm font-medium" style="color: #555;">Pricing Formula</dt>
                             <dd class="mt-1 text-sm" style="color: black;">
                                 @if($product->pricingFormula)
-                                    <div class="font-medium" style="color: black;">{{ $product->pricingFormula->label }}</div>
+                                    <div class="font-medium" style="color: black;">{{ $product->pricingFormula->label }}
+                                    </div>
                                     <div class="text-xs" style="color: #555;">
                                         {{ $product->pricingFormula->type->label() }}
                                         {{ $product->pricingFormula->value }}
@@ -102,7 +103,8 @@
                             <dd class="mt-1 flex flex-wrap gap-2">
                                 @forelse($product->categories as $category)
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 border border-gray-200" style="color: black;">
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 border border-gray-200"
+                                        style="color: black;">
                                         @if($category->parent)
                                             <span class="mr-1" style="color: #555;">{{ $category->parent->name }} ›</span>
                                         @endif
@@ -185,18 +187,21 @@
                             <dd class="mt-1 text-sm" style="color: black;">{{ $product->seo_title ?? '-' }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Description</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO
+                                Description</dt>
                             <dd class="mt-1 text-sm" style="color: black;">{{ $product->seo_description ?? '-' }}
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Keywords</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wider" style="color: #555;">SEO Keywords
+                            </dt>
                             <dd class="mt-1 text-sm" style="color: black;">
                                 @if(!empty($product->seo_keywords))
                                     <div class="flex flex-wrap gap-1">
                                         @foreach(explode(',', $product->seo_keywords) as $keyword)
                                             <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100" style="color: black;">
+                                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100"
+                                                style="color: black;">
                                                 {{ trim($keyword) }}
                                             </span>
                                         @endforeach
@@ -221,22 +226,22 @@
                             <table class="min-w-full divide-y divide-gray-300">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col"
-                                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-6" style="color: black;">
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-6"
+                                            style="color: black;">
                                             Customer</th>
-                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold" style="color: black;">
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold"
+                                            style="color: black;">
                                             Price (GBP)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
                                     @foreach($product->customerPrices as $customer)
                                         <tr>
-                                            <td
-                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6"
+                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6"
                                                 style="color: black;">
                                                 {{ $customer->name }}
-                                                <span
-                                                    class="block text-xs font-normal" style="color: #555;">{{ $customer->email }}</span>
+                                                <span class="block text-xs font-normal"
+                                                    style="color: #555;">{{ $customer->email }}</span>
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm" style="color: #555;">
                                                 £{{ number_format($customer->pivot->price, 2) }}
@@ -249,6 +254,52 @@
                     </div>
                 </div>
             @endif
+
+            <!-- Attachments Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold" style="color: black;">Attachments</h2>
+                </div>
+                <div class="p-6">
+                    @if($product->attachments->isNotEmpty())
+                        <div class="space-y-3">
+                            @foreach($product->attachments as $attachment)
+                                <div
+                                    class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition group">
+                                    <div class="bg-indigo-50 text-indigo-600 p-2 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-medium text-sm text-gray-900 truncate" style="color: black;">
+                                            {{ $attachment->name }}
+                                            <span class="block text-xs font-normal text-gray-500 mt-0.5">
+                                                {{ basename($attachment->file_path) }}
+                                            </span>
+                                        </div>
+                                        <a href="{{ Storage::url($attachment->file_path) }}" target="_blank"
+                                            class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline">
+                                            Download
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                            <svg class="mx-auto h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                style="color: #aaa;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                            <p class="mt-2 text-sm" style="color: #555;">No attachments.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <!-- Right Column (Images) -->
@@ -270,8 +321,8 @@
                                             class="h-full w-full object-contain">
                                     </div>
                                 @else
-                                    <div
-                                        class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center" style="color: #aaa;">
+                                    <div class="flex-shrink-0 h-14 w-14 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center"
+                                        style="color: #aaa;">
                                         <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
@@ -283,8 +334,7 @@
                                     <h3 class="text-base font-medium" style="color: black;">{{ $product->brand->name }}</h3>
                                     @if($product->brand->website)
                                         <a href="{{ $product->brand->website }}" target="_blank"
-                                            class="text-sm hover:underline inline-flex items-center"
-                                            style="color: #1e40af;">
+                                            class="text-sm hover:underline inline-flex items-center" style="color: #1e40af;">
                                             Visit Website
                                             <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -333,8 +383,8 @@
                             </div>
                         @else
                             <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" style="color: #aaa;">
+                                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                    style="color: #aaa;">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
@@ -344,6 +394,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>

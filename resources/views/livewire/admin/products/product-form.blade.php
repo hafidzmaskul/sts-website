@@ -14,7 +14,8 @@
                         <label class="block text-sm font-medium" style="color: black;">Title <span
                                 class="text-red-500">*</span></label>
                         <input type="text" wire:model.live="title" placeholder="e.g. Premium Wireless Headphones"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
                         @error('title') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                     </div>
 
@@ -23,16 +24,19 @@
                             <label class="block text-sm font-medium" style="color: black;">Slug</label>
                             <div class="flex rounded-lg shadow-sm">
                                 <span
-                                    class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#D2D2D2] bg-gray-50" style="color: #6b7280;">/product/</span>
+                                    class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#D2D2D2] bg-gray-50"
+                                    style="color: #6b7280;">/product/</span>
                                 <input type="text" wire:model="slug" placeholder="premium-wireless-headphones"
-                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-[#D2D2D2] bg-white focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
+                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-[#D2D2D2] bg-white focus:ring-indigo-500 focus:border-indigo-500"
+                                    style="color: black;">
                             </div>
                             @error('slug') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-medium" style="color: black;">Brand</label>
                             <select wire:model="brand_id"
-                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                                style="color: black;">
                                 <option value="">Select a Brand</option>
                                 @foreach($brands as $brand)
                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -94,7 +98,8 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
                     <h2 class="text-xl font-semibold" style="color: black;">SEO Optimized</h2>
-                    <p class="mt-1 text-sm" style="color: #6b7280;">Improve your product's visibility on search engines.</p>
+                    <p class="mt-1 text-sm" style="color: #6b7280;">Improve your product's visibility on search engines.
+                    </p>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
@@ -103,20 +108,24 @@
                             <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_title ?? '') }} / 60</span>
                         </div>
                         <input type="text" wire:model="seo_title"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
                     </div>
                     <div>
                         <div class="flex justify-between">
                             <label class="block text-sm font-medium" style="color: black;">SEO Description</label>
-                            <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_description ?? '') }} / 160</span>
+                            <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_description ?? '') }} /
+                                160</span>
                         </div>
                         <textarea wire:model="seo_description" rows="3"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;"></textarea>
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">SEO Keywords</label>
                         <input type="text" wire:model="seo_keywords" placeholder="Comma separated keywords"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
                     </div>
                 </div>
             </div>
@@ -135,7 +144,8 @@
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">Status</label>
                         <select wire:model="status"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
@@ -169,9 +179,11 @@
 
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">Pricing Formula</label>
-                        <div class="text-xs mb-2" style="color: #6b7280;">Select a pricing formula to apply automatically.</div>
+                        <div class="text-xs mb-2" style="color: #6b7280;">Select a pricing formula to apply
+                            automatically.</div>
                         <select wire:model="pricing_formula_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500" style="color: black;">
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
                             <option value="">None (Use Base Price)</option>
                             @foreach($pricingFormulas as $formula)
                                 <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
@@ -213,39 +225,41 @@
                             </div>
 
                             <div class="space-y-3" x-data="{
-                                    allCustomers: @js($customers->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'email' => $c->email])->values())
-                                }">
+                                        allCustomers: @js($customers->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'email' => $c->email])->values())
+                                    }">
                                 @foreach($customerPrices as $index => $cp)
                                     <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 relative group">
                                         <div class="space-y-3">
                                             <div>
-                                                <label class="block text-xs font-medium" style="color: #6b7280;">Customer</label>
+                                                <label class="block text-xs font-medium"
+                                                    style="color: #6b7280;">Customer</label>
 
                                                 <div x-data="{
-                                                                        open: false,
-                                                                        search: '',
-                                                                        get filteredCustomers() {
-                                                                            if (this.search === '') return this.allCustomers;
-                                                                            return this.allCustomers.filter(c =>
-                                                                                c.name.toLowerCase().includes(this.search.toLowerCase()) ||
-                                                                                c.email.toLowerCase().includes(this.search.toLowerCase())
-                                                                            );
-                                                                        },
-                                                                        get selectedCustomer() {
-                                                                            return this.allCustomers.find(c => c.id == $wire.customerPrices[{{ $index }}].user_id);
-                                                                        }
-                                                                    }" @click.outside="open = false" class="relative">
+                                                                                open: false,
+                                                                                search: '',
+                                                                                get filteredCustomers() {
+                                                                                    if (this.search === '') return this.allCustomers;
+                                                                                    return this.allCustomers.filter(c =>
+                                                                                        c.name.toLowerCase().includes(this.search.toLowerCase()) ||
+                                                                                        c.email.toLowerCase().includes(this.search.toLowerCase())
+                                                                                    );
+                                                                                },
+                                                                                get selectedCustomer() {
+                                                                                    return this.allCustomers.find(c => c.id == $wire.customerPrices[{{ $index }}].user_id);
+                                                                                }
+                                                                            }" @click.outside="open = false" class="relative">
 
                                                     <!-- Trigger -->
                                                     <button type="button"
                                                         @click="open = !open; if(open) $nextTick(() => $refs.searchInput.focus())"
-                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs" style="color: black;">
+                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
+                                                        style="color: black;">
                                                         <span class="block truncate"
                                                             x-text="selectedCustomer ? selectedCustomer.name + ' (' + selectedCustomer.email + ')' : 'Select Customer'"></span>
                                                         <span
                                                             class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                            <svg class="h-4 w-4" style="color: #9ca3af;" viewBox="0 0 20 20" fill="none"
-                                                                stroke="currentColor">
+                                                            <svg class="h-4 w-4" style="color: #9ca3af;" viewBox="0 0 20 20"
+                                                                fill="none" stroke="currentColor">
                                                                 <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke-width="1.5"
                                                                     stroke-linecap="round" stroke-linejoin="round" />
                                                             </svg>
@@ -262,18 +276,21 @@
                                                         <div
                                                             class="sticky top-0 z-10 bg-white px-2 py-1.5 border-b border-gray-100">
                                                             <input x-ref="searchInput" x-model="search" type="text"
-                                                                class="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-500 focus:ring-0 sm:text-xs rounded px-2 py-1" style="color: black;"
-                                                                placeholder="Search...">
+                                                                class="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-500 focus:ring-0 sm:text-xs rounded px-2 py-1"
+                                                                style="color: black;" placeholder="Search...">
                                                         </div>
 
                                                         <ul class="max-h-56 overflow-auto py-1">
                                                             <template x-for="customer in filteredCustomers" :key="customer.id">
                                                                 <li @click="$wire.customerPrices[{{ $index }}].user_id = customer.id; open = false; search = '';"
-                                                                    class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50" style="color: black;">
+                                                                    class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50"
+                                                                    style="color: black;">
                                                                     <div class="flex flex-col">
                                                                         <span class="font-medium truncate"
                                                                             x-text="customer.name"></span>
-                                                                        <span class="text-xs" style="color: #6b7280; font-weight: normal;" x-text="customer.email"></span>
+                                                                        <span class="text-xs"
+                                                                            style="color: #6b7280; font-weight: normal;"
+                                                                            x-text="customer.email"></span>
                                                                     </div>
                                                                     <span
                                                                         x-show="$wire.customerPrices[{{ $index }}].user_id == customer.id"
@@ -298,7 +315,8 @@
                                                 class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-medium" style="color: #6b7280;">Price (GBP)</label>
+                                                <label class="block text-xs font-medium" style="color: #6b7280;">Price
+                                                    (GBP)</label>
                                                 <div class="relative rounded shadow-sm">
                                                     <div
                                                         class="pointer-events-none absolute inset-y-0 left-0 pl-2 flex items-center">
@@ -306,8 +324,8 @@
                                                     </div>
                                                     <input type="number" step="0.01"
                                                         wire:model="customerPrices.{{ $index }}.price"
-                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-indigo-500 focus:border-indigo-500" style="color: black;"
-                                                        placeholder="0.00">
+                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                        style="color: black;" placeholder="0.00">
                                                 </div>
                                                 @error("customerPrices.{$index}.price") <span
                                                 class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
@@ -325,7 +343,8 @@
                             </div>
 
                             @if(empty($customerPrices))
-                                <div class="text-xs text-center italic py-2" style="color: #6b7280;">No customer prices added.</div>
+                                <div class="text-xs text-center italic py-2" style="color: #6b7280;">No customer prices added.
+                                </div>
                             @endif
                         </div>
                     @endif
@@ -348,7 +367,8 @@
                                 <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
                                     <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
                                         class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                    <span class="ml-2 text-sm font-semibold" style="color: black;">{{ $parent->name }}</span>
+                                    <span class="ml-2 text-sm font-semibold"
+                                        style="color: black;">{{ $parent->name }}</span>
                                 </label>
                                 @if($children = $groupedCategories->get($parent->id))
                                     <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
@@ -367,7 +387,8 @@
                         @foreach($groupedCategories as $parentId => $children)
                             @if($parentId && !$categories->contains('id', $parentId))
                                 <div class="space-y-1">
-                                    <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2" style="color: #9ca3af;">
+                                    <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2"
+                                        style="color: #9ca3af;">
                                         Uncategorized</div>
                                     @foreach($children as $child)
                                         <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
@@ -396,7 +417,8 @@
                     <!-- Existing Images -->
                     @if(count($storedImages) > 0)
                         <div class="space-y-3">
-                            <div class="text-xs font-medium uppercase tracking-wide" style="color: #6b7280;">Saved Images</div>
+                            <div class="text-xs font-medium uppercase tracking-wide" style="color: #6b7280;">Saved Images
+                            </div>
                             @foreach($storedImages as $index => $img)
                                 <div
                                     class="group flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative">
@@ -405,7 +427,8 @@
                                     <div class="flex-1 min-w-0">
                                         <label class="block text-xs font-medium" style="color: #6b7280;">Order</label>
                                         <input type="number" wire:model="storedImages.{{ $index }}.sequence"
-                                            class="block w-20 rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
+                                            class="block w-20 rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            style="color: black;">
                                     </div>
                                     <button type="button" wire:confirm="Remove this image?"
                                         wire:click="deleteImage({{ $img['id'] }})"
@@ -431,7 +454,8 @@
                                     <div class="flex items-start gap-4">
                                         <div class="flex-1 min-w-0">
                                             <input type="file" wire:model="newImages.{{ $index }}.image"
-                                                class="block w-full text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" style="color: #6b7280;">
+                                                class="block w-full text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                                style="color: #6b7280;">
                                             @error("newImages.{$index}.image") <span
                                             class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
 
@@ -445,7 +469,8 @@
                                         <div class="w-16">
                                             <label class="block text-xs font-medium" style="color: #6b7280;">Order</label>
                                             <input type="number" wire:model="newImages.{{ $index }}.sequence"
-                                                class="block w-full rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
+                                                class="block w-full rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                style="color: black;">
                                         </div>
                                         <button type="button" wire:click="removeNewImage({{ $index }})"
                                             class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1 shadow-sm hover:shadow">
@@ -470,6 +495,94 @@
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                             <p class="mt-1 text-xs" style="color: #6b7280;">No images yet.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Attachments Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold" style="color: black;">Attachments</h2>
+                    <button type="button" wire:click="addAttachment"
+                        class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Add Attachment
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <!-- Existing Attachments -->
+                    @if(count($storedAttachments) > 0)
+                        <div class="space-y-3">
+                            <div class="text-xs font-medium uppercase tracking-wide" style="color: #6b7280;">Saved Attachments</div>
+                            @foreach($storedAttachments as $index => $att)
+                                <div class="group flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative">
+                                    <div class="flex-1 min-w-0">
+                                        <label class="block text-xs font-medium mb-1" style="color: #6b7280;">Name</label>
+                                        <input type="text" wire:model="storedAttachments.{{ $index }}.name"
+                                            class="block w-full rounded-lg border border-[#D2D2D2] text-xs py-2 px-3 bg-white focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
+                                    </div>
+                                    <div class="pt-5">
+                                        <a href="{{ Storage::url($att['file_path']) }}" target="_blank" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">View File</a>
+                                    </div>
+                                    <button type="button" wire:confirm="Remove this attachment?"
+                                        wire:click="deleteAttachment({{ $att['id'] }})"
+                                        class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors mt-4">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- New Attachments -->
+                    @if(count($newAttachments) > 0)
+                        <div class="space-y-3">
+                            <div class="text-xs font-medium text-green-600 uppercase tracking-wide">New Attachments</div>
+                            @foreach($newAttachments as $index => $attData)
+                                <div class="group p-4 bg-white border border-dashed border-indigo-300 rounded-lg relative"
+                                    wire:key="new-attachment-{{ $attData['key'] }}">
+                                    <div class="flex items-start gap-4">
+                                        <div class="flex-1 min-w-0 space-y-4">
+                                            <div>
+                                                <label class="block text-xs font-medium mb-1" style="color: #6b7280;">Name</label>
+                                                <input type="text" wire:model="newAttachments.{{ $index }}.name" placeholder="e.g. User Manual"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] text-xs py-2 px-3 bg-white focus:ring-indigo-500 focus:border-indigo-500" style="color: black;">
+                                                @error("newAttachments.{$index}.name") <span
+                                                class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium mb-1" style="color: #6b7280;">File</label>
+                                                <input type="file" wire:model="newAttachments.{{ $index }}.file"
+                                                    class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                                @error("newAttachments.{$index}.file") <span
+                                                class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+                                        <button type="button" wire:click="removeNewAttachment({{ $index }})"
+                                            class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1 shadow-sm hover:shadow">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if(empty($newAttachments) && empty($storedAttachments))
+                        <div class="text-center py-6 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+                            <svg class="mx-auto h-8 w-8" style="color: #9ca3af;" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                            <p class="mt-1 text-xs" style="color: #6b7280;">No attachments yet.</p>
                         </div>
                     @endif
                 </div>
