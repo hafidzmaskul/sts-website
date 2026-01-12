@@ -14,7 +14,7 @@ export default function Header() {
     useEffect(() => {
         const fetchCartCount = async () => {
             try {
-                const res = await axios.get('/api/cart');
+                const res = await axios.get('/web/cart');
                 const items = res.data.data || res.data || [];
                 const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
                 setCartCount(count);

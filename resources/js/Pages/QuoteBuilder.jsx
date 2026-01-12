@@ -20,7 +20,7 @@ export default function QuoteBuilder() {
     const fetchQuotes = async () => {
         setIsLoading(true);
         try {
-            const res = await axios.get('/api/quote-builder');
+            const res = await axios.get('/web/quote-builder');
             setQuotes(res.data.data || res.data || []);
         } catch (error) {
             console.error('Failed to fetch quotes', error);
@@ -43,7 +43,7 @@ export default function QuoteBuilder() {
     const handleDeleteQuote = async (quoteId) => {
         if (!confirm('Are you sure you want to delete this quote?')) return;
         try {
-            await axios.delete(`/api/quote-builder/${quoteId}`);
+            await axios.delete(`/web/quote-builder/${quoteId}`);
             setQuotes(prev => prev.filter(q => q.id !== quoteId));
             setToast({
                 show: true,
@@ -70,7 +70,7 @@ export default function QuoteBuilder() {
     const handleDeleteProduct = async (quoteId, productId) => {
         if (!confirm('Are you sure you want to remove this product from the quote?')) return;
         try {
-            await axios.delete(`/api/quote-builder/${quoteId}/products/${productId}`);
+            await axios.delete(`/web/quote-builder/${quoteId}/products/${productId}`);
             setQuotes(prevQuotes => prevQuotes.map(quote => {
                 if (quote.id === quoteId) {
                     return {
@@ -117,7 +117,7 @@ export default function QuoteBuilder() {
 
         try {
             setIsLoading(true);
-            const { data } = await axios.put(`/api/quote-builder/${quote.id}`, { name: trimmedName });
+            const { data } = await axios.put(`/web/quote-builder/${quote.id}`, { name: trimmedName });
             setQuotes(prev =>
                 prev.map(q =>
                     q.id === quote.id ? { ...q, name: data?.name ?? trimmedName } : q

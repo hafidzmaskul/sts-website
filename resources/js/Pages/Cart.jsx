@@ -34,7 +34,7 @@ export default function Cart() {
     const fetchCart = async () => {
         setIsLoading(true);
         try {
-            const res = await axios.get('/api/cart');
+            const res = await axios.get('/web/cart');
             setCartItems(res.data.data || res.data || []);
             const count = (res.data.data || res.data || []).reduce((s,i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
@@ -56,7 +56,7 @@ export default function Cart() {
         window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
 
         try {
-            await axios.post('/api/cart', { product_id: item.product_id, quantity: 1 });
+            await axios.post('/web/cart', { product_id: item.product_id, quantity: 1 });
             setToast({ show: true, message: 'Quantity increased', type: 'success' });
         } catch (error) {
             console.error('Failed to increase', error);
@@ -85,7 +85,7 @@ export default function Cart() {
         window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
 
         try {
-            await axios.post('/api/cart/decrease', { product_id: item.product_id, quantity: 1 });
+            await axios.post('/web/cart/decrease', { product_id: item.product_id, quantity: 1 });
             setToast({ show: true, message: 'Quantity decreased', type: 'success' });
         } catch (error) {
             console.error('Failed to decrease', error);
@@ -107,7 +107,7 @@ export default function Cart() {
         setLoadingIds(prevIds => Array.from(new Set([...prevIds, item.id])));
 
         try {
-            await axios.delete(`/api/cart/${item.id}`);
+            await axios.delete(`/web/cart/${item.id}`);
             setToast({ show: true, message: 'Item removed', type: 'success' });
         } catch (error) {
             console.error('Failed to remove', error);
