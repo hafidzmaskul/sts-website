@@ -11,7 +11,7 @@ class QuoteBuilderController extends Controller
 {
     public function index(Request $request)
     {
-        $quoteBuilders = $request->user()->quoteBuilders()->with('products')->get();
+        $quoteBuilders = $request->user()->quoteBuilders()->with('products.images')->get();
 
         return response()->json([
             'data' => $quoteBuilders,
@@ -39,7 +39,7 @@ class QuoteBuilderController extends Controller
 
         return response()->json([
             'message' => 'Quote Builder created successfully',
-            'data' => $quoteBuilder->load('products'),
+            'data' => $quoteBuilder->load('products.images'),
         ], 201);
     }
 
@@ -57,7 +57,7 @@ class QuoteBuilderController extends Controller
 
         return response()->json([
             'message' => 'Quote Builder updated successfully',
-            'data' => $quoteBuilder->load('products'),
+            'data' => $quoteBuilder->load('products.images'),
         ]);
     }
 
@@ -82,7 +82,7 @@ class QuoteBuilderController extends Controller
 
         return response()->json([
             'message' => 'Product added to Quote Builder successfully',
-            'data' => $quoteBuilder->load('products'),
+            'data' => $quoteBuilder->load('products.images'),
         ]);
     }
 
@@ -93,7 +93,7 @@ class QuoteBuilderController extends Controller
 
         return response()->json([
             'message' => 'Product removed from Quote Builder successfully',
-            'data' => $quoteBuilder->load('products'),
+            'data' => $quoteBuilder->load('products.images'),
         ]);
     }
 }
