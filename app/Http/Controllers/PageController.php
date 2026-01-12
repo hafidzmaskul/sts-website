@@ -184,6 +184,14 @@ class PageController
     {
         return Inertia::render('BecomeCustomer');
     }
+
+
+    public function signUpCustomer(){
+        return Inertia::render('SignUpCustomer');
+    }
+    public function signUpFacility(){
+        return Inertia::render('SignUpCrediFacilities');
+    }
     public function signUp()
     {
         return Inertia::render('SignUp');
@@ -211,7 +219,7 @@ class PageController
 
     public function quoteBuilder()
     {
-        
+
         return Inertia::render('QuoteBuilder');
     }
     public function invoice()

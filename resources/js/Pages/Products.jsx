@@ -18,9 +18,9 @@ const sliderImages = [
 const PRODUCT_PAGE_SIZE = 28;
 
 const formatPrice = (amount) =>
-    new Intl.NumberFormat('en-US', {
+    new Intl.NumberFormat('en-GB', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'GBP',
         maximumFractionDigits: 0,
     }).format(amount);
 
@@ -529,7 +529,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                                             slug={product.slug}
                                                             showPricing={product.is_sign_up_for_pricing && !logged}
                                                         />
-                                                    
+
 
                                                 ))}
                                             </div>

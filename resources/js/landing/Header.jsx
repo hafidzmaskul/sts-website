@@ -9,28 +9,52 @@ export default function Header() {
     const [showPagesMobile, setShowPagesMobile] = useState(false);
     const [cartCount, setCartCount] = useState(0);
     const [sideNavOpen, setSideNavOpen] = useState(false);
+    const [cartProducts, setCartProducts] = useState([]);
+    const [showCartDropdown, setShowCartDropdown] = useState(false);
 
-    // fetch cart count and listen for cart changes
+    // fetch cart count and list, and listen for cart changes
     useEffect(() => {
-        const fetchCartCount = async () => {
+        const fetchCart = async () => {
             try {
                 const res = await axios.get('/web/cart');
-                const items = res.data.data || res.data || [];
+                let items = [];
+                // The API returns { data: [ ... ] }
+                if (Array.isArray(res.data.data)) {
+                    items = res.data.data.map((item) => {
+                        const product = item.product || {};
+                        // Try to get product image from images array
+                        let imageUrl = '';
+                        if (Array.isArray(product.images) && product.images.length > 0) {
+                            imageUrl = product.images[0]?.image_url || '';
+                        }
+                        return {
+                            id: item.id,
+                            quantity: item.quantity,
+                            // Use product title, fall back to null if not present
+                            title: product.title || 'Product',
+                            image: imageUrl,
+                        };
+                    });
+                } else {
+                    items = [];
+                }
+                setCartProducts(items);
+
                 const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
                 setCartCount(count);
             } catch (err) {
+                setCartProducts([]);
                 setCartCount(0);
             }
         };
 
-        fetchCartCount();
+        fetchCart();
 
         const handler = (e) => {
             if (e?.detail?.count !== undefined) {
                 setCartCount(e.detail.count);
-            } else {
-                fetchCartCount();
             }
+            fetchCart();
         };
 
         window.addEventListener('cart:changed', handler);
@@ -62,9 +86,9 @@ export default function Header() {
         { href: '/system-design', label: 'System Design' }
     ];
 
-    // Ref for closing dropdown if click outside
     const categoriesRef = useRef(null);
     const pagesRef = useRef(null);
+    const cartRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -74,9 +98,12 @@ export default function Header() {
             if (pagesRef.current && !pagesRef.current.contains(event.target)) {
                 setShowPages(false);
             }
+            if (cartRef.current && !cartRef.current.contains(event.target)) {
+                setShowCartDropdown(false);
+            }
         };
 
-        if (showCategories || showPages) {
+        if (showCategories || showPages || showCartDropdown) {
             document.addEventListener("mousedown", handleClickOutside);
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -85,7 +112,7 @@ export default function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showCategories, showPages]);
+    }, [showCategories, showPages, showCartDropdown]);
 
     // All nav items (desktop)
     const navLinks = (
@@ -157,7 +184,6 @@ export default function Header() {
             </div>
             {/* --- End Pages Dropdown Desktop --- */}
             <a href="/about-us" className="text-[#636270]">About</a>
-            {/* Quote Builder nav link: only show if logged in */}
             {isLoggedIn && (
                 <a
                     href="/quote-builder"
@@ -169,7 +195,6 @@ export default function Header() {
         </>
     );
 
-    // Baris atas dan bawah (informasi, search, cart, language)
     return (
         <header className="w-full bg-white border-gray-100 text-[#232323] font-sans z-50 relative">
             {/* Top Bar */}
@@ -271,20 +296,63 @@ export default function Header() {
                             </>
                         ) : (
                             <>
-                                <a href="/cart" className="flex items-center bg-white rounded-xl p-2 md:p-3 relative">
-                                    {/* Cart Icon */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
-                                    <span className="font-semibold mr-2 hidden md:inline">Cart</span>
-                                    <div className="inline-flex items-center justify-center h-5 w-5 text-xs font-bold rounded-full bg-[#007580] text-white ">
-                                        {cartCount}
-                                    </div>
-                                </a>
-                                {/* Remove inline quote-builder link from here; now show in nav menu, not topbar */}
+                                <div
+                                    className="relative"
+                                    ref={cartRef}
+                                    onMouseEnter={() => setShowCartDropdown(true)}
+                                    onMouseLeave={() => setShowCartDropdown(false)}
+                                >
+                                    <a href="/cart" className="flex items-center bg-white rounded-xl p-2 md:p-3 relative">
+                                        {/* Cart Icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
+                                        <span className="font-semibold mr-2 hidden md:inline">Cart</span>
+                                        <div className="inline-flex items-center justify-center h-5 w-5 text-xs font-bold rounded-full bg-[#007580] text-white ">
+                                            {cartCount}
+                                        </div>
+                                    </a>
+                                    {showCartDropdown && (
+                                        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
+                                            <div className="py-2">
+                                                {cartProducts && cartProducts.length > 0 ? (
+                                                    cartProducts.map((item, idx) => (
+                                                        <div key={item.id || idx} className="flex items-center px-4 py-2 border-b last:border-b-0">
+                                                            {item.image ? (
+                                                                <img
+                                                                    src={item.image}
+                                                                    alt={item.title}
+                                                                    className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
+                                                                />
+                                                            ) : (
+                                                                <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
+                                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb"/>
+                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/>
+                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5"/>
+                                                                    </svg>
+                                                                </div>
+                                                            )}
+                                                            <div className="flex flex-col">
+                                                                <span className="font-medium text-sm truncate max-w-[140px]">{item.title}</span>
+                                                                <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-gray-500 py-8">
+                                                        Cart is empty
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="border-t px-4 py-2">
+                                                <a href="/cart" className="block w-full text-center text-[#007580] hover:underline font-semibold">View Cart</a>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
                                 </a>
                                 <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex" href='/dashboard'>
-                                    {/* User Icon */}
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>
                                 </a>
                             </>
@@ -294,7 +362,6 @@ export default function Header() {
             </div>
 
             {/* Sidenav Overlay */}
-            {/* Overlay background */}
             <div
                 className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${sideNavOpen ? "block" : "hidden"}`}
                 onClick={() => setSideNavOpen(false)}
@@ -427,7 +494,6 @@ export default function Header() {
                     <li>
                         <a href="/about-us" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>About</a>
                     </li>
-                    {/* Quote Builder nav link: only show if logged in */}
                     {isLoggedIn && (
                         <li>
                             <a
