@@ -68,4 +68,25 @@ class Product extends Model
     {
         return $this->hasMany(ProductAttachment::class);
     }
+
+    protected $appends = [
+        'calculated_price',
+    ];
+
+    public function getCalculatedPriceAttribute()
+    {
+        return $this->calculatePrice(auth()->user());
+    }
+
+    public function calculatePrice($user = null)
+    {
+        if ($user) {
+            $customerPrice = $this->customerPrices()->where('user_id', $user->id)->first();
+            if ($customerPrice) {
+                return (float) $customerPrice->pivot->price;
+            }
+        }
+
+        return null;
+    }
 }

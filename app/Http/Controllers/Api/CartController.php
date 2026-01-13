@@ -25,7 +25,7 @@ class CartController extends Controller
         ]);
 
         $product = \App\Models\Product::findOrFail($request->product_id);
-        $price = $product->special_price ?: $product->base_price;
+        $price = $product->calculatePrice($request->user()) ?? ($product->special_price ?: $product->base_price);
 
         $cartItem = $request->user()->cartItems()->where('product_id', $request->product_id)->first();
 
