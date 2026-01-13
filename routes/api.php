@@ -37,6 +37,7 @@ Route::controller(\App\Http\Controllers\Api\CartController::class)
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
+Route::get('/settings', [\App\Http\Controllers\Api\SettingsController::class, 'index']);
 
 
 // Authentication Routes

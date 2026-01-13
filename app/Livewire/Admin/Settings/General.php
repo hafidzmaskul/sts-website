@@ -54,6 +54,36 @@ class General extends Component
     public $contact_phone;
     public $contact_address;
 
+    // Payment Methods
+    public $payment_method_1_name;
+    public $payment_method_1_desc;
+    public $payment_method_1_icon;
+    public $payment_method_1_icon_path;
+
+    public $payment_method_2_name;
+    public $payment_method_2_desc;
+    public $payment_method_2_icon;
+    public $payment_method_2_icon_path;
+
+    public $payment_method_3_name;
+    public $payment_method_3_desc;
+    public $payment_method_3_icon;
+    public $payment_method_3_icon_path;
+
+    // Shipping Settings
+    public $shipping_method_1_name;
+    public $shipping_method_1_desc;
+    public $shipping_method_1_price;
+    public $shipping_method_2_name;
+    public $shipping_method_2_desc;
+    public $shipping_method_2_price;
+    public $shipping_method_3_name;
+    public $shipping_method_3_desc;
+    public $shipping_method_3_price;
+
+    // Tax Settings
+    public $transaction_tax;
+
     public function mount()
     {
         $this->mail_mailer = Setting::where('key', 'mail_mailer')->value('value');
@@ -91,6 +121,33 @@ class General extends Component
         $this->contact_email = Setting::where('key', 'contact_email')->value('value');
         $this->contact_phone = Setting::where('key', 'contact_phone')->value('value');
         $this->contact_address = Setting::where('key', 'contact_address')->value('value');
+
+        // Shipping Settings
+        $this->shipping_method_1_name = Setting::where('key', 'shipping_method_1_name')->value('value') ?? '';
+        $this->shipping_method_1_desc = Setting::where('key', 'shipping_method_1_desc')->value('value') ?? '';
+        $this->shipping_method_1_price = Setting::where('key', 'shipping_method_1_price')->value('value') ?? '';
+        $this->shipping_method_2_name = Setting::where('key', 'shipping_method_2_name')->value('value') ?? '';
+        $this->shipping_method_2_desc = Setting::where('key', 'shipping_method_2_desc')->value('value') ?? '';
+        $this->shipping_method_2_price = Setting::where('key', 'shipping_method_2_price')->value('value') ?? '';
+        $this->shipping_method_3_name = Setting::where('key', 'shipping_method_3_name')->value('value') ?? '';
+        $this->shipping_method_3_desc = Setting::where('key', 'shipping_method_3_desc')->value('value') ?? '';
+        $this->shipping_method_3_price = Setting::where('key', 'shipping_method_3_price')->value('value') ?? '';
+
+        // Payment Settings
+        $this->payment_method_1_name = Setting::where('key', 'payment_method_1_name')->value('value') ?? '';
+        $this->payment_method_1_desc = Setting::where('key', 'payment_method_1_desc')->value('value') ?? '';
+        $this->payment_method_1_icon_path = Setting::where('key', 'payment_method_1_icon')->value('value') ?? '';
+
+        $this->payment_method_2_name = Setting::where('key', 'payment_method_2_name')->value('value') ?? '';
+        $this->payment_method_2_desc = Setting::where('key', 'payment_method_2_desc')->value('value') ?? '';
+        $this->payment_method_2_icon_path = Setting::where('key', 'payment_method_2_icon')->value('value') ?? '';
+
+        $this->payment_method_3_name = Setting::where('key', 'payment_method_3_name')->value('value') ?? '';
+        $this->payment_method_3_desc = Setting::where('key', 'payment_method_3_desc')->value('value') ?? '';
+        $this->payment_method_3_icon_path = Setting::where('key', 'payment_method_3_icon')->value('value') ?? '';
+
+        // Tax Settings
+        $this->transaction_tax = Setting::where('key', 'transaction_tax')->value('value') ?? '20';
     }
 
     public function saveMailSettings()
@@ -208,6 +265,89 @@ class General extends Component
 
         $this->dispatch('close-modal', 'site-information');
         $this->dispatch('notify', message: 'Site information updated successfully.');
+    }
+
+    public function saveShippingSettings()
+    {
+        $settings = [
+            'shipping_method_1_name' => $this->shipping_method_1_name,
+            'shipping_method_1_desc' => $this->shipping_method_1_desc,
+            'shipping_method_1_price' => $this->shipping_method_1_price,
+            'shipping_method_2_name' => $this->shipping_method_2_name,
+            'shipping_method_2_desc' => $this->shipping_method_2_desc,
+            'shipping_method_2_price' => $this->shipping_method_2_price,
+            'shipping_method_3_name' => $this->shipping_method_3_name,
+            'shipping_method_3_desc' => $this->shipping_method_3_desc,
+            'shipping_method_3_price' => $this->shipping_method_3_price,
+        ];
+
+        foreach ($settings as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        $this->dispatch('modal-close', name: 'shipping-settings');
+        $this->dispatch('notify', message: 'Shipping settings updated successfully.');
+        // If Flux listens to specific event, maybe 'flux:close'? 
+        // Let's keep 'close-modal' and fix the listener.
+    }
+
+    public function savePaymentSettings()
+    {
+        $settings = [
+            'payment_method_1_name' => $this->payment_method_1_name,
+            'payment_method_1_desc' => $this->payment_method_1_desc,
+            'payment_method_2_name' => $this->payment_method_2_name,
+            'payment_method_2_desc' => $this->payment_method_2_desc,
+            'payment_method_3_name' => $this->payment_method_3_name,
+            'payment_method_3_desc' => $this->payment_method_3_desc,
+        ];
+
+        if ($this->payment_method_1_icon) {
+            $settings['payment_method_1_icon'] = $this->payment_method_1_icon->store('payment_icons', 'public');
+        }
+        if ($this->payment_method_2_icon) {
+            $settings['payment_method_2_icon'] = $this->payment_method_2_icon->store('payment_icons', 'public');
+        }
+        if ($this->payment_method_3_icon) {
+            $settings['payment_method_3_icon'] = $this->payment_method_3_icon->store('payment_icons', 'public');
+        }
+
+        foreach ($settings as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        // Also update local paths so UI updates immediately without refresh (optional but good UX)
+        if ($this->payment_method_1_icon)
+            $this->payment_method_1_icon_path = $settings['payment_method_1_icon'];
+        if ($this->payment_method_2_icon)
+            $this->payment_method_2_icon_path = $settings['payment_method_2_icon'];
+        if ($this->payment_method_3_icon)
+            $this->payment_method_3_icon_path = $settings['payment_method_3_icon'];
+
+        // Reset inputs
+        $this->payment_method_1_icon = null;
+        $this->payment_method_2_icon = null;
+        $this->payment_method_3_icon = null;
+
+        $this->dispatch('modal-close', name: 'payment-settings');
+        $this->dispatch('notify', message: 'Payment settings updated successfully.');
+    }
+
+    public function saveTaxSettings()
+    {
+        Setting::updateOrCreate(
+            ['key' => 'transaction_tax'],
+            ['value' => $this->transaction_tax]
+        );
+
+        $this->dispatch('modal-close', name: 'tax-settings');
+        $this->dispatch('notify', message: 'Tax settings updated successfully.');
     }
 
     public function render()

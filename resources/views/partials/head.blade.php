@@ -11,6 +11,8 @@
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 <script defer src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@41.4.2/build/ckeditor.js"></script>
 
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     (function () {
         window.__ckLocks = window.__ckLocks || {};
@@ -114,22 +116,22 @@
             document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
         };
 
-        // Tiny toast system for browser events
-        function showToast(type, message) {
-            const root = document.getElementById('toast-root');
-            const item = document.createElement('div');
-            item.className = 'pointer-events-auto min-w-[260px] max-w-sm rounded-md px-4 py-3 shadow border text-sm ' +
-                (type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
-                    type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
-                        'bg-gray-50 border-gray-200 text-gray-800');
-            item.textContent = message;
-            root.appendChild(item);
-            setTimeout(() => { item.style.opacity = '0'; item.style.transition = 'opacity .3s'; }, 3800);
-            setTimeout(() => { item.remove(); }, 4200);
-        }
         window.addEventListener('notify', (e) => {
-            const { type = 'info', message = '' } = e.detail || {};
-            if (message) showToast(type, message);
+            const { type = 'success', message = '' } = e.detail || {};
+            // Map 'info' to 'success' for better UX if needed, or stick to passed type
+            const icon = type === 'info' ? 'success' : type;
+
+            if (message) {
+                Swal.fire({
+                    icon: icon,
+                    title: message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
         });
 
         // Auto-init for default news editor if present on load

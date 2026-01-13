@@ -18,6 +18,43 @@
             </div>
         </flux:modal.trigger>
 
+        <!-- Shipping Settings -->
+        <flux:modal.trigger name="shipping-settings">
+            <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer p-6">
+                <h3 class="text-base font-semibold text-black">Shipping Settings</h3>
+                <ul class="mt-4 space-y-2 text-sm text-black">
+                    <li>Method 1</li>
+                    <li>Method 2</li>
+                    <li>Method 3</li>
+                </ul>
+            </div>
+        </flux:modal.trigger>
+
+        <!-- Payment Settings -->
+        <flux:modal.trigger name="payment-settings">
+            <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer p-6">
+                <h3 class="text-base font-semibold text-black">Payment Settings</h3>
+                <ul class="mt-4 space-y-2 text-sm text-black">
+                    <li>Method 1</li>
+                    <li>Method 2</li>
+                    <li>Method 3</li>
+                </ul>
+            </div>
+        </flux:modal.trigger>
+
+        <!-- Tax Settings -->
+        <flux:modal.trigger name="tax-settings">
+            <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer p-6">
+                <h3 class="text-base font-semibold text-black">Tax Settings</h3>
+                <ul class="mt-4 space-y-2 text-sm text-black">
+                    <li>Transaction Tax %</li>
+                </ul>
+            </div>
+        </flux:modal.trigger>
+
         <!-- Integration Panel -->
         <flux:modal.trigger name="integration-settings">
             <div
@@ -276,6 +313,170 @@
                 <flux:button variant="ghost">Cancel</flux:button>
             </flux:modal.close>
             <flux:button variant="primary" wire:click="saveMailSettings">Save</flux:button>
+        </div>
+    </flux:modal>
+    <!-- Shipping Settings Modal -->
+    <flux:modal name="shipping-settings" class="min-w-[40rem] space-y-6">
+        <div>
+            <flux:heading size="lg">Shipping Settings</flux:heading>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Method 1 -->
+            <div class="space-y-4 border-b border-gray-200 pb-4">
+                <h3 class="font-medium text-black">Shipping Method 1</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="shipping_method_1_name" label="Name" placeholder="Standard Shipping" />
+                    <flux:input wire:model="shipping_method_1_price" label="Price" placeholder="0.00" />
+                </div>
+                <flux:input wire:model="shipping_method_1_desc" label="Description"
+                    placeholder="Delivery in 5-7 business days" />
+            </div>
+
+            <!-- Method 2 -->
+            <div class="space-y-4 border-b border-gray-200 pb-4">
+                <h3 class="font-medium text-black">Shipping Method 2</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="shipping_method_2_name" label="Name" placeholder="Express Shipping" />
+                    <flux:input wire:model="shipping_method_2_price" label="Price" placeholder="9.99" />
+                </div>
+                <flux:input wire:model="shipping_method_2_desc" label="Description"
+                    placeholder="Delivery in 2-3 business days" />
+            </div>
+
+            <!-- Method 3 -->
+            <div class="space-y-4">
+                <h3 class="font-medium text-black">Shipping Method 3</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="shipping_method_3_name" label="Name" placeholder="Overnight Shipping" />
+                    <flux:input wire:model="shipping_method_3_price" label="Price" placeholder="19.99" />
+                </div>
+                <flux:input wire:model="shipping_method_3_desc" label="Description" placeholder="Next day delivery" />
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="primary" wire:click="saveShippingSettings">Save</flux:button>
+        </div>
+    </flux:modal>
+    <!-- Payment Settings Modal -->
+    <flux:modal name="payment-settings" class="min-w-[40rem] space-y-6">
+        <div>
+            <flux:heading size="lg">Payment Settings</flux:heading>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Method 1 -->
+            <div class="space-y-4 border-b border-gray-200 pb-4">
+                <h3 class="font-medium text-black">Payment Method 1</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="payment_method_1_name" label="Name" placeholder="Credit / Debit Card" />
+                    <div>
+                        <label class="block text-sm font-medium text-black mb-2">Icon</label>
+                        <div class="flex items-center gap-4">
+                            <input type="file" wire:model="payment_method_1_icon" class="block w-full text-sm text-black
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-black
+                                hover:file:bg-indigo-100
+                            " />
+                        </div>
+                        @if($payment_method_1_icon_path)
+                            <div class="mt-2 text-xs">
+                                Current: <a href="{{ Storage::url($payment_method_1_icon_path) }}" target="_blank"
+                                    class="underline text-black">Open</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <flux:input wire:model="payment_method_1_desc" label="Description"
+                    placeholder="Pay securely with your credit or debit card" />
+            </div>
+
+            <!-- Method 2 -->
+            <div class="space-y-4 border-b border-gray-200 pb-4">
+                <h3 class="font-medium text-black">Payment Method 2</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="payment_method_2_name" label="Name" placeholder="PayPal" />
+                    <div>
+                        <label class="block text-sm font-medium text-black mb-2">Icon</label>
+                        <div class="flex items-center gap-4">
+                            <input type="file" wire:model="payment_method_2_icon" class="block w-full text-sm text-black
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-black
+                                hover:file:bg-indigo-100
+                            " />
+                        </div>
+                        @if($payment_method_2_icon_path)
+                            <div class="mt-2 text-xs">
+                                Current: <a href="{{ Storage::url($payment_method_2_icon_path) }}" target="_blank"
+                                    class="underline text-black">Open</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <flux:input wire:model="payment_method_2_desc" label="Description"
+                    placeholder="You will be redirected to PayPal to complete payment" />
+            </div>
+
+            <!-- Method 3 -->
+            <div class="space-y-4">
+                <h3 class="font-medium text-black">Payment Method 3</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input wire:model="payment_method_3_name" label="Name" placeholder="Bank Transfer" />
+                    <div>
+                        <label class="block text-sm font-medium text-black mb-2">Icon</label>
+                        <div class="flex items-center gap-4">
+                            <input type="file" wire:model="payment_method_3_icon" class="block w-full text-sm text-black
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-black
+                                hover:file:bg-indigo-100
+                            " />
+                        </div>
+                        @if($payment_method_3_icon_path)
+                            <div class="mt-2 text-xs">
+                                Current: <a href="{{ Storage::url($payment_method_3_icon_path) }}" target="_blank"
+                                    class="underline text-black">Open</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <flux:input wire:model="payment_method_3_desc" label="Description"
+                    placeholder="Transfer funds directly from your bank account" />
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="primary" wire:click="savePaymentSettings">Save</flux:button>
+        </div>
+    </flux:modal>
+    <!-- Tax Settings Modal -->
+    <flux:modal name="tax-settings" class="min-w-[40rem] space-y-6">
+        <div>
+            <flux:heading size="lg">Tax Settings</flux:heading>
+        </div>
+
+        <div class="space-y-6">
+            <flux:input wire:model="transaction_tax" label="Transaction Tax (%)" placeholder="20" />
+            <p class="text-sm text-gray-500">Default tax percentage applied to transactions.</p>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="primary" wire:click="saveTaxSettings">Save</flux:button>
         </div>
     </flux:modal>
 </div>
