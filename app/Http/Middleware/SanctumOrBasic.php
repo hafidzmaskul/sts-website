@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class SanctumOrBasic
@@ -19,9 +20,12 @@ class SanctumOrBasic
             return app(\Illuminate\Auth\Middleware\Authenticate::class)->handle($request, $next, 'sanctum');
         }
 
-        // Don't trigger the browser's native Basic Auth dialog for API requests.
-        // Return a JSON 401 response instead of calling AuthenticateWithBasicAuth,
-        // which emits a WWW-Authenticate header and causes the native prompt.
+        // Attempt Basic Auth
+        if (Auth::onceBasic() === null) {
+            return $next($request);
+        }
+
+        // If both fail, return JSON 401 without WWW-Authenticate header to avoid browser prompt
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }

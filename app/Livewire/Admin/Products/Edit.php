@@ -120,6 +120,20 @@ class Edit extends Component
         ];
     }
 
+    public function addCustomerPrice()
+    {
+        $this->customerPrices[] = [
+            'user_id' => '',
+            'price' => null,
+        ];
+    }
+
+    public function removeCustomerPrice($index)
+    {
+        unset($this->customerPrices[$index]);
+        $this->customerPrices = array_values($this->customerPrices);
+    }
+
     public function rules()
     {
         return [
@@ -293,7 +307,7 @@ class Edit extends Component
             'categories' => ProductCategory::orderBy('parent_id')->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
             'pricingFormulas' => PricingFormula::orderBy('label')->get(),
-            'customers' => \App\Models\User::role('customer')->orderBy('name')->get(),
+            'customers' => \App\Models\User::role(['customer', 'trade account', 'credit facilities account'])->orderBy('name')->get(),
         ]);
     }
 }

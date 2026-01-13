@@ -24,14 +24,20 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
+        $product = \App\Models\Product::findOrFail($request->product_id);
+        $price = $product->special_price ?: $product->base_price;
+
         $cartItem = $request->user()->cartItems()->where('product_id', $request->product_id)->first();
 
         if ($cartItem) {
-            $cartItem->increment('quantity', $request->quantity);
+            $cartItem->quantity += $request->quantity;
+            $cartItem->price = $price; // Update price to latest
+            $cartItem->save();
         } else {
             $cartItem = $request->user()->cartItems()->create([
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
+                'price' => $price,
             ]);
         }
 
