@@ -226,4 +226,9 @@ class PageController
     {
         return Inertia::render('Invoice');
     }
+
+
+    public function checkout(){
+        return Inertia::render('Checkout');
+    }
 }

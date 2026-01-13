@@ -32,6 +32,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('system-design', 'systemDesign')->name('system-design');
     Route::get('login-page', 'login')->name('login-page');
     Route::get('invoice', 'invoice')->name('invoice');
+    Route::get('checkout', 'checkout')->name('checkout');
 
 });
 
