@@ -68,6 +68,17 @@ Route::middleware(['auth'])->group(function () {
         return \Inertia\Inertia::render('TransactionDetail', ['id' => $id]);
     })->name('my-transactions.show');
 
+    Route::get('/quote-checkout', function (\Illuminate\Http\Request $request) {
+        $quoteIds = $request->input('quote_ids');
+        // Ensure quoteIds is always an array or null
+        if ($quoteIds && !is_array($quoteIds)) {
+            $quoteIds = [$quoteIds];
+        }
+        return \Inertia\Inertia::render('QuoteCheckout', [
+            'quoteIds' => $quoteIds
+        ]);
+    })->name('quote-checkout');
+
 
     Route::get('quote-builder', [\App\Http\Controllers\PageController::class, 'quoteBuilder'])->name('quote-builder');
 

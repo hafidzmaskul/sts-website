@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
@@ -188,7 +188,9 @@ export default function QuoteBuilder() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
                     <h1 className="text-3xl font-bold text-gray-800">Quote Builder</h1>
                     <div className="flex flex-col gap-2 w-full md:w-auto">
-                        <button className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-semibold py-2 px-6 rounded-md shadow-sm transition">
+                        <button
+                            onClick={() => router.visit('/quote-checkout')}
+                            className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-semibold py-2 px-6 rounded-md shadow-sm transition">
                             ADD TO CART
                         </button>
                     </div>
@@ -307,7 +309,9 @@ export default function QuoteBuilder() {
 
                                         {/* Action Buttons */}
                                         <div className="w-full lg:w-64 flex flex-col gap-3 shrink-0 justify-center">
-                                            <button className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-bold py-3 px-4 rounded-md shadow-sm text-center transition">
+                                            <button
+                                                onClick={() => router.visit('/quote-checkout', { data: { quote_ids: [quote.id] } })}
+                                                className="bg-[#5FC3FF] hover:bg-blue-400 text-white font-bold py-3 px-4 rounded-md shadow-sm text-center transition">
                                                 PROCEED TO CHECKOUT
                                             </button>
                                             {isEditing ? (
