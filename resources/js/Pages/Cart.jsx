@@ -6,12 +6,11 @@ import Footer from '../landing/Footer';
 import Toast from '../components/Toast';
 
 const formatPrice = (price) => {
-    if (!price) return '-';
+    if (!price && price !== 0) return '-';
     const cleanedPrice = price.toString().replace(/[^\d.-]/g, '');
     const parsedPrice = parseFloat(cleanedPrice);
     if (Number.isNaN(parsedPrice)) return '-';
-    const finalPrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(finalPrice);
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(parsedPrice);
 };
 
 export default function Cart() {
@@ -36,7 +35,7 @@ export default function Cart() {
         try {
             const res = await axios.get('/web/cart');
             setCartItems(res.data.data || res.data || []);
-            const count = (res.data.data || res.data || []).reduce((s,i) => s + (i.quantity || 0), 0);
+            const count = (res.data.data || res.data || []).reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
         } catch (error) {
             console.error('Failed to load cart', error);
@@ -122,7 +121,7 @@ export default function Cart() {
 
     const totalAmount = cartItems.reduce((s, item) => {
         const price = parseFloat((item.product?.base_price || '0').toString().replace(/[^\d.-]/g, ''));
-        const final = Number.isNaN(price) ? 0 : price > 10000 ? price : price * 1000;
+        const final = Number.isNaN(price) ? 0 : price;
         return s + final * (item.quantity || 0);
     }, 0);
 
@@ -165,7 +164,15 @@ export default function Cart() {
 
                             <div className="flex justify-between items-center pt-4">
                                 <div className="text-lg font-semibold">Total</div>
-                                <div className="text-xl font-bold">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalAmount)}</div>
+                                <div className="text-xl font-bold">{formatPrice(totalAmount)}</div>
+                            </div>
+                            <div className="mt-6 flex justify-end">
+                                <Link
+                                    href="/checkout"
+                                    className="bg-[#0079C2] text-white px-6 py-3 rounded font-medium hover:bg-[#00629e] transition-colors shadow-sm"
+                                >
+                                    Proceed to Checkout
+                                </Link>
                             </div>
                         </div>
                     )}

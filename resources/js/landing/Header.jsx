@@ -296,6 +296,10 @@ export default function Header() {
                             </>
                         ) : (
                             <>
+                                <a href="/my-transactions" className="flex items-center bg-white rounded-xl p-2 md:p-3 text-[#636270] hover:text-[#007580]" title="My Transactions">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0a9 9 0 0 1 18 0Z" /></svg>
+                                    <span className="font-semibold ml-2 hidden md:inline">History</span>
+                                </a>
                                 <div
                                     className="relative"
                                     ref={cartRef}
@@ -325,9 +329,9 @@ export default function Header() {
                                                             ) : (
                                                                 <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
                                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb"/>
-                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/>
-                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5"/>
+                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb" />
+                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
                                                                     </svg>
                                                                 </div>
                                                             )}
