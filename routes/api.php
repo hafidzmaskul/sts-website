@@ -38,6 +38,9 @@ Route::middleware(\App\Http\Middleware\OptionalAuth::class)->group(function () {
     Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
     Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 });
+Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
+    Route::post('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+});
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
 Route::get('/settings', [\App\Http\Controllers\Api\SettingsController::class, 'index']);
 

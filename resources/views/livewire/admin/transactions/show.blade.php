@@ -61,6 +61,11 @@
                                 <td class="px-6 py-2 text-right font-medium text-black">
                                     ${{ number_format($transaction->tax_amount, 2) }}</td>
                             </tr>
+                            <tr>
+                                <td colspan="3" class="px-6 py-2 text-right text-black">Shipping</td>
+                                <td class="px-6 py-2 text-right font-medium text-black">
+                                    ${{ number_format($transaction->shipping_price, 2) }}</td>
+                            </tr>
                             <tr class="text-lg">
                                 <td colspan="3" class="px-6 py-4 text-right font-bold text-black">Total</td>
                                 <td class="px-6 py-4 text-right font-bold text-indigo-600">
@@ -91,7 +96,41 @@
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Phone</p>
                         <p class="text-black">
-                            {{ $transaction->customer->phone ?? $transaction->customer->user->phone ?? '-' }}</p>
+                            {{ $transaction->customer->phone ?? $transaction->customer->user->phone ?? '-' }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-black uppercase">Checkout Email</p>
+                        <p class="text-black">{{ $transaction->contact_email ?? '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-200 bg-gray-50">
+                    <h2 class="font-bold text-black">Shipping Details</h2>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div>
+                        <p class="text-xs font-medium text-black uppercase">Recipient</p>
+                        <p class="text-black">{{ $transaction->shipping_first_name }} {{ $transaction->shipping_last_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-black uppercase">Phone</p>
+                        <p class="text-black">{{ $transaction->shipping_phone_number ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-black uppercase">Address</p>
+                        <p class="text-black">{{ $transaction->shipping_address }}</p>
+                        <p class="text-black">
+                            {{ $transaction->shipping_city }}, {{ $transaction->shipping_postal_code }}
+                        </p>
+                        <p class="text-black">{{ $transaction->shipping_country }}</p>
+                    </div>
+                     <div>
+                        <p class="text-xs font-medium text-black uppercase">Shipping Method</p>
+                        <p class="text-black">{{ $transaction->shipping_method ?? 'Standard' }}</p>
                     </div>
                 </div>
             </div>
@@ -116,7 +155,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Payment Method</p>
-                        <p class="text-black">{{ $transaction->payment_method ?? 'Not Set' }}</p>
+                        <p class="text-black">{{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}</p>
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Order Date</p>
