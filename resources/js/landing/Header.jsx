@@ -83,7 +83,8 @@ export default function Header() {
         { href: '/contact-us', label: 'Contact Us' },
         { href: '/training', label: 'Training' },
         { href: '/commisioning', label: 'Commisioning' },
-        { href: '/system-design', label: 'System Design' }
+        { href: '/system-design', label: 'System Design' },
+        { href: '/news', label: 'News' }
     ];
 
     const categoriesRef = useRef(null);
