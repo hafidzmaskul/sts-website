@@ -8,12 +8,22 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['brand', 'categories', 'images'])
-            ->where('status', 'active')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = Product::with(['brand', 'categories', 'images'])
+            ->where('status', 'active');
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('sku', 'like', '%' . $search . '%');
+            });
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $products = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         return response()->json([
             'success' => true,
