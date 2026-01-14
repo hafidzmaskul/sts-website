@@ -32,30 +32,52 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('system-design', 'systemDesign')->name('system-design');
     Route::get('login-page', 'login')->name('login-page');
     Route::get('invoice', 'invoice')->name('invoice');
-
+    Route::get('checkout', 'checkout')->name('checkout');
 });
 
 Route::middleware(['auth'])->group(function () {
 
     Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
-    ->prefix('web/quote-builder')
-    ->group(function () {
-        Route::get('/', 'index');
-        Route::post('/', 'store');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'destroy');
-        Route::post('/{id}/products', 'addProduct');
-        Route::delete('/{id}/products/{productId}', 'removeProduct');
-    });
+        ->prefix('web/quote-builder')
+        ->group(function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::put('/{id}', 'update');
+            Route::delete('/{id}', 'destroy');
+            Route::post('/{id}/products', 'addProduct');
+            Route::delete('/{id}/products/{productId}', 'removeProduct');
+        });
 
-Route::controller(\App\Http\Controllers\Api\CartController::class)
-    ->prefix('web/cart')
-    ->group(function () {
-        Route::get('/', 'index');
-        Route::post('/', 'store');
-        Route::post('/decrease', 'decrease');
-        Route::delete('/{productId}', 'destroy');
-    });
+    Route::controller(\App\Http\Controllers\Api\CartController::class)
+        ->prefix('web/cart')
+        ->group(function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::post('/decrease', 'decrease');
+            Route::delete('/{productId}', 'destroy');
+        });
+    Route::post('web/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+    Route::get('web/my-transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
+    Route::get('web/my-transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
+
+    Route::get('/my-transactions', function () {
+        return \Inertia\Inertia::render('TransactionHistory');
+    })->name('my-transactions');
+
+    Route::get('/my-transactions/{id}', function ($id) {
+        return \Inertia\Inertia::render('TransactionDetail', ['id' => $id]);
+    })->name('my-transactions.show');
+
+    Route::get('/quote-checkout', function (\Illuminate\Http\Request $request) {
+        $quoteIds = $request->input('quote_ids');
+        // Ensure quoteIds is always an array or null
+        if ($quoteIds && !is_array($quoteIds)) {
+            $quoteIds = [$quoteIds];
+        }
+        return \Inertia\Inertia::render('QuoteCheckout', [
+            'quoteIds' => $quoteIds
+        ]);
+    })->name('quote-checkout');
 
 
     Route::get('quote-builder', [\App\Http\Controllers\PageController::class, 'quoteBuilder'])->name('quote-builder');
@@ -74,7 +96,7 @@ Route::controller(\App\Http\Controllers\Api\CartController::class)
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
