@@ -105,12 +105,16 @@ class PageController
     public function news(): Response
     {
         $news = News::query()
+            ->with('categories')
             ->where('status', 'published')
             ->orderByDesc('created_at')
             ->get();
 
+        $categories = \App\Models\NewsCategory::all();
+
         return Inertia::render('News', [
             'news' => $news,
+            'categories' => $categories
         ]);
     }
 
@@ -186,10 +190,12 @@ class PageController
     }
 
 
-    public function signUpCustomer(){
+    public function signUpCustomer()
+    {
         return Inertia::render('SignUpCustomer');
     }
-    public function signUpFacility(){
+    public function signUpFacility()
+    {
         return Inertia::render('SignUpCrediFacilities');
     }
     public function signUp()
@@ -228,7 +234,8 @@ class PageController
     }
 
 
-    public function checkout(){
+    public function checkout()
+    {
         return Inertia::render('Checkout');
     }
 }

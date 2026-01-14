@@ -136,8 +136,9 @@ export default function Checkout() {
         <div className="min-h-screen flex flex-col bg-[#fff]">
             <Head title="Checkout" />
             <Header />
-            <div className="container mx-auto px-4 mt-4">
-                <nav className="text-xs md:text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+            <div className="border-1"></div>
+            <div className="container mx-auto  ">
+                <nav className="text-xs md:text-sm text-gray-500 py-3" aria-label="Breadcrumb">
                     <ol className="flex flex-wrap items-center gap-1">
                         <li><Link href='/home' className="hover:text-[#0079C2]">Home</Link></li>
                         <li className="mx-1 text-gray-400">/</li>
@@ -149,11 +150,11 @@ export default function Checkout() {
             </div>
 
             <main className="flex-1 w-full py-10 px-4 bg-[#F0F2F3]">
-                <div className="container mx-auto">
-                    <div className="flex flex-col md:flex-row gap-8">
+                <div className="container px-10 mx-auto">
+                    <div className=" flex flex-col md:flex-row gap-8">
 
                         {/* LEFT FORM */}
-                        <div className="w-full md:w-8/10 max-w-3xl flex-grow">
+                        <div className="w-full md:w-8/12  flex-grow">
                             {/* Contact Information */}
                             <div className="rounded-md mb-6 px-6 py-5 shadow bg-white">
                                 <h2 className="text-lg font-semibold mb-4">Contact Information</h2>
@@ -324,7 +325,7 @@ export default function Checkout() {
                         </div>
 
                         {/* RIGHT: 2/10, order summary */}
-                        <div className="w-full md:w-2/10 max-w-xs flex-shrink-0">
+                        <div className="w-full md:w-4/12  flex-shrink-0">
                             <div className="rounded-md shadow px-5 py-6 md:sticky top-28 bg-white">
                                 <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
 
