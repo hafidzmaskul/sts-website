@@ -42,4 +42,9 @@ class Customer extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function shippingAddresses()
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
 }

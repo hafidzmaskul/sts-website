@@ -46,6 +46,17 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
 Route::get('/settings', [\App\Http\Controllers\Api\SettingsController::class, 'index']);
 
+Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
+    ->middleware(\App\Http\Middleware\SanctumOrBasic::class)
+    ->prefix('shipping-addresses')
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+
 
 // Authentication Routes
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
