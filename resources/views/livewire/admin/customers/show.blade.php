@@ -96,6 +96,34 @@
                 </dl>
             </div>
 
+            <!-- Shipping Addresses -->
+            <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+                <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
+                    <flux:icon.truck class="w-5 h-5 text-gray-400" />
+                    Shipping Addresses
+                </h2>
+                @if($customer->shippingAddresses->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($customer->shippingAddresses as $address)
+                            <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                                <h3 class="text-sm font-semibold text-black mb-1">
+                                    {{ $address->first_name }} {{ $address->last_name }}
+                                </h3>
+                                <p class="text-sm text-gray-700 whitespace-pre-line">{{ $address->address }}</p>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ $address->city }}, {{ $address->postal_code }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    {{ $address->country }}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-gray-500 italic">No shipping addresses found.</p>
+                @endif
+            </div>
+
             <!-- Company Details -->
             <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
                 <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
