@@ -22,8 +22,11 @@ class QuoteBuilderController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'product_id' => 'required|array',
+            'product_id' => 'nullable|array',
             'product_id.*' => 'exists:products,id',
+            'items' => 'nullable|array',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'nullable|integer|min:1',
         ]);
 
         $quoteBuilder = DB::transaction(function () use ($request) {
@@ -32,7 +35,13 @@ class QuoteBuilderController extends Controller
                 'name' => $request->name,
             ]);
 
-            $quoteBuilder->products()->attach($request->product_id);
+            if ($request->has('items')) {
+                foreach ($request->items as $item) {
+                    $quoteBuilder->products()->attach($item['product_id'], ['quantity' => $item['quantity'] ?? 1]);
+                }
+            } elseif ($request->has('product_id')) {
+                $quoteBuilder->products()->attach($request->product_id, ['quantity' => 1]);
+            }
 
             return $quoteBuilder;
         });
@@ -75,10 +84,19 @@ class QuoteBuilderController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
+            'quantity' => 'nullable|integer|min:1',
         ]);
 
         $quoteBuilder = $request->user()->quoteBuilders()->findOrFail($id);
-        $quoteBuilder->products()->syncWithoutDetaching($request->product_id);
+
+        // Sync without detaching handles updates if the product exists, but using updateExistingPivot or syncWithoutDetaching with ID => attributes is safer for quantities
+        // However, standard attach/sync might duplicate if we want multiple entries? Typically pivot is unique pair.
+        // Assuming unique pair (product_id, quote_builder_id).
+
+        $quantity = $request->quantity ?? 1;
+        $quoteBuilder->products()->syncWithoutDetaching([
+            $request->product_id => ['quantity' => $quantity]
+        ]);
 
         return response()->json([
             'message' => 'Product added to Quote Builder successfully',

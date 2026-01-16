@@ -13,7 +13,7 @@ class QuoteBuilder extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_quote_builder');
+        return $this->belongsToMany(Product::class, 'product_quote_builder')->withPivot('quantity');
     }
 
     public function user()
