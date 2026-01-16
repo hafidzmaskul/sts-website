@@ -22,7 +22,7 @@ class TransactionController extends Controller
         }
 
         $transactions = Transaction::where('customer_id', $user->customer->id)
-            ->with(['items'])
+            ->with(['items.product.images'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -46,7 +46,7 @@ class TransactionController extends Controller
         }
 
         $transaction = Transaction::where('customer_id', $user->customer->id)
-            ->with(['items.product'])
+            ->with(['items.product.images'])
             ->findOrFail($id);
 
         return response()->json([
@@ -188,6 +188,7 @@ class TransactionController extends Controller
         $transaction->shipping_phone_number = $request->shipping_phone_number;
         $transaction->shipping_method = $request->shipping_method;
         $transaction->shipping_price = $request->shipping_price;
+        $transaction->payment_method = $request->shipping_payment_method;
 
         $transaction->save();
         $subtotal = 0;
@@ -238,7 +239,7 @@ class TransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $transaction->load('items'),
+            'data' => $transaction->load('items.product.images'),
         ], 201);
     }
 }

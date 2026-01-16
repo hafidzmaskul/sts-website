@@ -24,4 +24,15 @@ class TransactionItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    protected $appends = [
+        'product_image',
+    ];
+
+    public function getProductImageAttribute()
+    {
+        return $this->product && $this->product->images->first()
+            ? $this->product->images->first()->image_url
+            : null;
+    }
 }
