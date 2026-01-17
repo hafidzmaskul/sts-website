@@ -45,6 +45,17 @@ class ProductController extends Controller
             ], 404);
         }
 
+        $relatedProducts = Product::with(['brand', 'categories', 'images'])
+            ->where('status', 'active')
+            ->where('id', '!=', $product->id)
+            ->whereHas('categories', function ($query) use ($product) {
+                $query->whereIn('id', $product->categories->pluck('id'));
+            })
+            ->limit(4)
+            ->get();
+
+        $product->setAttribute('related_products', $relatedProducts);
+
         return response()->json([
             'success' => true,
             'data' => $product
