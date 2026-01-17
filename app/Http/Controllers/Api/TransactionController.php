@@ -21,10 +21,21 @@ class TransactionController extends Controller
             ], 403);
         }
 
-        $transactions = Transaction::where('customer_id', $user->customer->id)
+        $query = Transaction::where('customer_id', $user->customer->id)
             ->with(['items.product.images'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
+
+        if ($request->has('status')) {
+            $statuses = $request->status;
+            if (is_string($statuses)) {
+                $statuses = explode(',', $statuses);
+            }
+            if (is_array($statuses)) {
+                $query->whereIn('status', $statuses);
+            }
+        }
+
+        $transactions = $query->get();
 
         return response()->json([
             'success' => true,
