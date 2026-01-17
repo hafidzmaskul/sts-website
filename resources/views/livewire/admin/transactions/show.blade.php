@@ -38,7 +38,9 @@
                                             <div class="text-xs text-black">SKU: {{ $item->product->slug }}</div>
                                         @endif
                                     </td>
-                                    £{{ number_format($item->unit_price, 2) }}
+                                    <td class="px-6 py-4 text-black">
+                                        £{{ number_format($item->unit_price, 2) }}
+                                    </td>
                                     <td class="px-6 py-4 text-black">
                                         {{ $item->quantity }}
                                     </td>
@@ -103,65 +105,144 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Shipping Info -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 border-b border-gray-200 bg-gray-50">
-                    <h2 class="font-bold text-black">Shipping Details</h2>
+    <!-- Bottom Row: Shipping & Status -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <!-- Shipping Info -->
+        <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="font-bold text-black">Shipping Details</h2>
+            </div>
+            <div class="p-4 space-y-4">
+                <div>
+                    <p class="text-xs font-medium text-black uppercase">Recipient</p>
+                    <p class="text-black">{{ $transaction->shipping_first_name }}
+                        {{ $transaction->shipping_last_name }}
+                    </p>
                 </div>
-                <div class="p-4 space-y-4">
-                    <div>
-                        <p class="text-xs font-medium text-black uppercase">Recipient</p>
-                        <p class="text-black">{{ $transaction->shipping_first_name }}
-                            {{ $transaction->shipping_last_name }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs font-medium text-black uppercase">Phone</p>
-                        <p class="text-black">{{ $transaction->shipping_phone_number ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs font-medium text-black uppercase">Address</p>
-                        <p class="text-black">{{ $transaction->shipping_address }}</p>
-                        <p class="text-black">
-                            {{ $transaction->shipping_city }}, {{ $transaction->shipping_postal_code }}
-                        </p>
-                        <p class="text-black">{{ $transaction->shipping_country }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs font-medium text-black uppercase">Shipping Method</p>
-                        <p class="text-black">{{ $transaction->shipping_method ?? 'Standard' }}</p>
-                    </div>
+                <div>
+                    <p class="text-xs font-medium text-black uppercase">Phone</p>
+                    <p class="text-black">{{ $transaction->shipping_phone_number ?? '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-black uppercase">Address</p>
+                    <p class="text-black">{{ $transaction->shipping_address }}</p>
+                    <p class="text-black">
+                        {{ $transaction->shipping_city }}, {{ $transaction->shipping_postal_code }}
+                    </p>
+                    <p class="text-black">{{ $transaction->shipping_country }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-black uppercase">Shipping Method</p>
+                    <p class="text-black">{{ $transaction->shipping_method ?? 'Standard' }}</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Transaction Info -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-4 border-b border-gray-200 bg-gray-50">
-                    <h2 class="font-bold text-black">Transaction Status</h2>
-                </div>
-                <div class="p-4 space-y-4">
-                    <div>
-                        <p class="text-xs font-medium text-black uppercase">Status</p>
-                        <div class="mt-1">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                @if($transaction->status === 'completed') bg-green-100 text-green-800
-                                @elseif($transaction->status === 'pending') bg-yellow-100 text-yellow-800
-                                @elseif($transaction->status === 'cancelled') bg-red-100 text-red-800
-                                @else bg-gray-100 text-black @endif">
-                                {{ ucfirst($transaction->status) }}
-                            </span>
-                        </div>
+        <!-- Transaction Status -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 bg-gray-50 bg-white">
+                <h2 class="font-bold text-black">Transaction Status</h2>
+            </div>
+            <div class="p-4 space-y-4">
+                <div>
+                    <p class="text-xs font-medium text-black uppercase">Status</p>
+                    <div class="mt-1">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            @if($transaction->status === 'completed') bg-green-100 text-green-800
+                            @elseif($transaction->status === 'pending') bg-yellow-100 text-yellow-800
+                            @elseif($transaction->status === 'cancelled') bg-red-100 text-red-800
+                            @else bg-gray-100 text-black @endif">
+                            {{ ucfirst($transaction->status) }}
+                        </span>
                     </div>
-                    <div>
+                </div>
+
+                <!-- Update Status Form -->
+                <div class="space-y-4 pt-4 border-t border-gray-100">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide">Update Status</label>
+                    <form wire:submit="updateStatus" class="space-y-4">
+                        <select wire:model="newStatus"
+                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-black py-2.5 px-3">
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="left the storage">Left the storage</option>
+                            <option value="in transit">In transit</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+
+                        <textarea wire:model="notes" rows="3"
+                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-black py-2.5 px-3"
+                            placeholder="Add a note (optional)..."></textarea>
+
+                        <button type="submit"
+                            class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                            Update Status
+                        </button>
+                    </form>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100">
+                    <div class="mb-4">
                         <p class="text-xs font-medium text-black uppercase">Payment Method</p>
                         <p class="text-black">
-                            {{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}</p>
+                            {{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}
+                        </p>
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Order Date</p>
                         <p class="text-black">{{ $transaction->created_at->format('M d, Y H:i:s') }}</p>
                     </div>
                 </div>
+
+                <!-- Status History Timeline -->
+                @if($transaction->statusHistory->count() > 0)
+                    <div class="pt-4 border-t border-gray-100">
+                        <p class="text-xs font-medium text-black uppercase mb-3">History</p>
+                        <div class="flow-root">
+                            <ul role="list" class="-mb-8">
+                                @foreach($transaction->statusHistory as $history)
+                                    <li>
+                                        <div class="relative pb-8">
+                                            @if(!$loop->last)
+                                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                                                    aria-hidden="true"></span>
+                                            @endif
+                                            <div class="relative flex space-x-3">
+                                                <div>
+                                                    <span
+                                                        class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center ring-8 ring-white">
+                                                        <flux:icon.clock class="h-4 w-4 text-indigo-600" />
+                                                    </span>
+                                                </div>
+                                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                                    <div>
+                                                        <p class="text-sm text-black">
+                                                            Changed to <span
+                                                                class="font-medium text-gray-900">{{ ucfirst($history->status) }}</span>
+                                                        </p>
+                                                        @if($history->notes)
+                                                            <p class="text-xs text-gray-500 mt-1">{{ $history->notes }}</p>
+                                                        @endif
+                                                        <p class="text-xs text-gray-400 mt-0.5">by
+                                                            {{ $history->user->name ?? 'System' }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                                                        {{ $history->created_at->format('M d, H:i') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

@@ -32,6 +32,10 @@ class Transaction extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function statusHistory()
+    {
+        return $this->hasMany(TransactionStatusHistory::class)->orderBy('created_at', 'desc');
+    }
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
