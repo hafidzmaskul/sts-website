@@ -214,15 +214,9 @@
                                         {{ $limit->description ?? '-' }}
                                     @endif
                                 </td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm text-right text-green-600 font-medium">
-                                    {{ number_format($limit->credit, 2) }}
-                                </td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm text-right text-red-600 font-medium">
-                                    {{ number_format($limit->debit, 2) }}
-                                </td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm text-right text-gray-900 font-bold">
-                                    {{ number_format($limit->balance, 2) }}
-                                </td>
+                                {{ '£' . number_format($limit->credit, 2) }}
+                                {{ '£' . number_format($limit->debit, 2) }}
+                                {{ '£' . number_format($limit->balance, 2) }}
                             </tr>
                         @endforeach
                     </tbody>

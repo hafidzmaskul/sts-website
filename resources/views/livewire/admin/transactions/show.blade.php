@@ -38,14 +38,12 @@
                                             <div class="text-xs text-black">SKU: {{ $item->product->slug }}</div>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 text-black">
-                                        ${{ number_format($item->unit_price, 2) }}
-                                    </td>
+                                    £{{ number_format($item->unit_price, 2) }}
                                     <td class="px-6 py-4 text-black">
                                         {{ $item->quantity }}
                                     </td>
                                     <td class="px-6 py-4 text-right font-medium text-black">
-                                        ${{ number_format($item->total_price, 2) }}
+                                        £{{ number_format($item->total_price, 2) }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -54,22 +52,22 @@
                             <tr>
                                 <td colspan="3" class="px-6 py-2 text-right text-black">Subtotal</td>
                                 <td class="px-6 py-2 text-right font-medium text-black">
-                                    ${{ number_format($transaction->subtotal, 2) }}</td>
+                                    £{{ number_format($transaction->subtotal, 2) }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3" class="px-6 py-2 text-right text-black">Tax</td>
                                 <td class="px-6 py-2 text-right font-medium text-black">
-                                    ${{ number_format($transaction->tax_amount, 2) }}</td>
+                                    £{{ number_format($transaction->tax_amount, 2) }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3" class="px-6 py-2 text-right text-black">Shipping</td>
                                 <td class="px-6 py-2 text-right font-medium text-black">
-                                    ${{ number_format($transaction->shipping_price, 2) }}</td>
+                                    £{{ number_format($transaction->shipping_price, 2) }}</td>
                             </tr>
                             <tr class="text-lg">
                                 <td colspan="3" class="px-6 py-4 text-right font-bold text-black">Total</td>
                                 <td class="px-6 py-4 text-right font-bold text-indigo-600">
-                                    ${{ number_format($transaction->total_amount, 2) }}</td>
+                                    £{{ number_format($transaction->total_amount, 2) }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -114,7 +112,8 @@
                 <div class="p-4 space-y-4">
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Recipient</p>
-                        <p class="text-black">{{ $transaction->shipping_first_name }} {{ $transaction->shipping_last_name }}</p>
+                        <p class="text-black">{{ $transaction->shipping_first_name }}
+                            {{ $transaction->shipping_last_name }}</p>
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Phone</p>
@@ -128,7 +127,7 @@
                         </p>
                         <p class="text-black">{{ $transaction->shipping_country }}</p>
                     </div>
-                     <div>
+                    <div>
                         <p class="text-xs font-medium text-black uppercase">Shipping Method</p>
                         <p class="text-black">{{ $transaction->shipping_method ?? 'Standard' }}</p>
                     </div>
@@ -155,7 +154,8 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Payment Method</p>
-                        <p class="text-black">{{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}</p>
+                        <p class="text-black">
+                            {{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}</p>
                     </div>
                     <div>
                         <p class="text-xs font-medium text-black uppercase">Order Date</p>
