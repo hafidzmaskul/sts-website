@@ -23,8 +23,12 @@ class Index extends Component
     {
         $products = Product::with('categories')
             ->when($this->search, function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('brand_name', 'like', '%' . $this->search . '%');
+                $query->where(function ($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('brand', function ($subQ) {
+                            $subQ->where('name', 'like', '%' . $this->search . '%');
+                        });
+                });
             })
             ->latest()
             ->paginate(10);

@@ -19,7 +19,7 @@ class Show extends Component
 
     public function mount(Customer $customer)
     {
-        $this->customer = $customer->load(['user', 'company', 'shippingAddresses', 'creditLimits']);
+        $this->customer = $customer->load(['user', 'company', 'shippingAddresses', 'creditLimits' => fn($q) => $q->latest()]);
     }
 
     public function approve()
