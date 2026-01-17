@@ -63,8 +63,9 @@ Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']
 Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
 
 
+Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 
     // Transactions

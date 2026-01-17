@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Customers;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\CreditLimit;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -18,7 +19,7 @@ class Show extends Component
 
     public function mount(Customer $customer)
     {
-        $this->customer = $customer->load(['user', 'company', 'shippingAddresses']);
+        $this->customer = $customer->load(['user', 'company', 'shippingAddresses', 'creditLimits']);
     }
 
     public function approve()
@@ -48,6 +49,19 @@ class Show extends Component
         $this->customer->user_id = $user->id;
         $this->customer->status_review = 'approved';
         $this->customer->save();
+
+        // 4. Process Req. Credit Limit
+        if ($this->customer->company && $this->customer->company->requested_credit_limit) {
+            CreditLimit::create([
+                'customer_id' => $this->customer->id,
+                'company_id' => $this->customer->company_id,
+                'credit' => $this->customer->company->requested_credit_limit,
+                'debit' => 0,
+                'balance' => $this->customer->company->requested_credit_limit,
+                'description' => 'Req. Credit Limit Approved',
+                'user_id' => auth()->id(),
+            ]);
+        }
 
         // Optional: Send "Account Approved" email to user with password reset link or similar
         // For now, we just approve.

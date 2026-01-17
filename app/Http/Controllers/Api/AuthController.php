@@ -57,9 +57,20 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
+        $user = $request->user()->load(['customer.company', 'roles']);
+        $creditLimit = null;
+
+        if ($user->hasRole('credit facilities account')) {
+            $creditLimit = \App\Models\CreditLimit::where('company_id', $user->customer?->company_id)
+                ->latest()
+                ->value('balance') ?? 0;
+        }
+
+        $user->setAttribute('credit_limit', $creditLimit);
+
         return response()->json([
             'success' => true,
-            'user' => $request->user()->load('customer'),
+            'user' => $user,
         ]);
     }
 }

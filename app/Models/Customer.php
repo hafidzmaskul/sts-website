@@ -47,4 +47,9 @@ class Customer extends Model
     {
         return $this->hasMany(ShippingAddress::class);
     }
+
+    public function creditLimits()
+    {
+        return $this->hasMany(CreditLimit::class);
+    }
 }

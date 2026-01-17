@@ -11,7 +11,7 @@ class Show extends Component
 
     public function mount(Company $company)
     {
-        $this->company = $company->load('customers');
+        $this->company = $company->load(['customers', 'creditLimits']);
     }
 
     public function render()
