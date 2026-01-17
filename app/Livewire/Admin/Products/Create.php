@@ -34,6 +34,7 @@ class Create extends Component
     public $customerPrices = []; // [['user_id' => 1, 'price' => 100]]
 
     public $is_exclusive = false;
+    public $is_cta = false;
 
     // Rich Text Fields
     public $key_feature = '';
@@ -126,6 +127,7 @@ class Create extends Component
 
             'is_sign_up_for_pricing' => 'boolean',
             'is_exclusive' => 'boolean',
+            'is_cta' => 'boolean',
             'key_feature' => 'nullable|string',
             'product_overview' => 'nullable|string',
             'main_feature' => 'nullable|string',
@@ -157,6 +159,7 @@ class Create extends Component
             'special_price' => $this->special_price,
             'status' => $this->status,
             'is_exclusive' => $this->is_exclusive,
+            'is_cta' => $this->is_cta,
             'key_feature' => $this->key_feature,
             'product_overview' => $this->product_overview,
             'main_feature' => $this->main_feature,

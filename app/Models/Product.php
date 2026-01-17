@@ -26,11 +26,13 @@ class Product extends Model
         'seo_keywords',
         'created_by',
         'pricing_formula_id',
+        'is_cta',
     ];
 
     protected $casts = [
         'is_sign_up_for_pricing' => 'boolean',
         'is_exclusive' => 'boolean',
+        'is_cta' => 'boolean',
     ];
 
     public function brand()

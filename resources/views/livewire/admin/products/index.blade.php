@@ -56,7 +56,15 @@
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-black">{{ $product->title }}</div>
+                                <div class="text-sm font-medium text-black">
+                                    {{ $product->title }}
+                                    @if($product->is_cta)
+                                        <span
+                                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 ml-2">
+                                            CTA
+                                        </span>
+                                    @endif
+                                </div>
                                 <div class="text-xs text-black">{{ $product->slug }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

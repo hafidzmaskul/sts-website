@@ -3,6 +3,100 @@
         <!-- Left Column: Main Content (2/3 width) -->
         <div class="lg:col-span-2 space-y-8">
 
+            <!-- Images Card (Moved for better UX) -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-semibold" style="color: black;">Product Images</h2>
+                        <p class="mt-1 text-sm text-gray-500">Upload and manage product gallery.</p>
+                    </div>
+                    <button type="button" wire:click="addImage"
+                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        Add Image
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <!-- New Images -->
+                    @if(count($newImages) > 0)
+                        <div class="space-y-3">
+                            <div class="text-xs font-semibold text-green-600 uppercase tracking-wide px-1">New Uploads</div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                @foreach($newImages as $index => $imgData)
+                                    <div class="group p-3 bg-white border-2 border-dashed border-indigo-300 rounded-xl relative"
+                                        wire:key="new-image-{{ $imgData['key'] }}">
+                                        <div class="space-y-3">
+                                            <div class="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                                @if(isset($newImages[$index]['image']) && $newImages[$index]['image'])
+                                                    <img src="{{ $newImages[$index]['image']->temporaryUrl() }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="flex items-center justify-center h-full text-gray-400">
+                                                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                                    </div>
+                                                @endif
+                                                <input type="file" wire:model="newImages.{{ $index }}.image" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-500 mb-1">Order</label>
+                                                <input type="number" wire:model="newImages.{{ $index }}.sequence"
+                                                    class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50"
+                                                    style="color: black;">
+                                            </div>
+                                        </div>
+                                        <button type="button" wire:click="removeNewImage({{ $index }})"
+                                            class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1.5 shadow-sm hover:shadow transition-all">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                        @error("newImages.{$index}.image") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                        @error("newImages.{$index}.sequence") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Existing Images -->
+                    @if(count($storedImages) > 0)
+                        <div class="space-y-3 pt-4 @if(count($newImages) > 0) border-t border-gray-100 @endif">
+                            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide px-1">Saved Images</div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                @foreach($storedImages as $index => $img)
+                                    <div class="group relative bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                        <div class="aspect-square bg-gray-100 relative">
+                                            <img src="{{ Storage::url($img['image_path']) }}" class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                                        </div>
+                                        <div class="p-3 border-t border-gray-100 bg-gray-50/50">
+                                            <label class="block text-xs font-medium text-gray-500 mb-1">Order</label>
+                                            <input type="number" wire:model="storedImages.{{ $index }}.sequence"
+                                                class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                                                style="color: black;">
+                                        </div>
+                                        <button type="button" wire:confirm="Remove this image?" wire:click="deleteImage({{ $img['id'] }})"
+                                            class="absolute top-2 right-2 bg-white/90 text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1.5 shadow-sm opacity-0 group-hover:opacity-100 transition-all">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(empty($newImages) && empty($storedImages))
+                        <div class="text-center py-12 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl">
+                            <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500">No images uploaded yet.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- General Info Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
@@ -11,8 +105,7 @@
                 </div>
                 <div class="p-6 space-y-6">
                     <div>
-                        <label class="block text-sm font-medium" style="color: black;">Title <span
-                                class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium" style="color: black;">Title <span class="text-red-500">*</span></label>
                         <input type="text" wire:model.live="title" placeholder="e.g. Premium Wireless Headphones"
                             class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
                             style="color: black;">
@@ -23,8 +116,7 @@
                         <div>
                             <label class="block text-sm font-medium" style="color: black;">Slug</label>
                             <div class="flex rounded-lg shadow-sm">
-                                <span
-                                    class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#D2D2D2] bg-gray-50"
+                                <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#D2D2D2] bg-gray-50"
                                     style="color: #6b7280;">/product/</span>
                                 <input type="text" wire:model="slug" placeholder="premium-wireless-headphones"
                                     class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-[#D2D2D2] bg-white focus:ring-indigo-500 focus:border-indigo-500"
@@ -41,20 +133,7 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
-                        <select wire:model="brand_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
-                            style="color: black;">
-                            <option value="">Select a Brand</option>
-                            @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                    </div>
-
-                    <!-- Key Features (Moved up) -->
+                    <!-- Key Features -->
                     <div wire:ignore x-data
                         x-init="$nextTick(() => window.initCKEditor('key_feature_editor', 'key_feature_input', 'key_feature'))">
                         <label class="block text-sm font-medium" style="color: black;">Key Features</label>
@@ -113,8 +192,7 @@
                 <div class="p-6 space-y-6">
 
                     <!-- Drag & Drop Area for New Attachment -->
-                    <div 
-                        wire:click="addAttachment"
+                    <div wire:click="addAttachment"
                         class="cursor-pointer border-2 border-dashed border-indigo-200 rounded-xl p-6 flex flex-col items-center justify-center bg-indigo-50/50 hover:bg-indigo-50 hover:border-indigo-400 transition-all group">
                         <div class="p-3 bg-white rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
                              <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,6 +340,7 @@
                     </div>
                 </div>
             </div>
+            </div>
 
         </div>
 
@@ -327,6 +406,14 @@
                             <span class="ml-2 text-sm" style="color: black;">
                                 <span class="font-medium block" style="color: black;">Advance Pricing</span>
                                 <span style="color: #6b7280;">Enable specific pricing for customers.</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start cursor-pointer">
+                            <input type="checkbox" wire:model="is_cta"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
+                            <span class="ml-2 text-sm" style="color: black;">
+                                <span class="font-medium block" style="color: black;">Is CTA Product</span>
+                                <span style="color: #6b7280;">Mark this product as a Call to Action product.</span>
                             </span>
                         </label>
                     </div>
@@ -468,27 +555,62 @@
                 </div>
             </div>
 
-            <!-- Categories Card -->
+            <!-- Organization Card (Categories + Brand) -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold" style="color: black;">Categories</h2>
+                    <h2 class="text-lg font-semibold" style="color: black;">Organization</h2>
                 </div>
-                <div class="p-4">
-                    <div class="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                        @php
-                            $groupedCategories = $categories->groupBy('parent_id');
-                            $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
-                        @endphp
-                        @foreach($parents as $parent)
-                            <div class="space-y-1">
-                                <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
-                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                    <span class="ml-2 text-sm font-semibold"
-                                        style="color: black;">{{ $parent->name }}</span>
-                                </label>
-                                @if($children = $groupedCategories->get($parent->id))
-                                    <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
+                <div class="p-6 space-y-6">
+                    <!-- Brand -->
+                    <div>
+                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
+                        <select wire:model="brand_id"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
+                            <option value="">Select a Brand</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+
+                    <!-- Categories -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: black;">Categories</label>
+                        <div class="border border-gray-200 rounded-lg p-4 max-h-60 overflow-y-auto custom-scrollbar">
+                            @php
+                                $groupedCategories = $categories->groupBy('parent_id');
+                                $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
+                            @endphp
+                            @foreach($parents as $parent)
+                                <div class="space-y-1">
+                                    <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
+                                        <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
+                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                        <span class="ml-2 text-sm font-semibold"
+                                            style="color: black;">{{ $parent->name }}</span>
+                                    </label>
+                                    @if($children = $groupedCategories->get($parent->id))
+                                        <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
+                                            @foreach($children as $child)
+                                                <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
+                                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
+                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                    <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            <!-- Handling orphans if any -->
+                            @foreach($groupedCategories as $parentId => $children)
+                                @if($parentId && !$categories->contains('id', $parentId))
+                                    <div class="space-y-1">
+                                        <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2"
+                                            style="color: #9ca3af;">
+                                            Uncategorized</div>
                                         @foreach($children as $child)
                                             <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
                                                 <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
@@ -498,126 +620,11 @@
                                         @endforeach
                                     </div>
                                 @endif
-                            </div>
-                        @endforeach
-                        <!-- Handling orphans if any -->
-                        @foreach($groupedCategories as $parentId => $children)
-                            @if($parentId && !$categories->contains('id', $parentId))
-                                <div class="space-y-1">
-                                    <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2"
-                                        style="color: #9ca3af;">
-                                        Uncategorized</div>
-                                    @foreach($children as $child)
-                                        <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                            <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                            <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                            @endif
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Images Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-lg font-semibold" style="color: black;">Images</h2>
-                    <button type="button" wire:click="addImage"
-                        class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Add Image
-                    </button>
-                </div>
-                <div class="p-6 space-y-4">
-                    <!-- Existing Images -->
-                    @if(count($storedImages) > 0)
-                        <div class="space-y-3">
-                            <div class="text-xs font-medium uppercase tracking-wide" style="color: #6b7280;">Saved Images
-                            </div>
-                            @foreach($storedImages as $index => $img)
-                                <div
-                                    class="group flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg relative">
-                                    <img src="{{ Storage::url($img['image_path']) }}"
-                                        class="h-16 w-16 object-cover rounded bg-white border border-gray-200">
-                                    <div class="flex-1 min-w-0">
-                                        <label class="block text-xs font-medium" style="color: #6b7280;">Order</label>
-                                        <input type="number" wire:model="storedImages.{{ $index }}.sequence"
-                                            class="block w-20 rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            style="color: black;">
-                                    </div>
-                                    <button type="button" wire:confirm="Remove this image?"
-                                        wire:click="deleteImage({{ $img['id'] }})"
-                                        class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-red-50 transition-colors">
-                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    <!-- New Images -->
-                    @if(count($newImages) > 0)
-                        <div class="space-y-3">
-                            <div class="text-xs font-medium text-green-600 uppercase tracking-wide">New Uploads</div>
-                            @foreach($newImages as $index => $imgData)
-                                <div class="group p-3 bg-white border border-dashed border-indigo-300 rounded-lg relative"
-                                    wire:key="new-image-{{ $imgData['key'] }}">
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex-1 min-w-0">
-                                            <input type="file" wire:model="newImages.{{ $index }}.image"
-                                                class="block w-full text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                                                style="color: #6b7280;">
-                                            @error("newImages.{$index}.image") <span
-                                            class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
-
-                                            @if(isset($newImages[$index]['image']) && $newImages[$index]['image'])
-                                                <div class="mt-2">
-                                                    <img src="{{ $newImages[$index]['image']->temporaryUrl() }}"
-                                                        class="h-16 w-auto rounded border border-gray-200">
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="w-16">
-                                            <label class="block text-xs font-medium" style="color: #6b7280;">Order</label>
-                                            <input type="number" wire:model="newImages.{{ $index }}.sequence"
-                                                class="block w-full rounded border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                                style="color: black;">
-                                        </div>
-                                        <button type="button" wire:click="removeNewImage({{ $index }})"
-                                            class="absolute -top-2 -right-2 bg-white text-gray-400 hover:text-red-500 border border-gray-200 rounded-full p-1 shadow-sm hover:shadow">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    @error("newImages.{$index}.sequence") <span
-                                    class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if(empty($newImages) && empty($storedImages))
-                        <div class="text-center py-6 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
-                            <svg class="mx-auto h-8 w-8" style="color: #9ca3af;" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p class="mt-1 text-xs" style="color: #6b7280;">No images yet.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-
 
         </div>
     </div>
