@@ -65,6 +65,16 @@ class SettingsController extends Controller
             'tax' => [
                 'percentage' => (float) ($settings['transaction_tax'] ?? 20),
             ],
+            'transaction_statuses' => [
+                'pending',
+                'processing',
+                'left the storage',
+                'in transit',
+                'delivered',
+                'cancelled',
+                'paid',
+                'failed',
+            ],
         ]);
     }
 }
