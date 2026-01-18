@@ -21,6 +21,14 @@ class ProductController extends Controller
             });
         }
 
+        if ($request->has('category')) {
+            $category = $request->category;
+            $query->whereHas('categories', function ($q) use ($category) {
+                $q->where('name', 'like', '%' . $category . '%')
+                    ->orWhere('slug', 'like', '%' . $category . '%');
+            });
+        }
+
         $perPage = $request->input('per_page', 10);
         $products = $query->orderBy('created_at', 'desc')
             ->paginate($perPage);
