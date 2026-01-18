@@ -79,31 +79,7 @@ export default function ProductListingCard({
                         </div>
                     )}
 
-                    {/* View Details link - separate from login logic if needed, or maybe user wanted REPLACEMENT?
-                        Request said: "apabila showPricing is true maka ubah tombol menjadi tombol login... apabila false maka lanngsung tammpilkan priceLabel"
-
-                        Original code had:
-                        <a href... View Details </a>
-
-                        Interpretation:
-                        The "View Details" button slot is what is being toggled.
-                        BUT, if showPricing is FALSE (meaning price IS visible/user logged in?), user wants "show priceLabel".
-                        Original component PASSED priceLabel prop but never used it!
-
-                        Wait, let's re-read Carefully:
-                        "apabila showPricing is true maka ubah tombol menjadi tombol login" -> IF showPricing=true (hide price mode), show LOGIN BUTTON.
-                        "apabila false maka lanngsung tammpilkan priceLabel" -> IF showPricing=false (show price mode), show PRICE LABEL.
-
-                        So if showPricing=false, we show PRICE LABEL.
-                        What about "View Details"?
-                        The snippet provided by user was the View Details button.
-                        So effectively, "View Details" button is replaced by this logic.
-
-                        However, "Login to View Price" implies we want to see price.
-                        If price is shown, do we still want "View Details"?
-                        The user's request specifically targeted the View Details button block.
-                        So I will replace that block entirely.
-                    */}
+                    
                 </div>
             </article>
         </>

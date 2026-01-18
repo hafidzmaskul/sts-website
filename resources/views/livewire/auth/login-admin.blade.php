@@ -40,8 +40,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             $user = $this->validateCredentials();
 
-            // Prevent admin users from logging into the user area
-            if (!$user->hasAnyRole(['customer', 'trade account', 'credit facilities account'])) {
+            // Prevent non-admin users from logging into the admin area
+            if ($user->hasAnyRole(['customer', 'trade account', 'credit facilities account'])) {
                 // If somehow already authenticated, ensure logout
                 try {
                     Auth::logout();
@@ -49,10 +49,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 }
 
                 // Dispatch a browser toast message (matches other Livewire components)
-                $this->dispatch('notify', type: 'error', message: 'This area is for customers only.');
+                $this->dispatch('notify', type: 'error', message: 'You are not admin.');
 
                 // Set an error message for the form as well
-                $this->error = 'This area is for customers only.';
+                $this->error = 'You are not admin.';
 
                 // Stop further processing
                 $this->loading = false;
@@ -139,7 +139,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
 <div class=" ">
     <form wire:submit.prevent="login" class=" p-10 w-full bg-white   mx-auto">
-        <h1 class="font-inter capitalize text-center text-black font-bold text-2xl mb-10">Sign in</h1>
+        <h1 class="font-inter capitalize text-center text-black font-bold text-2xl mb-10">Welcome to admin area</h1>
         @if (!empty($error))
             <div class="text-red-600 text-sm mb-4 text-center">{{ $error }}</div>
         @endif

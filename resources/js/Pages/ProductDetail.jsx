@@ -110,6 +110,9 @@ export default function ProductDetail({ product, products = [], logged }) {
     const [newQuoteName, setNewQuoteName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    // Default quantity for quote builder logic
+    const DEFAULT_QUANTITY = 1;
+
     // Auto-hide toast
     useEffect(() => {
         if (toast.show) {
@@ -230,6 +233,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         });
     };
 
+    // --- CHANGES: handleSaveToExistingQuotes (payload) ---
     const handleSaveToExistingQuotes = async () => {
         if (selectedQuoteIds.length === 0) {
             setToast({
@@ -243,7 +247,8 @@ export default function ProductDetail({ product, products = [], logged }) {
         try {
             await Promise.all(selectedQuoteIds.map(quoteId =>
                 axios.post(`/web/quote-builder/${quoteId}/products`, {
-                    product_id: data.id
+                    product_id: data.id,
+                    quantity: DEFAULT_QUANTITY
                 })
             ));
 
@@ -269,6 +274,7 @@ export default function ProductDetail({ product, products = [], logged }) {
         }
     };
 
+    // --- CHANGES: handleCreateQuote (payload) ---
     const handleCreateQuote = async () => {
         if (!newQuoteName.trim()) {
             setToast({
@@ -282,7 +288,12 @@ export default function ProductDetail({ product, products = [], logged }) {
         try {
             await axios.post('/web/quote-builder', {
                 name: newQuoteName,
-                product_id: [data.id]
+                items: [
+                    {
+                        product_id: data.id,
+                        quantity: DEFAULT_QUANTITY
+                    }
+                ]
             });
 
             setIsCreateQuoteModalOpen(false);
