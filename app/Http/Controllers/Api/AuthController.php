@@ -52,6 +52,7 @@ class AuthController extends Controller
         ]);
     }
 
+
     /**
      * Get the authenticated user.
      */
@@ -71,6 +72,90 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'user' => $user,
+        ]);
+    }
+
+
+    /**
+     * Send OTP for password reset.
+     */
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $otp = rand(100000, 999999);
+        $key = 'password_reset_otp_' . $request->email;
+
+        // Store OTP in cache for 10 minutes
+        \Illuminate\Support\Facades\Cache::put($key, $otp, 600);
+
+        \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\ForgotPasswordOtp($otp));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP has been sent to your email.',
+        ]);
+    }
+
+    /**
+     * Reset password using OTP.
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required',
+            'password' => 'required|min:8',
+        ]);
+
+        $key = 'password_reset_otp_' . $request->email;
+        $cachedOtp = \Illuminate\Support\Facades\Cache::get($key);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            throw ValidationException::withMessages([
+                'otp' => ['The OTP is invalid or has expired.'],
+            ]);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = $request->password;
+        $user->save();
+
+        // Clear OTP
+        \Illuminate\Support\Facades\Cache::forget($key);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password has been reset successfully.',
+        ]);
+    }
+
+    /**
+     * Change password for authenticated user.
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'old_password' => ['The provided password does not match your current password.'],
+            ]);
+        }
+
+        $user->password = $request->new_password;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password has been changed successfully.',
         ]);
     }
 }

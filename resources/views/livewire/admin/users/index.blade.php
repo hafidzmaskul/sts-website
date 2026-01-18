@@ -9,8 +9,9 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <!-- Card Header: Search -->
-        <div class="px-4 py-4 border-b bg-gray-50 rounded-t-xl">
+        <!-- Card Header: Search & Filter -->
+        <div
+            class="px-4 py-4 border-b bg-gray-50 rounded-t-xl flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="max-w-xl w-full">
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -25,6 +26,16 @@
                         placeholder="Search name or email..." />
                 </div>
             </div>
+
+            <div class="w-full md:w-48">
+                <select wire:model.live="role_filter"
+                    class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">All Roles</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <!-- Table -->
@@ -35,7 +46,7 @@
                         <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Name</th>
                         <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Email</th>
                         <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Roles</th>
-                        <th class="px-4 py-3 text-left uppercase text-xs tracking-wider text-gray-800">Direct Perms</th>
+
                         <th class="px-4 py-3 text-right uppercase text-xs tracking-wider text-gray-800 w-44">Actions
                         </th>
                     </tr>
@@ -55,16 +66,6 @@
                                         <span
                                             class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                                             {{ $r->name }}
-                                        </span>
-                                    @endforeach
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach($u->permissions as $p)
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                            {{ $p->name }}
                                         </span>
                                     @endforeach
                                 </div>
@@ -160,7 +161,8 @@
                                 <option value="">None</option>
                                 @foreach($pricingFormulas as $formula)
                                     <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
-                                        {{ $formula->value }})</option>
+                                        {{ $formula->value }})
+                                    </option>
                                 @endforeach
                             </select>
                             @error('pricing_formula_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror

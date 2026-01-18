@@ -20,6 +20,7 @@ class Index extends Component
     public string $search = '';
     public bool $showForm = false;
     public ?int $editingId = null;
+    public ?int $role_filter = null;
 
     // form fields
     public string $name = '';
@@ -48,6 +49,11 @@ class Index extends Component
     }
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingRoleFilter()
     {
         $this->resetPage();
     }
@@ -132,6 +138,11 @@ class Index extends Component
                 $q->where(function ($w) {
                     $w->where('name', 'like', "%{$this->search}%")
                         ->orWhere('email', 'like', "%{$this->search}%");
+                });
+            })
+            ->when($this->role_filter, function ($q) {
+                $q->whereHas('roles', function ($q) {
+                    $q->where('id', $this->role_filter);
                 });
             })
             ->orderBy('name')

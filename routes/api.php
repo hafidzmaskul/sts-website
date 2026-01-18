@@ -59,14 +59,17 @@ Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
 
 
 // Authentication Routes
+Route::post('/auth/forgot-password', [\App\Http\Controllers\Api\AuthController::class, 'forgotPassword']);
+Route::post('/auth/reset-password', [\App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
 
 
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::post('/auth/change-password', [\App\Http\Controllers\Api\AuthController::class, 'changePassword']);
 
     // Transactions
     Route::get('/my-transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
