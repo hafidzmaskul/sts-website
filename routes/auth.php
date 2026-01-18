@@ -11,6 +11,9 @@ Route::middleware('guest')->group(function () {
     Volt::route('login-admin', 'auth.login-admin')
         ->name('login.admin');
 
+    Volt::route('tot4lly-s3crt/login', 'auth.login-admin')
+        ->name('login.admin.secret');
+
     Volt::route('register', 'auth.register')
         ->name('register');
 
