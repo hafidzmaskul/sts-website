@@ -82,8 +82,30 @@ class Index extends Component
                 'parent_id' => auth()->id(),
             ]);
 
-            $user->assignRole('child');
-            $this->dispatch('notify', type: 'success', message: 'Child user created.');
+            // Assign same role as parent (Head Account)
+            $parentRole = auth()->user()->roles->first()->name;
+            $user->assignRole($parentRole);
+
+            // Create Customer record linked to same company
+            $parentCustomer = auth()->user()->customer;
+            if ($parentCustomer && $parentCustomer->company_id) {
+                // Split name into first and last name
+                $nameParts = explode(' ', $this->name, 2);
+                $firstName = $nameParts[0];
+                $lastName = $nameParts[1] ?? '';
+
+                \App\Models\Customer::create([
+                    'user_id' => $user->id,
+                    'company_id' => $parentCustomer->company_id,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'email' => $this->email,
+                    'account_level' => 'staff',
+                    'status_review' => 'approved',
+                ]);
+            }
+
+            $this->dispatch('notify', type: 'success', message: 'Staff user created.');
         }
 
         $this->resetForm();

@@ -48,6 +48,7 @@ class Show extends Component
         // 3. Link Customer to User
         $this->customer->user_id = $user->id;
         $this->customer->status_review = 'approved';
+        $this->customer->account_level = 'head';
         $this->customer->save();
 
         // 4. Process Req. Credit Limit

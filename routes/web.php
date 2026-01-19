@@ -173,6 +173,12 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
     // Transaction Management for Fixed Roles
     Route::get('/dashboard/transactions', \App\Livewire\FixedRole\Transactions\Index::class)->name('dashboard.transactions.index');
     Route::get('/dashboard/transactions/{transaction}', \App\Livewire\FixedRole\Transactions\Show::class)->name('dashboard.transactions.show');
+
+    // Credit Limit Management for Credit Facilities
+    Route::get('/dashboard/credit-limits', \App\Livewire\FixedRole\CreditLimits\Index::class)->name('dashboard.credit-limits.index');
+
+    // Company Management
+    Route::get('/dashboard/company', \App\Livewire\FixedRole\Company\Show::class)->name('dashboard.company.show');
 });
 
 require __DIR__ . '/auth.php';
