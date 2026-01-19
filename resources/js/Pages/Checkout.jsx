@@ -94,16 +94,30 @@ export default function Checkout({ auth }) {
         return Number.isNaN(parsed) ? 0 : parsed;
     };
 
+    const getProductPrice = (product) => {
+        if (!product) return 0;
+        // Match server logic: calculatePrice($user) ?? ($product->special_price ?: $product->base_price)
+        // calculated_price is appended by the model if user is logged in
+        let price = product.calculated_price;
+        if (price === undefined || price === null) {
+            price = product.special_price || product.base_price;
+        }
+        return getNumericPrice(price);
+    };
+
     const subtotal = cartItems.reduce((acc, item) => {
-        return acc + (getNumericPrice(item.product?.base_price) * (item.quantity || 0));
+        return acc + (getProductPrice(item.product) * (item.quantity || 0));
     }, 0);
+
 
     const shippingSelected = shippingMethods.find(m => String(m.name) === String(shippingMethod));
     const shippingPrice = shippingSelected ? (shippingSelected.price || 0) : 0;
     const taxPercentage = typeof tax.percentage === 'number' ? tax.percentage : 11;
-    const taxAmount = subtotal * (taxPercentage / 100);
+    // Server calculates tax on (subtotal + shipping)
+    const taxAmount = (subtotal + shippingPrice) * (taxPercentage / 100);
     const totalAmount = subtotal + shippingPrice + taxAmount;
 
+    console.log(shippingSelected)
     // PATCH HERE: shipping_method di payload diubah dari objek jadi string name saja
     const handleCheckout = async () => {
         setIsSubmitting(true);
@@ -118,7 +132,7 @@ export default function Checkout({ auth }) {
                 items: cartItems.map(item => ({
                     product_id: item.product_id,
                     quantity: item.quantity,
-                    price: getNumericPrice(item.product?.base_price)
+                    price: getProductPrice(item.product)
                 }))
             };
 
@@ -353,7 +367,7 @@ export default function Checkout({ auth }) {
                                                 <div className="font-medium mb-1 text-sm line-clamp-2">{item.product?.title}</div>
                                                 <div className="text-xs text-gray-500">Qty: {item.quantity}</div>
                                                 <div className="text-sm font-medium text-[#0079C2] mt-2">
-                                                    {formatPrice(getNumericPrice(item.product?.base_price) * item.quantity)}
+                                                    {formatPrice(getProductPrice(item.product) * item.quantity)}
                                                 </div>
                                             </div>
                                         ))

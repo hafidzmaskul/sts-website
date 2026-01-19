@@ -102,11 +102,20 @@ export default function QuoteCheckout({ quoteIds, auth }) {
         return Number.isNaN(parsed) ? 0 : parsed;
     };
 
+    const getProductPrice = (product) => {
+        if (!product) return 0;
+        let price = product.calculated_price;
+        if (price === undefined || price === null) {
+            price = product.special_price || product.base_price;
+        }
+        return getNumericPrice(price);
+    };
+
     // Calculate subtotal from all products in all displayed quotes
-    // Note: Assuming quantity is 1 for each product in quote as per API response
     const subtotal = quotes.reduce((acc, quote) => {
         const quoteTotal = (quote.products || []).reduce((qAcc, p) => {
-            return qAcc + getNumericPrice(p.base_price);
+            const qty = p.pivot?.quantity || 1;
+            return qAcc + (getProductPrice(p) * qty);
         }, 0);
         return acc + quoteTotal;
     }, 0);
@@ -114,7 +123,8 @@ export default function QuoteCheckout({ quoteIds, auth }) {
     const shippingSelected = shippingMethods.find(m => String(m.name) === String(shippingMethod));
     const shippingPrice = shippingSelected ? (shippingSelected.price || 0) : 0;
     const taxPercentage = typeof tax.percentage === 'number' ? tax.percentage : 11;
-    const taxAmount = subtotal * (taxPercentage / 100);
+    // Server calculates tax on (subtotal + shipping)
+    const taxAmount = (subtotal + shippingPrice) * (taxPercentage / 100);
     const totalAmount = subtotal + shippingPrice + taxAmount;
 
     const handleCheckout = async () => {
@@ -366,7 +376,7 @@ export default function QuoteCheckout({ quoteIds, auth }) {
                                                         <div key={product.id || pIdx} className="w-full flex justify-between items-start gap-2 mb-2 last:mb-0">
                                                             <div className="text-xs text-gray-600 line-clamp-2">{product.title || product.name || 'Unknown Product'}</div>
                                                             <div className="text-xs font-medium text-[#0079C2] whitespace-nowrap">
-                                                                {formatPrice(product.base_price)}
+                                                                {formatPrice(getProductPrice(product))}
                                                             </div>
                                                         </div>
                                                     ))
@@ -375,7 +385,7 @@ export default function QuoteCheckout({ quoteIds, auth }) {
                                                 )}
                                                 {quote.products && quote.products.length > 0 && (
                                                     <div className="text-xs font-bold text-gray-700 mt-2 pt-1 border-t w-full text-right">
-                                                        Subtotal: {formatPrice(quote.products.reduce((acc, p) => acc + getNumericPrice(p.base_price), 0))}
+                                                        Subtotal: {formatPrice(quote.products.reduce((acc, p) => acc + (getProductPrice(p) * (p.pivot?.quantity || 1)), 0))}
                                                     </div>
                                                 )}
                                             </div>
