@@ -73,6 +73,7 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         return \Inertia\Inertia::render('TransactionDetail', ['id' => $id]);
     })->name('my-transactions.show');
 
+    Route::post('/web/product-requests', [\App\Http\Controllers\Api\ProductRequestController::class, 'store']);
 
 
     Route::get('/quote-checkout', function (\Illuminate\Http\Request $request) {
