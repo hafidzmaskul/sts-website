@@ -21,6 +21,7 @@ export default function QuoteBuilder() {
     const editInputRefs = useRef({});
     const saveClickedRef = useRef(false);
     const deleteClickedRef = useRef(false);
+    const addProductClickedRef = useRef(false); // NEW: Track if Add Product was clicked
 
     const fetchQuotes = async () => {
         setIsLoading(true);
@@ -278,11 +279,15 @@ export default function QuoteBuilder() {
 
     // Cancel edit mode for a quote (only trigger if not losing focus to Save/Modify/other input)
     const handleCancelEdit = (e) => {
-        // Don't close if focus moves to Save button or Modify, only close if leaving the quote card
-        // Basic logic: only close if the relatedTarget (receiving focus) is not inside this card
-        // but for simplicity, just close unless it's Save button
         setEditingQuoteId(null);
         setEditQuoteName('');
+    };
+
+    // New logic: button add product goes to /products
+    const handleAddProductToQuote = (quote) => {
+        // Instead of showing a toast, directly navigate to the product list page
+        // Use setTimeout to ensure this runs *after* blur/other handlers if needed
+        router.visit('/products');
     };
 
     return (
@@ -411,11 +416,13 @@ export default function QuoteBuilder() {
                                                         if (
                                                             saveClickedRef.current ||
                                                             deleteClickedRef.current ||
+                                                            addProductClickedRef.current || // do not cancel if add product clicked
                                                             (newTarget && newTarget.dataset && newTarget.dataset.quoteAction === 'save') ||
                                                             (newTarget && newTarget.className && typeof newTarget.className === 'string' && newTarget.className.includes('qty-input'))
                                                         ) {
                                                             saveClickedRef.current = false;
                                                             deleteClickedRef.current = false;
+                                                            addProductClickedRef.current = false;
                                                             return;
                                                         }
 
@@ -509,6 +516,26 @@ export default function QuoteBuilder() {
                                                 ) : (
                                                     <div className="text-gray-400 italic p-4">No products in this quote.</div>
                                                 )}
+
+                                                {/* ADD PRODUCT BUTTON - show after products when isEditing */}
+                                                {isEditing && (
+                                                    <button
+                                                        type="button"
+                                                        onMouseDown={() => { addProductClickedRef.current = true; }}
+                                                        onClick={() => {
+                                                            handleAddProductToQuote(quote);
+                                                            addProductClickedRef.current = false;
+                                                        }}
+                                                        className="min-w-[220px] flex flex-col items-center justify-center border-2 border-dashed border-[#0079C2] bg-white/80 rounded-lg py-8 px-4 text-[#0079C2] font-semibold hover:bg-blue-50 transition cursor-pointer"
+                                                        style={{ height: "232px" }} // To visually match product card
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="#0079C2" strokeWidth={2}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/>
+                                                        </svg>
+                                                        Add Product
+                                                    </button>
+                                                )}
+
                                             </div>
                                         </div>
 
