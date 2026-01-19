@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
@@ -149,6 +149,9 @@ Route::middleware(['auth'])->group(function () {
 
         // Settings
         Route::get('/admin/settings/general', \App\Livewire\Admin\Settings\General::class)->name('admin.settings.general');
+
+        // User Masquerade
+        Route::get('/admin/masquerade/{userId}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'masquerade'])->name('admin.users.masquerade');
     });
 
     // Parent User Management
