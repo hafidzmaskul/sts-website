@@ -43,13 +43,15 @@ class PageController
             ->select('pc.*', DB::raw('COUNT(pcp.product_id) as products_count'))
             ->groupBy('pc.id')
             ->get();
+
+
         $brand =  Brand::get(); //is_active
 
         return Inertia::render('Landing', [
             'banners' => $banners,
             'featured' => $featured,
             'categories' => $categories,
-            'brand' => $brand
+            'brand' => $brand,
         ]);
     }
 
@@ -151,7 +153,7 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::with('images')->where('slug', $slug)->with('categories')->firstOrFail();
+        $product = Product::with('images')->where('slug', $slug)->with('categories')->with('brand')->firstOrFail();
         $relatedProducts = Product::with('images')
             ->where('id', '!=', $product->id)
             ->where('status', 'active')
@@ -237,8 +239,30 @@ class PageController
     public function checkout()
     {
         $auth = Auth::user()->load(['customer.company', 'roles']);
-        return Inertia::render('Checkout',[
+        return Inertia::render('Checkout', [
             'auth' => $auth
+        ]);
+    }
+
+    public function search(\Illuminate\Http\Request $request): Response
+    {
+        $query = $request->input('q');
+        $products = [];
+
+        if ($query) {
+            $products = Product::with(['images', 'categories', 'brand'])
+                ->where(function ($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%")
+                        ->orWhereHas('brand', function ($subQ) use ($query) {
+                            $subQ->where('name', 'like', "%{$query}%");
+                        });
+                })
+                ->get();
+        }
+
+        return Inertia::render('SearchResults', [
+            'products' => $products,
+            'query' => $query
         ]);
     }
 }

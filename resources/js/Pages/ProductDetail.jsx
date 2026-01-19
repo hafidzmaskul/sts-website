@@ -473,7 +473,8 @@ export default function ProductDetail({ product, products = [], logged }) {
                                 alt={data.title}
                                 className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
                             />
-                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
+                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}  </h3>
+
                             <p className="text-gray-500 text-sm mb-1">{data.brand_name}</p>
                             <p className="text-[#0079C2] text-lg font-bold mb-2">
                                 {data.is_sign_up_for_pricing && !logged
@@ -657,10 +658,13 @@ export default function ProductDetail({ product, products = [], logged }) {
                         <div className="lg:col-span-3 space-y-6">
                             <div>
                                 <p className="text-xs  tracking-wide font-inter font-light mb-1">
-                                    {data.brand_name}
+                                    {data.brand.name}
                                 </p>
                                 <h1 className="font-inter font-semibold text-3xl md:text-4xl lg:text-5xl text-[#232323] mb-2">
                                     {data.title}
+                                </h1>
+                                <h1 className="font-inter font-semibold text-md  text-[#232323] mb-2">
+                                    {data.sku}
                                 </h1>
                             </div>
                             <div className="space-y-3">

@@ -66,8 +66,6 @@ const transformProduct = (product, index = 0) => {
 };
 
 export default function Products({ products = [], baseProducts = [], productCategory = [], logged }) {
-    console.log(logged)
-    console.log('DEBUG PRODUCTS:', products);
     const allProducts = useMemo(() => {
         const sourceProducts = Array.isArray(products) && products.length > 0
             ? products
@@ -110,6 +108,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                 price: product.price,
                 image: product.image,
                 badge: product.badge,
+                slug: product.slug
             })),
         [allProducts],
     );

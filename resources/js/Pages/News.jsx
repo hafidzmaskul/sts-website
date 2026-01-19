@@ -8,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function News({ news, categories }) {
-    console.log(news)
     const [selectedCategory, setSelectedCategory] = useState('All');
 
     // Filter news based on selected category

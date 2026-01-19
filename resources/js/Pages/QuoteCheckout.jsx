@@ -14,7 +14,6 @@ const formatPrice = (price) => {
 };
 
 export default function QuoteCheckout({ quoteIds, auth }) {
-    console.log(auth)
     const isCreditAccount = auth?.roles?.some(role => role.name === 'credit facilities account');
     const [quotes, setQuotes] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
