@@ -135,11 +135,13 @@
                     </flux:navlist.item>
                 @endcan
 
-                <flux:navlist.item icon="cog" :href="route('admin.settings.general')"
-                    :current="request()->routeIs('admin.settings.general')" wire:navigate
-                    :class="request()->routeIs('admin.settings.general') ? 'custom-navitem-active' : 'custom-navitem'">
-                    {{ __('General Settings') }}
-                </flux:navlist.item>
+                @can('settings.view')
+                    <flux:navlist.item icon="cog" :href="route('admin.settings.general')"
+                        :current="request()->routeIs('admin.settings.general')" wire:navigate
+                        :class="request()->routeIs('admin.settings.general') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('General Settings') }}
+                    </flux:navlist.item>
+                @endcan
             </flux:navlist.group>
 
             <!-- Catalog Group -->

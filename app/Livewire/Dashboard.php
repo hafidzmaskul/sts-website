@@ -18,12 +18,17 @@ class Dashboard extends Component
         $fixedRoles = ['guest', 'trade account', 'credit facilities account', 'child'];
 
         if (in_array($userRole, $fixedRoles)) {
-            $recentTransactions = [];
+            $currentBalance = 0;
             if (in_array($userRole, ['trade account', 'credit facilities account']) && $user->customer) {
                 $recentTransactions = $user->customer->transactions()
                     ->latest()
                     ->take(5)
                     ->get();
+
+                if ($userRole === 'credit facilities account' && $user->customer->company) {
+                    $latestLimit = $user->customer->company->creditLimits()->latest()->first();
+                    $currentBalance = $latestLimit ? $latestLimit->balance : 0;
+                }
             }
 
             return view('livewire.dashboard', [
@@ -31,6 +36,7 @@ class Dashboard extends Component
                 'userName' => $user->name,
                 'userRole' => $userRole,
                 'recentTransactions' => $recentTransactions,
+                'currentBalance' => $currentBalance,
             ])->title('Dashboard');
         }
 
