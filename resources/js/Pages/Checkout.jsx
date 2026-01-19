@@ -13,7 +13,9 @@ const formatPrice = (price) => {
     return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(parsedPrice);
 };
 
-export default function Checkout() {
+export default function Checkout({ auth }) {
+    console.log(auth)
+    const isCreditAccount = auth?.roles?.some(role => role.name === 'credit facilities account');
     const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -108,6 +110,7 @@ export default function Checkout() {
         try {
             const payload = {
                 ...formData,
+                shipping_payment_method: isCreditAccount ? 'Credit Limit' : formData.shipping_payment_method,
                 shipping_method: shippingMethod, // Changed from 'shippingSelected' (object) to just name (string)
                 shipping_price: shippingPrice,
                 tax_amount: taxAmount,
@@ -291,42 +294,52 @@ export default function Checkout() {
                             </div>
 
                             {/* Payment Method */}
-                            <div className="rounded-md px-6 py-5 shadow bg-white">
-                                <h2 className="text-lg font-semibold mb-4">Payment Method</h2>
-                                <div className="space-y-4">
-                                    {paymentMethods.length === 0 ? (
-                                        <div className="text-xs text-gray-400">No payment methods available</div>
-                                    ) : (
-                                        paymentMethods.map((method) => (
-                                            <label
-                                                key={method.id}
-                                                className={`flex items-start gap-3 cursor-pointer border rounded px-4 py-3 ${formData.shipping_payment_method === method.name ? 'border-[#0079C2] bg-blue-50' : ''
-                                                    }`}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="payment_method"
-                                                    value={method.name}
-                                                    className="mt-1"
-                                                    checked={formData.shipping_payment_method === method.name}
-                                                    onChange={handlePaymentMethodChange}
-                                                />
-                                                <div>
-                                                    <div className="font-medium">{method.name}</div>
-                                                    {method.description && (
-                                                        <div className="text-xs text-gray-500">{method.description}</div>
-                                                    )}
-                                                </div>
-                                            </label>
-                                        ))
-                                    )}
+                            {!isCreditAccount && (
+                                <div className="rounded-md px-6 py-5 shadow bg-white">
+                                    <h2 className="text-lg font-semibold mb-4">Payment Method</h2>
+                                    <div className="space-y-4">
+                                        {paymentMethods.length === 0 ? (
+                                            <div className="text-xs text-gray-400">No payment methods available</div>
+                                        ) : (
+                                            paymentMethods.map((method) => (
+                                                <label
+                                                    key={method.id}
+                                                    className={`flex items-start gap-3 cursor-pointer border rounded px-4 py-3 ${formData.shipping_payment_method === method.name ? 'border-[#0079C2] bg-blue-50' : ''
+                                                        }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        value={method.name}
+                                                        className="mt-1"
+                                                        checked={formData.shipping_payment_method === method.name}
+                                                        onChange={handlePaymentMethodChange}
+                                                    />
+                                                    <div>
+                                                        <div className="font-medium">{method.name}</div>
+                                                        {method.description && (
+                                                            <div className="text-xs text-gray-500">{method.description}</div>
+                                                        )}
+                                                    </div>
+                                                </label>
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* RIGHT: 2/10, order summary */}
                         <div className="w-full md:w-4/12  flex-shrink-0">
                             <div className="rounded-md shadow px-5 py-6 md:sticky top-28 bg-white">
+                                {isCreditAccount && (
+                                    <div className="mb-6 pb-6 border-b border-gray-200">
+                                        <h2 className="text-sm font-medium text-gray-500 mb-1">Credit Limit</h2>
+                                        <div className="text-2xl font-bold text-[#0079C2]">
+                                            {formatPrice(auth?.customer?.company?.requested_credit_limit || 0)}
+                                        </div>
+                                    </div>
+                                )}
                                 <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
 
                                 <div className="max-h-96 overflow-auto custom-scrollbar">
@@ -372,9 +385,9 @@ export default function Checkout() {
                                         isSubmitting ||
                                         cartItems.length === 0 ||
                                         !shippingMethod ||
-                                        !formData.shipping_payment_method
+                                        (!isCreditAccount && !formData.shipping_payment_method)
                                     }
-                                    className={`w-full mt-6 py-3 px-4 rounded font-medium text-white transition-colors ${isSubmitting || cartItems.length === 0 || !shippingMethod || !formData.shipping_payment_method
+                                    className={`w-full mt-6 py-3 px-4 rounded font-medium text-white transition-colors ${isSubmitting || cartItems.length === 0 || !shippingMethod || (!isCreditAccount && !formData.shipping_payment_method)
                                         ? 'bg-gray-400 cursor-not-allowed'
                                         : 'bg-[#0079C2] hover:bg-[#00629e]'
                                         }`}
@@ -392,3 +405,82 @@ export default function Checkout() {
         </div>
     );
 }
+
+
+// {
+//     "id": 61,
+//     "parent_id": null,
+//     "name": "Labore et fugiat la Rerum veritatis ex l",
+//     "email": "bekajebuzu@mailinator.com",
+//     "email_verified_at": null,
+//     "two_factor_confirmed_at": null,
+//     "created_at": "2026-01-19T03:07:46.000000Z",
+//     "updated_at": "2026-01-19T03:08:07.000000Z",
+//     "pricing_formula_id": null,
+//     "customer": {
+//         "id": 61,
+//         "user_id": 61,
+//         "company_id": 4,
+//         "first_name": "Labore et fugiat la",
+//         "last_name": "Rerum veritatis ex l",
+//         "email": "bekajebuzu@mailinator.com",
+//         "role_applied": "credit facilities account",
+//         "account_number": "PENDING-696707919b2ff",
+//         "job_title": "Manager",
+//         "phone": null,
+//         "address": null,
+//         "city": null,
+//         "postal_code": null,
+//         "country": null,
+//         "status": "active",
+//         "status_review": "approved",
+//         "review_note": null,
+//         "created_at": "2026-01-14T03:03:45.000000Z",
+//         "updated_at": "2026-01-19T03:07:46.000000Z",
+//         "company": {
+//             "id": 4,
+//             "name": "Amet aut et fugiat",
+//             "registration_number": "Doloremque sunt et",
+//             "trading_name": "Officiis fugiat anim",
+//             "vat_number": "Velit eaque nobis do",
+//             "address": "Ut nulla minima labo",
+//             "trading_address": "Est in quia et nihil",
+//             "phone": "Cupidatat tempora ra",
+//             "fax": "Voluptatum vel nihil",
+//             "activities_description": "Voluptatem sit iure",
+//             "purchasing_contact_name": "Quia impedit unde d",
+//             "purchasing_contact_phone": "Et fugiat non rerum",
+//             "purchasing_contact_email": "xydevek@mailinator.com",
+//             "accounts_contact_name": "Eligendi distinctio",
+//             "accounts_contact_phone": "Ullamco ipsam ut qui",
+//             "accounts_contact_email": "fame@mailinator.com",
+//             "bank_name": "Dignissimos impedit",
+//             "bank_address": "Repudiandae est est",
+//             "bank_sort_code": "Commodo esse in dol",
+//             "bank_account_number": "Et officia animi nu",
+//             "trade_ref_1_details": "Hic officia accusant",
+//             "trade_ref_1_phone": "Cupiditate voluptate",
+//             "trade_ref_1_email": "novevaliwu@mailinator.com",
+//             "trade_ref_2_details": "Autem maxime tempor",
+//             "trade_ref_2_phone": "In laboris voluptatu",
+//             "trade_ref_2_email": "kujiwi@mailinator.com",
+//             "requested_credit_limit": "42.00",
+//             "created_at": "2026-01-14T03:03:45.000000Z",
+//             "updated_at": "2026-01-14T03:03:45.000000Z"
+//         }
+//     },
+//     "roles": [
+//         {
+//             "id": 6,
+//             "name": "credit facilities account",
+//             "guard_name": "web",
+//             "created_at": "2026-01-05T14:56:39.000000Z",
+//             "updated_at": "2026-01-05T14:56:39.000000Z",
+//             "pivot": {
+//                 "model_type": "App\\Models\\User",
+//                 "model_id": 61,
+//                 "role_id": 6
+//             }
+//         }
+//     ]
+// }
