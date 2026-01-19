@@ -38,6 +38,14 @@
 
             @if($customer->user_id)
                 @can('customers.edit')
+                    <a href="{{ route('admin.users.masquerade', $customer->user_id) }}"
+                        onclick="return confirm('Are you sure you want to login as this user? You will be redirected to the homepage.')"
+                        class="flex items-center px-2 py-2 rounded-lg border border-black bg-white hover:bg-gray-100 text-black"
+                        style="height: 36px;" title="Login Masquerade">
+                        <flux:icon.arrow-right-start-on-rectangle class="w-4 h-4" />
+                        <span class="ml-2 text-sm">Login as User</span>
+                    </a>
+
                     <a href="{{ route('admin.customers.edit', $customer->id) }}"
                         class="flex items-center px-2 py-2 rounded-lg border border-black bg-white hover:bg-gray-100 text-black"
                         style="height: 36px; width: 36px; justify-content: center;">
