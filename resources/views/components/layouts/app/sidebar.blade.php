@@ -176,6 +176,11 @@
                         {{ __('Transactions') }}
                     </flux:navlist.item>
                     {{-- @endcan --}}
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('admin.product-requests.index')"
+                        :current="request()->routeIs('admin.product-requests.*')" wire:navigate
+                        :class="request()->routeIs('admin.product-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Product Requests') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             @endcanany
 
@@ -222,6 +227,8 @@
                             {{ __('Messages') }}
                         </flux:navlist.item>
                     @endcan
+
+
                 </flux:navlist.group>
             @endcan
 

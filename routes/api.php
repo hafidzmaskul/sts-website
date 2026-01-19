@@ -45,6 +45,10 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
 });
 Route::get('/product-categories', [\App\Http\Controllers\Api\ProductCategoryController::class, 'index']);
 Route::get('/settings', [\App\Http\Controllers\Api\SettingsController::class, 'index']);
+Route::post('/product-requests', [\App\Http\Controllers\Api\ProductRequestController::class, 'store']);
+
+Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
+});
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
     ->middleware(\App\Http\Middleware\SanctumOrBasic::class)

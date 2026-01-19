@@ -128,6 +128,10 @@ Route::middleware(['auth'])->group(function () {
         // Contact Submissions
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 
+        // Product Requests
+        Route::get('/admin/product-requests', \App\Livewire\Admin\ProductRequests\Index::class)->name('admin.product-requests.index');
+        Route::get('/admin/product-requests/{productRequest}', \App\Livewire\Admin\ProductRequests\Show::class)->name('admin.product-requests.show');
+
         // Brands
         Route::get('/admin/brands', App\Livewire\Admin\Brands\Index::class)->name('admin.brands.index');
         Route::get('/admin/brands/create', App\Livewire\Admin\Brands\Create::class)->name('admin.brands.create');
