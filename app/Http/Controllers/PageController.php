@@ -236,6 +236,9 @@ class PageController
 
     public function checkout()
     {
-        return Inertia::render('Checkout');
+        $auth = Auth::user()->load(['customer.company', 'roles']);
+        return Inertia::render('Checkout',[
+            'auth' => $auth
+        ]);
     }
 }

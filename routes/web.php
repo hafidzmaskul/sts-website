@@ -74,8 +74,10 @@ Route::middleware(['auth'])->group(function () {
         if ($quoteIds && !is_array($quoteIds)) {
             $quoteIds = [$quoteIds];
         }
+        $auth = Auth::user()->load(['customer.company', 'roles']);
         return \Inertia\Inertia::render('QuoteCheckout', [
-            'quoteIds' => $quoteIds
+            'quoteIds' => $quoteIds,
+            'auth' => $auth
         ]);
     })->name('quote-checkout');
 

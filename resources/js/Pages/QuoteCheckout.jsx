@@ -13,7 +13,9 @@ const formatPrice = (price) => {
     return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(parsedPrice);
 };
 
-export default function QuoteCheckout({ quoteIds }) {
+export default function QuoteCheckout({ quoteIds, auth }) {
+    console.log(auth)
+    const isCreditAccount = auth?.roles?.some(role => role.name === 'credit facilities account');
     const [quotes, setQuotes] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -121,6 +123,7 @@ export default function QuoteCheckout({ quoteIds }) {
         try {
             const payload = {
                 ...formData,
+                shipping_payment_method: isCreditAccount ? 'Credit Limit' : formData.shipping_payment_method,
                 shipping_method: shippingMethod,
                 shipping_price: shippingPrice,
                 tax_amount: taxAmount,
@@ -145,8 +148,9 @@ export default function QuoteCheckout({ quoteIds }) {
         <div className="min-h-screen flex flex-col bg-[#fff]">
             <Head title="Checkout Quotes" />
             <Header />
-            <div className="container mx-auto px-4 mt-4">
-                <nav className="text-xs md:text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+            <div className="border-1"></div>
+            <div className="container mx-auto">
+                <nav className="text-xs md:text-sm text-gray-500 py-3" aria-label="Breadcrumb">
                     <ol className="flex flex-wrap items-center gap-1">
                         <li><Link href='/home' className="hover:text-[#0079C2]">Home</Link></li>
                         <li className="mx-1 text-gray-400">/</li>
@@ -162,7 +166,7 @@ export default function QuoteCheckout({ quoteIds }) {
                     <div className="flex flex-col md:flex-row gap-8">
 
                         {/* LEFT FORM */}
-                        <div className="w-full md:w-8/10 max-w-3xl flex-grow">
+                        <div className="w-full md:w-8/12 flex-grow">
                             {/* Contact Information */}
                             <div className="rounded-md mb-6 px-6 py-5 shadow bg-white">
                                 <h2 className="text-lg font-semibold mb-4">Contact Information</h2>
@@ -299,42 +303,52 @@ export default function QuoteCheckout({ quoteIds }) {
                             </div>
 
                             {/* Payment Method */}
-                            <div className="rounded-md px-6 py-5 shadow bg-white">
-                                <h2 className="text-lg font-semibold mb-4">Payment Method</h2>
-                                <div className="space-y-4">
-                                    {paymentMethods.length === 0 ? (
-                                        <div className="text-xs text-gray-400">No payment methods available</div>
-                                    ) : (
-                                        paymentMethods.map((method) => (
-                                            <label
-                                                key={method.id}
-                                                className={`flex items-start gap-3 cursor-pointer border rounded px-4 py-3 ${formData.shipping_payment_method === method.name ? 'border-[#0079C2] bg-blue-50' : ''
-                                                    }`}
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="payment_method"
-                                                    value={method.name}
-                                                    className="mt-1"
-                                                    checked={formData.shipping_payment_method === method.name}
-                                                    onChange={handlePaymentMethodChange}
-                                                />
-                                                <div>
-                                                    <div className="font-medium">{method.name}</div>
-                                                    {method.description && (
-                                                        <div className="text-xs text-gray-500">{method.description}</div>
-                                                    )}
-                                                </div>
-                                            </label>
-                                        ))
-                                    )}
+                            {!isCreditAccount && (
+                                <div className="rounded-md px-6 py-5 shadow bg-white">
+                                    <h2 className="text-lg font-semibold mb-4">Payment Method</h2>
+                                    <div className="space-y-4">
+                                        {paymentMethods.length === 0 ? (
+                                            <div className="text-xs text-gray-400">No payment methods available</div>
+                                        ) : (
+                                            paymentMethods.map((method) => (
+                                                <label
+                                                    key={method.id}
+                                                    className={`flex items-start gap-3 cursor-pointer border rounded px-4 py-3 ${formData.shipping_payment_method === method.name ? 'border-[#0079C2] bg-blue-50' : ''
+                                                        }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        value={method.name}
+                                                        className="mt-1"
+                                                        checked={formData.shipping_payment_method === method.name}
+                                                        onChange={handlePaymentMethodChange}
+                                                    />
+                                                    <div>
+                                                        <div className="font-medium">{method.name}</div>
+                                                        {method.description && (
+                                                            <div className="text-xs text-gray-500">{method.description}</div>
+                                                        )}
+                                                    </div>
+                                                </label>
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* RIGHT: Order Summary */}
-                        <div className="w-full md:w-2/10 max-w-xs flex-shrink-0">
+                        <div className="w-full md:w-4/12  flex-shrink-0">
                             <div className="rounded-md shadow px-5 py-6 md:sticky top-28 bg-white">
+                                {isCreditAccount && (
+                                    <div className="mb-6 pb-6 border-b border-gray-200">
+                                        <h2 className="text-sm font-medium text-gray-500 mb-1">Credit Limit</h2>
+                                        <div className="text-2xl font-bold text-[#0079C2]">
+                                            {formatPrice(auth?.customer?.company?.requested_credit_limit || 0)}
+                                        </div>
+                                    </div>
+                                )}
                                 <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
 
                                 <div className="max-h-96 overflow-auto custom-scrollbar">
@@ -395,9 +409,9 @@ export default function QuoteCheckout({ quoteIds }) {
                                         isSubmitting ||
                                         quotes.length === 0 ||
                                         !shippingMethod ||
-                                        !formData.shipping_payment_method
+                                        (!isCreditAccount && !formData.shipping_payment_method)
                                     }
-                                    className={`w-full mt-6 py-3 px-4 rounded font-medium text-white transition-colors ${isSubmitting || quotes.length === 0 || !shippingMethod || !formData.shipping_payment_method
+                                    className={`w-full mt-6 py-3 px-4 rounded font-medium text-white transition-colors ${isSubmitting || quotes.length === 0 || !shippingMethod || (!isCreditAccount && !formData.shipping_payment_method)
                                         ? 'bg-gray-400 cursor-not-allowed'
                                         : 'bg-[#0079C2] hover:bg-[#00629e]'
                                         }`}
@@ -408,10 +422,10 @@ export default function QuoteCheckout({ quoteIds }) {
                         </div>
                     </div>
                 </div>
-            </main>
+            </main >
 
             <Footer />
             <Toast show={toast.show} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, show: false }))} />
-        </div>
+        </div >
     );
 }
