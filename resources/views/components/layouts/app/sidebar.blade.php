@@ -89,6 +89,20 @@
                         :class="request()->routeIs('dashboard.transactions.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Transactions') }}
                     </flux:navlist.item>
+
+                    @if(auth()->user()->hasRole('credit facilities account'))
+                        <flux:navlist.item icon="scale" :href="route('dashboard.credit-limits.index')"
+                            :current="request()->routeIs('dashboard.credit-limits.*')" wire:navigate
+                            :class="request()->routeIs('dashboard.credit-limits.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Credit Limit') }}
+                        </flux:navlist.item>
+                    @endif
+
+                    <flux:navlist.item icon="building-office-2" :href="route('dashboard.company.show')"
+                        :current="request()->routeIs('dashboard.company.*')" wire:navigate
+                        :class="request()->routeIs('dashboard.company.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Company') }}
+                    </flux:navlist.item>
                 @endif
 
                 @can('roles.view')
