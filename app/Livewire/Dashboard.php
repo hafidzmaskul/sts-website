@@ -18,10 +18,19 @@ class Dashboard extends Component
         $fixedRoles = ['guest', 'trade account', 'credit facilities account', 'child'];
 
         if (in_array($userRole, $fixedRoles)) {
+            $recentTransactions = [];
+            if (in_array($userRole, ['trade account', 'credit facilities account']) && $user->customer) {
+                $recentTransactions = $user->customer->transactions()
+                    ->latest()
+                    ->take(5)
+                    ->get();
+            }
+
             return view('livewire.dashboard', [
                 'simpleView' => true,
                 'userName' => $user->name,
                 'userRole' => $userRole,
+                'recentTransactions' => $recentTransactions,
             ])->title('Dashboard');
         }
 

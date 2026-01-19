@@ -83,6 +83,12 @@
                         :class="request()->routeIs('dashboard.users.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Manage Users') }}
                     </flux:navlist.item>
+
+                    <flux:navlist.item icon="banknotes" :href="route('dashboard.transactions.index')"
+                        :current="request()->routeIs('dashboard.transactions.*')" wire:navigate
+                        :class="request()->routeIs('dashboard.transactions.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Transactions') }}
+                    </flux:navlist.item>
                 @endif
 
                 @can('roles.view')

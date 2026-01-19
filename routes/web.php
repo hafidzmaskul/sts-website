@@ -162,6 +162,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Parent User Management
     Route::get('/dashboard/users', \App\Livewire\FixedRole\ChildUsers\Index::class)->name('dashboard.users.index');
+
+    // Transaction Management for Fixed Roles
+    Route::get('/dashboard/transactions', \App\Livewire\FixedRole\Transactions\Index::class)->name('dashboard.transactions.index');
+    Route::get('/dashboard/transactions/{transaction}', \App\Livewire\FixedRole\Transactions\Show::class)->name('dashboard.transactions.show');
 });
 
 require __DIR__ . '/auth.php';

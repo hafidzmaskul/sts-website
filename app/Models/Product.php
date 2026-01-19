@@ -33,6 +33,8 @@ class Product extends Model
         'is_sign_up_for_pricing' => 'boolean',
         'is_exclusive' => 'boolean',
         'is_cta' => 'boolean',
+        'special_price' => 'double',
+        'base_price' => 'double',
     ];
 
     public function brand()

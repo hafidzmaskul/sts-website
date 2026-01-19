@@ -3,12 +3,46 @@
         <h1 class="text-2xl font-bold text-black">Hello {{ $userName }}</h1>
         <p class="text-lg text-gray-700">Role: <span class="font-medium">{{ ucfirst($userRole) }}</span></p>
 
-        @if(in_array($userRole, ['trade account', 'credit facilities account']))
-            <div class="mt-6">
-                <a href="{{ route('dashboard.users.index') }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#0079C2] hover:bg-[#00619e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Manage Users
-                </a>
+
+
+        @if(in_array($userRole, ['trade account', 'credit facilities account']) && !empty($recentTransactions))
+            <div class="mt-8">
+                <h2 class="text-xl font-bold text-black mb-4">Recent Transactions</h2>
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
+                    <ul role="list" class="divide-y divide-gray-200">
+                        @forelse($recentTransactions as $transaction)
+                            <li>
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-[#0079C2] truncate">
+                                            {{ $transaction->invoice_code }}
+                                        </p>
+                                        <div class="ml-2 flex-shrink-0 flex">
+                                            <p
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                {{ ucfirst($transaction->status) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                Amount: ${{ number_format($transaction->total_amount, 2) }}
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <p>
+                                                {{ $transaction->created_at->format('M j, Y') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        @empty
+                            <p class="p-4 text-sm text-gray-500">No transactions found.</p>
+                        @endforelse
+                    </ul>
+                </div>
             </div>
         @endif
     </div>
