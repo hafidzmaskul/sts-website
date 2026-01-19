@@ -8,20 +8,18 @@ import LoginModal from '../components/LoginModal';
 import Toast from '../components/Toast';
 
 const formatPrice = (price) => {
-    if (!price) {
+    if (!price && price !== 0) {
         return '-';
     }
-    const cleanedPrice = price.toString().replace(/[^\d.-]/g, '');
-    const parsedPrice = parseFloat(cleanedPrice);
+    const parsedPrice = parseFloat(String(price).replace(/[^\d.-]/g, ''));
     if (Number.isNaN(parsedPrice)) {
         return '-';
     }
-    const finalPrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
     return new Intl.NumberFormat('en-GB', {
         style: 'currency',
         currency: 'GBP',
         maximumFractionDigits: 0,
-    }).format(finalPrice);
+    }).format(parsedPrice);
 };
 
 const ImageZoom = ({ src, alt, className }) => {
@@ -66,10 +64,8 @@ const ImageZoom = ({ src, alt, className }) => {
     );
 };
 
-// Modified Modal to support custom sizes
 const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
     if (!isOpen) return null;
-    // Sizes: md, lg, xl
     const sizeClasses = {
         md: "max-w-md",
         lg: "max-w-3xl",
@@ -93,13 +89,19 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
     );
 };
 
-
 export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false }) {
-
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     // Toast state
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+    // CTA: Product Request modal for is_cta
+    const [isProductRequestModalOpen, setIsProductRequestModalOpen] = useState(false);
+    const [requestProductLoading, setRequestProductLoading] = useState(false);
+    const [requestProductName, setRequestProductName] = useState('');
+    const [requestProductEmail, setRequestProductEmail] = useState('');
+    const [requestProductPhone, setRequestProductPhone] = useState('');
+    const [requestProductMessage, setRequestProductMessage] = useState('');
 
     // Quote Builder States
     const [isQuoteOptionModalOpen, setIsQuoteOptionModalOpen] = useState(false);
@@ -113,7 +115,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     // Default quantity for quote builder logic
     const DEFAULT_QUANTITY = 1;
 
-    // Auto-hide toast
     useEffect(() => {
         if (toast.show) {
             const timer = setTimeout(() => setToast((t) => ({ ...t, show: false })), 4000);
@@ -139,14 +140,12 @@ export default function ProductDetail({ product, products = [], logged, is_guest
 
     const data = product;
 
+    // SAFE access for images (api returns image_url directly)
     const productImages = useMemo(() => {
         if (Array.isArray(data.images) && data.images.length > 0) {
             return data.images
                 .sort((a, b) => (a.sequence || 0) - (b.sequence || 0))
-                .map((img) => {
-                    const imagePath = img.image_path;
-                    return imagePath?.startsWith('/') ? imagePath : `/storage/${imagePath}`;
-                });
+                .map((img) => img.image_url || (img.image_path?.startsWith('/') ? img.image_path : `/storage/${img.image_path}`));
         }
         return ['/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'];
     }, [data.images]);
@@ -156,9 +155,9 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [openAccordion, setOpenAccordion] = useState('description');
 
-    // Set specs with price conditional
+    // Set specs with price conditional, reference latest API shape
     const specs = useMemo(() => [
-        { label: 'Brand', value: data.brand_name || '-' },
+        { label: 'Brand', value: data.brand?.name || '-' },
         { label: 'Status', value: data.status === 'active' ? 'Ready Stock' : 'Unavailable' },
         {
             label: 'Harga',
@@ -170,13 +169,20 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                     : formatPrice(data.base_price),
         },
         { label: 'Exclusive', value: data.is_exclusive ? 'Yes' : 'No' },
-    ], [data.brand_name, data.status, data.base_price, data.is_exclusive, data.is_sign_up_for_pricing, logged]);
+    ], [
+        data.brand?.name,
+        data.status,
+        data.base_price,
+        data.is_exclusive,
+        data.is_sign_up_for_pricing,
+        logged
+    ]);
 
     const accordionItems = useMemo(() => [
         {
             id: 'description',
             title: 'Deskripsi Produk',
-            content: data.product_overview || '',
+            content: data.product_overview ? data.product_overview : '',
         },
         {
             id: 'specs',
@@ -186,7 +192,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         {
             id: 'information',
             title: 'Information',
-            content: data.information || '',
+            content: data.information ? data.information : '',
         },
     ], [data.product_overview, data.information, specs]);
 
@@ -207,7 +213,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             setExistingQuotes(response.data.data || response.data || []);
             setIsExistingQuoteModalOpen(true);
         } catch (error) {
-            console.error('Failed to fetch quotes', error);
             setToast({
                 show: true,
                 message: 'Failed to load existing quotes.',
@@ -233,7 +238,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         });
     };
 
-    // --- CHANGES: handleSaveToExistingQuotes (payload) ---
     const handleSaveToExistingQuotes = async () => {
         if (selectedQuoteIds.length === 0) {
             setToast({
@@ -261,9 +265,8 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             });
             setTimeout(() => {
                 router.visit('/quote-builder');
-            }, 1000); // Wait a bit for toast to be seen
+            }, 1000);
         } catch (error) {
-            console.error('Failed to add product to quotes', error);
             setToast({
                 show: true,
                 message: 'Failed to add product to some quotes.',
@@ -274,7 +277,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         }
     };
 
-    // --- CHANGES: handleCreateQuote (payload) ---
     const handleCreateQuote = async () => {
         if (!newQuoteName.trim()) {
             setToast({
@@ -307,7 +309,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 router.visit('/quote-builder');
             }, 1000);
         } catch (error) {
-            console.error('Failed to create quote', error);
             setToast({
                 show: true,
                 message: 'Failed to create new quote.',
@@ -315,6 +316,42 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Product Request CTA
+    const handleRequestProduct = async () => {
+        if (!requestProductName.trim() || !requestProductEmail.trim() || !requestProductPhone.trim()) {
+            setToast({
+                show: true,
+                message: 'Isi form lengkap (nama, email, phone) terlebih dahulu.',
+                type: 'error'
+            });
+            return;
+        }
+        setRequestProductLoading(true);
+        try {
+            await axios.post('/web/product-requests', {
+                product_id: data.id,
+                name: requestProductName,
+                email: requestProductEmail,
+                phone: requestProductPhone,
+                message: requestProductMessage,
+            });
+            setIsProductRequestModalOpen(false);
+            setRequestProductName('');
+            setRequestProductEmail('');
+            setRequestProductPhone('');
+            setRequestProductMessage('');
+            setToast({ show: true, message: 'Thank you. Your product request has been submitted successfully.', type: 'success' });
+        } catch (err) {
+            setToast({
+                show: true,
+                message: err?.response?.data?.message || 'Failed to submit product request.',
+                type: 'error'
+            });
+        } finally {
+            setRequestProductLoading(false);
         }
     };
 
@@ -349,9 +386,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             const items = res.data.data || res.data || [];
             const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
-        } catch (e) {
-            // ignore
-        }
+        } catch (e) {}
     };
 
     const handleAddToCart = async () => {
@@ -362,36 +397,25 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             setToast({ show: true, message: 'Product added to cart', type: 'success' });
             await refreshCart();
         } catch (error) {
-            console.error('Add to cart failed', error);
             setToast({ show: true, message: error?.response?.data?.message || 'Failed to add to cart', type: 'error' });
         } finally {
             setIsAddingToCart(false);
         }
     };
 
+    // Featured products. Use image_url if available.
     const featuredProducts = useMemo(() => {
-        if (products.length === 0) {
-            return [];
-        }
-
+        if (products.length === 0) return [];
         return products
             .filter((p) => p.id !== data.id)
             .slice(0, 8)
             .map((product, index) => {
-                const imagePath = product.images?.[0]?.image_path;
-                const image = imagePath
-                    ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
-                    : '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png';
-
-                let basePrice = null;
-                if (product.base_price) {
-                    const cleanedPrice = product.base_price.toString().replace(/[^\d.-]/g, '');
-                    const parsedPrice = parseFloat(cleanedPrice);
-                    if (!Number.isNaN(parsedPrice)) {
-                        basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
-                    }
+                let image = '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png';
+                if (Array.isArray(product.images) && product.images.length > 0) {
+                    const imgObj = product.images[0];
+                    image = imgObj.image_url || (imgObj.image_path?.startsWith('/') ? imgObj.image_path : `/storage/${imgObj.image_path}`);
                 }
-
+                const basePrice = typeof product.base_price === "number" ? product.base_price : null;
                 const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
 
                 return {
@@ -404,12 +428,13 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             });
     }, [products, data.id]);
 
-
-    // Helper for product image url
+    // Helper for product image url (for quote thumbnails)
     const getCoverImage = (product) => {
         if (Array.isArray(product.images) && product.images.length > 0) {
             const sorted = [...product.images].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
-            const imagePath = sorted[0].image_path;
+            const imgObj = sorted[0];
+            if (imgObj?.image_url) return imgObj.image_url;
+            const imagePath = imgObj.image_path;
             if (imagePath?.startsWith("http")) {
                 return imagePath;
             }
@@ -418,7 +443,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         return "/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png";
     };
 
-    // --- RENDER ---
     return (
         <div className="min-h-screen flex flex-col ">
             <Toast
@@ -431,6 +455,65 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
             />
+
+            {/* Product Request Modal CTA */}
+            <Modal
+                isOpen={isProductRequestModalOpen}
+                onClose={() => setIsProductRequestModalOpen(false)}
+                title="Request This Product"
+            >
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <label htmlFor="requestProductName" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input
+                            id="requestProductName"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                            value={requestProductName}
+                            onChange={e => setRequestProductName(e.target.value)}
+                            placeholder="Enter your name"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="requestProductEmail" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input
+                            id="requestProductEmail"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                            type="email"
+                            value={requestProductEmail}
+                            onChange={e => setRequestProductEmail(e.target.value)}
+                            placeholder="Your email"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="requestProductPhone" className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input
+                            id="requestProductPhone"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                            type="tel"
+                            value={requestProductPhone}
+                            onChange={e => setRequestProductPhone(e.target.value)}
+                            placeholder="Your phone"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="requestProductMessage" className="block text-sm font-medium text-gray-700 mb-1">Message (optional)</label>
+                        <textarea
+                            id="requestProductMessage"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                            value={requestProductMessage}
+                            onChange={e => setRequestProductMessage(e.target.value)}
+                            placeholder="Message or request detail..."
+                        />
+                    </div>
+                    <button
+                        onClick={handleRequestProduct}
+                        disabled={requestProductLoading}
+                        className={`w-full py-3 rounded-lg text-white font-medium transition ${requestProductLoading ? 'bg-gray-300 cursor-wait' : 'bg-[#0079C2] hover:bg-[#005a91]'}`}
+                    >
+                        {requestProductLoading ? 'Sending...' : 'Submit Request'}
+                    </button>
+                </div>
+            </Modal>
 
             {/* Quote Option Modal */}
             <Modal
@@ -454,7 +537,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 </div>
             </Modal>
 
-            {/* Existing Quote Modal (BIGGER, with product info displayed) */}
+            {/* Existing Quote Modal */}
             <Modal
                 isOpen={isExistingQuoteModalOpen}
                 onClose={() => setIsExistingQuoteModalOpen(false)}
@@ -465,17 +548,14 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                     <div className="text-center py-6 text-lg">Loading quotes...</div>
                 ) : (
                     <div className="flex flex-col md:flex-row gap-8">
-                        {/* Product Info Area */}
                         <div className="w-full md:w-2/5 bg-gray-50 rounded-lg p-4 flex flex-col items-center md:items-start justify-center border border-gray-200">
-                            {/* Product Image */}
                             <img
                                 src={productImages[activeImageIndex]}
                                 alt={data.title}
                                 className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
                             />
-                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}  </h3>
-
-                            <p className="text-gray-500 text-sm mb-1">{data.brand_name}</p>
+                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
+                            <p className="text-gray-500 text-sm mb-1">{data.brand?.name}</p>
                             <p className="text-[#0079C2] text-lg font-bold mb-2">
                                 {data.is_sign_up_for_pricing && !logged
                                     ? <span className="italic text-gray-400">Login untuk melihat harga</span>
@@ -483,7 +563,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 }
                             </p>
                         </div>
-                        {/* Quote Selection Area, scrollable */}
                         <div className="w-full md:w-3/5 flex flex-col gap-4 max-h-[400px] overflow-y-auto">
                             <div className="space-y-1 border rounded-lg p-2 flex-1">
                                 {existingQuotes.length > 0 ? (
@@ -506,7 +585,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                                     </span>
                                                 </div>
                                             </label>
-                                            {/* Show existing quote's products thumbnails and titles */}
                                             {quote.products && quote.products.length > 0 && (
                                                 <div className="flex flex-row flex-wrap gap-2 mt-1 mb-2 pl-8">
                                                     {quote.products.slice(0, 5).map(prod => (
@@ -580,14 +658,9 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             </Modal>
 
             <Head>
-                {/* The title will be managed by Inertia */}
                 <title>{data.seo_title ?? 'Product Detail'}</title>
-
-                {/* Add your dynamic SEO meta tags */}
                 <meta name="description" content={data.seo_description} />
                 <meta name="keywords" content={data.seo_keywords} />
-
-                {/* You can even add Open Graph tags for social sharing */}
                 <meta property="og:title" content={data.seo_title ?? 'Product Detail'} />
                 <meta property="og:description" content={data.seo_description} />
             </Head>
@@ -598,7 +671,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                     id="detail-product"
                     className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10 space-y-10"
                 >
-                    {/* Breadcrumb */}
                     <nav className="text-xs md:text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
                         <ol className="flex flex-wrap items-center gap-1">
                             <li>
@@ -614,6 +686,19 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     className="hover:text-[#0079C2]"
                                 >Products</Link>
                             </li>
+                            {Array.isArray(data.categories) && data.categories[0] && (
+                                <>
+                                    <li className="mx-1 text-gray-400">/</li>
+                                    <li>
+                                        <Link
+                                            href={`/categories/${data.categories[0].slug}`}
+                                            className="hover:text-[#0079C2]"
+                                        >
+                                            {data.categories[0].name}
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                             <li className="mx-1 text-gray-400">/</li>
                             <li className="text-gray-700">{data.title}</li>
                         </ol>
@@ -658,7 +743,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                         <div className="lg:col-span-3 space-y-6">
                             <div>
                                 <p className="text-xs  tracking-wide font-inter font-light mb-1">
-                                    {data.brand.name}
+                                    {data.brand?.name}
                                 </p>
                                 <h1 className="font-inter font-semibold text-3xl md:text-4xl lg:text-5xl text-[#232323] mb-2">
                                     {data.title}
@@ -668,7 +753,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 </h1>
                             </div>
                             <div className="space-y-3">
-                                {/* Harga: show logic for login and is_sign_up_for_pricing */}
                                 {data.is_sign_up_for_pricing ? (
                                     logged ? (
                                         <p className="text-md md:text-xl font-semibold font-inter">
@@ -685,7 +769,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     </p>
                                 )}
                             </div>
-                            {/* Show Sign In button only if is_sign_up_for_pricing=true and not logged in */}
                             {data.is_sign_up_for_pricing && !logged && (
                                 <div className="flex flex-wrap gap-3">
                                     <button
@@ -697,6 +780,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     </button>
                                 </div>
                             )}
+
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
                                 {(logged || (isGuest && !data.is_sign_up_for_pricing)) && (
                                     <button
@@ -718,50 +802,64 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                         Add To Quote
                                     </button>
                                 )}
+
+                                {/* CTA Button for Product Request */}
+                                {data.is_cta && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsProductRequestModalOpen(true)}
+                                        className="inline-flex items-center justify-center rounded-sm bg-[#FFA723] border border-[#FFA723] px-8 py-3 text-sm font-medium text-white cursor-pointer hover:shadow-xl transition w-full"
+                                    >
+                                        Request Product CTA
+                                    </button>
+                                )}
                             </div>
 
-                            {/* Key Feature */}
-                            <div>
-                                <div className="font-inter font-bold text-lg mb-2">
-                                    Key Feature
+                            {data.key_feature && (
+                                <div>
+                                    <div className="font-inter font-bold text-lg mb-2">
+                                        Key Feature
+                                    </div>
+                                    <div className="font-poppins font-normal text-md">
+                                        <div dangerouslySetInnerHTML={{ __html: data.key_feature }} />
+                                    </div>
                                 </div>
-                                <div className="font-poppins font-normal text-md">
-                                    <div dangerouslySetInnerHTML={{ __html: data.key_feature }} />
-                                </div>
-                            </div>
+                            )}
                             <hr />
-                            {/* Product Overview */}
-                            <div>
-                                <div className="font-inter font-bold text-lg mb-2">
-                                    Product Overview
+                            {data.product_overview && (
+                                <div>
+                                    <div className="font-inter font-bold text-lg mb-2">
+                                        Product Overview
+                                    </div>
+                                    <div className="font-poppins font-normal text-md">
+                                        <div dangerouslySetInnerHTML={{ __html: data.product_overview }} />
+                                    </div>
                                 </div>
-                                <div className="font-poppins font-normal text-md">
-                                    <div dangerouslySetInnerHTML={{ __html: data.product_overview }} />
-                                </div>
-                            </div>
+                            )}
                             <hr />
-                            {/* Main Features */}
-                            <div>
-                                <div className="font-inter font-bold text-lg mb-2">
-                                    Main Features
+                            {data.main_feature && (
+                                <div>
+                                    <div className="font-inter font-bold text-lg mb-2">
+                                        Main Features
+                                    </div>
+                                    <div className="font-poppins font-normal text-md">
+                                        <div dangerouslySetInnerHTML={{ __html: data.main_feature }} />
+                                    </div>
                                 </div>
-                                <div className="font-poppins font-normal text-md">
-                                    <div dangerouslySetInnerHTML={{ __html: data.main_feature }} />
-                                </div>
-                            </div>
+                            )}
                             <hr />
-                            {/* Information */}
-                            <div>
-                                <div className="font-inter font-bold text-lg mb-2">
-                                    Information
+                            {data.information && (
+                                <div>
+                                    <div className="font-inter font-bold text-lg mb-2">
+                                        Information
+                                    </div>
+                                    <div className="font-poppins font-normal text-md">
+                                        <div dangerouslySetInnerHTML={{ __html: data.information }} />
+                                    </div>
                                 </div>
-                                <div className="font-poppins font-normal text-md">
-                                    <div dangerouslySetInnerHTML={{ __html: data.information }} />
-                                </div>
-                            </div>
+                            )}
                             <hr />
 
-                            {/* Accordion */}
                             <div className="mt-4 space-y-3">
                                 <div className="font-inter font-bold text-lg mb-2">
                                     Specification
