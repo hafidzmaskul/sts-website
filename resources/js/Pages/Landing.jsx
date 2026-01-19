@@ -1,133 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Head, router } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
-import ProductCard from '../components/ProductCard';
-import CategoryCard from '../components/CategoryCard';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
 import 'swiper/css';
 import axios from 'axios';
-
-const fallbackProducts = [
-    {
-        id: 1,
-        title: 'Aurora Fabric Armchair',
-        price: 1299000,
-        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-        badge: 'New',
-        slug: 'aurora-fabric-armchair',
-    },
-    {
-        id: 2,
-        title: 'Nordic Wooden Lamp',
-        price: 759000,
-        image: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1200&q=80',
-        badge: 'Sale',
-        slug: 'nordic-wooden-lamp',
-    },
-    {
-        id: 3,
-        title: 'Marble Side Table',
-        price: 999000,
-        image: 'https://images.unsplash.com/photo-1517701604594-6c73f2a46b5c?auto=format&fit=crop&w=1200&q=80',
-        badge: 'Hot',
-        slug: 'marble-side-table',
-    },
-    {
-        id: 4,
-        title: 'Cloud Cotton Sofa',
-        price: 3999000,
-        image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=1200&q=80',
-        badge: 'New',
-        slug: 'cloud-cotton-sofa',
-    },
-    {
-        id: 5,
-        title: 'Slate Steel Bookshelf',
-        price: 1849000,
-        image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80',
-        badge: 'Limited',
-        slug: 'slate-steel-bookshelf',
-    },
-    {
-        id: 6,
-        title: 'Sienna Leather Tote',
-        price: 1250000,
-        image: 'https://images.unsplash.com/photo-1483982258113-b72862e6cff6?auto=format&fit=crop&w=1200&q=80',
-        badge: 'Sale',
-        slug: 'sienna-leather-tote',
-    },
-    {
-        id: 7,
-        title: 'Cerulean Table Lamp',
-        price: 545000,
-        image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
-        badge: 'New',
-        slug: 'cerulean-table-lamp',
-    },
-    {
-        id: 8,
-        title: 'Monaco Lounge Chair',
-        price: 2199000,
-        image: 'https://images.unsplash.com/photo-1618219805997-e3736730b8c1?auto=format&fit=crop&w=1200&q=80',
-        badge: 'Featured',
-        slug: 'monaco-lounge-chair',
-    },
-];
-
-const fallbackCategories = [
-    {
-        id: 1,
-        name: 'Security Systems',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 2,
-        name: 'Access Control',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 3,
-        name: 'Video Surveillance',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 4,
-        name: 'Networking',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 5,
-        name: 'Smart Office',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 6,
-        name: 'Home Automation',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-    {
-        id: 7,
-        name: 'Audio Visual',
-        image_path: '/assets/dummmy/fecd358a1b56bef6f0106d5df4cf057608b437f0.png',
-    },
-];
 
 export default function Landing({
     banners = [],
     landingPageData = {},
     featured = [],
-    categories =[],
-    brand =[],
+    categories = [],
+    brand = [],
 }) {
 
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-    const [activeProductIndex, setActiveProductIndex] = useState(0);
-    const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
     const productSwiperRef = useRef(null);
-    const categorySwiperRef = useRef(null);
     const shopSwiper1Ref = useRef(null);
     const shopSwiper2Ref = useRef(null);
     const shopSwiper3Ref = useRef(null);
@@ -143,8 +33,6 @@ export default function Landing({
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-    const heroDescription = landingPageData.hero_description ?? 'Discover personalised HR and employment law support crafted for ambitious teams and growing organisations.';
 
     useEffect(() => {
         if (banners.length <= 1) {
@@ -181,12 +69,12 @@ export default function Landing({
     const goNext = () => goToSlide(currentBannerIndex + 1);
     const goPrevious = () => goToSlide(currentBannerIndex - 1);
 
-    // Tambahkan slug pada products hasil mapping featured
+    // Transform featured products only based on real data (NO FALLBACK PRODUCTS)
     const transformFeaturedProduct = (product, index) => {
         const imagePath = product.images?.[0]?.image_path;
         const image = imagePath
             ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
-            : fallbackProducts[index % fallbackProducts.length].image;
+            : ''; // no fallback
 
         let basePrice = null;
         if (product.base_price) {
@@ -218,18 +106,20 @@ export default function Landing({
             price: basePrice,
             image,
             badge: product.badge ?? badge,
-            slug, // tambahkan slug ke product
+            slug,
         };
     };
 
+    // If featured is empty, products will be empty array (NO fallback products)
     const products = useMemo(() => {
         if (featured.length > 0) {
             const normalizedProducts = featured.map((product, index) => transformFeaturedProduct(product, index));
             return normalizedProducts;
         }
-        return fallbackProducts;
+        return [];
     }, [featured]);
 
+    // Duplicate products if needed for infinite loop
     const visibleSlides = useMemo(() => {
         if (products.length >= 4) {
             return 4;
@@ -246,7 +136,6 @@ export default function Landing({
         return 1;
     }, [products.length]);
 
-    // Duplicate products if needed for infinite loop
     const loopedProducts = useMemo(() => {
         if (products.length === 0) {
             return [];
@@ -260,147 +149,43 @@ export default function Landing({
         return products;
     }, [products, visibleSlides]);
 
-    const shouldLoopProducts = loopedProducts.length > 0;
-
-    useEffect(() => {
-        setActiveProductIndex(0);
-        if (productSwiperRef.current) {
-            productSwiperRef.current.slideTo(0);
+    // Transform categories (NO fallbackCategories at all)
+    const getTransformedCategories = () => {
+        if (categories && categories.length > 0) {
+            return categories.map((cat, idx) => ({
+                ...cat,
+                image_url: cat.image_url
+                    ? cat.image_url
+                    : cat.image_path
+                    ? (cat.image_path.startsWith('http')
+                        ? cat.image_path
+                        : `/storage/${cat.image_path}`)
+                    : "",
+                name: cat.name || `Category ${idx + 1}`,
+                products: Array.isArray(cat.products) ? cat.products : [],
+                products_count:
+                    typeof cat.products_count === 'number'
+                        ? cat.products_count
+                        : Array.isArray(cat.products)
+                        ? cat.products.length
+                        : 0,
+            }));
         }
-    }, [products.length]);
-
-    const handleProductSlideChange = (swiperInstance) => {
-        setActiveProductIndex(swiperInstance.realIndex ?? swiperInstance.activeIndex ?? 0);
+        // No fallback, return empty array
+        return [];
     };
+    const transformedCategories = useMemo(() => getTransformedCategories(), [categories]);
 
-    const goToProductSlide = (index) => {
-        if (!productSwiperRef.current) {
-            return;
+    // Brands section sectionId
+    const resolveBrandImage = (img) => {
+        // Accept already complete urls or storage paths, otherwise prepend /storage/
+        if (!img) {
+            return '/assets/dummmy/default-brand.png';
         }
-
-        if (shouldLoopProducts) {
-            productSwiperRef.current.slideToLoop(index);
-            return;
+        if (img.startsWith('http') || img.startsWith('/')) {
+            return img;
         }
-
-        productSwiperRef.current.slideTo(index);
-    };
-
-    const goToNextProduct = () => {
-        productSwiperRef.current?.slideNext();
-    };
-
-    const goToPreviousProduct = () => {
-        productSwiperRef.current?.slidePrev();
-    };
-
-    const transformedCategories = useMemo(() => {
-        if (categories.length > 0) {
-            const normalizedCategories = categories.map((category, index) => {
-                const imagePath = category.image_path;
-                const image = imagePath
-                    ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
-                    : fallbackCategories[index % fallbackCategories.length].image_path;
-
-                return {
-                    id: category.id ?? index,
-                    name: category.name ?? `Category ${index + 1}`,
-                    image_path: image,
-                    products_count: category.products_count ?? 0,
-                };
-            });
-
-            return normalizedCategories;
-        }
-        return fallbackCategories;
-    }, [categories]);
-
-    const categorySlidesPerView = 5;
-
-    // Duplicate categories if needed for infinite loop
-    const loopedCategories = useMemo(() => {
-        if (transformedCategories.length === 0) {
-            return [];
-        }
-        // If we don't have enough slides for loop, duplicate them
-        const minSlidesForLoop = categorySlidesPerView * 2;
-        if (transformedCategories.length < minSlidesForLoop) {
-            const multiplier = Math.ceil(minSlidesForLoop / transformedCategories.length);
-            return Array(multiplier).fill(transformedCategories).flat();
-        }
-        return transformedCategories;
-    }, [transformedCategories, categorySlidesPerView]);
-
-    const shouldLoopCategories = loopedCategories.length > 0;
-    const initialCategoryIndex = transformedCategories.length >= 3 ? 2 : Math.max(0, transformedCategories.length - 1);
-
-    useEffect(() => {
-        setActiveCategoryIndex(initialCategoryIndex);
-        if (categorySwiperRef.current) {
-            if (shouldLoopCategories) {
-                categorySwiperRef.current.slideToLoop(initialCategoryIndex);
-            } else {
-                categorySwiperRef.current.slideTo(initialCategoryIndex);
-            }
-        }
-    }, [loopedCategories.length, initialCategoryIndex, shouldLoopCategories]);
-
-    const handleCategorySlideChange = (swiperInstance) => {
-        setActiveCategoryIndex(swiperInstance.realIndex ?? swiperInstance.activeIndex ?? 0);
-    };
-
-    const goToCategorySlide = (index) => {
-        if (!categorySwiperRef.current) {
-            return;
-        }
-
-        if (shouldLoopCategories) {
-            categorySwiperRef.current.slideToLoop(index);
-            return;
-        }
-
-        categorySwiperRef.current.slideTo(index);
-    };
-
-    const goToNextCategory = () => {
-        categorySwiperRef.current?.slideNext();
-    };
-
-    const goToPreviousCategory = () => {
-        categorySwiperRef.current?.slidePrev();
-    };
-
-    const goToNextShop = () => {
-        shopSwiper1Ref.current?.slideNext();
-        shopSwiper2Ref.current?.slideNext();
-        shopSwiper3Ref.current?.slideNext();
-    };
-
-    const goToPreviousShop = () => {
-        shopSwiper1Ref.current?.slidePrev();
-        shopSwiper2Ref.current?.slidePrev();
-        shopSwiper3Ref.current?.slidePrev();
-    };
-
-    const offsetFromActiveCategory = (index) => {
-        const total = transformedCategories.length;
-
-        if (total === 0) {
-            return 0;
-        }
-
-        const rawOffset = index - activeCategoryIndex;
-        const half = Math.floor(total / 2);
-
-        if (rawOffset > half) {
-            return rawOffset - total;
-        }
-
-        if (rawOffset < -half) {
-            return rawOffset + total;
-        }
-
-        return rawOffset;
+        return `/storage/${img}`;
     };
 
     // Handle form input changes
@@ -418,7 +203,7 @@ export default function Landing({
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/api/contact-submissions', formData);
+            await axios.post('/api/contact-submissions', formData);
 
             setIsSubmitting(false);
             setShowSuccessAlert(true);
@@ -440,16 +225,16 @@ export default function Landing({
         }
     };
 
-    // Helper: Brand Image Path
-    const resolveBrandImage = (img) => {
-        // Accept already complete urls or storage paths, otherwise prepend /storage/
-        if (!img) {
-            return '/assets/dummmy/default-brand.png';
-        }
-        if (img.startsWith('http') || img.startsWith('/')) {
-            return img;
-        }
-        return `/storage/${img}`;
+    const goToNextShop = () => {
+        shopSwiper1Ref.current?.slideNext();
+        shopSwiper2Ref.current?.slideNext();
+        shopSwiper3Ref.current?.slideNext();
+    };
+
+    const goToPreviousShop = () => {
+        shopSwiper1Ref.current?.slidePrev();
+        shopSwiper2Ref.current?.slidePrev();
+        shopSwiper3Ref.current?.slidePrev();
     };
 
     return (
@@ -518,7 +303,7 @@ export default function Landing({
                                 onClick={goNext}
                                 className="pointer-events-auto inline-flex items-start gap-2  border-none  bg-white px-10 py-2 font-semibold text-[#0079C2] transition hover:bg-[#0079C2] hover:text-white"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -703,13 +488,13 @@ export default function Landing({
                 </div>
 
             </section>
+            {/* SHOP BY CATEGORY - Loop Categories - Please don't change design, just data and mapping */}
             <section id='shop-by-category' className='bg-[#F3F3F3]'>
-                <div className="container md:px-20 px-10 mx-auto">
+                <div className="container md:px-20 px-10 py-20 mx-auto">
                     <div className="mb-6 flex container mx-auto py-10 px-10 nd:px-20 flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-1">
                             <h1 className='font-inter font-bebas-neue font-bold text-5xl'>Shop by Category</h1>
                         </div>
-
                         <div className="flex items-center gap-3">
                             <button
                                 type="button"
@@ -729,285 +514,82 @@ export default function Landing({
                             </button>
                         </div>
                     </div>
-                    <div className="flex mt-10 items-center gap-4">
-                        <div className="w-2/10 flex justify-center">
-                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
-                        </div>
-                        <div className="w-8/10">
-                            <Swiper
-                                modules={[Autoplay]}
-                                onSwiper={(swiperInstance) => {
-                                    shopSwiper1Ref.current = swiperInstance;
-                                }}
-                                loop={true}
-                                slidesPerView={4}
-                                spaceBetween={40}
-                                speed={650}
-                                autoplay={{
-                                    delay: 4200,
-                                    disableOnInteraction: false,
-                                    pauseOnMouseEnter: true,
-                                }}
-                                breakpoints={{
-                                    0: {
-                                        slidesPerView: 1,
-                                        spaceBetween: 20,
-                                    },
-                                    768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 30,
-                                    },
-                                    1024: {
-                                        slidesPerView: 4,
-                                        spaceBetween: 40,
-                                    },
-                                }}
-                            >
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                            </Swiper>
-                        </div>
-                    </div>
-                    <div className="flex mt-10 items-center gap-4">
-                        <div className="w-2/10 flex justify-center">
-                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
-                        </div>
-                        <div className="w-8/10">
-                            <Swiper
-                                modules={[Autoplay]}
-                                onSwiper={(swiperInstance) => {
-                                    shopSwiper2Ref.current = swiperInstance;
-                                }}
-                                loop={true}
-                                slidesPerView={4}
-                                spaceBetween={40}
-                                speed={650}
-                                autoplay={{
-                                    delay: 4200,
-                                    disableOnInteraction: false,
-                                    pauseOnMouseEnter: true,
-                                }}
-                                breakpoints={{
-                                    0: {
-                                        slidesPerView: 1,
-                                        spaceBetween: 20,
-                                    },
-                                    768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 30,
-                                    },
-                                    1024: {
-                                        slidesPerView: 4,
-                                        spaceBetween: 40,
-                                    },
-                                }}
-                            >
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                            </Swiper>
-                        </div>
-                    </div>
-                    <div className="flex mt-10 items-center gap-4 pb-10">
-                        <div className="w-2/10 flex justify-center">
-                            <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>LOREM IPSUM</h1>
-                        </div>
-                        <div className="w-8/10">
-                            <Swiper
-                                modules={[Autoplay]}
-                                onSwiper={(swiperInstance) => {
-                                    shopSwiper3Ref.current = swiperInstance;
-                                }}
-                                loop={true}
-                                slidesPerView={4}
-                                spaceBetween={40}
-                                speed={650}
-                                autoplay={{
-                                    delay: 4200,
-                                    disableOnInteraction: false,
-                                    pauseOnMouseEnter: true,
-                                }}
-                                breakpoints={{
-                                    0: {
-                                        slidesPerView: 1,
-                                        spaceBetween: 20,
-                                    },
-                                    768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 30,
-                                    },
-                                    1024: {
-                                        slidesPerView: 4,
-                                        spaceBetween: 40,
-                                    },
-                                }}
-                            >
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                        <img src="/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png" className='h-40 py-2 w-full object-contain' alt="" />
-                                        <span className="font-bebas-neue font-bold px-3 text-2xl ">lorem Ipsum</span> <br />
-                                        <span className="font-inter font-light text-xs px-3 ">120 product</span>
-                                    </div>
-                                </SwiperSlide>
-                            </Swiper>
-                        </div>
-                    </div>
+                    {/* Loop categories, 3 rows if possible */}
+                    {[0, 1, 2].map((row) => {
+                        // Get 3 sets of categories for 3 swiper rows
+                        // You can also split evenly. Safe so will always render 3 rows if available (else empty)
+                        const categoriesRow = transformedCategories.filter((_, idx) => idx % 3 === row);
+                        return (
+                            <div className="flex mt-20 items-center gap-8" key={row}>
+                                <div className="w-2/10 flex justify-center">
+                                    {/* category name. Use first slide name or fallback */}
+                                    <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>
+                                        {categoriesRow[0]?.name || "No Category"}
+                                    </h1>
+                                </div>
+                                <div className="w-8/10">
+                                    <Swiper
+                                        modules={[Autoplay]}
+                                        onSwiper={swiperInstance => {
+                                            if (row === 0)
+                                                shopSwiper1Ref.current = swiperInstance;
+                                            else if (row === 1)
+                                                shopSwiper2Ref.current = swiperInstance;
+                                            else if (row === 2)
+                                                shopSwiper3Ref.current = swiperInstance;
+                                        }}
+                                        loop={true}
+                                        slidesPerView={4}
+                                        spaceBetween={40}
+                                        speed={650}
+                                        autoplay={{
+                                            delay: 4200,
+                                            disableOnInteraction: false,
+                                            pauseOnMouseEnter: true,
+                                        }}
+                                        breakpoints={{
+                                            0: {
+                                                slidesPerView: 1,
+                                                spaceBetween: 20,
+                                            },
+                                            768: {
+                                                slidesPerView: 2,
+                                                spaceBetween: 30,
+                                            },
+                                            1024: {
+                                                slidesPerView: 4,
+                                                spaceBetween: 40,
+                                            },
+                                        }}
+                                    >
+                                        {/* Loop per category in this row */}
+                                        {categoriesRow.map((category, idx) => (
+                                            <SwiperSlide key={category?.id ?? `catrow${row}-slide${idx}`}>
+                                                <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
+                                                    <img
+                                                        src={category?.image_url || "/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png"}
+                                                        className='h-40 py-2 w-full object-contain'
+                                                        alt=""
+                                                    />
+                                                    {/* category name */}
+                                                    <span className="font-bebas-neue font-bold px-3 text-2xl ">
+                                                        {category?.name || "Unknown"}
+                                                    </span>
+                                                    <br />
+                                                    {/* product count */}
+                                                    <span className="font-inter font-light text-xs px-3 ">
+                                                        {category?.products_count} product
+                                                    </span>
+                                                    {/* product name(s) */}
+
+                                                </div>
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
             <section className="w-full mt-20  flex flex-col md:flex-row bg-[#0079C2]">
