@@ -39,4 +39,8 @@ class ProductCategory extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category_product');
+    }
 }
