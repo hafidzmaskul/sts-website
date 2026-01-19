@@ -49,6 +49,14 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}/products/{productId}', 'removeProduct');
         });
 
+    Route::get('web/my-transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
+
+    Route::get('/my-transactions', function () {
+        return \Inertia\Inertia::render('TransactionHistory');
+    })->name('my-transactions');
+});
+
+Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function () {
     Route::controller(\App\Http\Controllers\Api\CartController::class)
         ->prefix('web/cart')
         ->group(function () {
@@ -57,17 +65,15 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/decrease', 'decrease');
             Route::delete('/{productId}', 'destroy');
         });
-    Route::post('web/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
-    Route::get('web/my-transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
-    Route::get('web/my-transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 
-    Route::get('/my-transactions', function () {
-        return \Inertia\Inertia::render('TransactionHistory');
-    })->name('my-transactions');
+    Route::post('web/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+    Route::get('web/my-transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 
     Route::get('/my-transactions/{id}', function ($id) {
         return \Inertia\Inertia::render('TransactionDetail', ['id' => $id]);
     })->name('my-transactions.show');
+
+
 
     Route::get('/quote-checkout', function (\Illuminate\Http\Request $request) {
         $quoteIds = $request->input('quote_ids');

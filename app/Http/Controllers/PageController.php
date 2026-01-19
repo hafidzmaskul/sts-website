@@ -38,10 +38,9 @@ class PageController
             $product->images = $mainImage ? $mainImage->image_path : null;
             return $product;
         });
-        $categories = DB::table('product_categories as pc')
-            ->leftJoin('product_category_product as pcp', 'pc.id', '=', 'pcp.product_category_id')
-            ->select('pc.*', DB::raw('COUNT(pcp.product_id) as products_count'))
-            ->groupBy('pc.id')
+        $categories = ProductCategory::withCount('products')
+            ->with('products.images')
+            ->orderByDesc('products_count')
             ->get();
 
 

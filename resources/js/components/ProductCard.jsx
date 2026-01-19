@@ -136,21 +136,26 @@ export default function ProductCard({
                 </svg>
             </button>
             <a href={`/products/${slug}`}>
-            <div className="relative overflow-hidden rounded-[22px] ">
-                <img
-                    ref={imageRef}
-                    src={image}
-                    alt={title}
-                    className="aspect-[4/5] h-full w-full object-contain transition duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                />
-            </div>
+                <div className="relative overflow-hidden rounded-[22px] ">
+                    <img
+                        ref={imageRef}
+                        src={image}
+                        alt={title}
+                        className="aspect-[4/5] h-full w-full object-contain transition duration-700 ease-out group-hover:scale-105"
+                        loading="lazy"
+                    />
+                </div>
+            </a>
+
 
             <div className="mt-5 flex items-start justify-between gap-3">
-                <div className="">
-                    <p className="text-base font-normal ">{title}</p>
-                    <p className="text-base font-bold ">{formatPrice(price)}</p>
-                </div>
+
+                <a href={`/products/${slug}`}>
+                    <div className="">
+                        <p className="text-base font-normal ">{title}</p>
+                        <p className="text-base font-bold ">{formatPrice(price)}</p>
+                    </div>
+                </a>
                 {/* Cart */}
                 <button
                     type="button"
@@ -175,7 +180,6 @@ export default function ProductCard({
                     </svg>
                 </button>
             </div>
-            </a>
         </article>
     );
 }

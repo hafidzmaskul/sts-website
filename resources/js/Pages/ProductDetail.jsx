@@ -94,7 +94,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 };
 
 
-export default function ProductDetail({ product, products = [], logged }) {
+export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false }) {
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -698,7 +698,7 @@ export default function ProductDetail({ product, products = [], logged }) {
                                 </div>
                             )}
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
-                                {logged && (
+                                {(logged || (isGuest && !data.is_sign_up_for_pricing)) && (
                                     <button
                                         type="button"
                                         onClick={handleAddToCart}
