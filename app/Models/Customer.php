@@ -26,6 +26,7 @@ class Customer extends Model
         'account_number',
         'job_title',
         'company_id',
+        'account_level',
     ];
 
     public function scopePending($query)

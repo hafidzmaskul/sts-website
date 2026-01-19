@@ -35,12 +35,13 @@ class ProductCategory extends Model
         return $this->hasMany(ProductCategory::class, 'parent_id');
     }
 
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_category_product');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

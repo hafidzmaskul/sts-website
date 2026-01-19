@@ -146,6 +146,12 @@
                                         <div class="flex-1 min-w-0">
                                             <p class="text-sm font-medium text-gray-900 truncate">
                                                 {{ $customer->first_name }} {{ $customer->last_name }}
+                                                @if($customer->account_level)
+                                                    <span
+                                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $customer->account_level === 'head' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800' }}">
+                                                        {{ ucfirst($customer->account_level) }}
+                                                    </span>
+                                                @endif
                                             </p>
                                             <p class="text-sm text-gray-500 truncate">
                                                 {{ $customer->email }}

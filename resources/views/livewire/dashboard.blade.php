@@ -3,11 +3,38 @@
         <h1 class="text-2xl font-bold text-black">Hello {{ $userName }}</h1>
         <p class="text-lg text-gray-700">Role: <span class="font-medium">{{ ucfirst($userRole) }}</span></p>
 
+        @if($userRole === 'credit facilities account' && isset($currentBalance))
+            <div class="mt-6 mb-8">
+                <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 sm:w-1/3">
+                    <div class="px-4 py-5 sm:p-6 flex justify-between items-center">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                Current Credit Balance
+                            </dt>
+                            <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                                £{{ number_format($currentBalance, 2) }}
+                            </dd>
+                        </div>
+                        <a href="{{ route('dashboard.credit-limits.index') }}"
+                            class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 font-medium">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+
 
 
         @if(in_array($userRole, ['trade account', 'credit facilities account']) && !empty($recentTransactions))
             <div class="mt-8">
-                <h2 class="text-xl font-bold text-black mb-4">Recent Transactions</h2>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-black">Recent Transactions</h2>
+                    <a href="{{ route('dashboard.transactions.index') }}"
+                        class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 font-medium">
+                        View All
+                    </a>
+                </div>
                 <div class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
                     <ul role="list" class="divide-y divide-gray-200">
                         @forelse($recentTransactions as $transaction)
