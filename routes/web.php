@@ -33,6 +33,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('login-page', 'login')->name('login-page');
     Route::get('invoice', 'invoice')->name('invoice');
     Route::get('checkout', 'checkout')->name('checkout');
+    Route::get('/search', 'search')->name('search');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -98,7 +99,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),

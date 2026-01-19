@@ -17,6 +17,7 @@ const fallbackProducts = [
         price: 1299000,
         image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
         badge: 'New',
+        slug: 'aurora-fabric-armchair',
     },
     {
         id: 2,
@@ -24,6 +25,7 @@ const fallbackProducts = [
         price: 759000,
         image: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1200&q=80',
         badge: 'Sale',
+        slug: 'nordic-wooden-lamp',
     },
     {
         id: 3,
@@ -31,6 +33,7 @@ const fallbackProducts = [
         price: 999000,
         image: 'https://images.unsplash.com/photo-1517701604594-6c73f2a46b5c?auto=format&fit=crop&w=1200&q=80',
         badge: 'Hot',
+        slug: 'marble-side-table',
     },
     {
         id: 4,
@@ -38,6 +41,7 @@ const fallbackProducts = [
         price: 3999000,
         image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=1200&q=80',
         badge: 'New',
+        slug: 'cloud-cotton-sofa',
     },
     {
         id: 5,
@@ -45,6 +49,7 @@ const fallbackProducts = [
         price: 1849000,
         image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80',
         badge: 'Limited',
+        slug: 'slate-steel-bookshelf',
     },
     {
         id: 6,
@@ -52,6 +57,7 @@ const fallbackProducts = [
         price: 1250000,
         image: 'https://images.unsplash.com/photo-1483982258113-b72862e6cff6?auto=format&fit=crop&w=1200&q=80',
         badge: 'Sale',
+        slug: 'sienna-leather-tote',
     },
     {
         id: 7,
@@ -59,6 +65,7 @@ const fallbackProducts = [
         price: 545000,
         image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
         badge: 'New',
+        slug: 'cerulean-table-lamp',
     },
     {
         id: 8,
@@ -66,6 +73,7 @@ const fallbackProducts = [
         price: 2199000,
         image: 'https://images.unsplash.com/photo-1618219805997-e3736730b8c1?auto=format&fit=crop&w=1200&q=80',
         badge: 'Featured',
+        slug: 'monaco-lounge-chair',
     },
 ];
 
@@ -112,7 +120,7 @@ export default function Landing({
     landingPageData = {},
     featured = [],
     categories =[],
-    brand =[]
+    brand =[],
 }) {
 
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -173,6 +181,7 @@ export default function Landing({
     const goNext = () => goToSlide(currentBannerIndex + 1);
     const goPrevious = () => goToSlide(currentBannerIndex - 1);
 
+    // Tambahkan slug pada products hasil mapping featured
     const transformFeaturedProduct = (product, index) => {
         const imagePath = product.images?.[0]?.image_path;
         const image = imagePath
@@ -190,12 +199,26 @@ export default function Landing({
 
         const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Sales' : 'Limited';
 
+        // Ambil slug jika ada di original object, kalau tidak coba generate dari title
+        let slug = product.slug;
+        if (!slug && product.title) {
+            slug = product.title
+                .toString()
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        } else if (!slug) {
+            slug = `product-${product.id ?? index}`;
+        }
+
         return {
             id: product.id ?? index,
             title: product.title ?? `Product ${index + 1}`,
             price: basePrice,
             image,
             badge: product.badge ?? badge,
+            slug, // tambahkan slug ke product
         };
     };
 
@@ -650,7 +673,7 @@ export default function Landing({
                     {/* Card Kanan (Services) */}
                     <div className="bg-[#0079C2] flex flex-col lg:flex-row items-stretch justify-end relative lg:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-16 lg:py-0">
+                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
                             <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -666,11 +689,11 @@ export default function Landing({
                                 className="block lg:hidden mt-6 h-44 w-auto object-contain"
                             />
                         </div>
-                        <div className="hidden lg:block absolute right-0 lg:-right-6 top-1/2 -translate-y-1/2 z-0">
+                        <div className="hidden lg:block absolute right-2 lg:-right-6 top-1/3 -translate-y-1/2 z-0">
                             <img
                                 src="/assets/cctv.png"
                                 alt="CCTV"
-                                className="h-72 object-contain"
+                                className="h-60 object-contain"
                                 style={{
                                     transform: 'translateX(30%) translateY(-20%)',
                                 }}

@@ -6,7 +6,6 @@ import HeroSection from '../components/HeroSection';
 import ServiceArticleCard from '../components/ServiceArticleCard';
 
 export default function Service({ services = [] }) {
-    console.log(services)
     return (
         <div className="min-h-screen flex flex-col">
             <Head title="Services" />

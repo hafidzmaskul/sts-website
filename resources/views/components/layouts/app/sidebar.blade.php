@@ -259,20 +259,17 @@
         <flux:spacer />
 
         <flux:navlist variant="outline">
-            <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
-                target="_blank" class="custom-navitem">
-                {{ __('Repository') }}
+            <flux:navlist.item icon="folder-git-2" href="/"
+                 class="custom-navitem">
+                {{ __('Landing Page') }}
             </flux:navlist.item>
-            <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire"
-                target="_blank" class="custom-navitem">
-                {{ __('Documentation') }}
-            </flux:navlist.item>
+            
         </flux:navlist>
 
         <!-- User Menu -->
         <flux:dropdown class="hidden lg:block" position="bottom" align="start">
             <flux:profile class="custom-navitem" :initials="auth()->user()->initials()" icon:trailing="chevrons-up-down"
-                data-test="sidebar-menu-button" />
+                data-test="sidebar-menu-button" name="{{ auth()->user()->name }}" />
 
             <flux:menu class="w-[220px]">
                 <flux:menu.radio.group>
