@@ -94,6 +94,8 @@ class TransactionController extends Controller
             'total_amount' => 'required|numeric',
             'quote_builder_ids' => 'nullable|array',
             'quote_builder_ids.*' => 'exists:quote_builders,id',
+            'product_id' => 'nullable|exists:products,id',
+            'quantity' => 'nullable|integer|min:1',
         ]);
 
         // Load Settings for Calculation
@@ -158,8 +160,22 @@ class TransactionController extends Controller
         // Prepare items data to process later
         $itemsToProcess = [];
         $isQuoteBuilder = false;
+        $isDirectPurchase = false;
 
-        if ($request->has('quote_builder_ids') && !empty($request->quote_builder_ids)) {
+        if ($request->filled('product_id')) {
+            $isDirectPurchase = true;
+            $product = \App\Models\Product::find($request->product_id);
+            $quantity = $request->input('quantity', 1);
+
+            // Create a mock object that mimics a cart item structure for consistent processing
+            // Alternatively, just treat it as a distinct case. 
+            // Let's create a generic structure to iterate over.
+            $itemsToProcess[] = (object) [
+                'product' => $product,
+                'quantity' => $quantity
+            ];
+
+        } elseif ($request->has('quote_builder_ids') && !empty($request->quote_builder_ids)) {
             $isQuoteBuilder = true;
             $itemsToProcess = \App\Models\QuoteBuilder::whereIn('id', $request->quote_builder_ids)
                 ->where('user_id', $user->id)
@@ -338,7 +354,9 @@ class TransactionController extends Controller
                 ]);
 
                 // Delete Cart Item
-                $item->delete();
+                if (!$isDirectPurchase) {
+                    $item->delete();
+                }
             }
         }
 

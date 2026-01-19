@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/contact-submissions', [ContactSubmissionController::class, 'store']);
 Route::post('/quotes', [\App\Http\Controllers\Api\QuoteController::class, 'store']);
 Route::post('/sign-up', [\App\Http\Controllers\CustomerRegistrationController::class, 'store']);
+Route::post('/guest-register', [\App\Http\Controllers\Api\GuestController::class, 'store']);
 
 Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
     ->middleware(\App\Http\Middleware\SanctumOrBasic::class)
