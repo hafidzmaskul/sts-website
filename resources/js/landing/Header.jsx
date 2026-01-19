@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
 import axios from 'axios';
 
 export default function Header() {
@@ -7,10 +7,19 @@ export default function Header() {
     const [showCategories, setShowCategories] = useState(false);
     const [showPages, setShowPages] = useState(false);
     const [showPagesMobile, setShowPagesMobile] = useState(false);
+    const [showBecomeCustomer, setShowBecomeCustomer] = useState(false); // <-- new for desktop
+    const [showBecomeCustomerMobile, setShowBecomeCustomerMobile] = useState(false); // <-- new for mobile
     const [cartCount, setCartCount] = useState(0);
     const [sideNavOpen, setSideNavOpen] = useState(false);
     const [cartProducts, setCartProducts] = useState([]);
     const [showCartDropdown, setShowCartDropdown] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = () => {
+        if (!searchQuery.trim()) return;
+        router.get('/search', { q: searchQuery });
+        setSideNavOpen(false); // Close sidebar if open
+    };
 
     // fetch cart count and list, and listen for cart changes
     useEffect(() => {
@@ -87,9 +96,16 @@ export default function Header() {
         { href: '/news', label: 'News' }
     ];
 
+    // Become Customer dropdown menu
+    const becomeCustomerMenu = [
+        { href: '/sign-up-customer', label: 'Sign Up Customer' },
+        { href: '/sign-up-credit-facility', label: 'Sign Up Credit Facility' }
+    ];
+
     const categoriesRef = useRef(null);
     const pagesRef = useRef(null);
     const cartRef = useRef(null);
+    const becomeCustomerRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -102,9 +118,12 @@ export default function Header() {
             if (cartRef.current && !cartRef.current.contains(event.target)) {
                 setShowCartDropdown(false);
             }
+            if (becomeCustomerRef.current && !becomeCustomerRef.current.contains(event.target)) {
+                setShowBecomeCustomer(false);
+            }
         };
 
-        if (showCategories || showPages || showCartDropdown) {
+        if (showCategories || showPages || showCartDropdown || showBecomeCustomer) {
             document.addEventListener("mousedown", handleClickOutside);
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -113,7 +132,7 @@ export default function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showCategories, showPages, showCartDropdown]);
+    }, [showCategories, showPages, showCartDropdown, showBecomeCustomer]);
 
     // All nav items (desktop)
     const navLinks = (
@@ -154,7 +173,6 @@ export default function Header() {
                 )}
             </div>
             <a href="/" className="text-[#007580]">Home</a>
-            <a href="/shop" className="text-[#636270]">Shop</a>
             <a href="/products" className="text-[#636270]">Product</a>
             {/* --- Pages Dropdown Desktop --- */}
             <div className="relative" ref={pagesRef}>
@@ -193,6 +211,34 @@ export default function Header() {
                     Quote Builder
                 </a>
             )}
+            {/* Become Customer Dropdown Desktop */}
+            <div className="relative" ref={becomeCustomerRef}>
+                <button
+                    className="flex items-center text-[#636270] hover:text-[#007580] px-3 py-2 rounded-xl transition"
+                    onClick={() => setShowBecomeCustomer(s => !s)}
+                    type="button"
+                >
+                    Become Customer
+                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                {showBecomeCustomer && (
+                    <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 shadow-lg z-50 rounded">
+                        {becomeCustomerMenu.map(link => (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                className="block px-4 py-2 hover:bg-gray-100"
+                                onClick={() => setShowBecomeCustomer(false)}
+                            >
+                                {link.label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </div>
+            {/* End Become Customer Dropdown Desktop */}
         </>
     );
 
@@ -206,7 +252,7 @@ export default function Header() {
                     </div>
                     <div className="flex space-x-4 items-center">
                         {/* Language Dropdown */}
-                        <div className="relative">
+                        {/* <div className="relative">
                             <button
                                 className="flex items-center hover:text-black transition"
                                 onClick={() => setShowLang(s => !s)}
@@ -230,8 +276,8 @@ export default function Header() {
                                 </div>
                             )}
                         </div>
-                        <a href="/faq" className="hover:underline">FAQ</a>
-                        <a href="/help" className="hover:underline">Need help?</a>
+                        <a href="/faq" className="hover:underline">FAQ</a> */}
+                        <a href="/contact-us" className="hover:underline">Need help?</a>
                     </div>
                 </div>
             </div>
@@ -262,8 +308,14 @@ export default function Header() {
                                 type="text"
                                 placeholder="Search products..."
                                 className="w-full border rounded-lg pl-4 pr-10 py-2 focus:outline-none border-gray-300 focus:border-yellow-400 transition"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                             />
-                            <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-400">
+                            <button
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-400"
+                                onClick={handleSearch}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24"
@@ -400,8 +452,14 @@ export default function Header() {
                             type="text"
                             placeholder="Search products..."
                             className="w-full border rounded-lg pl-4 pr-10 py-2 focus:outline-none border-gray-300 focus:border-yellow-400 transition"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         />
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-400">
+                        <button
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-400"
+                            onClick={handleSearch}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24"
@@ -460,9 +518,7 @@ export default function Header() {
                     <li>
                         <a href="/" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#007580]" onClick={() => setSideNavOpen(false)}>Home</a>
                     </li>
-                    <li>
-                        <a href="/shop" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>Shop</a>
-                    </li>
+
                     <li>
                         <a href="/products" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>Product</a>
                     </li>
@@ -510,6 +566,36 @@ export default function Header() {
                             </a>
                         </li>
                     )}
+                    {/* Become Customer Dropdown Mobile */}
+                    <li className="relative">
+                        <button
+                            className="flex items-center w-full py-2 px-4 rounded hover:bg-gray-100 text-[#636270] transition"
+                            onClick={() => setShowBecomeCustomerMobile(s => !s)}
+                        >
+                            Become Customer
+                            <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        {showBecomeCustomerMobile && (
+                            <div className="mt-1 ml-3 bg-white border border-gray-200 shadow-lg z-50 rounded w-48 absolute left-0">
+                                {becomeCustomerMenu.map(link => (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        className="block px-4 py-2 text-[#636270] hover:bg-gray-100"
+                                        onClick={() => {
+                                            setShowBecomeCustomerMobile(false);
+                                            setSideNavOpen(false);
+                                        }}
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                            </div>
+                        )}
+                    </li>
+                    {/* End Become Customer Dropdown Mobile */}
                 </ul>
                 {/* Cart user icons */}
                 <div className="flex items-center px-4 space-x-5 mt-6 mb-2">
@@ -551,7 +637,7 @@ export default function Header() {
                 <div className="px-4 pb-6 text-sm">
                     <div className="flex items-center space-x-4">
                         {/* Language Dropdown on sidenav */}
-                        <div className="relative">
+                        {/* <div className="relative">
                             <button
                                 className="flex items-center hover:text-black text-[#232323] transition"
                                 onClick={() => setShowLang(s => !s)}
@@ -574,9 +660,9 @@ export default function Header() {
                                     ))}
                                 </div>
                             )}
-                        </div>
-                        <a href="/faq" className="hover:underline text-[#232323]">FAQ</a>
-                        <a href="/help" className="hover:underline text-[#232323]">Need help?</a>
+                        </div> */}
+                        {/* <a href="/faq" className="hover:underline text-[#232323]">FAQ</a> */}
+                        <a href="/contact-us" className="hover:underline text-[#232323]">Need help?</a>
                     </div>
                 </div>
             </nav>

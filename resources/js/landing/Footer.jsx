@@ -32,7 +32,7 @@ export default function Footer() {
                         <p className="text-base text-[#272343] font-light mb-1">Vivamus tristique odio sit amet velit semper, eu posuere turpis interdum.</p>
                         <p className="text-base text-[#272343] font-light mb-1">Cras egestas purus</p>
                     </div>
-                    <div className="flex items-center space-x-4 mt-6">
+                    <div className="flex items-center mt-6">
                         <a
                             href="#"
                             className="transition rounded-full group"
