@@ -110,6 +110,18 @@ class Edit extends Component
                 ];
             })
             ->toArray();
+
+        // Load Advance Pricing
+        $existingCustomerPrices = $product->customerPrices()->get();
+        if ($existingCustomerPrices->isNotEmpty()) {
+            $this->showAdvancePricing = true;
+            $this->customerPrices = $existingCustomerPrices->map(function ($user) {
+                return [
+                    'user_id' => $user->id,
+                    'price' => $user->pivot->price,
+                ];
+            })->toArray();
+        }
     }
 
     public function addAttachment()
