@@ -87,7 +87,7 @@ export default function AboutUs({ teamMembers = [] }) {
                         <AboutArticleCard
                             image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
                             title="Leading pros rely on STS."
-                            description="Our customers demand a high-performance distributor. See what makes ADI stand out from competitors, and why we’re the leading security and low-voltage distributor."
+                            description="Our customers demand a high-performance distributor. See what makes STS stand out from competitors, and why we’re the leading security and low-voltage distributor."
                             buttonLabel="See Why"
                             additionnal={false}
                         />
