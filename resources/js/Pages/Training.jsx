@@ -68,7 +68,7 @@ export default function AboutUs({ teamMembers = [] }) {
                 />
                 <section className='container md:px-20 px-20 mx-auto h-[50vh] flex justify-center items-center'>
                     <p className='font-nunito-sans font-medium text-2xl text-center  '>
-                    Grow your business with ADI’s learning opportunities. Sign up for a webinar, attend a branch event or stop by an ADI Expo near you to gain industry knowledge and learn about new products and solutions. Our in-person events offer plenty of opportunities for networking with others in your industry, and our digital training resources provide you the tools you need to sharpen your skills from anywhere.
+                    Grow your business with STS’s learning opportunities. Sign up for a webinar, attend a branch event or stop by an STS Expo near you to gain industry knowledge and learn about new products and solutions. Our in-person events offer plenty of opportunities for networking with others in your industry, and our digital training resources provide you the tools you need to sharpen your skills from anywhere.
                     </p>
                 </section>
                 <section
@@ -79,21 +79,21 @@ export default function AboutUs({ teamMembers = [] }) {
                         <AboutArticleCard
                             image="/assets/dummmy/4da057811344b5b24e0cebd05a110367acce6d17.jpg"
                             title="Branch Events, Expos and Tradeshows"
-                            description="Held at various locations across UK&I, ADI branch events and the ADI Expo Series are an excellent opportunity to demo new products, learn about new supplier offerings and savings, network and much more."
+                            description="Held at various locations across UK&I, STS branch events and the STS Expo Series are an excellent opportunity to demo new products, learn about new supplier offerings and savings, network and much more."
                             buttonLabel="FIND AN EVENT"
                             additionnal={false}
                         />
                         <AboutArticleCard
                             image="/assets/dummmy/76d31484b6e24d55dbd51757391aac276e45a069.jpg"
                             title="STS Academy"
-                            description="Improve your knowledge in access control, IP video and more. These online trainings are direct from ADI's extensive supplier partner network and can be done all from the comfort of your home or office."
+                            description="Improve your knowledge in access control, IP video and more. These online trainings are direct from STS's extensive supplier partner network and can be done all from the comfort of your home or office."
                             buttonLabel="GET STARTED"
                             additionnal={false}
                         />
                         <AboutArticleCard
                             image="/assets/dummmy/e627bae0f4f8fee6ca10ca03182e4947644236a2.jpg"
                             title="Webinars"
-                            description="We offer free webinars presented by experts at ADI and leading suppliers on the industry’s top trends, technologies and challenges. Sign up for an upcoming webinar or watch a replay of a past event."
+                            description="We offer free webinars presented by experts at STS and leading suppliers on the industry’s top trends, technologies and challenges. Sign up for an upcoming webinar or watch a replay of a past event."
                             buttonLabel="SIGN UP"
                             additionnal={false}
                         />

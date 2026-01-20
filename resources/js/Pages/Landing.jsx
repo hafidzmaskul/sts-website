@@ -445,7 +445,7 @@ export default function Landing({
                         <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
                             <p className=" mb-4 text-sm lg:text-base max-w-[375px]">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Upgrade your security with our latest deals on access control and surveillance products. Enjoy reliable performance, modern design, and trusted protection—now at special prices for a limited time.
                             </p>
                             <button className="bg-white hover: text-[#0079C2] px-6 py-2 rounded font-semibold transition  self-end flex items-center gap-2">
                                 Shop Now
@@ -475,7 +475,7 @@ export default function Landing({
                         <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
                             <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            From consultation to installation and ongoing support, we deliver end-to-end security services tailored to your needs. Protect your property with expert solutions designed for reliability, safety, and peace of mind.
                             </p>
                             <button className="bg-white hover:bg-gray-200 text-[#0079C2] px-6 py-2 rounded font-semibold transition self-start flex items-center gap-2">
                                 Shop Now

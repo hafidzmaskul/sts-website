@@ -250,7 +250,7 @@ export default class ContactUs extends Component {
                                 <img src="/assets/Learn About Us.svg" alt="About Us" className="mx-auto h-20 mb-4" />
                                 <h2 className="text-xl font-semibold text-[#002856] mb-2">About Us</h2>
                                 <p className="text-[#414042] mb-4">
-                                    For more than 25 years, ADI has been the leading security and low-voltage distributor professionals rely on.
+                                    For more than 25 years, STS has been the leading security and low-voltage distributor professionals rely on.
                                 </p>
                                 <button className="mt-auto bg-[#0079C2] text-white px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2">
                                     Learn About Us

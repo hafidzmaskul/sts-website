@@ -61,12 +61,14 @@ export default function News({ news, categories }) {
                             >
                                 {heroNews.map((item) => (
                                     <SwiperSlide key={item.id} className="relative">
-                                        <div className="absolute inset-0 bg-black/40 z-10" />
+                                        <div className=" inset-0 bg-black/40 z-10" />
+                                        <div className="">
                                         <img
                                             src={getImageUrl(item.image_path)}
                                             alt={item.title}
                                             className="w-full h-full object-cover"
                                         />
+                                        </div>
                                         <div className="absolute bottom-0 left-0 w-full z-20 p-6 md:p-12 lg:p-16">
                                             <div className="max-w-4xl">
                                                 {/* Indicators above title as requested */}
@@ -147,7 +149,7 @@ export default function News({ news, categories }) {
                                         <img
                                             src={getImageUrl(item.image_path)}
                                             alt={item.title}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            className=" object-contain transition-transform duration-500 group-hover:scale-105"
                                         />
                                     </div>
                                     <div className="flex flex-col flex-grow pt-5">

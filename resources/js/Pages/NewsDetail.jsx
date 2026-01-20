@@ -126,29 +126,7 @@ export default function NewsDetail({ news, otherNews }) {
                                 </div>
                             </div>
 
-                            {/* Categories Widget (Optional, if we had list of cats here, but we pass full cats in index, not detail.
-                                We could pass it if we wanted, but not requested specifically. sticking to 'otherNews')
-                            */}
-
-                            <div className="bg-[#0079C2] rounded-xl p-8 text-white relative overflow-hidden">
-                                <div className="relative z-10">
-                                    <h3 className="text-2xl font-bold mb-4">Subscribe to our Newsletter</h3>
-                                    <p className="mb-6 opacity-90 text-sm">Get the latest updates and news directly in your inbox.</p>
-                                    <div className="flex flex-col gap-3">
-                                        <input
-                                            type="email"
-                                            placeholder="Your email address"
-                                            className="px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full"
-                                        />
-                                        <button className="bg-[#232323] hover:bg-black text-white px-6 py-3 rounded-lg font-semibold transition w-full">
-                                            Subscribe
-                                        </button>
-                                    </div>
-                                </div>
-                                {/* Decorative circle */}
-                                <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full"></div>
-                                <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-32 h-32 bg-white opacity-10 rounded-full"></div>
-                            </div>
+                            
 
                         </div>
                     </div>
