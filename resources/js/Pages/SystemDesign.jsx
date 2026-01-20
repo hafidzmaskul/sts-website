@@ -213,7 +213,7 @@ export default function SystemDesign({ services = [] }) {
                             }}
                         >
                             <h2 className="text-2xl font-bold font-inter mb-4">Resource Hub</h2>
-                            <p className='font-inter font-medium text-base'>Discover ADI's latest articles, buying guides and tools tailored to installers and integrators on industry topics</p>
+                            <p className='font-inter font-medium text-base'>Discover our latest articles, buying guides and tools tailored to installers and integrators on industry topics</p>
                         </div>
                     </div>
                     {/* Kolom kedua: lebar 2/12 */}
