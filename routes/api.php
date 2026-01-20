@@ -51,7 +51,11 @@ Route::post('/product-requests', [\App\Http\Controllers\Api\ProductRequestContro
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::get('/liked-products', [\App\Http\Controllers\Api\ProductLikeController::class, 'index']);
     Route::post('/products/like', [\App\Http\Controllers\Api\ProductLikeController::class, 'like']);
+    Route::post('/products/like', [\App\Http\Controllers\Api\ProductLikeController::class, 'like']);
+    Route::post('/products/like', [\App\Http\Controllers\Api\ProductLikeController::class, 'like']);
     Route::post('/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
+    Route::get('/coupons', [\App\Http\Controllers\Api\CouponController::class, 'index']);
+    Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
 });
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
