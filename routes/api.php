@@ -49,6 +49,9 @@ Route::get('/settings', [\App\Http\Controllers\Api\SettingsController::class, 'i
 Route::post('/product-requests', [\App\Http\Controllers\Api\ProductRequestController::class, 'store']);
 
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
+    Route::get('/liked-products', [\App\Http\Controllers\Api\ProductLikeController::class, 'index']);
+    Route::post('/products/like', [\App\Http\Controllers\Api\ProductLikeController::class, 'like']);
+    Route::post('/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
 });
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)

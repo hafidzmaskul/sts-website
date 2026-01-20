@@ -93,4 +93,9 @@ class Product extends Model
 
         return null;
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'product_user_likes')->withTimestamps();
+    }
 }
