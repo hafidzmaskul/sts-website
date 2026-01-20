@@ -77,7 +77,10 @@ Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']
 Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
 
 
-Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
+Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
+    Route::get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
+    Route::put('/me', [\App\Http\Controllers\Api\AuthController::class, 'updateProfile']);
+});
 
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);

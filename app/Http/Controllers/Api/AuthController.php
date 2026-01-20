@@ -11,6 +11,42 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * Update the user profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'city' => 'nullable|string',
+            'country' => 'nullable|string',
+        ]);
+
+        $user->update([
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email,
+        ]);
+
+        $user->customer()->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone_number,
+            'address' => $request->address,
+            'postal_code' => $request->postal_code,
+            'city' => $request->city,
+            'country' => $request->country,
+        ]);
+
+        return $this->me($request);
+    }
+    /**
      * Handle a login request.
      */
     public function login(Request $request)
