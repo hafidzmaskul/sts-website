@@ -107,4 +107,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'product_user_likes')->withTimestamps();
     }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class);
+    }
 }
