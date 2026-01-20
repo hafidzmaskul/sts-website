@@ -96,6 +96,7 @@ class TransactionController extends Controller
             'quote_builder_ids.*' => 'exists:quote_builders,id',
             'product_id' => 'nullable|exists:products,id',
             'quantity' => 'nullable|integer|min:1',
+            'coupon_id' => 'nullable|exists:coupons,id',
         ]);
 
         // Load Settings for Calculation
@@ -210,6 +211,7 @@ class TransactionController extends Controller
 
         // 1. Calculate Subtotal
         $calculatedSubtotal = 0;
+        $debugItems = [];
         \Illuminate\Support\Facades\Log::info('--- Transaction Total Calculation Start ---');
         foreach ($itemsToProcess as $item) {
             if ($isQuoteBuilder) {
@@ -222,6 +224,15 @@ class TransactionController extends Controller
                     $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
                     $subtotalItem = $price * $quantity;
                     $calculatedSubtotal += $subtotalItem;
+
+                    $debugItems[] = [
+                        'product_id' => $product->id,
+                        'title' => $product->title,
+                        'quantity' => $quantity,
+                        'price' => $price,
+                        'subtotal' => $subtotalItem,
+                    ];
+
                     \Illuminate\Support\Facades\Log::info("Quote Item: {$product->title}, Price: {$price}, Qty: {$quantity}, Subtotal: {$subtotalItem}");
                 }
             } else {
@@ -230,6 +241,15 @@ class TransactionController extends Controller
                 $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
                 $subtotalItem = $price * $item->quantity;
                 $calculatedSubtotal += $subtotalItem;
+
+                $debugItems[] = [
+                    'product_id' => $product->id,
+                    'title' => $product->title,
+                    'quantity' => $item->quantity,
+                    'price' => $price,
+                    'subtotal' => $subtotalItem,
+                ];
+
                 \Illuminate\Support\Facades\Log::info("Cart Item: {$product->title}, Price: {$price}, Qty: {$item->quantity}, Subtotal: {$subtotalItem}");
             }
         }
@@ -249,13 +269,67 @@ class TransactionController extends Controller
 
         // 3. Calculate Tax
         $taxRate = (float) ($settings['transaction_tax'] ?? 0);
-        $calculatedTaxAmount = ($calculatedSubtotal + $calculatedShippingPrice) * ($taxRate / 100);
 
-        // 4. Calculate Total
-        $calculatedTotal = $calculatedSubtotal + $calculatedShippingPrice + $calculatedTaxAmount;
+        // Calculate Subtotal + Shipping before discount
+        $subtotalWithShipping = $calculatedSubtotal + $calculatedShippingPrice;
+
+        // 4. Calculate Discount
+        $calculatedDiscount = 0;
+        $coupon = null;
+        $couponData = null;
+
+        if ($request->filled('coupon_id')) {
+            $coupon = \App\Models\Coupon::find($request->coupon_id);
+
+            if (!$coupon) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid coupon code.',
+                ], 400);
+            }
+
+            if (!$coupon->isEligibleFor($user)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Coupon is not valid or you are not eligible.',
+                ], 400);
+            }
+
+            // Calculate Discount
+            if ($coupon->discount_type === 'percentage') {
+                $calculatedDiscount = $calculatedSubtotal * ($coupon->discount_value / 100);
+            } else {
+                $calculatedDiscount = $coupon->discount_value;
+            }
+
+            // Ensure discount doesn't exceed subtotal (optional rule, but good practice)
+            // Or should it cover shipping? Usually coupons cover items.
+            // Let's assume it covers subtotal.
+            if ($calculatedDiscount > $calculatedSubtotal) {
+                $calculatedDiscount = $calculatedSubtotal;
+            }
+
+            $couponData = [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'discount_amount' => $calculatedDiscount,
+            ];
+        }
+
+        // Apply Discount to Taxable Base? 
+        // Typically tax is applied AFTER discount.
+        // Taxable Amount = (Subtotal - Discount) + Shipping
+        // Let's adjust tax calculation.
+
+        $taxableAmount = max(0, $calculatedSubtotal - $calculatedDiscount) + $calculatedShippingPrice;
+        $calculatedTaxAmount = $taxableAmount * ($taxRate / 100);
+
+        // 5. Calculate Total
+        $calculatedTotal = max(0, $calculatedSubtotal - $calculatedDiscount) + $calculatedShippingPrice + $calculatedTaxAmount;
 
         \Illuminate\Support\Facades\Log::info("Calculated Subtotal: {$calculatedSubtotal}");
         \Illuminate\Support\Facades\Log::info("Calculated Shipping Price: {$calculatedShippingPrice}");
+        \Illuminate\Support\Facades\Log::info("Calculated Discount: {$calculatedDiscount}");
         \Illuminate\Support\Facades\Log::info("Tax Rate: {$taxRate}%");
         \Illuminate\Support\Facades\Log::info("Calculated Tax Amount: {$calculatedTaxAmount}");
         \Illuminate\Support\Facades\Log::info("Calculated Total: {$calculatedTotal}");
@@ -267,6 +341,26 @@ class TransactionController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Total amount mismatch. Calculated: ' . number_format($calculatedTotal, 2) . ', Request: ' . number_format($request->total_amount, 2),
+                'data' => [
+                    'items' => $debugItems,
+                    'shipping' => [
+                        'method' => $request->shipping_method,
+                        'price' => $calculatedShippingPrice,
+                    ],
+                    'coupon' => $couponData,
+                    'tax' => [
+                        'rate' => $taxRate,
+                        'amount' => $calculatedTaxAmount,
+                    ],
+                    'totals' => [
+                        'subtotal' => $calculatedSubtotal,
+                        'discount_amount' => $calculatedDiscount,
+                        'shipping_price' => $calculatedShippingPrice,
+                        'tax_amount' => $calculatedTaxAmount,
+                        'calculated_total' => $calculatedTotal,
+                        'request_total' => $request->total_amount,
+                    ]
+                ]
             ], 400);
         }
 
@@ -304,11 +398,17 @@ class TransactionController extends Controller
         $transaction->shipping_phone_number = $request->shipping_phone_number;
         $transaction->shipping_method = $request->shipping_method;
         $transaction->shipping_price = $calculatedShippingPrice;
-        // Auto set payment method for credit facilities
         if ($user->hasRole('credit facilities account')) {
             $transaction->payment_method = 'credit_limit';
         } else {
             $transaction->payment_method = $request->shipping_payment_method;
+        }
+
+        if ($coupon) {
+            $transaction->coupon_id = $coupon->id;
+            $transaction->discount_amount = $calculatedDiscount;
+            // Increment Used Count
+            $coupon->increment('used_count');
         }
 
         $transaction->save();

@@ -61,6 +61,17 @@
                                 <td class="px-6 py-2 text-right font-medium text-black">
                                     £{{ number_format($transaction->tax_amount, 2) }}</td>
                             </tr>
+                            @if($transaction->coupon_id && $transaction->coupon)
+                                <tr>
+                                    <td colspan="3" class="px-6 py-2 text-right text-black">
+                                        Discount <span
+                                            class="text-xs text-gray-500">({{ $transaction->coupon->code }})</span>
+                                    </td>
+                                    <td class="px-6 py-2 text-right font-medium text-green-600">
+                                        -£{{ number_format($transaction->discount_amount, 2) }}
+                                    </td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td colspan="3" class="px-6 py-2 text-right text-black">Shipping</td>
                                 <td class="px-6 py-2 text-right font-medium text-black">

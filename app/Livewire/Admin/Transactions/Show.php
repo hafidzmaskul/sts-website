@@ -13,7 +13,7 @@ class Show extends Component
 
     public function mount(Transaction $transaction)
     {
-        $this->transaction = $transaction->load(['customer.user', 'items.product', 'statusHistory.user']);
+        $this->transaction = $transaction->load(['customer.user', 'items.product', 'statusHistory.user', 'coupon']);
         $this->newStatus = $transaction->status;
     }
 

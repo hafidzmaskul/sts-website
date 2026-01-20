@@ -25,11 +25,18 @@ class Transaction extends Model
         'shipping_phone_number',
         'shipping_method',
         'shipping_price',
+        'coupon_id',
+        'discount_amount',
     ];
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
     }
 
     public function statusHistory()
