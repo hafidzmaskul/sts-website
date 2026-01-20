@@ -35,11 +35,14 @@ export default function ProductCard({
     image,
     badge = 'New',
     id,
-    slug
+    slug,
+    initialLiked = false,
 }) {
     const badgeBgColor = getBadgeBgColor(badge);
     const imageRef = useRef(null);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [liked, setLiked] = useState(initialLiked);
+    const [isTogglingLike, setIsTogglingLike] = useState(false);
 
     // Cart helpers: animation and add-to-cart
     const animateAddToCart = () => {
@@ -93,6 +96,42 @@ export default function ProductCard({
         }
     };
 
+    const handleToggleLike = async () => {
+        if (!id || isTogglingLike) {
+            return;
+        }
+
+        setIsTogglingLike(true);
+
+        try {
+            if (!liked) {
+                await axios.post('/web/products/like', { product_id: id });
+                setLiked(true);
+                window.dispatchEvent(
+                    new CustomEvent('liked:changed', {
+                        detail: { productId: id, liked: true },
+                    }),
+                );
+            } else {
+                await axios.post('/web/products/unlike', { product_id: id });
+                setLiked(false);
+                window.dispatchEvent(
+                    new CustomEvent('liked:changed', {
+                        detail: { productId: id, liked: false },
+                    }),
+                );
+            }
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                window.location.href = '/login-page';
+            }
+
+            console.error('Toggle like failed', error);
+        } finally {
+            setIsTogglingLike(false);
+        }
+    };
+
     return (
         <article className="group relative h-full overflow-hidden rounded-3xl bg-white px-5  pb-6 pt-5 transition-transform duration-500 hover:-translate-y-2">
             <div
@@ -102,16 +141,21 @@ export default function ProductCard({
                 {badge}
             </div>
 
+    {/* like */}
             <button
                 type="button"
-                className="absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 group"
+                onClick={handleToggleLike}
+                disabled={isTogglingLike}
+                className={`absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 group ${
+                    isTogglingLike ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width={24}
                     height={24}
                     viewBox="0 0 24 24"
-                    className="block group-hover:hidden"
+                    className={`block ${liked ? 'hidden' : 'group-hover:hidden'}`}
                 >
                     <path
                         fill="none"
@@ -127,7 +171,7 @@ export default function ProductCard({
                     width={24}
                     height={24}
                     viewBox="0 0 24 24"
-                    className="hidden group-hover:block"
+                    className={liked ? 'block' : 'hidden group-hover:block'}
                 >
                     <path
                         fill="#0079C2"

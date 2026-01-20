@@ -13,6 +13,8 @@ export default function Header() {
     const [sideNavOpen, setSideNavOpen] = useState(false);
     const [cartProducts, setCartProducts] = useState([]);
     const [showCartDropdown, setShowCartDropdown] = useState(false);
+    const [likedProducts, setLikedProducts] = useState([]);
+    const [showLikedDropdown, setShowLikedDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearch = () => {
@@ -99,6 +101,7 @@ export default function Header() {
     const categoriesRef = useRef(null);
     const pagesRef = useRef(null);
     const cartRef = useRef(null);
+    const likedRef = useRef(null);
     const becomeCustomerRef = useRef(null);
 
     useEffect(() => {
@@ -112,12 +115,15 @@ export default function Header() {
             if (cartRef.current && !cartRef.current.contains(event.target)) {
                 setShowCartDropdown(false);
             }
+            if (likedRef.current && !likedRef.current.contains(event.target)) {
+                setShowLikedDropdown(false);
+            }
             if (becomeCustomerRef.current && !becomeCustomerRef.current.contains(event.target)) {
                 setShowBecomeCustomer(false);
             }
         };
 
-        if (showCategories || showPages || showCartDropdown || showBecomeCustomer) {
+        if (showCategories || showPages || showCartDropdown || showLikedDropdown || showBecomeCustomer) {
             document.addEventListener("mousedown", handleClickOutside);
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -126,7 +132,50 @@ export default function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showCategories, showPages, showCartDropdown, showBecomeCustomer]);
+    }, [showCategories, showPages, showCartDropdown, showLikedDropdown, showBecomeCustomer]);
+
+    useEffect(() => {
+        const fetchLiked = async () => {
+            try {
+                const res = await axios.get('/web/liked-products');
+                const paginator = res.data?.data;
+                const items = Array.isArray(paginator?.data) ? paginator.data : [];
+
+                const mapped = items.map((product) => {
+                    let imageUrl = '';
+                    if (Array.isArray(product.images) && product.images.length > 0) {
+                        const raw = product.images[0]?.image_path || product.images[0]?.image_url || '';
+                        imageUrl = raw
+                            ? (raw.startsWith('/') ? raw : `/storage/${raw}`)
+                            : '';
+                    }
+
+                    return {
+                        id: product.id,
+                        title: product.title || 'Product',
+                        image: imageUrl,
+                        slug: product.slug,
+                    };
+                });
+
+                setLikedProducts(mapped);
+            } catch (error) {
+                setLikedProducts([]);
+            }
+        };
+
+        fetchLiked();
+
+        const handleLikedChanged = () => {
+            fetchLiked();
+        };
+
+        window.addEventListener('liked:changed', handleLikedChanged);
+
+        return () => {
+            window.removeEventListener('liked:changed', handleLikedChanged);
+        };
+    }, []);
 
     // All nav items (desktop)
     const navLinks = (
@@ -376,9 +425,60 @@ export default function Header() {
                                         </div>
                                     )}
                                 </div>
-                                <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
-                                </a>
+                                <div
+                                    className="relative hidden md:flex"
+                                    ref={likedRef}
+                                    onMouseEnter={() => setShowLikedDropdown(true)}
+                                    onMouseLeave={() => setShowLikedDropdown(false)}
+                                >
+                                    <a href="/liked-products" className="bg-white rounded-xl p-2 md:p-3 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
+                                    </a>
+                                    {showLikedDropdown && (
+                                        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
+                                            <div className="py-2">
+                                                {likedProducts && likedProducts.length > 0 ? (
+                                                    likedProducts.map((item) => (
+                                                        <a
+                                                            key={item.id}
+                                                            href={item.slug ? `/products/${item.slug}` : '#'}
+                                                            className="flex items-center px-4 py-2 border-b last:border-b-0 hover:bg-gray-50"
+                                                        >
+                                                            {item.image ? (
+                                                                <img
+                                                                    src={item.image}
+                                                                    alt={item.title}
+                                                                    className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
+                                                                />
+                                                            ) : (
+                                                                <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
+                                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb" />
+                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
+                                                                    </svg>
+                                                                </div>
+                                                            )}
+                                                            <div className="flex-1">
+                                                                <span className="font-medium text-sm truncate max-w-[160px]">{item.title}</span>
+                                                            </div>
+                                                        </a>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-gray-500 py-8">
+                                                        No liked products
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="border-t px-4 py-2">
+                                                <a href="/liked-products" className="block w-full text-center text-[#007580] hover:underline font-semibold">
+                                                    View Liked Products
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div> {/* like */}
+
                                 {isLoggedIn && (
                                     <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex" href='/dashboard'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>

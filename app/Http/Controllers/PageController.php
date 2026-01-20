@@ -45,12 +45,13 @@ class PageController
 
 
         $brand =  Brand::get(); //is_active
-
+        $user = Auth::user()?->load('likedProducts');
         return Inertia::render('Landing', [
             'banners' => $banners,
             'featured' => $featured,
             'categories' => $categories,
             'brand' => $brand,
+            'user' => $user
         ]);
     }
 

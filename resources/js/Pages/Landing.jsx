@@ -14,8 +14,9 @@ export default function Landing({
     featured = [],
     categories = [],
     brand = [],
+    user
 }) {
-
+    console.log(user)
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const productSwiperRef = useRef(null);
     const shopSwiper1Ref = useRef(null);
@@ -69,6 +70,16 @@ export default function Landing({
     const goNext = () => goToSlide(currentBannerIndex + 1);
     const goPrevious = () => goToSlide(currentBannerIndex - 1);
 
+    const likedProductIds = useMemo(() => {
+        if (!user || !Array.isArray(user?.liked_products)) {
+            return [];
+        }
+
+        return user.liked_products
+            .map((likedProduct) => likedProduct?.id)
+            .filter((id) => id !== null && id !== undefined);
+    }, [user]);
+
     // Transform featured products only based on real data (NO FALLBACK PRODUCTS)
     const transformFeaturedProduct = (product, index) => {
         const imagePath = product.images?.[0]?.image_path;
@@ -100,13 +111,16 @@ export default function Landing({
             slug = `product-${product.id ?? index}`;
         }
 
+        const id = product.id ?? index;
+
         return {
-            id: product.id ?? index,
+            id,
             title: product.title ?? `Product ${index + 1}`,
             price: basePrice,
             image,
             badge: product.badge ?? badge,
             slug,
+            isLiked: likedProductIds.includes(id),
         };
     };
 
