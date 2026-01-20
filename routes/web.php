@@ -110,7 +110,7 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
@@ -159,6 +159,12 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
+
+        // Coupons
+        Route::get('/admin/coupons', App\Livewire\Admin\Coupons\Index::class)->name('admin.coupons.index');
+        Route::get('/admin/coupons/create', App\Livewire\Admin\Coupons\Create::class)->name('admin.coupons.create');
+        Route::get('/admin/coupons/{coupon}', App\Livewire\Admin\Coupons\Show::class)->name('admin.coupons.show');
+        Route::get('/admin/coupons/{coupon}/edit', App\Livewire\Admin\Coupons\Edit::class)->name('admin.coupons.edit');
 
         // Pricing Formulas
         Route::get('/admin/pricing-formulas', \App\Livewire\Admin\PricingFormulas\Index::class)->name('admin.pricing-formulas.index');

@@ -198,6 +198,11 @@
                         {{ __('Transactions') }}
                     </flux:navlist.item>
                     {{-- @endcan --}}
+                    <flux:navlist.item icon="ticket" :href="route('admin.coupons.index')"
+                        :current="request()->routeIs('admin.coupons.*')" wire:navigate
+                        :class="request()->routeIs('admin.coupons.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Coupons') }}
+                    </flux:navlist.item>
                     <flux:navlist.item icon="clipboard-document-list" :href="route('admin.product-requests.index')"
                         :current="request()->routeIs('admin.product-requests.*')" wire:navigate
                         :class="request()->routeIs('admin.product-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
@@ -259,11 +264,10 @@
         <flux:spacer />
 
         <flux:navlist variant="outline">
-            <flux:navlist.item icon="folder-git-2" href="/"
-                 class="custom-navitem">
+            <flux:navlist.item icon="folder-git-2" href="/" class="custom-navitem">
                 {{ __('Landing Page') }}
             </flux:navlist.item>
-            
+
         </flux:navlist>
 
         <!-- User Menu -->
