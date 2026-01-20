@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             'logged' => $user && !$user->hasRole('guest'),
             'is_guest' => $user && $user->hasRole('guest'),
             'auth' => $user ? $user->load(['customer.company', 'roles']) : null,
+            'productCategories' => \App\Models\ProductCategory::with('children')->whereNull('parent_id')->get(),
         ];
     }
 }

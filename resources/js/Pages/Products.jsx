@@ -100,6 +100,35 @@ export default function Products({ products = [], baseProducts = [], productCate
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const catId = params.get('category');
+        const subId = params.get('subcategory');
+
+        if (catId) {
+            const id = parseInt(catId);
+            if (!isNaN(id)) {
+                setSelectedCategories([id]);
+            }
+        }
+
+        if (subId) {
+            const id = parseInt(subId);
+            if (!isNaN(id)) {
+                setSelectedSubCategories([id]);
+                // Automatically expand the parent category if it's a subcategory
+                if (Array.isArray(productCategory)) {
+                    const parent = productCategory.find(cat =>
+                        cat.children && cat.children.some(child => child.id === id)
+                    );
+                    if (parent && !expandedCategories.includes(parent.id)) {
+                        setExpandedCategories(prev => [...prev, parent.id]);
+                    }
+                }
+            }
+        }
+    }, [productCategory]);
+
     const featuredProducts = useMemo(
         () =>
             allProducts.slice(0, 8).map((product) => ({
@@ -517,17 +546,17 @@ export default function Products({ products = [], baseProducts = [], productCate
                                             <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                                 {visibleProducts.map((product) => (
 
-                                                        <ProductListingCard
-                                                            key={product.id}
-                                                            image={product.image}
-                                                            name={product.title}
-                                                            brand={product.brand_name}
-                                                            series={product.series}
-                                                            badge={product.badge}
-                                                            priceLabel={formatPrice(product.price)}
-                                                            slug={product.slug}
-                                                            showPricing={product.is_sign_up_for_pricing && !logged}
-                                                        />
+                                                    <ProductListingCard
+                                                        key={product.id}
+                                                        image={product.image}
+                                                        name={product.title}
+                                                        brand={product.brand_name}
+                                                        series={product.series}
+                                                        badge={product.badge}
+                                                        priceLabel={formatPrice(product.price)}
+                                                        slug={product.slug}
+                                                        showPricing={product.is_sign_up_for_pricing && !logged}
+                                                    />
 
 
                                                 ))}
