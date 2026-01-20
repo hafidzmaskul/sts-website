@@ -123,6 +123,7 @@ export default function FeaturedProductsSection({
                             badge={product.badge}
                             id={product.id}
                             slug={product.slug}
+                            initialLiked={product.isLiked}
                         />
                     </SwiperSlide>
                 ))}
