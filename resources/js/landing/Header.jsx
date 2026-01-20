@@ -23,6 +23,8 @@ export default function Header() {
         setSideNavOpen(false); // Close sidebar if open
     };
 
+
+
     // fetch cart count and list, and listen for cart changes
     useEffect(() => {
         const fetchCart = async () => {
@@ -72,16 +74,14 @@ export default function Header() {
         return () => window.removeEventListener('cart:changed', handler);
     }, []);
 
-    // Get logged status from shared Inertia props
-    const { logged: isLoggedIn = false, is_guest: isGuest = false } = usePage().props;
+    // Get logged status and categories from shared Inertia props
+    const {
+        logged: isLoggedIn = false,
+        is_guest: isGuest = false,
+        productCategories = []
+    } = usePage().props;
 
-    // List categories for dropdown (expand as needed)
-    const categories = [
-        'Electronics',
-        'Fashion',
-        'Food',
-        'Books'
-    ];
+    // List categories for dropdown (removed hardcoded list)
 
     // List pages for the dropdown
     const pages = [
@@ -94,8 +94,8 @@ export default function Header() {
 
     // Become Customer dropdown menu
     const becomeCustomerMenu = [
-        { href: '/sign-up-customer', label: 'Sign Up Customer' },
-        { href: '/sign-up-credit-facility', label: 'Sign Up Credit Facility' }
+        { href: '/sign-up-customer', label: 'Sign up as Trade' },
+        { href: '/sign-up-credit-facility', label: 'Sign up as Credit facilitator' }
     ];
 
     const categoriesRef = useRef(null);
@@ -201,22 +201,59 @@ export default function Header() {
                     </svg>
                 </button>
                 {showCategories && (
-                    <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg z-50 rounded">
-                        {categories.map(cat => (
-                            <a
-                                key={cat}
-                                href={`/category/${cat.toLowerCase()}`}
-                                className="block px-4 py-2 hover:bg-gray-100"
-                                onClick={() => setShowCategories(false)}
-                            >
-                                {cat}
-                            </a>
-                        ))}
+                    <div className="absolute left-0 mt-2 w-64 bg-white border border-gray-200 shadow-xl z-50 rounded-xl overflow-visible py-2">
+                        {Array.isArray(productCategories) && productCategories.length > 0 ? (
+                            productCategories.map((category) => (
+                                <div key={category.id} className="group relative px-2">
+                                    <div className="flex items-center justify-between w-full rounded-lg hover:bg-gray-100 transition-colors">
+                                        <button
+                                            onClick={() => {
+                                                router.get('/products', { category: category.id });
+                                                setShowCategories(false);
+                                            }}
+                                            className="flex-1 px-3 py-2.5 text-left text-sm font-medium text-gray-700"
+                                        >
+                                            {category.name}
+                                        </button>
+                                        {category.children && category.children.length > 0 && (
+                                            <div className="pr-3 text-gray-400">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Children (subcategories) on hover */}
+                                    {category.children && category.children.length > 0 && (
+                                        <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute left-full top-0 w-64 bg-white border border-gray-200 shadow-xl rounded-xl py-2 ml-0 transition-all duration-200 z-[60]">
+                                            {category.children.map((child) => (
+                                                <div key={child.id} className="px-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            router.get('/products', { subcategory: child.id });
+                                                            setShowCategories(false);
+                                                        }}
+                                                        className="block w-full px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-50 hover:text-[#0079C2] rounded-lg transition-colors"
+                                                    >
+                                                        {child.name}
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="px-4 py-3 text-sm text-gray-500 italic">
+                                No categories available
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
             <a href="/" className="text-[#007580]">Home</a>
-            <a href="/products" className="text-[#636270]">Product</a>
+            <a href="/products" className="text-[#636270]">Products</a>
             {/* --- Pages Dropdown Desktop --- */}
             <div className="relative" ref={pagesRef}>
                 <button
@@ -357,12 +394,7 @@ export default function Header() {
                                 >
                                     Login
                                 </a>
-                                <a
-                                    href="/sign-up"
-                                    className="bg-white border border-[#0079C2] text-[#0079C2] hover:bg-[#0079C2] hover:text-white px-4 py-2 rounded-xl font-semibold transition"
-                                >
-                                    Sign Up
-                                </a>
+
                             </>
                         )}
                         {(isLoggedIn || isGuest) && (
@@ -425,59 +457,61 @@ export default function Header() {
                                         </div>
                                     )}
                                 </div>
-                                <div
-                                    className="relative hidden md:flex"
-                                    ref={likedRef}
-                                    onMouseEnter={() => setShowLikedDropdown(true)}
-                                    onMouseLeave={() => setShowLikedDropdown(false)}
-                                >
-                                    <a href="/liked-products" className="bg-white rounded-xl p-2 md:p-3 flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
-                                    </a>
-                                    {showLikedDropdown && (
-                                        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
-                                            <div className="py-2">
-                                                {likedProducts && likedProducts.length > 0 ? (
-                                                    likedProducts.map((item) => (
-                                                        <a
-                                                            key={item.id}
-                                                            href={item.slug ? `/products/${item.slug}` : '#'}
-                                                            className="flex items-center px-4 py-2 border-b last:border-b-0 hover:bg-gray-50"
-                                                        >
-                                                            {item.image ? (
-                                                                <img
-                                                                    src={item.image}
-                                                                    alt={item.title}
-                                                                    className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
-                                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb" />
-                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
-                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
-                                                                    </svg>
+                                {isLoggedIn && !isGuest && (
+                                    <div
+                                        className="relative hidden md:flex"
+                                        ref={likedRef}
+                                        onMouseEnter={() => setShowLikedDropdown(true)}
+                                        onMouseLeave={() => setShowLikedDropdown(false)}
+                                    >
+                                        <a href="/liked-products" className="bg-white rounded-xl p-2 md:p-3 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
+                                        </a>
+                                        {showLikedDropdown && (
+                                            <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
+                                                <div className="py-2">
+                                                    {likedProducts && likedProducts.length > 0 ? (
+                                                        likedProducts.map((item) => (
+                                                            <a
+                                                                key={item.id}
+                                                                href={item.slug ? `/products/${item.slug}` : '#'}
+                                                                className="flex items-center px-4 py-2 border-b last:border-b-0 hover:bg-gray-50"
+                                                            >
+                                                                {item.image ? (
+                                                                    <img
+                                                                        src={item.image}
+                                                                        alt={item.title}
+                                                                        className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
+                                                                    />
+                                                                ) : (
+                                                                    <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
+                                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                            <rect width="24" height="24" rx="4" fill="#e5e7eb" />
+                                                                            <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                                                                            <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
+                                                                        </svg>
+                                                                    </div>
+                                                                )}
+                                                                <div className="flex-1">
+                                                                    <span className="font-medium text-sm truncate max-w-[160px]">{item.title}</span>
                                                                 </div>
-                                                            )}
-                                                            <div className="flex-1">
-                                                                <span className="font-medium text-sm truncate max-w-[160px]">{item.title}</span>
-                                                            </div>
-                                                        </a>
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center text-gray-500 py-8">
-                                                        No liked products
-                                                    </div>
-                                                )}
+                                                            </a>
+                                                        ))
+                                                    ) : (
+                                                        <div className="text-center text-gray-500 py-8">
+                                                            No liked products
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="border-t px-4 py-2">
+                                                    <a href="/liked-products" className="block w-full text-center text-[#007580] hover:underline font-semibold">
+                                                        View Liked Products
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div className="border-t px-4 py-2">
-                                                <a href="/liked-products" className="block w-full text-center text-[#007580] hover:underline font-semibold">
-                                                    View Liked Products
-                                                </a>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div> {/* like */}
+                                        )}
+                                    </div>
+                                )} {/* like */}
 
                                 {isLoggedIn && (
                                     <a className="bg-white rounded-xl p-2 md:p-3 hidden md:flex" href='/dashboard'>
@@ -569,20 +603,44 @@ export default function Header() {
                                 </svg>
                             </button>
                             {showCategories && (
-                                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg z-50 rounded">
-                                    {categories.map(cat => (
-                                        <a
-                                            key={cat}
-                                            href={`/category/${cat.toLowerCase()}`}
-                                            className="block px-4 py-2 hover:bg-gray-100"
-                                            onClick={() => {
-                                                setShowCategories(false);
-                                                setSideNavOpen(false);
-                                            }}
-                                        >
-                                            {cat}
-                                        </a>
-                                    ))}
+                                <div className="mt-2 space-y-1 bg-gray-50 rounded-xl p-2 border border-gray-100">
+                                    {Array.isArray(productCategories) && productCategories.length > 0 ? (
+                                        productCategories.map((category) => (
+                                            <div key={category.id} className="space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <button
+                                                        onClick={() => {
+                                                            router.get('/products', { category: category.id });
+                                                            setShowCategories(false);
+                                                            setSideNavOpen(false);
+                                                        }}
+                                                        className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm rounded-lg transition-all"
+                                                    >
+                                                        {category.name}
+                                                    </button>
+                                                </div>
+                                                {category.children && category.children.length > 0 && (
+                                                    <div className="ml-4 pl-2 border-l border-gray-200 space-y-1">
+                                                        {category.children.map((child) => (
+                                                            <button
+                                                                key={child.id}
+                                                                onClick={() => {
+                                                                    router.get('/products', { subcategory: child.id });
+                                                                    setShowCategories(false);
+                                                                    setSideNavOpen(false);
+                                                                }}
+                                                                className="block w-full px-4 py-1.5 text-left text-xs text-gray-500 hover:text-[#0079C2]"
+                                                            >
+                                                                {child.name}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="px-4 py-2 text-xs text-gray-400 italic">No categories</div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -592,7 +650,7 @@ export default function Header() {
                     </li>
 
                     <li>
-                        <a href="/products" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>Product</a>
+                        <a href="/products" className="block py-2 px-4 rounded hover:bg-gray-100 text-[#636270]" onClick={() => setSideNavOpen(false)}>Products</a>
                     </li>
                     {/* --- Pages Dropdown Mobile --- */}
                     <li className="relative">
@@ -680,13 +738,7 @@ export default function Header() {
                             >
                                 Login
                             </a>
-                            <a
-                                href="/sign-up"
-                                className="bg-white border border-[#0079C2] text-[#0079C2] hover:bg-[#0079C2] hover:text-white px-4 py-2 rounded-xl font-semibold transition w-full text-center"
-                                style={{ display: 'block' }}
-                            >
-                                Sign Up
-                            </a>
+
                         </>
                     )}
                     {(isLoggedIn || isGuest) && (
@@ -698,9 +750,11 @@ export default function Header() {
                                     {cartCount}
                                 </div>
                             </a>
-                            <a className="bg-white rounded-xl p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
-                            </a>
+                            {isLoggedIn && !isGuest && (
+                                <a className="bg-white rounded-xl p-2" href="/liked-products">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.23c-1.733-3.924-5.764-4.273-7.641-2.562c-1.529 1.373-2.263 4.665-.867 7.695C5.9 17.573 12 20.309 12 20.309s6.101-2.736 8.508-7.946c1.396-3.03.662-6.322-.867-7.695C17.764 2.957 13.733 3.306 12 7.229"></path></svg>
+                                </a>
+                            )}
                             {isLoggedIn && !isGuest && (
                                 <a className="bg-white rounded-xl p-2" href='/dashboard'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>

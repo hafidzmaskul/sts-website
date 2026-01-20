@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import { usePage } from '@inertiajs/react';
 
 const formatPrice = (price) => {
     if (price === null || price === undefined) {
@@ -38,6 +39,7 @@ export default function ProductCard({
     slug,
     initialLiked = false,
 }) {
+    const { logged } = usePage().props;
     const badgeBgColor = getBadgeBgColor(badge);
     const imageRef = useRef(null);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -97,7 +99,7 @@ export default function ProductCard({
     };
 
     const handleToggleLike = async () => {
-        if (!id || isTogglingLike) {
+        if (!id || isTogglingLike || !logged) {
             return;
         }
 
@@ -141,44 +143,45 @@ export default function ProductCard({
                 {badge}
             </div>
 
-    {/* like */}
-            <button
-                type="button"
-                onClick={handleToggleLike}
-                disabled={isTogglingLike}
-                className={`absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 group ${
-                    isTogglingLike ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    className={`block ${liked ? 'hidden' : 'group-hover:hidden'}`}
+            {/* like */}
+            {logged && (
+                <button
+                    type="button"
+                    onClick={handleToggleLike}
+                    disabled={isTogglingLike}
+                    className={`absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300 group ${isTogglingLike ? 'opacity-60 cursor-not-allowed' : ''
+                        }`}
                 >
-                    <path
-                        fill="none"
-                        stroke="#0079C2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19.5 12.572L12 20l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    className={liked ? 'block' : 'hidden group-hover:block'}
-                >
-                    <path
-                        fill="#0079C2"
-                        d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037.033l.034-.03a6 6 0 0 1 4.733-1.44l.246.036a6 6 0 0 1 3.364 10.008l-.18.185l-.048.041l-7.45 7.379a1 1 0 0 1-1.313.082l-.094-.082l-7.493-7.422A6 6 0 0 1 6.979 3.074"
-                    />
-                </svg>
-            </button>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                        className={`block ${liked ? 'hidden' : 'group-hover:hidden'}`}
+                    >
+                        <path
+                            fill="none"
+                            stroke="#0079C2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19.5 12.572L12 20l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"
+                        />
+                    </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                        className={liked ? 'block' : 'hidden group-hover:block'}
+                    >
+                        <path
+                            fill="#0079C2"
+                            d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037.033l.034-.03a6 6 0 0 1 4.733-1.44l.246.036a6 6 0 0 1 3.364 10.008l-.18.185l-.048.041l-7.45 7.379a1 1 0 0 1-1.313.082l-.094-.082l-7.493-7.422A6 6 0 0 1 6.979 3.074"
+                        />
+                    </svg>
+                </button>
+            )}
             <a href={`/products/${slug}`}>
                 <div className="relative overflow-hidden rounded-[22px] ">
                     <img

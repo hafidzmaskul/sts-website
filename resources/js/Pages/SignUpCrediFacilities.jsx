@@ -70,7 +70,7 @@ export default function BecomeCustomer() {
         address: '',
         trading_address: '',
         phone: '',
-        fax: '',
+        // fax: '',  // Removed Fax from formData state
         activities_description: '',
         purchasing_contact_name: '',
         purchasing_contact_phone: '',
@@ -169,7 +169,7 @@ export default function BecomeCustomer() {
                     address: '',
                     trading_address: '',
                     phone: '',
-                    fax: '',
+                    // fax: '', // Remove reset fax
                     activities_description: '',
                     purchasing_contact_name: '',
                     purchasing_contact_phone: '',
@@ -355,7 +355,7 @@ export default function BecomeCustomer() {
                                             </div>
                                         </div>
 
-                                        {/* Telephone No, Fax No (inline) */}
+                                        {/* Telephone No (removed Fax No), use only phone */}
                                         <div className="flex flex-col md:flex-row gap-6">
                                             <div className="flex-1">
                                                 <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
@@ -369,18 +369,7 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.phone && <div className="text-xs text-red-500 mt-1">{errors.phone}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Fax No
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.fax}
-                                                    onChange={e => handleChange('fax', e.target.value)}
-                                                />
-                                                {errors.fax && <div className="text-xs text-red-500 mt-1">{errors.fax}</div>}
-                                            </div>
+                                            {/* Deleted Fax input and error, use only one column */}
                                         </div>
 
                                         {/* Main Activities (not inline) */}

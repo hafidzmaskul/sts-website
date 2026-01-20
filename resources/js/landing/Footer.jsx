@@ -174,7 +174,7 @@ export default function Footer() {
                         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-2">
                             <input
                                 type="text"
-                                placeholder="Your Name"
+                                placeholder="Your Email"
                                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none text-base"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
@@ -192,7 +192,7 @@ export default function Footer() {
                         {error && <div className="text-red-500 text-sm">{error}</div>}
                         {message && <div className="text-green-600 text-sm">{message}</div>}
                     </form>
-                    <p className="mt-4 text-sm text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt erat enim.</p>
+                    {/* <p className="mt-4 text-sm text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt erat enim.</p> */}
                 </div>
             </div>
             {/* Baris 2 */}
