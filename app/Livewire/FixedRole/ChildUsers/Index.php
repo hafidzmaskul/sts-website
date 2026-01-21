@@ -7,6 +7,9 @@ use Livewire\WithPagination;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewStaffUserCredentials;
 
 class Index extends Component
 {
@@ -34,7 +37,7 @@ class Index extends Component
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->editingId),
             ],
-            'password' => $this->editingId ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
+            'password' => 'nullable|min:8|confirmed',
         ];
     }
 
@@ -75,10 +78,12 @@ class Index extends Component
             $user->save();
             $this->dispatch('notify', type: 'success', message: 'User updated.');
         } else {
+            $generatedPassword = Str::random(10);
+
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
-                'password' => Hash::make($this->password),
+                'password' => Hash::make($generatedPassword),
                 'parent_id' => auth()->id(),
             ]);
 
@@ -105,7 +110,10 @@ class Index extends Component
                 ]);
             }
 
-            $this->dispatch('notify', type: 'success', message: 'Staff user created.');
+            // Send credentials via email
+            Mail::to($this->email)->send(new NewStaffUserCredentials($user, $generatedPassword));
+
+            $this->dispatch('notify', type: 'success', message: 'Staff user created. Check email for credentials.');
         }
 
         $this->resetForm();

@@ -78,11 +78,13 @@
                 </flux:navlist.item>
 
                 @if(auth()->user()->hasAnyRole(['trade account', 'credit facilities account']))
-                    <flux:navlist.item icon="users" :href="route('dashboard.users.index')"
-                        :current="request()->routeIs('dashboard.users.*')" wire:navigate
-                        :class="request()->routeIs('dashboard.users.*') ? 'custom-navitem-active' : 'custom-navitem'">
-                        {{ __('Manage Users') }}
-                    </flux:navlist.item>
+                    @if(auth()->user()->customer?->account_level !== 'staff')
+                        <flux:navlist.item icon="users" :href="route('dashboard.users.index')"
+                            :current="request()->routeIs('dashboard.users.*')" wire:navigate
+                            :class="request()->routeIs('dashboard.users.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Manage Users') }}
+                        </flux:navlist.item>
+                    @endif
 
                     <flux:navlist.item icon="banknotes" :href="route('dashboard.transactions.index')"
                         :current="request()->routeIs('dashboard.transactions.*')" wire:navigate
