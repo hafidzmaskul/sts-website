@@ -130,9 +130,9 @@ export default function Cart() {
             <Head title="Cart" />
             <Header />
 
-            <main className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10">
-                <div className="max-w-4xl w-full mx-auto bg-white p-6 rounded-lg">
-                    <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
+            <main className="flex-1 container mx-auto px-2 sm:px-4 md:px-6 lg:px-20 py-6 sm:py-8 md:py-10">
+                <div className="max-w-4xl w-full mx-auto bg-white p-3 sm:p-4 md:p-6 rounded-lg">
+                    <h1 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4">Your Cart</h1>
 
                     {isLoading ? (
                         <div className="text-center py-10">Loading...</div>
@@ -144,32 +144,79 @@ export default function Cart() {
                     ) : (
                         <div className="space-y-4">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex items-center gap-4 py-4 border-b">
-                                    <img src={item.product?.images?.[0]?.image_path ? (item.product.images[0].image_path.startsWith('/') ? item.product.images[0].image_path : `/storage/${item.product.images[0].image_path}`) : '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'} alt={item.product?.title} className="w-20 h-20 object-cover rounded" />
+                                <div key={item.id} className="flex flex-col sm:flex-row sm:items-center gap-4 py-4 border-b">
+                                    <div className="flex items-center sm:block gap-4 sm:gap-0">
+                                        <img
+                                            src={item.product?.images?.[0]?.image_path
+                                                ? (item.product.images[0].image_path.startsWith('/')
+                                                    ? item.product.images[0].image_path
+                                                    : `/storage/${item.product.images[0].image_path}`)
+                                                : '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'}
+                                            alt={item.product?.title}
+                                            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded mb-2 sm:mb-0"
+                                        />
+                                    </div>
                                     <div className="flex-1">
-                                        <div className="font-medium text-[#232323]">{item.product?.title}</div>
+                                        <div className="font-medium text-[#232323] text-base sm:text-lg">{item.product?.title}</div>
                                         <div className="text-sm text-gray-600">{formatPrice(item.product?.base_price)}</div>
+                                        <div className="mt-3 flex items-center gap-2 sm:hidden">
+                                            <button
+                                                onClick={() => decrease(item)}
+                                                className="px-3 py-1 bg-gray-200 rounded font-bold hover:bg-gray-300"
+                                                disabled={loadingIds.includes(item.id)}
+                                            >-</button>
+                                            <div className="px-4">{item.quantity}</div>
+                                            <button
+                                                onClick={() => increase(item)}
+                                                className="px-3 py-1 bg-gray-200 rounded font-bold hover:bg-gray-300"
+                                                disabled={loadingIds.includes(item.id)}
+                                            >+</button>
+                                        </div>
+                                        <div className="mt-1 text-xs sm:hidden">
+                                            <span className="font-medium">Total: </span>
+                                            {formatPrice(item.product?.base_price * item.quantity)}
+                                        </div>
+                                        <div className="mt-2 sm:hidden">
+                                            <button
+                                                onClick={() => removeItem(item)}
+                                                className="text-xs text-red-500 underline"
+                                                disabled={loadingIds.includes(item.id)}
+                                            >Remove</button>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button onClick={() => decrease(item)} className="px-3 py-1 bg-gray-200 rounded">-</button>
-                                        <div className="px-4">{item.quantity}</div>
-                                        <button onClick={() => increase(item)} className="px-3 py-1 bg-gray-200 rounded">+</button>
-                                    </div>
-                                    <div className="w-28 text-right">
-                                        <div className="font-medium">{formatPrice(item.product?.base_price * item.quantity)}</div>
-                                        <button onClick={() => removeItem(item)} className="text-sm text-red-500 mt-2">Remove</button>
+                                    {/* Controls for non-mobile */}
+                                    <div className="hidden sm:flex flex-col items-center w-32 md:w-36">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <button
+                                                onClick={() => decrease(item)}
+                                                className="px-3 py-1 bg-gray-200 rounded font-bold hover:bg-gray-300"
+                                                disabled={loadingIds.includes(item.id)}
+                                            >-</button>
+                                            <div className="px-4">{item.quantity}</div>
+                                            <button
+                                                onClick={() => increase(item)}
+                                                className="px-3 py-1 bg-gray-200 rounded font-bold hover:bg-gray-300"
+                                                disabled={loadingIds.includes(item.id)}
+                                            >+</button>
+                                        </div>
+                                        <div className="font-medium text-right text-sm">{formatPrice(item.product?.base_price * item.quantity)}</div>
+                                        <button
+                                            onClick={() => removeItem(item)}
+                                            className="text-xs text-red-500 mt-2 hover:underline"
+                                            disabled={loadingIds.includes(item.id)}
+                                        >Remove</button>
                                     </div>
                                 </div>
                             ))}
 
-                            <div className="flex justify-between items-center pt-4">
+                            <div className="flex flex-col sm:flex-row justify-between items-center pt-4 gap-2">
                                 <div className="text-lg font-semibold">Total</div>
                                 <div className="text-xl font-bold">{formatPrice(totalAmount)}</div>
                             </div>
-                            <div className="mt-6 flex justify-end">
+                            <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
                                 <Link
                                     href="/checkout"
-                                    className="bg-[#0079C2] text-white px-6 py-3 rounded font-medium hover:bg-[#00629e] transition-colors shadow-sm"
+                                    className="bg-[#0079C2] text-white w-full sm:w-auto text-center px-6 py-3 rounded font-medium hover:bg-[#00629e] transition-colors shadow-sm"
                                 >
                                     Proceed to Checkout
                                 </Link>

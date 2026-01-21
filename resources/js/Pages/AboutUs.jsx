@@ -51,32 +51,33 @@ const aboutStatsData = [
 ];
 
 export default function AboutUs({ teamMembers = [] }) {
-    // Tidak perlu grouping manual: gunakan CSS grid untuk 4 kolom responsif
     return (
         <div className="min-h-screen flex flex-col">
             <Head title="About Us" />
             <Header />
 
             <main className="">
-
                 <HeroSection
                     bgUrl="/assets/bg-about.jpg"
                     title="About Us"
                     text="The leading security and low-voltage distributor and a trusted name among installers and dealers"
                     textColor="text-white"
                 />
-                <section className='container md:px-20 px-20 mx-auto h-[50vh] flex justify-center items-center'>
-                    <p className='font-nunito-sans font-medium text-2xl text-center  '>
+                {/* Main text section: Responsive for mobile, tablet, desktop */}
+                <section className="container mx-auto flex justify-center items-center py-12 px-4 sm:py-12 sm:px-6 md:px-10 lg:px-20">
+                    <p className="font-nunito-sans font-medium text-lg xs:text-xl sm:text-2xl text-center leading-relaxed">
                         STS is the leading global wholesale distributor of security, AV and low-voltage products with more than
                         25 years in the business. Our extensive global footprint reaches more than 200 locations in 17 countries
                         and is combined with our strategic supplier relationships and focus on customer service to serve you with
-                        one of the widest ranges of products and services of any low-voltage distributor.</p>
+                        one of the widest ranges of products and services of any low-voltage distributor.
+                    </p>
                 </section>
+                {/* Articles section: responsive grid */}
                 <section
                     id="articles"
-                    className="container mx-auto px-6 md:px-10 lg:px-20 py-10"
+                    className="container mx-auto py-10 px-4 sm:px-6 md:px-10 lg:px-20"
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
                         <AboutArticleCard
                             image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
                             title="Our customers"
@@ -101,11 +102,11 @@ export default function AboutUs({ teamMembers = [] }) {
                     </div>
                 </section>
 
+                {/* Stats Grid: responsive spacing and columns */}
                 <section className='bg-[#F0F2F3] py-10'>
-                    <h1 className='font-inter font-bold text-4xl text-center py-10'>By the number</h1>
-                    {/* Tanpa double loop, gunakan grid untuk membuat 4 kolom per baris */}
-                    <div className="container px-10 md:px-20 mx-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ">
+                    <h1 className="font-inter font-bold text-2xl sm:text-3xl md:text-4xl text-center py-6 sm:py-10">By the numbers</h1>
+                    <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
                             {aboutStatsData.map((item, idx) => (
                                 <AboutStatsCard
                                     key={idx}
@@ -117,39 +118,40 @@ export default function AboutUs({ teamMembers = [] }) {
                         </div>
                     </div>
                 </section>
+
+                {/* Company headlines & solutions: responsive flex and spacing */}
                 <section className='py-10'>
-                    <div className="container mx-auto px-6 md:px-10 lg:px-20 py-10">
-                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-8">
-
-                                <div className=" bg-[#0079C2] flex p-5 rounded-xl">
-                                    <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
-                                        <h2 className="font-bold text-2xl mb-2">Company Headlines</h2>
-                                        <p className="text-white text-base mb-4">Read the latest news and press releases from STS</p>
-                                        <div className="">
-                                            <button className='text-[#0079C2] text-base bg-white rounded-lg py-1 px-10'>View News</button>
-                                        </div>
-                                    </div>
-                                    <div className="w-full md:w-2/8 flex justify-center items-center">
-                                        <img src="/assets/company.svg" alt="Company" className="max-w-full h-auto" />
+                    <div className="container mx-auto py-8 px-4 sm:px-6 md:px-10 lg:px-20">
+                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                            {/* Company Headlines Card */}
+                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 sm:p-6 md:p-5 rounded-xl">
+                                <div className="w-full sm:w-3/5 flex flex-col justify-center text-white mb-4 sm:mb-0 sm:mr-5">
+                                    <h2 className="font-bold text-xl sm:text-2xl mb-2">Company Headlines</h2>
+                                    <p className="text-white text-sm sm:text-base mb-4">Read the latest news and press releases from STS</p>
+                                    <div>
+                                        <button className='text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10'>View News</button>
                                     </div>
                                 </div>
-
-                                <div className=" bg-[#0079C2] flex p-5 rounded-xl">
-                                    <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
-                                        <h2 className="font-bold text-2xl mb-2">Solutions</h2>
-                                        <p className="text-white text-base mb-4">Explore how we can help you design best-in-class systems</p>
-                                        <div className="">
-                                            <button className='text-[#0079C2] text-base bg-white rounded-lg py-1 px-10'>View News</button>
-                                        </div>
-                                    </div>
-                                    <div className="w-full md:w-2/8 flex justify-center items-center">
-                                        <img src="/assets/solution.svg" alt="Company" className="max-w-full h-auto" />
+                                <div className="w-full sm:w-2/5 flex justify-center items-center">
+                                    <img src="/assets/company.svg" alt="Company" className="max-w-[120px] sm:max-w-[140px] md:max-w-full h-auto" />
+                                </div>
+                            </div>
+                            {/* Solutions Card */}
+                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 sm:p-6 md:p-5 rounded-xl">
+                                <div className="w-full sm:w-3/5 flex flex-col justify-center text-white mb-4 sm:mb-0 sm:mr-5">
+                                    <h2 className="font-bold text-xl sm:text-2xl mb-2">Solutions</h2>
+                                    <p className="text-white text-sm sm:text-base mb-4">Explore how we can help you design best-in-class systems</p>
+                                    <div>
+                                        <button className='text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10'>View News</button>
                                     </div>
                                 </div>
+                                <div className="w-full sm:w-2/5 flex justify-center items-center">
+                                    <img src="/assets/solution.svg" alt="Solutions" className="max-w-[120px] sm:max-w-[140px] md:max-w-full h-auto" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
-
             </main>
 
             <Footer />

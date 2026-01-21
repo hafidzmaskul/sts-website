@@ -51,31 +51,31 @@ const aboutStatsData = [
 ];
 
 export default function AboutUs({ teamMembers = [] }) {
-    // Tidak perlu grouping manual: gunakan CSS grid untuk 4 kolom responsif
     return (
         <div className="min-h-screen flex flex-col">
             <Head title="About Us" />
             <Header />
 
-            <main className="">
-
+            <main>
                 <HeroSection
                     bgUrl="/assets/bg-training.png"
                     title="Training and Events"
                     text="We offer a variety of resources to help you stay up-to-date on what you need to know in the industry."
                     textColor="text-white"
-                    textSize='text-6xl'
+                    textSize="text-4xl md:text-6xl"
                 />
-                <section className='container md:px-20 px-20 mx-auto h-[50vh] flex justify-center items-center'>
-                    <p className='font-nunito-sans font-medium text-2xl text-center  '>
-                    Grow your business with STS’s learning opportunities. Sign up for a webinar, attend a branch event or stop by an STS Expo near you to gain industry knowledge and learn about new products and solutions. Our in-person events offer plenty of opportunities for networking with others in your industry, and our digital training resources provide you the tools you need to sharpen your skills from anywhere.
+                {/* Section: Intro Text */}
+                <section className="container mx-auto px-4 md:px-12 lg:px-20 py-10 flex items-center min-h-[35vh]">
+                    <p className="font-nunito-sans font-medium text-lg md:text-2xl text-center">
+                        Grow your business with STS’s learning opportunities. Sign up for a webinar, attend a branch event or stop by an STS Expo near you to gain industry knowledge and learn about new products and solutions. Our in-person events offer plenty of opportunities for networking with others in your industry, and our digital training resources provide you the tools you need to sharpen your skills from anywhere.
                     </p>
                 </section>
+                {/* Section: Articles (Cards Grid) */}
                 <section
                     id="articles"
-                    className="container mx-auto px-6 md:px-10 lg:px-20 py-10"
+                    className="container mx-auto px-4 md:px-10 lg:px-20 py-10"
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
                         <AboutArticleCard
                             image="/assets/dummmy/4da057811344b5b24e0cebd05a110367acce6d17.jpg"
                             title="Branch Events, Expos and Tradeshows"
@@ -99,12 +99,11 @@ export default function AboutUs({ teamMembers = [] }) {
                         />
                     </div>
                 </section>
-
-                <section className='bg-[#F0F2F3] py-10'>
-                    <h1 className='font-inter font-bold text-4xl text-center py-10'>By the number</h1>
-                    {/* Tanpa double loop, gunakan grid untuk membuat 4 kolom per baris */}
-                    <div className="container px-10 md:px-20 mx-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ">
+                {/* Section: By the Numbers */}
+                <section className="bg-[#F0F2F3] py-10">
+                    <h1 className="font-inter font-bold text-2xl md:text-4xl text-center py-6 md:py-10">By the number</h1>
+                    <div className="container px-4 md:px-10 lg:px-20 mx-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
                             {aboutStatsData.map((item, idx) => (
                                 <AboutStatsCard
                                     key={idx}
@@ -116,39 +115,47 @@ export default function AboutUs({ teamMembers = [] }) {
                         </div>
                     </div>
                 </section>
-                <section className='py-10'>
-                    <div className="container mx-auto px-6 md:px-10 lg:px-20 py-10">
-                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-8">
-
-                                <div className=" bg-[#0079C2] flex p-5 rounded-xl">
-                                    <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
-                                        <h2 className="font-bold text-2xl mb-2">Company Headlines</h2>
-                                        <p className="text-white text-base mb-4">Read the latest news and press releases from STS</p>
-                                        <div className="">
-                                            <button className='text-[#0079C2] text-base bg-white rounded-lg py-1 px-10'>View News</button>
-                                        </div>
-                                    </div>
-                                    <div className="w-full md:w-2/8 flex justify-center items-center">
-                                        <img src="/assets/company.svg" alt="Company" className="max-w-full h-auto" />
-                                    </div>
-                                </div>
-
-                                <div className=" bg-[#0079C2] flex p-5 rounded-xl">
-                                    <div className="w-full md:w-6/8 flex flex-col justify-center text-white">
-                                        <h2 className="font-bold text-2xl mb-2">Solutions</h2>
-                                        <p className="text-white text-base mb-4">Explore how we can help you design best-in-class systems</p>
-                                        <div className="">
-                                            <button className='text-[#0079C2] text-base bg-white rounded-lg py-1 px-10'>View News</button>
-                                        </div>
-                                    </div>
-                                    <div className="w-full md:w-2/8 flex justify-center items-center">
-                                        <img src="/assets/solution.svg" alt="Company" className="max-w-full h-auto" />
+                {/* Section: Company headlines and Solutions */}
+                <section className="py-10">
+                    <div className="container mx-auto px-4 md:px-10 lg:px-20 py-10">
+                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                            {/* Card 1 */}
+                            <div className="bg-[#0079C2] flex flex-col md:flex-row items-center p-5 rounded-xl gap-4 md:gap-0">
+                                <div className="w-full md:w-3/4 flex flex-col justify-center text-white">
+                                    <h2 className="font-bold text-xl md:text-2xl mb-1 md:mb-2">Company Headlines</h2>
+                                    <p className="text-white text-sm md:text-base mb-2 md:mb-4">
+                                        Read the latest news and press releases from STS
+                                    </p>
+                                    <div>
+                                        <button className="text-[#0079C2] text-sm md:text-base bg-white rounded-lg py-1 px-5 md:px-10">
+                                            View News
+                                        </button>
                                     </div>
                                 </div>
+                                <div className="w-full md:w-1/4 flex justify-center items-center">
+                                    <img src="/assets/company.svg" alt="Company" className="max-w-[120px] h-auto md:max-w-full" />
+                                </div>
+                            </div>
+                            {/* Card 2 */}
+                            <div className="bg-[#0079C2] flex flex-col md:flex-row items-center p-5 rounded-xl gap-4 md:gap-0">
+                                <div className="w-full md:w-3/4 flex flex-col justify-center text-white">
+                                    <h2 className="font-bold text-xl md:text-2xl mb-1 md:mb-2">Solutions</h2>
+                                    <p className="text-white text-sm md:text-base mb-2 md:mb-4">
+                                        Explore how we can help you design best-in-class systems
+                                    </p>
+                                    <div>
+                                        <button className="text-[#0079C2] text-sm md:text-base bg-white rounded-lg py-1 px-5 md:px-10">
+                                            View News
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="w-full md:w-1/4 flex justify-center items-center">
+                                    <img src="/assets/solution.svg" alt="Company" className="max-w-[120px] h-auto md:max-w-full" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
-
             </main>
 
             <Footer />

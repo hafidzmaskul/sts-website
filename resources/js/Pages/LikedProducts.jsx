@@ -30,24 +30,39 @@ export default function LikedProducts() {
         <div className="min-h-screen flex flex-col bg-[#F3F3F3]">
             <Head title="Liked Products" />
             <Header />
-
-            <main className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10">
-                <div className="max-w-4xl w-full mx-auto bg-white p-6 rounded-lg">
-                    <h1 className="text-2xl font-semibold mb-4">Liked Products</h1>
-
+            <main className="flex-1 w-full px-2 xs:px-4 sm:px-6 md:px-10 lg:px-20 py-5 md:py-10">
+                <div className="max-w-4xl w-full mx-auto bg-white p-3 xs:p-4 sm:p-6 rounded-lg shadow-sm">
+                    <h1 className="text-lg xs:text-xl md:text-2xl font-semibold mb-3 xs:mb-4 text-[#232323]">Liked Products</h1>
                     {isLoading ? (
                         <div className="text-center py-10">Loading...</div>
                     ) : likedItems.length === 0 ? (
-                        <div className="text-center py-10">
-                            <p className="mb-4">You have no liked products.</p>
-                            <Link href="/products" className="text-[#0079C2] hover:underline">
+                        <div className="text-center py-8 xs:py-10">
+                            <p className="mb-4 text-sm md:text-base">You have no liked products.</p>
+                            <Link
+                                href="/products"
+                                className="text-[#0079C2] hover:underline text-sm md:text-base"
+                            >
                                 Browse products
                             </Link>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="flex flex-col divide-y divide-gray-200">
                             {likedItems.map((product) => (
-                                <div key={product.id} className="flex items-center gap-4 py-4 border-b">
+                                <div
+                                    key={product.id}
+                                    className="flex flex-col xs:flex-row items-start xs:items-center gap-3 xs:gap-4 py-3 xs:py-4"
+                                >
+                                    {/* Action pindah ke depan */}
+                                    <div className="order-2 xs:order-1 flex flex-col justify-between xs:h-20 xs:min-w-[110px] mr-0 xs:mr-4 mb-2 xs:mb-0">
+                                        {product.slug && (
+                                            <Link
+                                                href={`/products/${product.slug}`}
+                                                className="text-xs md:text-sm text-[#0079C2] hover:underline font-medium"
+                                            >
+                                                View product
+                                            </Link>
+                                        )}
+                                    </div>
                                     <img
                                         src={
                                             product.images?.[0]?.image_path
@@ -57,18 +72,12 @@ export default function LikedProducts() {
                                                 : '/assets/notfound.png'
                                         }
                                         alt={product.title}
-                                        className="w-20 h-20 object-cover rounded"
+                                        className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded flex-shrink-0 border order-1 xs:order-2"
                                     />
-                                    <div className="flex-1">
-                                        <div className="font-medium text-[#232323]">{product.title}</div>
-                                        {product.slug && (
-                                            <Link
-                                                href={`/products/${product.slug}`}
-                                                className="text-sm text-[#0079C2] hover:underline"
-                                            >
-                                                View product
-                                            </Link>
-                                        )}
+                                    <div className="flex-1 order-3">
+                                        <div className="font-medium text-sm md:text-base text-[#232323] line-clamp-2 mb-1">
+                                            {product.title}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -76,9 +85,7 @@ export default function LikedProducts() {
                     )}
                 </div>
             </main>
-
             <Footer />
         </div>
     );
 }
-

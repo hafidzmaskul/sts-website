@@ -48,7 +48,7 @@ export default function TransactionDetail({ id }) {
         return (
             <div className="min-h-screen flex flex-col bg-[#fff]">
                 <Header />
-                <main className="flex-1 container mx-auto px-6 py-10 text-center">
+                <main className="flex-1 container mx-auto px-4 py-10 text-center">
                     Loading details...
                 </main>
                 <Footer />
@@ -60,7 +60,7 @@ export default function TransactionDetail({ id }) {
         return (
             <div className="min-h-screen flex flex-col bg-[#fff]">
                 <Header />
-                <main className="flex-1 container mx-auto px-6 py-10 text-center">
+                <main className="flex-1 container mx-auto px-4 py-10 text-center">
                     <p className="text-gray-500 mb-4">Transaction not found.</p>
                     <Link href="/my-transactions" className="text-[#0079C2] hover:underline">Back to History</Link>
                 </main>
@@ -77,23 +77,23 @@ export default function TransactionDetail({ id }) {
             <Head title={`Invoice #${transaction.invoice_code || transaction.id}`} />
             <Header />
 
-            <main className="flex-1 w-full py-10 px-4 bg-white">
-                <div className="container mx-auto">
+            <main className="flex-1 w-full py-6 sm:py-8 md:py-10 px-2 sm:px-4 bg-white">
+                <div className="container mx-auto max-w-3xl md:max-w-4xl">
                     {/* Breadcrumb */}
-                    <nav className="text-xs md:text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+                    <nav className="text-xs md:text-sm text-gray-500 mb-4 md:mb-8" aria-label="Breadcrumb">
                         <ol className="flex flex-wrap items-center gap-1">
                             <li><Link href='/home' className="hover:text-[#0079C2]">Home</Link></li>
                             <li className="mx-1 text-gray-400">/</li>
                             <li><Link href='/my-transactions' className="hover:text-[#0079C2]">Transactions</Link></li>
                             <li className="mx-1 text-gray-400">/</li>
-                            <li className="text-gray-700">Invoice #{transaction.invoice_code}</li>
+                            <li className="text-gray-700 truncate max-w-[150px] sm:max-w-none">Invoice #{transaction.invoice_code}</li>
                         </ol>
                     </nav>
 
                     {/* Invoice Card Container */}
                     <div className="flex justify-center">
                         <div
-                            className="relative py-10 w-full max-w-4xl flex flex-col"
+                            className="relative py-4 sm:py-8 w-full flex flex-col"
                             style={{
                                 backgroundImage: "url('/assets/invoice-bg.png')",
                                 backgroundSize: "cover",
@@ -101,30 +101,30 @@ export default function TransactionDetail({ id }) {
                             }}
                         >
                             {/* Content */}
-                            <div className="relative z-10 p-10 flex flex-col h-full text-[#232323] font-sans">
+                            <div className="relative z-10 px-2 sm:px-4 md:p-10 flex flex-col h-full text-[#232323] font-sans">
 
                                 {/* Header */}
-                                <div className="flex justify-center items-center mb-12">
-                                    <div className="">
-                                        <h1 className="text-7xl font-bold text-[#000] mb-2">STS</h1>
-                                        <p className="text-sm text-gray-500">{transaction.invoice_code}</p>
+                                <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center mb-8 sm:mb-10 gap-4 sm:gap-0">
+                                    <div className="flex flex-col justify-center items-center text-center sm:items-start sm:text-left">
+                                        <h1 className="text-4xl sm:text-7xl font-bold text-[#000] mb-1 sm:mb-2">STS</h1>
+                                        <p className="text-xs sm:text-sm text-gray-500 break-all">{transaction.invoice_code}</p>
                                     </div>
-                                    <div className="h-full border-l border-gray-200 mx-10"></div>
-                                    <div className="text-right flex flex-col items-start space-y-1">
-                                        <span className="text-xs text-gray-400">Invoice number:</span>
-                                        <span className="text-lg font-bold text-black">{transaction.invoice_code}</span>
-                                        <span className="text-xs text-gray-400 mt-3">Issued:</span>
-                                        <span className="text-base text-black">{formatDate(transaction.created_at, 'short')}</span>
-                                        <span className="text-xs text-gray-400 mt-3">Status:</span>
-                                        <span className={`text-sm font-semibold ${transaction.status === 'paid' ? 'text-green-600' : 'text-gray-600'}`}>
+                                    <div className="hidden sm:block h-full border-l border-gray-200 mx-8"></div>
+                                    <div className="flex flex-col items-center sm:items-start text-center sm:text-right sm:ml-8 gap-1">
+                                        <span className="text-[10px] sm:text-xs text-gray-400">Invoice number:</span>
+                                        <span className="text-base sm:text-lg font-bold text-black break-all">{transaction.invoice_code}</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-400 mt-2 sm:mt-3">Issued:</span>
+                                        <span className="text-sm sm:text-base text-black">{formatDate(transaction.created_at, 'short')}</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-400 mt-2 sm:mt-3">Status:</span>
+                                        <span className={`text-xs sm:text-sm font-semibold ${transaction.status === 'paid' ? 'text-green-600' : 'text-gray-600'}`}>
                                             {transaction.status ? transaction.status.toUpperCase() : 'PENDING'}
                                         </span>
                                     </div>
                                 </div>
 
                                 {/* Bill To / Date Info */}
-                                <div className="flex flex-col md:flex-row gap-4 bg-white p-10 rounded-2xl shadow-xl mb-10">
-                                    <div className="w-full md:w-2/5 flex flex-col">
+                                <div className="flex flex-col md:flex-row gap-4 bg-white p-4 sm:p-6 md:p-10 rounded-2xl shadow-xl mb-6 md:mb-10">
+                                    <div className="w-full md:w-2/5 flex flex-col mb-4 md:mb-0">
                                         <div className="flex items-center gap-2 mb-2">
                                             <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#5FC3FF]">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -133,25 +133,25 @@ export default function TransactionDetail({ id }) {
                                             </div>
                                             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Billed To</h3>
                                         </div>
-                                        <div className="bg-[#EBEFF6] p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[170px]">
+                                        <div className="bg-[#EBEFF6] p-3 sm:p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[130px] sm:min-h-[170px]">
                                             <div className="flex items-center gap-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" className="w-6 h-6 text-[#2388FF]">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-[#2388FF]">
                                                     <path fill="currentColor" d="M6.25 7a5.75 5.75 0 1 1 11.5 0a5.75 5.75 0 0 1-11.5 0m5.548 7.261a1 1 0 0 1 .13-.011h.144q.066 0 .13.011l7.295 1.283l.038.008c1.344.31 2.788 1.163 3.069 2.82l.004.029l.114.877v.002c.264 2.009-1.329 3.47-3.21 3.47a1 1 0 0 1-.124-.01h-14.9c-1.881 0-3.475-1.462-3.21-3.472l.114-.869l.005-.03c.28-1.627 1.736-2.528 3.077-2.819l.029-.006z"></path>
                                                 </svg>
-                                                <p className="font-bold text-lg">{transaction.shipping_first_name} {transaction.shipping_last_name}</p>
+                                                <p className="font-bold text-base sm:text-lg">{transaction.shipping_first_name} {transaction.shipping_last_name}</p>
                                             </div>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-all">
                                                 {transaction.shipping_phone_number}
                                             </p>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-all">
                                                 {transaction.contact_email}
                                             </p>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-words">
                                                 {transaction.shipping_address}, {transaction.shipping_city}, {transaction.shipping_postal_code}, {transaction.shipping_country}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="w-full md:w-2/5 flex flex-col">
+                                    <div className="w-full md:w-2/5 flex flex-col mb-4 md:mb-0">
                                         <div className="flex items-center gap-2 mb-2">
                                             <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#5FC3FF]">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -160,9 +160,9 @@ export default function TransactionDetail({ id }) {
                                             </div>
                                             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">From</h3>
                                         </div>
-                                        <div className="bg-[#EBEFF6] p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[170px]">
+                                        <div className="bg-[#EBEFF6] p-3 sm:p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[130px] sm:min-h-[170px]">
                                             <div className="flex items-center gap-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6">
                                                     <g className="building-outline">
                                                         <g fill="#2388FF" className="Vector">
                                                             <path fillRule="evenodd" d="M8 5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3zm3-1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" clipRule="evenodd"></path>
@@ -172,15 +172,15 @@ export default function TransactionDetail({ id }) {
                                                         </g>
                                                     </g>
                                                 </svg>
-                                                <p className="font-bold text-lg">STS</p>
+                                                <p className="font-bold text-base sm:text-lg">STS</p>
                                             </div>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-all">
                                                 (684) 879 - 0102
                                             </p>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-all">
                                                 contact@maurosicard.com
                                             </p>
-                                            <p className="font-inter font-normal text-xs text-[#868DA6]">
+                                            <p className="font-inter font-normal text-xs text-[#868DA6] break-words">
                                                 Pablo Alto, San Francisco, CA 94109, United States of America
                                             </p>
                                             <p className="font-inter font-normal text-xs text-[#868DA6]">
@@ -197,10 +197,9 @@ export default function TransactionDetail({ id }) {
                                             </div>
                                             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total</h3>
                                         </div>
-                                        <div className="bg-[#5FC3FF] text-white p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[170px]" style={{ boxShadow: '0px 4.22px 16.87px 0px #2388FF54' }}>
-                                            <p className="font-bold text-lg">GBP</p>
-
-                                            <p className="font-inter font-semibold text-xl md:text-2xl break-words">
+                                        <div className="bg-[#5FC3FF] text-white p-3 sm:p-4 rounded-lg flex-1 flex flex-col justify-between min-h-[90px] sm:min-h-[170px]" style={{ boxShadow: '0px 4.22px 16.87px 0px #2388FF54' }}>
+                                            <p className="font-bold text-base sm:text-lg">GBP</p>
+                                            <p className="font-inter font-semibold text-lg sm:text-2xl break-words">
                                                 {formatPrice(transaction.total_amount)}
                                             </p>
                                             <p className="font-inter font-normal text-xs text-[#white]">
@@ -211,67 +210,94 @@ export default function TransactionDetail({ id }) {
                                 </div>
 
                                 {/* Table */}
-                                <div className="gap-4 bg-white p-10 rounded-2xl shadow-xl mb-10 overflow-x-auto">
-                                    <table className="w-full text-left border-separate border-spacing-y-2">
-                                        <thead>
-                                            <tr>
-                                                <th className="py-3 px-4 text-xs font-bold text-gray-400 uppercase">Description</th>
-                                                <th className="py-3 text-xs font-bold text-gray-400 uppercase text-center">Qty</th>
-                                                <th className="py-3 text-xs font-bold text-gray-400 uppercase text-right">Price</th>
-                                                <th className="py-3 px-4 text-xs font-bold text-gray-400 uppercase text-right">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="text-sm">
-                                            {transaction.items && transaction.items.length > 0 ? (
-                                                transaction.items.map((item, index) => (
-                                                    <tr key={index}>
-                                                        <td className="py-4 pl-4 border-l border-y border-[#EBEFF6] rounded-l-full bg-white">
-                                                            <p className="font-semibold text-gray-800">
-                                                                {item.product?.title || item.product_name_snapshot || 'Product'}
-                                                            </p>
-                                                            <p className="text-xs text-gray-500">{item.product_sku_snapshot || '-'}</p>
-                                                        </td>
-                                                        <td className="py-4 border-y border-[#EBEFF6] bg-white text-center">{item.quantity}</td>
-                                                        <td className="py-4 border-y border-[#EBEFF6] bg-white text-right">{formatPrice(item.unit_price)}</td>
-                                                        <td className="py-4 pr-4 border-r border-y border-[#EBEFF6] rounded-r-full bg-white text-right font-medium">{formatPrice(item.total_price)}</td>
-                                                    </tr>
-                                                ))
-                                            ) : (
+                                <div className="gap-4 bg-white p-2 sm:p-6 md:p-10 rounded-2xl shadow-xl mb-6 md:mb-10 overflow-x-auto">
+                                    <div className="hidden xs:block overflow-x-auto">
+                                        <table className="w-full min-w-[400px] text-left border-separate border-spacing-y-2">
+                                            <thead>
                                                 <tr>
-                                                    <td colSpan="4" className="py-4 text-center text-gray-500">No items found</td>
+                                                    <th className="py-3 px-2 sm:px-4 text-xs font-bold text-gray-400 uppercase">Description</th>
+                                                    <th className="py-3 text-xs font-bold text-gray-400 uppercase text-center">Qty</th>
+                                                    <th className="py-3 text-xs font-bold text-gray-400 uppercase text-right">Price</th>
+                                                    <th className="py-3 px-2 sm:px-4 text-xs font-bold text-gray-400 uppercase text-right">Total</th>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody className="text-xs sm:text-sm">
+                                                {transaction.items && transaction.items.length > 0 ? (
+                                                    transaction.items.map((item, index) => (
+                                                        <tr key={index}>
+                                                            <td className="py-2 sm:py-4 pl-2 sm:pl-4 border-l border-y border-[#EBEFF6] rounded-l-full bg-white">
+                                                                <p className="font-semibold text-gray-800">
+                                                                    {item.product?.title || item.product_name_snapshot || 'Product'}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500">{item.product_sku_snapshot || '-'}</p>
+                                                            </td>
+                                                            <td className="py-2 sm:py-4 border-y border-[#EBEFF6] bg-white text-center">{item.quantity}</td>
+                                                            <td className="py-2 sm:py-4 border-y border-[#EBEFF6] bg-white text-right">{formatPrice(item.unit_price)}</td>
+                                                            <td className="py-2 sm:py-4 pr-2 sm:pr-4 border-r border-y border-[#EBEFF6] rounded-r-full bg-white text-right font-medium">{formatPrice(item.total_price)}</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="4" className="py-4 text-center text-gray-500">No items found</td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {/* Mobile Table */}
+                                    <div className="block xs:hidden">
+                                        {transaction.items && transaction.items.length > 0 ? (
+                                            transaction.items.map((item, idx) => (
+                                                <div key={idx} className="mb-3 bg-[#F9FAFB] rounded-xl p-3 border border-[#EBEFF6]">
+                                                    <div className="flex flex-row items-center justify-between mb-1">
+                                                        <span className="font-semibold text-gray-800">{item.product?.title || item.product_name_snapshot || 'Product'}</span>
+                                                        <span className="text-xs text-gray-600">x{item.quantity}</span>
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 mb-1">{item.product_sku_snapshot || '-'}</div>
+                                                    <div className="flex flex-row items-center justify-between">
+                                                        <span className="text-xs text-gray-500">Unit</span>
+                                                        <span className="text-xs font-semibold text-gray-700">{formatPrice(item.unit_price)}</span>
+                                                    </div>
+                                                    <div className="flex flex-row items-center justify-between">
+                                                        <span className="text-xs text-gray-500">Total</span>
+                                                        <span className="text-xs font-bold text-gray-800">{formatPrice(item.total_price)}</span>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="py-4 text-center text-gray-500">No items found</div>
+                                        )}
+                                    </div>
 
-                                    <div className="flex justify-end mt-6 pt-4 space-y-2 flex-col items-end">
-                                        <div className="flex items-center gap-6 w-full max-w-xs justify-between">
-                                            <span className="text-gray-500 text-sm">Subtotal</span>
+                                    {/* Totals */}
+                                    <div className="flex justify-end mt-4 pt-2 space-y-2 flex-col items-end">
+                                        <div className="flex items-center gap-4 w-full max-w-xs justify-between">
+                                            <span className="text-gray-500 text-xs sm:text-sm">Subtotal</span>
                                             <span className="font-medium text-gray-700">{formatPrice(transaction.subtotal)}</span>
                                         </div>
-                                        <div className="flex items-center gap-6 w-full max-w-xs justify-between">
-                                            <span className="text-gray-500 text-sm">Shipping</span>
+                                        <div className="flex items-center gap-4 w-full max-w-xs justify-between">
+                                            <span className="text-gray-500 text-xs sm:text-sm">Shipping</span>
                                             <span className="font-medium text-gray-700">{formatPrice(transaction.shipping_price)}</span>
                                         </div>
-                                        <div className="flex items-center gap-6 w-full max-w-xs justify-between">
-                                            <span className="text-gray-500 text-sm">Tax</span>
+                                        <div className="flex items-center gap-4 w-full max-w-xs justify-between">
+                                            <span className="text-gray-500 text-xs sm:text-sm">Tax</span>
                                             <span className="font-medium text-gray-700">{formatPrice(transaction.tax_amount)}</span>
                                         </div>
                                         {displayDiscount && (
-                                            <div className="flex items-center gap-6 w-full max-w-xs justify-between">
-                                                <span className="text-gray-500 text-sm">Discount</span>
+                                            <div className="flex items-center gap-4 w-full max-w-xs justify-between">
+                                                <span className="text-gray-500 text-xs sm:text-sm">Discount</span>
                                                 <span className="font-medium text-green-700">- {formatPrice(transaction.discount_amount)}</span>
                                             </div>
                                         )}
-                                        <div className="flex items-center gap-6 w-full max-w-xs justify-between border-t border-gray-100 pt-2 mt-2">
+                                        <div className="flex items-center gap-4 w-full max-w-xs justify-between border-t border-gray-100 pt-2 mt-2">
                                             <span className="text-gray-500 font-bold">Total Amount</span>
-                                            <span className="text-3xl font-bold text-[#232323]">{formatPrice(transaction.total_amount)}</span>
+                                            <span className="text-2xl sm:text-3xl font-bold text-[#232323]">{formatPrice(transaction.total_amount)}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Footer Notes */}
-                                <div className="pt-6 text-start text-xs text-gray-500">
+                                <div className="pt-4 sm:pt-6 text-start text-xs text-gray-500">
                                     <p className="mb-1 font-bold">Terms & Conditions:</p>
                                     <p>Fees and payment terms will be established in the contract or agreement prior to the commencement of the project. We reserve the right to suspend or halt work in the event of non-payment.</p>
                                 </div>
