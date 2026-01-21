@@ -386,7 +386,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             const items = res.data.data || res.data || [];
             const count = items.reduce((s, i) => s + (i.quantity || 0), 0);
             window.dispatchEvent(new CustomEvent('cart:changed', { detail: { count } }));
-        } catch (e) {}
+        } catch (e) { }
     };
 
     const handleAddToCart = async () => {
@@ -395,6 +395,17 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         try {
             await axios.post('/web/cart', { product_id: data.id, quantity: 1 });
             setToast({ show: true, message: 'Product added to cart', type: 'success' });
+
+            // Handle guest first-time refresh
+            if (isGuest) {
+                const hasAddedBefore = localStorage.getItem('guest_has_added_to_cart');
+                if (!hasAddedBefore) {
+                    localStorage.setItem('guest_has_added_to_cart', 'true');
+                    window.location.reload();
+                    return;
+                }
+            }
+
             await refreshCart();
         } catch (error) {
             setToast({ show: true, message: error?.response?.data?.message || 'Failed to add to cart', type: 'error' });
@@ -782,16 +793,14 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                             )}
 
                             <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
-                                {(logged || (isGuest && !data.is_sign_up_for_pricing)) && (
-                                    <button
-                                        type="button"
-                                        onClick={handleAddToCart}
-                                        disabled={isAddingToCart}
-                                        className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
-                                    >
-                                        {isAddingToCart ? 'Adding...' : 'Add To Cart'}
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={handleAddToCart}
+                                    disabled={isAddingToCart}
+                                    className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
+                                >
+                                    {isAddingToCart ? 'Adding...' : 'Add To Cart'}
+                                </button>
 
                                 {logged && (
                                     <button

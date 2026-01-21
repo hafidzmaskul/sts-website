@@ -39,7 +39,7 @@ export default function ProductCard({
     slug,
     initialLiked = false,
 }) {
-    const { logged } = usePage().props;
+    const { logged, is_guest: isGuest } = usePage().props;
     const badgeBgColor = getBadgeBgColor(badge);
     const imageRef = useRef(null);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -89,6 +89,17 @@ export default function ProductCard({
         try {
             await axios.post('/web/cart', { product_id: id, quantity: 1 });
             // Optional: emit a success event or toast if possible
+
+            // Handle guest first-time refresh
+            if (isGuest) {
+                const hasAddedBefore = localStorage.getItem('guest_has_added_to_cart');
+                if (!hasAddedBefore) {
+                    localStorage.setItem('guest_has_added_to_cart', 'true');
+                    window.location.reload();
+                    return;
+                }
+            }
+
             await refreshCart();
         } catch (error) {
             console.error('Add to cart failed', error);
