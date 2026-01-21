@@ -147,7 +147,7 @@
                         </div>
                     @endif
 
-                    @if ($isLoggedIn)
+                    @if ($logged)
                         <a class="bg-white rounded-xl p-2 md:p-3 hidden md:flex" href="/dashboard">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

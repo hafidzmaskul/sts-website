@@ -428,78 +428,80 @@ export default function Header() {
 
                     {/* Cart & User */}
                     <div className="flex items-center space-x-2 md:space-x-5">
+                        {/* Cart is now always visible, regardless of login status */}
+                        <div
+                            className="relative"
+                            ref={cartRef}
+                            onMouseEnter={() => setShowCartDropdown(true)}
+                            onMouseLeave={() => setShowCartDropdown(false)}
+                        >
+                            <a href="/cart" className={`flex items-center bg-white rounded-xl p-2 md:p-3 relative ${isActive('/cart') ? "text-[#007580]" : ""}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
+                                <span className="font-semibold mr-2 hidden md:inline">Cart</span>
+                                <div className="inline-flex items-center justify-center h-5 w-5 text-xs font-bold rounded-full bg-[#007580] text-white ">
+                                    {cartCount}
+                                </div>
+                            </a>
+                            {showCartDropdown && (
+                                <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
+                                    <div className="py-2">
+                                        {cartProducts && cartProducts.length > 0 ? (
+                                            cartProducts.map((item, idx) => (
+                                                <div key={item.id || idx} className="flex items-center px-4 py-2 border-b last:border-b-0">
+                                                    {item.image ? (
+                                                        <img
+                                                            src={item.image}
+                                                            alt={item.title}
+                                                            className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                <rect width="24" height="24" rx="4" fill="#e5e7eb" />
+                                                                <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                                                                <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
+                                                            </svg>
+                                                        </div>
+                                                    )}
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium text-sm truncate max-w-[140px]">{item.title}</span>
+                                                        <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-center text-gray-500 py-8">
+                                                Cart is empty
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="border-t px-4 py-2">
+                                        <a href="/cart" className="block w-full text-center text-[#007580] hover:underline font-semibold">View Cart</a>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Login button only for not logged in users */}
                         {(!isLoggedIn || isGuest) && (
+                            <a
+                                href="/login"
+                                className="bg-[#0079C2] hover:bg-[#00609C] text-white px-4 py-2 rounded-xl font-semibold transition"
+                            >
+                                Login
+                            </a>
+                        )}
+
+                        {/* Only for logged in users */}
+                        {isLoggedIn && (
                             <>
-                                <a
-                                    href="/login"
-                                    className="bg-[#0079C2] hover:bg-[#00609C] text-white px-4 py-2 rounded-xl font-semibold transition"
-                                >
-                                    Login
+                                <a href="/my-transactions" className={`flex items-center bg-white rounded-xl p-2 md:p-3 ${isActive('/my-transactions') ? "text-[#007580]" : "text-[#636270] hover:text-[#007580]"}`} title="My Transactions">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0a9 9 0 0 1 18 0Z" /></svg>
+                                    <span className="font-semibold ml-2 hidden md:inline">History</span>
                                 </a>
 
-                            </>
-                        )}
-                        {(isLoggedIn || isGuest) && (
-                            <>
-                                {isLoggedIn && (
-                                    <a href="/my-transactions" className={`flex items-center bg-white rounded-xl p-2 md:p-3 ${isActive('/my-transactions') ? "text-[#007580]" : "text-[#636270] hover:text-[#007580]"}`} title="My Transactions">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0a9 9 0 0 1 18 0Z" /></svg>
-                                        <span className="font-semibold ml-2 hidden md:inline">History</span>
-                                    </a>
-                                )}
-                                <div
-                                    className="relative"
-                                    ref={cartRef}
-                                    onMouseEnter={() => setShowCartDropdown(true)}
-                                    onMouseLeave={() => setShowCartDropdown(false)}
-                                >
-                                    <a href="/cart" className={`flex items-center bg-white rounded-xl p-2 md:p-3 relative ${isActive('/cart') ? "text-[#007580]" : ""}`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
-                                        <span className="font-semibold mr-2 hidden md:inline">Cart</span>
-                                        <div className="inline-flex items-center justify-center h-5 w-5 text-xs font-bold rounded-full bg-[#007580] text-white ">
-                                            {cartCount}
-                                        </div>
-                                    </a>
-                                    {showCartDropdown && (
-                                        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg z-50 rounded overflow-y-auto max-h-80 min-h-12 min-w-[180px]">
-                                            <div className="py-2">
-                                                {cartProducts && cartProducts.length > 0 ? (
-                                                    cartProducts.map((item, idx) => (
-                                                        <div key={item.id || idx} className="flex items-center px-4 py-2 border-b last:border-b-0">
-                                                            {item.image ? (
-                                                                <img
-                                                                    src={item.image}
-                                                                    alt={item.title}
-                                                                    className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
-                                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                        <rect width="24" height="24" rx="4" fill="#e5e7eb" />
-                                                                        <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
-                                                                        <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
-                                                                    </svg>
-                                                                </div>
-                                                            )}
-                                                            <div className="flex flex-col">
-                                                                <span className="font-medium text-sm truncate max-w-[140px]">{item.title}</span>
-                                                                <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center text-gray-500 py-8">
-                                                        Cart is empty
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="border-t px-4 py-2">
-                                                <a href="/cart" className="block w-full text-center text-[#007580] hover:underline font-semibold">View Cart</a>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                {isLoggedIn && !isGuest && (
+                                {/* Liked products (only for logged in non-guest) */}
+                                {!isGuest && (
                                     <div
                                         className="relative hidden md:flex"
                                         ref={likedRef}
@@ -555,13 +557,12 @@ export default function Header() {
                                             </div>
                                         )}
                                     </div>
-                                )} {/* like */}
-
-                                {isLoggedIn && (
-                                    <a className={`bg-white rounded-xl p-2 md:p-3 hidden md:flex ${isActive('/dashboard') ? "text-[#007580]" : "" }`} href='/dashboard'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>
-                                    </a>
                                 )}
+
+                                {/* Dashboard */}
+                                <a className={`bg-white rounded-xl p-2 md:p-3 hidden md:flex ${isActive('/dashboard') ? "text-[#007580]" : "" }`} href='/dashboard'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>
+                                </a>
                             </>
                         )}
                     </div>

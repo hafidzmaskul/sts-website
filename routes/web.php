@@ -58,6 +58,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('web/liked-products', [\App\Http\Controllers\Api\ProductLikeController::class, 'index']);
     Route::post('web/products/like', [\App\Http\Controllers\Api\ProductLikeController::class, 'like']);
     Route::post('web/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
+    Route::get('web/coupons', [\App\Http\Controllers\Api\CouponController::class, 'index']);
+    Route::get('web/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
 });
 
 Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function () {
