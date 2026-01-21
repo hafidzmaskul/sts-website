@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', 'destroy');
             Route::post('/{id}/products', 'addProduct');
             Route::delete('/{id}/products/{productId}', 'removeProduct');
+            Route::get('/{id}/related-products', 'getRelatedProducts');
         });
 
     Route::get('web/my-transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
@@ -112,7 +113,7 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),

@@ -114,4 +114,55 @@ class QuoteBuilderController extends Controller
             'data' => $quoteBuilder->load('products.images'),
         ]);
     }
+
+    /**
+     * Get related products for a quote builder.
+     * Returns products from the same categories as products already in the quote.
+     * If no products in quote, returns latest products.
+     * Supports search to find any product.
+     */
+    public function getRelatedProducts(Request $request, $id)
+    {
+        $quoteBuilder = $request->user()->quoteBuilders()->with('products.categories')->findOrFail($id);
+
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10);
+
+        // Get existing product IDs to exclude
+        $existingProductIds = $quoteBuilder->products->pluck('id')->toArray();
+
+        $query = \App\Models\Product::with(['images'])
+            ->where('status', 'active')
+            ->whereNotIn('id', $existingProductIds);
+
+        // If search is provided, search all products
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('sku', 'like', '%' . $search . '%');
+            });
+        } else {
+            // Get category IDs from products in the quote
+            $categoryIds = $quoteBuilder->products
+                ->flatMap(fn($product) => $product->categories->pluck('id'))
+                ->unique()
+                ->toArray();
+
+            // If there are categories, filter by them (related products)
+            if (!empty($categoryIds)) {
+                $query->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('id', $categoryIds);
+                });
+            }
+        }
+
+        $products = $query->orderBy('created_at', 'desc')
+            ->limit($perPage)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $products,
+        ]);
+    }
 }

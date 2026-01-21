@@ -69,6 +69,9 @@ export default function TransactionDetail({ id }) {
         );
     }
 
+    // Helper: show discount amount as 0 if not present
+    const displayDiscount = transaction.discount_amount !== undefined && transaction.discount_amount !== null && Number(transaction.discount_amount) !== 0;
+
     return (
         <div className="min-h-screen flex flex-col bg-[#fff]">
             <Head title={`Invoice #${transaction.invoice_code || transaction.id}`} />
@@ -254,6 +257,12 @@ export default function TransactionDetail({ id }) {
                                             <span className="text-gray-500 text-sm">Tax</span>
                                             <span className="font-medium text-gray-700">{formatPrice(transaction.tax_amount)}</span>
                                         </div>
+                                        {displayDiscount && (
+                                            <div className="flex items-center gap-6 w-full max-w-xs justify-between">
+                                                <span className="text-gray-500 text-sm">Discount</span>
+                                                <span className="font-medium text-green-700">- {formatPrice(transaction.discount_amount)}</span>
+                                            </div>
+                                        )}
                                         <div className="flex items-center gap-6 w-full max-w-xs justify-between border-t border-gray-100 pt-2 mt-2">
                                             <span className="text-gray-500 font-bold">Total Amount</span>
                                             <span className="text-3xl font-bold text-[#232323]">{formatPrice(transaction.total_amount)}</span>

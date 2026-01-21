@@ -23,6 +23,15 @@ export default function QuoteBuilder() {
     const deleteClickedRef = useRef(false);
     const addProductClickedRef = useRef(false); // NEW: Track if Add Product was clicked
 
+    // State for Add Product Modal
+    const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+    const [addProductQuoteId, setAddProductQuoteId] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
+    const [productSearchQuery, setProductSearchQuery] = useState('');
+    const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+    const [modalSuccessMessage, setModalSuccessMessage] = useState('');
+    const searchTimeoutRef = useRef(null);
+
     const fetchQuotes = async () => {
         setIsLoading(true);
         try {
@@ -33,6 +42,92 @@ export default function QuoteBuilder() {
             setToast({ show: true, message: 'Failed to load quotes', type: 'error' });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Fetch related products for a quote
+    const fetchRelatedProducts = async (quoteId, search = '') => {
+        setIsLoadingProducts(true);
+        try {
+            const params = { per_page: 10 };
+            if (search.trim()) {
+                params.search = search.trim();
+            }
+            const res = await axios.get(`/web/quote-builder/${quoteId}/related-products`, { params });
+            setRelatedProducts(res.data.data || []);
+        } catch (error) {
+            console.error('Failed to fetch related products', error);
+            setToast({ show: true, message: 'Failed to load products', type: 'error' });
+        } finally {
+            setIsLoadingProducts(false);
+        }
+    };
+
+    // Handle search input with debounce
+    const handleProductSearch = (value) => {
+        setProductSearchQuery(value);
+
+        // Clear previous timeout
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        // Debounce search
+        searchTimeoutRef.current = setTimeout(() => {
+            if (addProductQuoteId) {
+                fetchRelatedProducts(addProductQuoteId, value);
+            }
+        }, 300);
+    };
+
+    // Open add product modal
+    const openAddProductModal = (quoteId) => {
+        setAddProductQuoteId(quoteId);
+        setProductSearchQuery('');
+        setIsAddProductModalOpen(true);
+        fetchRelatedProducts(quoteId);
+    };
+
+    // Close add product modal
+    const closeAddProductModal = () => {
+        setIsAddProductModalOpen(false);
+        setAddProductQuoteId(null);
+        setRelatedProducts([]);
+        setProductSearchQuery('');
+        setModalSuccessMessage('');
+    };
+
+    // Add product to quote from modal
+    const handleAddProductFromModal = async (productId) => {
+        if (!addProductQuoteId) return;
+
+        try {
+            await axios.post(`/web/quote-builder/${addProductQuoteId}/products`, {
+                product_id: productId,
+                quantity: 1
+            });
+
+            // Show success message inside modal
+            setModalSuccessMessage('Product added to quote successfully!');
+
+            // Auto-hide success message after 3 seconds
+            setTimeout(() => {
+                setModalSuccessMessage('');
+            }, 3000);
+
+            // Refresh quotes to show the new product
+            await fetchQuotes();
+
+            // Refresh related products to remove the added one
+            fetchRelatedProducts(addProductQuoteId, productSearchQuery);
+        } catch (error) {
+            console.error('Failed to add product', error);
+            setModalSuccessMessage('');
+            setToast({
+                show: true,
+                message: 'Failed to add product to quote.',
+                type: 'error'
+            });
         }
     };
 
@@ -283,11 +378,9 @@ export default function QuoteBuilder() {
         setEditQuoteName('');
     };
 
-    // New logic: button add product goes to /products
+    // Open add product modal when clicking add product button
     const handleAddProductToQuote = (quote) => {
-        // Instead of showing a toast, directly navigate to the product list page
-        // Use setTimeout to ensure this runs *after* blur/other handlers if needed
-        router.visit('/products');
+        openAddProductModal(quote.id);
     };
 
     return (
@@ -347,6 +440,126 @@ export default function QuoteBuilder() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Product Modal */}
+            {isAddProductModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 overflow-hidden max-h-[90vh] flex flex-col">
+                        {/* Modal Header */}
+                        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-[#0079C2] to-[#5FC3FF]">
+                            <h3 className="text-xl font-bold text-white">Add Product to Quote</h3>
+                            <button onClick={closeAddProductModal} className="text-white hover:text-gray-200 transition">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Search Input */}
+                        <div className="px-6 py-4 border-b border-gray-100">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0079C2] focus:border-transparent transition text-gray-700 placeholder-gray-400"
+                                    placeholder="Search all products by name or SKU..."
+                                    value={productSearchQuery}
+                                    onChange={(e) => handleProductSearch(e.target.value)}
+                                    autoFocus
+                                />
+                            </div>
+                            <p className="mt-2 text-xs text-gray-500">
+                                {productSearchQuery ? 'Searching all products...' : 'Showing related products. Type to search all products.'}
+                            </p>
+
+                            {/* Success Message */}
+                            {modalSuccessMessage && (
+                                <div className="mt-3 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg animate-pulse">
+                                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span className="font-medium">{modalSuccessMessage}</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Product Grid */}
+                        <div className="flex-1 overflow-y-auto px-6 py-4">
+                            {isLoadingProducts ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0079C2]"></div>
+                                    <span className="ml-3 text-gray-500">Loading products...</span>
+                                </div>
+                            ) : relatedProducts.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <svg className="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                    </svg>
+                                    <p className="mt-3 text-gray-500">
+                                        {productSearchQuery ? 'No products found matching your search.' : 'No related products available.'}
+                                    </p>
+                                    {productSearchQuery && (
+                                        <button
+                                            onClick={() => handleProductSearch('')}
+                                            className="mt-2 text-[#0079C2] hover:underline text-sm"
+                                        >
+                                            Clear search
+                                        </button>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {relatedProducts.map((product) => (
+                                        <button
+                                            key={product.id}
+                                            onClick={() => handleAddProductFromModal(product.id)}
+                                            className="group bg-white border border-gray-200 rounded-lg p-3 hover:border-[#0079C2] hover:shadow-lg transition-all duration-200 text-left"
+                                        >
+                                            <div className="aspect-square bg-gray-50 rounded-md overflow-hidden mb-3 flex items-center justify-center">
+                                                <img
+                                                    src={
+                                                        product.images && product.images.length > 0 && product.images[0].image_path
+                                                            ? (product.images[0].image_path.startsWith('/') ? product.images[0].image_path : `/storage/${product.images[0].image_path}`)
+                                                            : '/assets/logo.png'
+                                                    }
+                                                    alt={product.title || 'Product'}
+                                                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-200"
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
+                                                />
+                                            </div>
+                                            <p className="text-sm font-medium text-gray-700 line-clamp-2 group-hover:text-[#0079C2] transition-colors">
+                                                {product.title || 'Unknown Product'}
+                                            </p>
+                                            <div className="mt-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-xs bg-[#0079C2] text-white px-2 py-1 rounded-full">
+                                                    Click to add
+                                                </span>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                            <p className="text-sm text-gray-500">
+                                {relatedProducts.length} product{relatedProducts.length !== 1 ? 's' : ''} available
+                            </p>
+                            <button
+                                onClick={closeAddProductModal}
+                                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -530,7 +743,7 @@ export default function QuoteBuilder() {
                                                         style={{ height: "232px" }} // To visually match product card
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="#0079C2" strokeWidth={2}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                                                         </svg>
                                                         Add Product
                                                     </button>
