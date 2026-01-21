@@ -99,7 +99,7 @@ export default function BecomeCustomer() {
     const steps = [
         { number: 1, title: 'Company Information', desc: 'Basic Company Details' },
         { number: 2, title: 'Contact Information', desc: 'Key personnel contacts' },
-        { number: 3, title: 'Financial & References', desc: 'Banking and trade references' },
+        // { number: 3, title: 'Financial & References', desc: 'Banking and trade references' },
     ];
 
     const handleChange = (field, value) => {
@@ -216,13 +216,13 @@ export default function BecomeCustomer() {
                         <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
                             {/* Stepper Indicator */}
                             <div className="mt-10 mb-8">
-                                <div className="flex items-start justify-between">
+                                <div className="flex item-center justify-between">
                                     {steps.map((step, index) => {
                                         const status = getStepStatus(step.number);
                                         const isLast = index === steps.length - 1;
                                         return (
                                             <React.Fragment key={step.number}>
-                                                <div className="flex flex-col items-center" style={{ flex: isLast ? '0 0 auto' : '1 1 0' }}>
+                                                <div className="flex flex-col items-center" style={{ flex: '1 1 auto' }}>
                                                     <div
                                                         className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-colors ${
                                                             status === 'active'
@@ -531,183 +531,8 @@ export default function BecomeCustomer() {
                                             </div>
                                         </div>
 
-                                        {/* Navigation Buttons */}
+                                        {/* Buttons: Previous and Submit */}
                                         <div className="flex justify-between mt-6 pt-6 border-t border-[#E8E7E7]">
-                                            <button
-                                                type="button"
-                                                onClick={handlePrevious}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
-                                            >Previous</button>
-                                            <button
-                                                type="button"
-                                                onClick={handleNext}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
-                                            >Next</button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Step 3: Financial & References */}
-                                {currentStep === 3 && (
-                                    <div className="space-y-6 animate-fade-in">
-                                        <h2 className="font-bold text-lg text-[#002856] mb-0">Financial & References</h2>
-
-                                        {/* Bank Name, Address (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Bank Name
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.bank_name}
-                                                    onChange={e => handleChange('bank_name', e.target.value)}
-                                                />
-                                                {errors.bank_name && <div className="text-xs text-red-500 mt-1">{errors.bank_name}</div>}
-                                            </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Bank Address
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.bank_address}
-                                                    onChange={e => handleChange('bank_address', e.target.value)}
-                                                />
-                                                {errors.bank_address && <div className="text-xs text-red-500 mt-1">{errors.bank_address}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* Sort Code, Account Number (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Sort Code
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.bank_sort_code}
-                                                    onChange={e => handleChange('bank_sort_code', e.target.value)}
-                                                />
-                                                {errors.bank_sort_code && <div className="text-xs text-red-500 mt-1">{errors.bank_sort_code}</div>}
-                                            </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Account Number
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.bank_account_number}
-                                                    onChange={e => handleChange('bank_account_number', e.target.value)}
-                                                />
-                                                {errors.bank_account_number && <div className="text-xs text-red-500 mt-1">{errors.bank_account_number}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* Name & Address of Trade Reference 1 */}
-                                        <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                Name & Address of Trade Reference 1
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                value={formData.trade_ref_1_details}
-                                                onChange={e => handleChange('trade_ref_1_details', e.target.value)}
-                                            />
-                                            {errors.trade_ref_1_details && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_1_details}</div>}
-                                        </div>
-                                        {/* Telephone, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Telephone No
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.trade_ref_1_phone}
-                                                    onChange={e => handleChange('trade_ref_1_phone', e.target.value)}
-                                                />
-                                                {errors.trade_ref_1_phone && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_1_phone}</div>}
-                                            </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Email
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.trade_ref_1_email}
-                                                    onChange={e => handleChange('trade_ref_1_email', e.target.value)}
-                                                />
-                                                {errors.trade_ref_1_email && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_1_email}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* Name & Address of Trade Reference 2 */}
-                                        <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                Name & Address of Trade Reference 2
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                value={formData.trade_ref_2_details}
-                                                onChange={e => handleChange('trade_ref_2_details', e.target.value)}
-                                            />
-                                            {errors.trade_ref_2_details && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_details}</div>}
-                                        </div>
-                                        {/* Telephone, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Telephone No
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.trade_ref_2_phone}
-                                                    onChange={e => handleChange('trade_ref_2_phone', e.target.value)}
-                                                />
-                                                {errors.trade_ref_2_phone && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_phone}</div>}
-                                            </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Email
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.trade_ref_2_email}
-                                                    onChange={e => handleChange('trade_ref_2_email', e.target.value)}
-                                                />
-                                                {errors.trade_ref_2_email && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_email}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* Credit Limit */}
-                                        <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                Credit Limit Required
-                                            </label>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                value={formData.requested_credit_limit}
-                                                onChange={e => handleChange('requested_credit_limit', e.target.value)}
-                                            />
-                                            {errors.requested_credit_limit && <div className="text-xs text-red-500 mt-1">{errors.requested_credit_limit}</div>}
-                                        </div>
-                                       
-
-                                        {/* Navigation and Submit Buttons */}
-                                        <div className="flex justify-between mt-8 pt-6 border-t border-[#E8E7E7] gap-4">
                                             <button
                                                 type="button"
                                                 onClick={handlePrevious}
@@ -716,10 +541,27 @@ export default function BecomeCustomer() {
                                             <button
                                                 type="submit"
                                                 disabled={processing}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] flex items-center gap-2"
+                                                className={`px-8 py-2 rounded font-medium text-white ${processing ? 'bg-[#90C0E4] cursor-not-allowed' : 'bg-[#0079C2] hover:bg-[#005b8c]'}`}
                                             >
-                                                {processing ? 'Registering...' : 'Submit'}
+                                                {processing ? 'Submitting...' : 'Submit'}
                                             </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Step 3: Financial & References */}
+                                {currentStep === 3 && (
+                                    <div className="space-y-6 animate-fade-in text-center py-10">
+                                        <h2 className="font-bold text-lg text-[#002856] mb-0">Financial & References</h2>
+                                        <p className="text-base text-[#002856] mt-4">
+                                            Form for step 3 has been removed.
+                                        </p>
+                                        <div className="flex justify-center mt-8 pt-6 border-t border-[#E8E7E7] gap-4">
+                                            <button
+                                                type="button"
+                                                onClick={handlePrevious}
+                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
+                                            >Previous</button>
                                         </div>
                                     </div>
                                 )}

@@ -90,6 +90,11 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 };
 
 export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false }) {
+    // Check if any category has name 'Discontinued'
+    const isDiscontinued = Array.isArray(product?.categories)
+        ? product.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
+        : false;
+
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     // Toast state
@@ -468,205 +473,213 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             />
 
             {/* Product Request Modal CTA */}
-            <Modal
-                isOpen={isProductRequestModalOpen}
-                onClose={() => setIsProductRequestModalOpen(false)}
-                title="Request This Product"
-            >
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <label htmlFor="requestProductName" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input
-                            id="requestProductName"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
-                            value={requestProductName}
-                            onChange={e => setRequestProductName(e.target.value)}
-                            placeholder="Enter your name"
-                        />
+            {!isDiscontinued && (
+                <Modal
+                    isOpen={isProductRequestModalOpen}
+                    onClose={() => setIsProductRequestModalOpen(false)}
+                    title="Request This Product"
+                >
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <label htmlFor="requestProductName" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                            <input
+                                id="requestProductName"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                                value={requestProductName}
+                                onChange={e => setRequestProductName(e.target.value)}
+                                placeholder="Enter your name"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="requestProductEmail" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input
+                                id="requestProductEmail"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                                type="email"
+                                value={requestProductEmail}
+                                onChange={e => setRequestProductEmail(e.target.value)}
+                                placeholder="Your email"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="requestProductPhone" className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                            <input
+                                id="requestProductPhone"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                                type="tel"
+                                value={requestProductPhone}
+                                onChange={e => setRequestProductPhone(e.target.value)}
+                                placeholder="Your phone"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="requestProductMessage" className="block text-sm font-medium text-gray-700 mb-1">Message (optional)</label>
+                            <textarea
+                                id="requestProductMessage"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                                value={requestProductMessage}
+                                onChange={e => setRequestProductMessage(e.target.value)}
+                                placeholder="Message or request detail..."
+                            />
+                        </div>
+                        <button
+                            onClick={handleRequestProduct}
+                            disabled={requestProductLoading}
+                            className={`w-full py-3 rounded-lg text-white font-medium transition ${requestProductLoading ? 'bg-gray-300 cursor-wait' : 'bg-[#0079C2] hover:bg-[#005a91]'}`}
+                        >
+                            {requestProductLoading ? 'Sending...' : 'Submit Request'}
+                        </button>
                     </div>
-                    <div>
-                        <label htmlFor="requestProductEmail" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input
-                            id="requestProductEmail"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
-                            type="email"
-                            value={requestProductEmail}
-                            onChange={e => setRequestProductEmail(e.target.value)}
-                            placeholder="Your email"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="requestProductPhone" className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                        <input
-                            id="requestProductPhone"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
-                            type="tel"
-                            value={requestProductPhone}
-                            onChange={e => setRequestProductPhone(e.target.value)}
-                            placeholder="Your phone"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="requestProductMessage" className="block text-sm font-medium text-gray-700 mb-1">Message (optional)</label>
-                        <textarea
-                            id="requestProductMessage"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
-                            value={requestProductMessage}
-                            onChange={e => setRequestProductMessage(e.target.value)}
-                            placeholder="Message or request detail..."
-                        />
-                    </div>
-                    <button
-                        onClick={handleRequestProduct}
-                        disabled={requestProductLoading}
-                        className={`w-full py-3 rounded-lg text-white font-medium transition ${requestProductLoading ? 'bg-gray-300 cursor-wait' : 'bg-[#0079C2] hover:bg-[#005a91]'}`}
-                    >
-                        {requestProductLoading ? 'Sending...' : 'Submit Request'}
-                    </button>
-                </div>
-            </Modal>
+                </Modal>
+            )}
 
             {/* Quote Option Modal */}
-            <Modal
-                isOpen={isQuoteOptionModalOpen}
-                onClose={() => setIsQuoteOptionModalOpen(false)}
-                title="Add to Quote"
-            >
-                <div className="flex flex-col gap-4">
-                    <button
-                        onClick={handleOpenExistingQuotes}
-                        className="w-full py-3 bg-[#0079C2] text-white rounded-lg hover:bg-[#005a91] transition font-medium"
-                    >
-                        Add to Existing Quote
-                    </button>
-                    <button
-                        onClick={handleOpenCreateQuote}
-                        className="w-full py-3 border border-[#0079C2] text-[#0079C2] rounded-lg hover:bg-blue-50 transition font-medium"
-                    >
-                        Create New Quote
-                    </button>
-                </div>
-            </Modal>
+            {!isDiscontinued && (
+                <Modal
+                    isOpen={isQuoteOptionModalOpen}
+                    onClose={() => setIsQuoteOptionModalOpen(false)}
+                    title="Add to Quote"
+                >
+                    <div className="flex flex-col gap-4">
+                        <button
+                            onClick={handleOpenExistingQuotes}
+                            className="w-full py-3 bg-[#0079C2] text-white rounded-lg hover:bg-[#005a91] transition font-medium"
+                        >
+                            Add to Existing Quote
+                        </button>
+                        <button
+                            onClick={handleOpenCreateQuote}
+                            className="w-full py-3 border border-[#0079C2] text-[#0079C2] rounded-lg hover:bg-blue-50 transition font-medium"
+                        >
+                            Create New Quote
+                        </button>
+                    </div>
+                </Modal>
+            )}
 
             {/* Existing Quote Modal */}
-            <Modal
-                isOpen={isExistingQuoteModalOpen}
-                onClose={() => setIsExistingQuoteModalOpen(false)}
-                title="Select Quote"
-                size="lg"
-            >
-                {isLoading ? (
-                    <div className="text-center py-6 text-lg">Loading quotes...</div>
-                ) : (
-                    <div className="flex flex-col md:flex-row gap-8">
-                        <div className="w-full md:w-2/5 bg-gray-50 rounded-lg p-4 flex flex-col items-center md:items-start justify-center border border-gray-200">
-                            <img
-                                src={productImages[activeImageIndex]}
-                                alt={data.title}
-                                className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
-                            />
-                            <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
-                            <p className="text-gray-500 text-sm mb-1">{data.brand?.name}</p>
-                            <p className="text-[#0079C2] text-lg font-bold mb-2">
-                                {data.is_sign_up_for_pricing && !logged
-                                    ? <span className="italic text-gray-400">Login untuk melihat harga</span>
-                                    : formatPrice(data.base_price)
-                                }
-                            </p>
-                        </div>
-                        <div className="w-full md:w-3/5 flex flex-col gap-4 max-h-[400px] overflow-y-auto">
-                            <div className="space-y-1 border rounded-lg p-2 flex-1">
-                                {existingQuotes.length > 0 ? (
-                                    existingQuotes.map(quote => (
-                                        <div key={quote.id} className="border-b border-dashed border-gray-200 py-3 last:border-none px-1">
-                                            <label className="flex items-center gap-3 cursor-pointer select-none">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedQuoteIds.includes(quote.id)}
-                                                    onChange={() => handleQuoteCheckboxChange(quote.id)}
-                                                    className="w-5 h-5 text-[#0079C2] border-gray-300 rounded focus:ring-[#0079C2]"
-                                                />
-                                                <div className="flex flex-col gap-0">
-                                                    <span className="text-gray-700 font-medium">{quote.name || `Quote #${quote.id}`}</span>
-                                                    <span className="text-xs text-gray-400">
-                                                        {Array.isArray(quote.products)
-                                                            ? `${quote.products.length} product${quote.products.length !== 1 ? "s" : ""} in this quote`
-                                                            : '0 products'
-                                                        }
-                                                    </span>
-                                                </div>
-                                            </label>
-                                            {quote.products && quote.products.length > 0 && (
-                                                <div className="flex flex-row flex-wrap gap-2 mt-1 mb-2 pl-8">
-                                                    {quote.products.slice(0, 5).map(prod => (
-                                                        <div key={prod.id} className="flex flex-col items-center w-20">
-                                                            <div className="w-10 h-10 overflow-hidden rounded border border-gray-200 bg-white flex items-center justify-center">
-                                                                <img
-                                                                    src={getCoverImage(prod)}
-                                                                    alt={prod.title}
-                                                                    className="w-full h-full object-contain"
-                                                                    loading="lazy"
-                                                                />
-                                                            </div>
-                                                            <span className="mt-1 text-[10px] text-center text-gray-700 line-clamp-2 break-words w-full">{prod.title || prod.name}</span>
-                                                        </div>
-                                                    ))}
-                                                    {quote.products.length > 5 &&
-                                                        <span className="pl-2 text-xs text-gray-400 self-center align-middle">
-                                                            +{quote.products.length - 5} more
-                                                        </span>
-                                                    }
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-gray-500 text-center py-6">No existing quotes found.</p>
-                                )}
+            {!isDiscontinued && (
+                <Modal
+                    isOpen={isExistingQuoteModalOpen}
+                    onClose={() => setIsExistingQuoteModalOpen(false)}
+                    title="Select Quote"
+                    size="lg"
+                >
+                    {isLoading ? (
+                        <div className="text-center py-6 text-lg">Loading quotes...</div>
+                    ) : (
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="w-full md:w-2/5 bg-gray-50 rounded-lg p-4 flex flex-col items-center md:items-start justify-center border border-gray-200">
+                                <img
+                                    src={productImages[activeImageIndex]}
+                                    alt={data.title}
+                                    className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
+                                />
+                                <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
+                                <p className="text-gray-500 text-sm mb-1">{data.brand?.name}</p>
+                                <p className="text-[#0079C2] text-lg font-bold mb-2">
+                                    {data.is_sign_up_for_pricing && !logged
+                                        ? <span className="italic text-gray-400">Login untuk melihat harga</span>
+                                        : formatPrice(data.base_price)
+                                    }
+                                </p>
                             </div>
-                            <button
-                                onClick={handleSaveToExistingQuotes}
-                                disabled={selectedQuoteIds.length === 0}
-                                className={`w-full py-3 rounded-lg text-white font-medium transition ${selectedQuoteIds.length > 0 ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
-                                    }`}
-                            >
-                                Save
-                            </button>
+                            <div className="w-full md:w-3/5 flex flex-col gap-4 max-h-[400px] overflow-y-auto">
+                                <div className="space-y-1 border rounded-lg p-2 flex-1">
+                                    {existingQuotes.length > 0 ? (
+                                        existingQuotes.map(quote => (
+                                            <div key={quote.id} className="border-b border-dashed border-gray-200 py-3 last:border-none px-1">
+                                                <label className="flex items-center gap-3 cursor-pointer select-none">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedQuoteIds.includes(quote.id)}
+                                                        onChange={() => handleQuoteCheckboxChange(quote.id)}
+                                                        className="w-5 h-5 text-[#0079C2] border-gray-300 rounded focus:ring-[#0079C2]"
+                                                    />
+                                                    <div className="flex flex-col gap-0">
+                                                        <span className="text-gray-700 font-medium">{quote.name || `Quote #${quote.id}`}</span>
+                                                        <span className="text-xs text-gray-400">
+                                                            {Array.isArray(quote.products)
+                                                                ? `${quote.products.length} product${quote.products.length !== 1 ? "s" : ""} in this quote`
+                                                                : '0 products'
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                                {quote.products && quote.products.length > 0 && (
+                                                    <div className="flex flex-row flex-wrap gap-2 mt-1 mb-2 pl-8">
+                                                        {quote.products.slice(0, 5).map(prod => (
+                                                            <div key={prod.id} className="flex flex-col items-center w-20">
+                                                                <div className="w-10 h-10 overflow-hidden rounded border border-gray-200 bg-white flex items-center justify-center">
+                                                                    <img
+                                                                        src={getCoverImage(prod)}
+                                                                        alt={prod.title}
+                                                                        className="w-full h-full object-contain"
+                                                                        loading="lazy"
+                                                                    />
+                                                                </div>
+                                                                <span className="mt-1 text-[10px] text-center text-gray-700 line-clamp-2 break-words w-full">{prod.title || prod.name}</span>
+                                                            </div>
+                                                        ))}
+                                                        {quote.products.length > 5 &&
+                                                            <span className="pl-2 text-xs text-gray-400 self-center align-middle">
+                                                                +{quote.products.length - 5} more
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-500 text-center py-6">No existing quotes found.</p>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={handleSaveToExistingQuotes}
+                                    disabled={selectedQuoteIds.length === 0}
+                                    className={`w-full py-3 rounded-lg text-white font-medium transition ${selectedQuoteIds.length > 0 ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
+                                        }`}
+                                >
+                                    Save
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </Modal>
+                    )}
+                </Modal>
+            )}
 
             {/* Create Quote Modal */}
-            <Modal
-                isOpen={isCreateQuoteModalOpen}
-                onClose={() => setIsCreateQuoteModalOpen(false)}
-                title="Create New Quote"
-            >
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <label htmlFor="quoteName" className="block text-sm font-medium text-gray-700 mb-1">
-                            Quote Name
-                        </label>
-                        <input
-                            type="text"
-                            id="quoteName"
-                            value={newQuoteName}
-                            onChange={(e) => setNewQuoteName(e.target.value)}
-                            placeholder="Enter quote name..."
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
-                        />
+            {!isDiscontinued && (
+                <Modal
+                    isOpen={isCreateQuoteModalOpen}
+                    onClose={() => setIsCreateQuoteModalOpen(false)}
+                    title="Create New Quote"
+                >
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <label htmlFor="quoteName" className="block text-sm font-medium text-gray-700 mb-1">
+                                Quote Name
+                            </label>
+                            <input
+                                type="text"
+                                id="quoteName"
+                                value={newQuoteName}
+                                onChange={(e) => setNewQuoteName(e.target.value)}
+                                placeholder="Enter quote name..."
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0079C2] focus:border-[#0079C2] outline-none"
+                            />
+                        </div>
+                        <button
+                            onClick={handleCreateQuote}
+                            disabled={isLoading || !newQuoteName.trim()}
+                            className={`w-full py-3 rounded-lg text-white font-medium transition ${!isLoading && newQuoteName.trim() ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
+                                }`}
+                        >
+                            {isLoading ? 'Creating...' : 'Create & Add Product'}
+                        </button>
                     </div>
-                    <button
-                        onClick={handleCreateQuote}
-                        disabled={isLoading || !newQuoteName.trim()}
-                        className={`w-full py-3 rounded-lg text-white font-medium transition ${!isLoading && newQuoteName.trim() ? 'bg-[#0079C2] hover:bg-[#005a91]' : 'bg-gray-300 cursor-not-allowed'
-                            }`}
-                    >
-                        {isLoading ? 'Creating...' : 'Create & Add Product'}
-                    </button>
-                </div>
-            </Modal>
+                </Modal>
+            )}
 
             <Head>
                 <title>{data.seo_title ?? 'Product Detail'}</title>
@@ -780,7 +793,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     </p>
                                 )}
                             </div>
-                            {data.is_sign_up_for_pricing && !logged && (
+                            {data.is_sign_up_for_pricing && !logged && !isDiscontinued && (
                                 <div className="flex flex-wrap gap-3">
                                     <button
                                         type="button"
@@ -792,37 +805,40 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 </div>
                             )}
 
-                            <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
-                                <button
-                                    type="button"
-                                    onClick={handleAddToCart}
-                                    disabled={isAddingToCart}
-                                    className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
-                                >
-                                    {isAddingToCart ? 'Adding...' : 'Add To Cart'}
-                                </button>
-
-                                {logged && (
+                            {/* Only show action buttons if not discontinued */}
+                            {!isDiscontinued && (
+                                <div className="flex flex-col gap-5 items-stretch max-w-xs w-full">
                                     <button
                                         type="button"
-                                        onClick={handleAddToQuoteClick}
-                                        className="inline-flex items-center justify-center rounded-sm bg-[#0079C2] border border-[#0079C2] px-8 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full"
+                                        onClick={handleAddToCart}
+                                        disabled={isAddingToCart}
+                                        className={`inline-flex items-center justify-center rounded-sm bg-[#5FC3FF] px-10 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full ${isAddingToCart ? 'opacity-70 cursor-wait' : ''}`}
                                     >
-                                        Add To Quote
+                                        {isAddingToCart ? 'Adding...' : 'Add To Cart'}
                                     </button>
-                                )}
 
-                                {/* CTA Button for Product Request */}
-                                {data.is_cta && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsProductRequestModalOpen(true)}
-                                        className="inline-flex items-center justify-center rounded-sm bg-[#FFA723] border border-[#FFA723] px-8 py-3 text-sm font-medium text-white cursor-pointer hover:shadow-xl transition w-full"
-                                    >
-                                        Request Product CTA
-                                    </button>
-                                )}
-                            </div>
+                                    {logged && (
+                                        <button
+                                            type="button"
+                                            onClick={handleAddToQuoteClick}
+                                            className="inline-flex items-center justify-center rounded-sm bg-[#0079C2] border border-[#0079C2] px-8 py-3 text-sm font-normal text-white cursor-pointer hover:shadow-xl transition w-full"
+                                        >
+                                            Add To Quote
+                                        </button>
+                                    )}
+
+                                    {/* CTA Button for Product Request */}
+                                    {data.is_cta && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsProductRequestModalOpen(true)}
+                                            className="inline-flex items-center justify-center rounded-sm bg-[#FFA723] border border-[#FFA723] px-8 py-3 text-sm font-medium text-white cursor-pointer hover:shadow-xl transition w-full"
+                                        >
+                                            Request Product CTA
+                                        </button>
+                                    )}
+                                </div>
+                            )}
 
                             {data.key_feature && (
                                 <div>

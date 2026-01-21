@@ -68,7 +68,7 @@ export default function BecomeCustomer() {
         trading_name: '',
         vat_number: '',
         address: '',
-        trading_address: '',
+        // trading_address: '',  // Hapus input ini dari formData state, tidak perlu Trading Name kedua (trading_address)
         phone: '',
         // fax: '',  // Removed Fax from formData state
         activities_description: '',
@@ -167,7 +167,7 @@ export default function BecomeCustomer() {
                     trading_name: '',
                     vat_number: '',
                     address: '',
-                    trading_address: '',
+                    // trading_address: '', // Hapus reset trading_address karena field itu dihapus
                     phone: '',
                     // fax: '', // Remove reset fax
                     activities_description: '',
@@ -327,7 +327,7 @@ export default function BecomeCustomer() {
                                             </div>
                                         </div>
 
-                                        {/* Company Address, Trading Address (inline) */}
+                                        {/* Company Address (full width, hapus kolom Trading Name kedua/Trading Address) */}
                                         <div className="flex flex-col md:flex-row gap-6">
                                             <div className="flex-1">
                                                 <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
@@ -341,18 +341,7 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.address && <div className="text-xs text-red-500 mt-1">{errors.address}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Trading Name (If applicable)
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.trading_address}
-                                                    onChange={e => handleChange('trading_address', e.target.value)}
-                                                />
-                                                {errors.trading_address && <div className="text-xs text-red-500 mt-1">{errors.trading_address}</div>}
-                                            </div>
+                                            {/* Dihapus Trading Name (kedua)/Trading Address */}
                                         </div>
 
                                         {/* Telephone No (removed Fax No), use only phone */}
@@ -696,13 +685,17 @@ export default function BecomeCustomer() {
                                                 <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
                                                     Credit Limit Required
                                                 </label>
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                    value={formData.requested_credit_limit}
-                                                    onChange={e => handleChange('requested_credit_limit', e.target.value)}
-                                                />
+                                                <div className="relative">
+                                                    <span className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[#000] text-xs pl-1 pointer-events-none">£</span>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-4 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
+                                                        style={{ paddingLeft: '1.2em' }}
+                                                        value={formData.requested_credit_limit}
+                                                        onChange={e => handleChange('requested_credit_limit', e.target.value)}
+                                                    />
+                                                </div>
                                                 {errors.requested_credit_limit && <div className="text-xs text-red-500 mt-1">{errors.requested_credit_limit}</div>}
                                                 <div className="text-xs text-[#000] font-poppins">
                                                 * Please Note: References must reflect your required credit limit.

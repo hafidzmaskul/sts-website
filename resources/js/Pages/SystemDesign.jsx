@@ -113,7 +113,7 @@ export default function SystemDesign({ services = [] }) {
                         </div>
                         {/* Right: Bulleted List */}
                         <div className="flex-1 flex justify-end">
-                            <ul className="list-disc list-inside text-white text-xs font-medium space-y-0 text-left">
+                            <ul className="list-disc list-inside text-white text-base font-medium space-y-0 text-left">
                                 <li>
                                     We have the widest range of security products in the UK: 250 brands, 25,000 products.
                                 </li>

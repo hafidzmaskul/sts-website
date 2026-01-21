@@ -267,7 +267,7 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.item icon="folder-git-2" href="/" class="custom-navitem">
-                {{ __('Landing Page') }}
+                {{ __('Back To Homepage') }}
             </flux:navlist.item>
 
         </flux:navlist>
