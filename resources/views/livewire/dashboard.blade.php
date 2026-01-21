@@ -77,10 +77,67 @@
     <div class="p-6 space-y-6">
         <h1 class="text-2xl font-bold" style="color: #000;">Dashboard</h1>
 
+        <!-- Business Overview -->
+        <h2 class="text-xl font-bold mb-4" style="color: #000;">Business Overview</h2>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Revenue -->
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500">Total Revenue</h3>
+                    <div class="p-2 bg-green-50 rounded-lg">
+                        <flux:icon.banknotes class="w-6 h-6 text-green-600" />
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <span
+                        class="text-3xl font-bold text-black">£{{ number_format($businessStats['total_revenue'], 2) }}</span>
+                </div>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500">Total Orders</h3>
+                    <div class="p-2 bg-blue-50 rounded-lg">
+                        <flux:icon.shopping-bag class="w-6 h-6 text-blue-600" />
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-black">{{ number_format($businessStats['total_orders']) }}</span>
+                </div>
+            </div>
+
+            <!-- Total Customers -->
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-medium text-gray-500">Total Customers</h3>
+                    <div class="p-2 bg-purple-50 rounded-lg">
+                        <flux:icon.users class="w-6 h-6 text-purple-600" />
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <span
+                        class="text-3xl font-bold text-black">{{ number_format($businessStats['total_customers']) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white mb-8">
+            <h3 class="text-lg font-semibold mb-6 text-black">Revenue & Order Trends (Last 30 Days)</h3>
+            <div class="relative h-80 w-full">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+        </div>
+
+        <h2 class="text-xl font-bold mb-4" style="color: #000;">Content Stats</h2>
+
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- News Stats -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-medium" style="color: #000;">Total Articles</h3>
                     <div class="p-2 rounded-lg">
@@ -94,7 +151,7 @@
             </div>
 
             <!-- Newsletter Stats -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-medium" style="color: #000;">Subscribers</h3>
                     <div class="p-2 rounded-lg">
@@ -107,7 +164,7 @@
             </div>
 
             <!-- Product Categories Stats -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-medium" style="color: #000;">Categories</h3>
                     <div class="p-2 rounded-lg">
@@ -120,7 +177,7 @@
             </div>
 
             <!-- Banners Stats -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-medium" style="color: #000;">Active Banners</h3>
                     <div class="p-2 rounded-lg">
@@ -133,10 +190,85 @@
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('livewire:navigated', function () {
+                initDashboardChart();
+            });
+
+            // Initial load in case not navigated via Livewire SPA
+            document.addEventListener('DOMContentLoaded', function () {
+                initDashboardChart();
+            });
+
+            function initDashboardChart() {
+                const ctx = document.getElementById('dashboardChart');
+                if (!ctx) return;
+
+                // Destroy existing chart if it exists to prevent duplicates
+                if (window.myDashboardChart) {
+                    window.myDashboardChart.destroy();
+                }
+
+                const chartData = @json($chartData);
+
+                window.myDashboardChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [
+                            {
+                                label: 'Revenue (£)',
+                                data: chartData.revenue,
+                                borderColor: '#0ea5e9', // Sky 500
+                                backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                                borderWidth: 2,
+                                yAxisID: 'y',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'Orders',
+                                data: chartData.orders,
+                                borderColor: '#8b5cf6', // Violet 500
+                                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                yAxisID: 'y1',
+                                tension: 0.3,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Revenue (£)'
+                                },
+                                ticks: {
+                                    callback: function  (value) {                                     return '£' + value;                                 }                             }                         },                         y1: {                             type: 'linear',                             display: true,                             position: 'right',                             title: {                                 display: true,                                 text: 'Orders'                             },                             grid: {                                 drawOnChartArea: false,                             },                             beginAtZero: true,                             ticks: {                                 stepSize: 1                             }                         },                     }                 }             });         }
+        </script>
+
         <!-- Recent Activity Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Recent News -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <h3 class="text-lg font-semibold mb-4" style="color: #000;">Recent Articles</h3>
                 <div class="space-y-4">
                     @forelse($recent_news as $article)
@@ -158,7 +290,7 @@
             </div>
 
             <!-- Recent Subscriptions -->
-            <div class="p-6 rounded-2xl shadow border border-zinc-200">
+            <div class="p-6 rounded-2xl shadow border border-zinc-200 bg-white">
                 <h3 class="text-lg font-semibold mb-4" style="color: #000;">New Subscribers</h3>
                 <div class="space-y-4">
                     @forelse($recent_subscriptions as $sub)

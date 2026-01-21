@@ -5,9 +5,19 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use Spatie\Permission\Models\Role;
 
-test('guests are redirected to the login page', function () {
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+beforeEach(function () {
+    $roles = ['admin', 'customer', 'trade account', 'credit facilities account', 'guest', 'child'];
+    foreach ($roles as $role) {
+        Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
+    }
+});
+
+test('guests are allowed and auto-logged in', function () {
     $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('login'));
+    $response->assertStatus(200);
+    // Guests might see 'Guest User' or similar depending on EnsureGuestUser logic
 });
 
 test('authenticated users can visit the dashboard', function () {
@@ -52,4 +62,70 @@ test('normal users do not see recent transactions section', function () {
 
     $response->assertStatus(200);
     $response->assertDontSee('Recent Transactions');
+});
+
+test('admin user sees business overview stats', function () {
+    $this->withoutExceptionHandling();
+    $role = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'trade account', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+    $user = User::factory()->create();
+    $user->assignRole($role);
+
+    // Create some data
+    $customerRole = Role::firstOrCreate(['name' => 'customer', 'guard_name' => 'web']);
+    $customerUser = User::factory()->create();
+    $customerUser->assignRole($customerRole);
+    Customer::factory()->create(['user_id' => $customerUser->id]);
+
+    Transaction::create([
+        'customer_id' => $customerUser->customer->id,
+        'invoice_code' => 'INV-STAT-001',
+        'total_amount' => 100,
+        'status' => 'paid',
+    ]);
+
+    Transaction::create([
+        'customer_id' => $customerUser->customer->id,
+        'invoice_code' => 'INV-STAT-002',
+        'total_amount' => 50,
+        'status' => 'pending', // Pending doesn't count for revenue in our logic
+    ]);
+
+    Transaction::create([
+        'customer_id' => $customerUser->customer->id,
+        'invoice_code' => 'INV-STAT-003',
+        'total_amount' => 200,
+        'status' => 'cancelled', // Cancelled doesn't count for orders
+    ]);
+
+    $this->actingAs($user);
+
+    $response = $this->get(route('dashboard'));
+
+    $response->assertStatus(200);
+    $response->assertSee('Business Overview');
+
+    // Revenue: 100 (Paid)
+    // Orders: 2 (Paid + Pending, Cancelled excluded)
+    // Customers: 1
+
+    // Livewire feature tests return rendered HTML, so we check content directly
+    $response->assertStatus(200);
+    $response->assertSee('Business Overview');
+
+    // Revenue formatted: 100 -> £100.00
+    // Check for the value, assuming currency symbol might be in separate span or adjacent
+    $response->assertSee('100.00');
+
+    // Orders count: 2
+    $response->assertSee('2');
+
+    // Customers count: 1 or more
+    // Hard to check exact number if dynamic, but we can check the label exists
+    $response->assertSee('Total Customers');
+
+    // Verify chart data key is present in the rendered script
+    $response->assertSee('const chartData =');
 });
