@@ -27,6 +27,16 @@ class Transaction extends Model
         'shipping_price',
         'coupon_id',
         'discount_amount',
+        'coupon_data',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'coupon_data' => 'array',
     ];
 
     public function customer()
@@ -50,10 +60,19 @@ class Transaction extends Model
 
     protected $appends = [
         'invoice_url',
+        'saved_coupon',
     ];
 
     public function getInvoiceUrlAttribute()
     {
         return 'http://sts.gaia-ol.com/payment';
+    }
+
+    public function getSavedCouponAttribute()
+    {
+        if (!empty($this->coupon_data)) {
+            return $this->coupon_data;
+        }
+        return $this->coupon;
     }
 }

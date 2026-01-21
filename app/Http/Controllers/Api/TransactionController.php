@@ -407,6 +407,17 @@ class TransactionController extends Controller
         if ($coupon) {
             $transaction->coupon_id = $coupon->id;
             $transaction->discount_amount = $calculatedDiscount;
+
+            // Store Historical Data Snapshot
+            $transaction->coupon_data = [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'name' => $coupon->name,
+                'type' => $coupon->type,
+                'discount_type' => $coupon->discount_type,
+                'discount_value' => $coupon->discount_value,
+            ];
+
             // Increment Used Count
             $coupon->increment('used_count');
         }
@@ -483,7 +494,7 @@ class TransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $transaction->load('items.product.images'),
+            'data' => $transaction->load(['items.product.images']),
         ], 201);
     }
 }
