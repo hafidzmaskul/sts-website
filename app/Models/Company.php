@@ -44,8 +44,18 @@ class Company extends Model
         return $this->hasMany(Customer::class);
     }
 
-    public function creditLimits(): HasMany
+    public function creditLimits()
     {
         return $this->hasMany(CreditLimit::class);
+    }
+
+    public function monthlyCreditLimits()
+    {
+        return $this->hasMany(MonthlyCreditLimit::class);
+    }
+
+    public function statementHistories()
+    {
+        return $this->hasMany(StatementHistory::class);
     }
 }

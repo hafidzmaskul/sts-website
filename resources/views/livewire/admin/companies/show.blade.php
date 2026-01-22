@@ -184,10 +184,15 @@
 
     <!-- Credit Limits (Full Width) -->
     <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
-        <h2 class="text-lg font-semibold mb-4 text-black flex items-center gap-2">
-            <flux:icon.credit-card class="w-5 h-5 text-gray-400" />
-            Credit Limits
-        </h2>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-black flex items-center gap-2">
+                <flux:icon.credit-card class="w-5 h-5 text-gray-400" />
+                Credit Limits
+            </h2>
+            <button wire:click="confirmSendStatement" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium flex items-center gap-1">
+                <span>Send Statement</span>
+            </button>
+        </div>
 
         @if($company->creditLimits->count() > 0)
             <div class="overflow-hidden border border-gray-200 rounded-lg">
@@ -244,6 +249,58 @@
         @else
             <p class="text-sm text-gray-500 italic">No credit limit history found.</p>
         @endif
+    </div>
+
+    <!-- Statement History Section -->
+    <div class="rounded-xl shadow p-6 border border-gray-200 bg-white mt-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-black flex items-center gap-2">
+                <flux:icon.document-text class="w-5 h-5 text-gray-400" />
+                Statement History
+            </h2>
+        </div>
+
+        <div class="overflow-hidden border border-gray-200 rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent Date</th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender</th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipients</th>
+                        <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($this->company->statementHistories()->latest()->get() as $history)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ $history->created_at->format('d M Y H:i') }}</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                                <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                                    {{ $history->period }}
+                                </span>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ $history->user->name ?? 'System' }}</td>
+                            <td class="px-3 py-2 text-sm text-gray-500 max-w-xs truncate" title="{{ $history->recipients }}">
+                                {{ $history->recipients }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
+                                <button wire:click="downloadStatement({{ $history->id }})" class="text-indigo-600 hover:text-indigo-900 flex items-center justify-end gap-1 ml-auto">
+                                    <flux:icon.arrow-down-tray class="w-4 h-4" />
+                                    Download
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-3 py-4 text-center text-sm text-gray-500">
+                                No statements sent yet.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Monthly Credit Limit History (Full Width) -->
@@ -318,6 +375,41 @@
             <p class="text-sm text-gray-500 italic">No monthly credit limit history found.</p>
         @endif
     </div>
+
+    <!-- Send Statement Modal -->
+    <flux:modal name="send-statement-modal" class="min-w-[30rem] space-y-6" wire:model="showStatementModal">
+        <div>
+            <flux:heading size="lg">Send Monthly Statement</flux:heading>
+            <flux:subheading>Select the month and year to generate the statement for.</flux:subheading>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-black mb-2">Month</label>
+                <select wire:model="statementMonth" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 text-black">
+                    @foreach($this->months as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-black mb-2">Year</label>
+                <select wire:model="statementYear" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 text-black">
+                    @foreach($this->years as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="primary" wire:click="sendInvoice">Send Email</flux:button>
+        </div>
+    </flux:modal>
 
     <!-- Add Limit Modal -->
     <flux:modal name="add-limit-modal" class="min-w-[30rem] space-y-6" wire:model="showAddLimitModal">
