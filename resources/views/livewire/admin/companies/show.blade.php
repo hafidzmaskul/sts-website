@@ -73,8 +73,15 @@
                     </div>
                     <div class="grid grid-cols-3 gap-4 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
                         <dt class="text-sm font-medium text-gray-500">Credit Limit</dt>
-                        <dd class="col-span-2 text-sm font-semibold text-black">
-                            {{ $company->requested_credit_limit ? number_format($company->requested_credit_limit, 2) : '-' }}
+                        <dd class="col-span-2 text-sm font-semibold text-black flex items-center gap-2">
+                            @if($monthlyCreditLimits->isNotEmpty())
+                                £{{ number_format($monthlyCreditLimits->first()->amount, 2) }}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                    Active
+                                </span>
+                            @else
+                                {{ $company->requested_credit_limit ? '£' . number_format($company->requested_credit_limit, 2) : '-' }}
+                            @endif
                         </dd>
                     </div>
                 </dl>
@@ -238,4 +245,97 @@
             <p class="text-sm text-gray-500 italic">No credit limit history found.</p>
         @endif
     </div>
+
+    <!-- Monthly Credit Limit History (Full Width) -->
+    <div class="rounded-xl shadow p-6 border border-gray-200 bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-black flex items-center gap-2">
+                <flux:icon.clock class="w-5 h-5 text-gray-400" />
+                Monthly Credit Limit History
+            </h2>
+            <button wire:click="confirmAddLimit" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
+                + Add New Limit
+            </button>
+        </div>
+
+        @if($monthlyCreditLimits->count() > 0)
+            <div class="overflow-hidden border border-gray-200 rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col"
+                                class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No
+                            </th>
+                            <th scope="col"
+                                class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Created At</th>
+                            <th scope="col"
+                                class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Description</th>
+                            <th scope="col"
+                                class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                User Name</th>
+                            <th scope="col"
+                                class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Amount</th>
+                            <th scope="col" class="relative px-6 py-3">
+                                <span class="sr-only">Status</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse($monthlyCreditLimits as $index => $limit)
+                            <tr>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $monthlyCreditLimits->count() - $index }}
+                                    @if($index === 0)
+                                        <span
+                                            class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $limit->created_at->format('M d, Y H:i') }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">{{ $limit->description }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $limit->user->name ?? 'Unknown' }}
+                                </td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    £{{ number_format($limit->amount, 2) }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 text-center">No history
+                                    found</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="text-sm text-gray-500 italic">No monthly credit limit history found.</p>
+        @endif
+    </div>
+
+    <!-- Add Limit Modal -->
+    <flux:modal name="add-limit-modal" class="min-w-[30rem] space-y-6" wire:model="showAddLimitModal">
+        <div>
+            <flux:heading size="lg">Add Monthly Credit Limit</flux:heading>
+        </div>
+
+        <div class="space-y-4">
+            <flux:input wire:model="newLimitAmount" label="Amount" type="number" step="0.01" />
+
+            <flux:input wire:model="newLimitDescription" label="Description" />
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="primary" wire:click="saveLimit">Save</flux:button>
+        </div>
+    </flux:modal>
 </div>

@@ -62,6 +62,14 @@ class Show extends Component
                 'description' => 'Req. Credit Limit Approved',
                 'user_id' => auth()->id(),
             ]);
+
+            // 5. Store Requested Credit Limit for Monthly Reset
+            \App\Models\MonthlyCreditLimit::create([
+                'company_id' => $this->customer->company_id,
+                'user_id' => $user->id, // Initial request belongs to the customer
+                'amount' => $this->customer->company->requested_credit_limit,
+                'description' => 'Initial approved credit limit',
+            ]);
         }
 
         // Optional: Send "Account Approved" email to user with password reset link or similar
