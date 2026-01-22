@@ -62,14 +62,30 @@ export default function Commisioning({ services = [] }) {
                 </nav>
             </div>
 
-            <HeroSection
-                bgUrl="/assets/bg-commisioning.png"
-                title="Commisioning"
-                text="Lorem ipsum dolor sit amet consectetur. Feugiat suspendisse diam mauris nec odio sed feugiat sollicitudin rutrum aliquam."
-                textColor="text-black"
-                textAlign="end"
-                textSize='text-3xl md:text-5xl'
-            />
+            {/* Hero Section - Responsive Improvement */}
+            <div className="md:hidden block">
+
+                <HeroSection
+                    bgUrl=""
+                    title="Commissioning"
+                    text="Commissioning your security system with us ensures expert setup, optimal performance, and peace of mind. Our seasoned team provides thorough testing, configuration, and personalized training that guarantees maximum reliability from day one."
+                    textColor="text-black"
+                    textAlign="end"
+                    textSize="text-3xl md:text-5xl"
+                />
+            </div>
+            <div className="md:block hidden">
+
+                <HeroSection
+                    bgUrl="/assets/bg-commisioning.png"
+                    title="Commissioning"
+                    text="Commissioning your security system with us ensures expert setup, optimal performance, and peace of mind. Our seasoned team provides thorough testing, configuration, and personalized training that guarantees maximum reliability from day one."
+                    textColor="text-black"
+                    textAlign="end"
+                    textSize="text-3xl md:text-5xl"
+                />
+            </div>
+
             <main className="flex-1">
 
                 {/* Commissioning service section - improved responsive */}
