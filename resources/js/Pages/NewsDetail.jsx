@@ -36,40 +36,40 @@ export default function NewsDetail({ news, otherNews }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-white font-inter">
+        <div className="min-h-screen flex flex-col bg-white font-inter p-3">
             <Head title={`${news.title} - STS News`} />
             <Header />
 
-            <main className="flex-grow pt-24 pb-20"> {/* PT to clear fixed header if needed, loosely based on design */}
-                <div className="container mx-auto px-4 md:px-10 lg:px-20">
+            <main className="flex-grow pt-24 pb-10 sm:pb-16"> {/* Lower pb on mobile */}
+                <div className="container mx-auto px-2 sm:px-4 md:px-8 lg:px-20">
 
                     {/* Breadcrumb */}
-                    <nav className="flex mb-8 text-sm text-gray-500">
+                    <nav className="flex flex-wrap mb-6 sm:mb-8 text-xs sm:text-sm text-gray-500">
                         <Link href="/" className="hover:text-[#0079C2]">Home</Link>
-                        <span className="mx-2">/</span>
+                        <span className="mx-1 sm:mx-2">/</span>
                         <Link href="/news" className="hover:text-[#0079C2]">News</Link>
-                        <span className="mx-2">/</span>
-                        <span className="text-gray-900 truncate max-w-[200px]">{news.title}</span>
+                        <span className="mx-1 sm:mx-2">/</span>
+                        <span className="text-gray-900 truncate max-w-[80vw] sm:max-w-[200px]">{news.title}</span>
                     </nav>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div className="grid grid-cols-1 gap-y-10 gap-x-0 sm:gap-x-8 lg:gap-x-12 lg:grid-cols-12">
                         {/* Main Content Column */}
-                        <div className="lg:col-span-8">
+                        <div className="lg:col-span-8 order-2 lg:order-1">
                             {/* Article Header */}
-                            <div className="mb-8">
-                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#232323] leading-tight mb-4">
+                            <div className="mb-6 sm:mb-8">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#232323] leading-tight mb-3 sm:mb-4 break-words">
                                     {news.title}
                                 </h1>
-                                <div className="flex items-center text-gray-500 text-sm md:text-base space-x-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center text-gray-500 text-xs sm:text-sm md:text-base gap-1 sm:gap-4">
                                     <span className="flex items-center">
-                                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                         </svg>
                                         {formatDate(news.created_at)}
                                     </span>
                                     {news.categories && news.categories.length > 0 && (
-                                        <span className="flex items-center">
-                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <span className="flex items-center mt-1 sm:mt-0">
+                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                                             </svg>
                                             {news.categories.map(c => c.name).join(', ')}
@@ -79,17 +79,17 @@ export default function NewsDetail({ news, otherNews }) {
                             </div>
 
                             {/* Featured Image */}
-                            <div className="mb-10 rounded-2xl overflow-hidden shadow-sm">
+                            <div className="mb-6 sm:mb-10 rounded-xl sm:rounded-2xl overflow-hidden shadow-sm">
                                 <img
                                     src={getImageUrl(news.image_path || news.image)}
                                     alt={news.title}
-                                    className="w-full h-auto object-cover max-h-[500px]"
+                                    className="w-full h-auto object-cover max-h-[230px] sm:max-h-[350px] md:max-h-[500px] transition-all"
                                 />
                             </div>
 
                             {/* Article Content */}
                             <div
-                                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                                className="prose prose-sm sm:prose-base md:prose-lg max-w-none text-gray-700 leading-relaxed px-0 sm:px-0"
                                 dangerouslySetInnerHTML={{ __html: news.content }}
                             />
 
@@ -97,15 +97,22 @@ export default function NewsDetail({ news, otherNews }) {
                         </div>
 
                         {/* Sidebar Column */}
-                        <div className="lg:col-span-4 space-y-10">
+                        {/* Move sidebar above content on mobile/tablet */}
+                        <div className="lg:col-span-4 order-1 lg:order-2 space-y-6 sm:space-y-10">
                             {/* Latest News Widget */}
-                            <div className="bg-[#F9FAFB] rounded-xl p-6 border border-gray-100">
-                                <h3 className="text-xl font-bold text-[#232323] mb-6 border-b pb-2">Latest News</h3>
-                                <div className="space-y-6">
+                            <div className="bg-[#F9FAFB] rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-100">
+                                <h3 className="text-lg sm:text-xl font-bold text-[#232323] mb-4 sm:mb-6 border-b pb-2">
+                                    Latest News
+                                </h3>
+                                <div className="space-y-4 sm:space-y-6">
                                     {otherNews && otherNews.length > 0 ? (
                                         otherNews.map((item) => (
-                                            <Link href={`/news/${item.slug}`} key={item.id} className="group flex gap-4 items-start">
-                                                <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
+                                            <Link
+                                                href={`/news/${item.slug}`}
+                                                key={item.id}
+                                                className="group flex gap-3 sm:gap-4 items-start"
+                                            >
+                                                <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-md sm:rounded-lg overflow-hidden bg-gray-200">
                                                     <img
                                                         src={getImageUrl(item.image_path || item.thumbnail)}
                                                         alt={item.title}
@@ -113,21 +120,18 @@ export default function NewsDetail({ news, otherNews }) {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-gray-900 group-hover:text-[#0079C2] transition-colors line-clamp-2 text-sm leading-snug mb-1">
+                                                    <h4 className="font-semibold text-gray-900 group-hover:text-[#0079C2] transition-colors line-clamp-2 text-xs sm:text-sm leading-snug mb-0.5 sm:mb-1">
                                                         {item.title}
                                                     </h4>
-                                                    <span className="text-xs text-gray-500">{formatDate(item.created_at)}</span>
+                                                    <span className="text-[10px] sm:text-xs text-gray-500">{formatDate(item.created_at)}</span>
                                                 </div>
                                             </Link>
                                         ))
                                     ) : (
-                                        <p className="text-gray-500 text-sm">No other news available.</p>
+                                        <p className="text-gray-500 text-xs sm:text-sm">No other news available.</p>
                                     )}
                                 </div>
                             </div>
-
-                            
-
                         </div>
                     </div>
                 </div>

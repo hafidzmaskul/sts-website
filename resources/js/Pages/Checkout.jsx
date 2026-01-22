@@ -167,7 +167,8 @@ export default function Checkout({ auth }) {
             };
 
             const response = await axios.post('/web/transactions', payload);
-            setToast({ show: true, message: 'Checkout successful!', type: 'success' });
+            setToast({ show: true, message: 'Checkout successful!,', type: 'success' });
+            setToast({ show: true, message: 'Waiting For Redirect To Invoice !,', type: 'success' });
             setTimeout(() => {
                 window.location.href = `/my-transactions/${response.data.data.id}`;
             }, 1500);

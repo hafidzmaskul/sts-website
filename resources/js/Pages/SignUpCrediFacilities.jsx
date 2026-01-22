@@ -68,9 +68,7 @@ export default function BecomeCustomer() {
         trading_name: '',
         vat_number: '',
         address: '',
-        // trading_address: '',  // Hapus input ini dari formData state, tidak perlu Trading Name kedua (trading_address)
         phone: '',
-        // fax: '',  // Removed Fax from formData state
         activities_description: '',
         purchasing_contact_name: '',
         purchasing_contact_phone: '',
@@ -167,9 +165,7 @@ export default function BecomeCustomer() {
                     trading_name: '',
                     vat_number: '',
                     address: '',
-                    // trading_address: '', // Hapus reset trading_address karena field itu dihapus
                     phone: '',
-                    // fax: '', // Remove reset fax
                     activities_description: '',
                     purchasing_contact_name: '',
                     purchasing_contact_phone: '',
@@ -208,54 +204,72 @@ export default function BecomeCustomer() {
             <Header />
 
             <main>
-                <section className="bg-[#F0F2F3] py-10 px-10 container mx-auto my-20">
+                {/* Main section updated with improved responsive classes */}
+                <section className="bg-[#F0F2F3] py-5 sm:py-8 md:py-10 px-2 sm:px-6 md:px-10 container mx-auto my-5 sm:my-10 md:my-20">
                     <div className="text-center">
-                        <h1 className='text-[#002856] font-bold font-inter text-2xl'>STS | Become a Customer</h1>
+                        <h1 className="text-[#002856] font-bold font-inter text-lg sm:text-xl md:text-2xl">STS | Become a Customer</h1>
                     </div>
-                    <div className="flex flex-col mx-auto mt-8 text-left max-w-4xl">
+                    <div className="flex flex-col mx-auto mt-6 sm:mt-8 text-left w-full max-w-full sm:max-w-2xl md:max-w-4xl">
                         <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
                             {/* Stepper Indicator */}
-                            <div className="mt-10 mb-8">
-                                <div className="flex items-start justify-between">
+                            <div className="mt-6 sm:mt-8 md:mt-10 mb-6 sm:mb-8">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-center sm:justify-between gap-4 sm:gap-0">
                                     {steps.map((step, index) => {
                                         const status = getStepStatus(step.number);
                                         const isLast = index === steps.length - 1;
                                         return (
                                             <React.Fragment key={step.number}>
-                                                <div className="flex flex-col items-center" style={{ flex: isLast ? '0 0 auto' : '1 1 0' }}>
+                                                <div
+                                                    className="flex flex-row sm:flex-col items-center"
+                                                    style={{ flex: isLast ? '0 0 auto' : '1 1 0' }}
+                                                >
                                                     <div
-                                                        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-colors ${status === 'active'
+                                                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center font-bold text-xs sm:text-sm transition-colors ${
+                                                            status === 'active'
                                                                 ? 'border-[#0079C2] bg-white text-[#0079C2]'
                                                                 : status === 'completed'
-                                                                    ? 'border-[#0079C2] bg-[#0079C2] text-white'
-                                                                    : 'border-[#757575] bg-white text-[#757575]'
-                                                            }`}
+                                                                ? 'border-[#0079C2] bg-[#0079C2] text-white'
+                                                                : 'border-[#757575] bg-white text-[#757575]'
+                                                        }`}
                                                     >
                                                         {status === 'completed' ? (
-                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                             </svg>
                                                         ) : (
                                                             step.number
                                                         )}
                                                     </div>
-                                                    <div className="mt-2 text-center max-w-[150px]">
-                                                        <div className={`text-xs font-bold ${status === 'active' ? 'text-[#0079C2]' : status === 'completed' ? 'text-[#0079C2]' : 'text-[#757575]'}`}>
+                                                    <div className="ml-3 sm:ml-0 sm:mt-2 text-left sm:text-center max-w-[120px] sm:max-w-[150px]">
+                                                        <div
+                                                            className={`text-[10px] sm:text-xs font-bold ${
+                                                                status === 'active' || status === 'completed'
+                                                                    ? 'text-[#0079C2]'
+                                                                    : 'text-[#757575]'
+                                                            }`}
+                                                        >
                                                             {step.title}
                                                         </div>
-                                                        <div className={`text-xs mt-1 ${status === 'active' ? 'text-[#0079C2]' : status === 'completed' ? 'text-[#0079C2]' : 'text-[#757575]'}`}>
+                                                        <div
+                                                            className={`text-[10px] sm:text-xs mt-0.5 sm:mt-1 ${
+                                                                status === 'active' || status === 'completed'
+                                                                    ? 'text-[#0079C2]'
+                                                                    : 'text-[#757575]'
+                                                            }`}
+                                                        >
                                                             {step.desc}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 {!isLast && (
                                                     <div
-                                                        className={`flex-1 h-0.5 mx-2 mt-5 ${completedSteps.includes(step.number)
+                                                        className={`hidden sm:flex flex-1 h-0.5 mx-2 mt-5 ${
+                                                            completedSteps.includes(step.number)
                                                                 ? 'bg-[#0079C2]'
                                                                 : currentStep > step.number
-                                                                    ? 'bg-[#0079C2]'
-                                                                    : 'bg-[#757575]'
-                                                            }`}
+                                                                ? 'bg-[#0079C2]'
+                                                                : 'bg-[#757575]'
+                                                        }`}
                                                     />
                                                 )}
                                             </React.Fragment>
@@ -264,16 +278,17 @@ export default function BecomeCustomer() {
                                 </div>
                             </div>
 
-                            <div className="mt-10 bg-white p-8 space-y-10 overflow-auto rounded-lg border border-[#f0f0f0]">
+                            {/* Responsive padding, spacing, and scroll for card */}
+                            <div className="mt-6 sm:mt-8 md:mt-10 bg-white p-4 sm:p-6 md:p-8 space-y-8 sm:space-y-10 overflow-auto rounded-lg border border-[#f0f0f0]">
                                 {/* Step 1: Company Information */}
                                 {currentStep === 1 && (
-                                    <div className="space-y-6 animate-fade-in">
-                                        <h2 className="font-bold text-lg text-[#002856] mb-0">Company Information</h2>
+                                    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+                                        <h2 className="font-bold text-base sm:text-lg text-[#002856] mb-0">Company Information</h2>
 
                                         {/* Company Name, Company Registration No: */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Company Name <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
@@ -285,8 +300,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.name && <div className="text-xs text-red-500 mt-1">{errors.name}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Company Registration No:
                                                 </label>
                                                 <input
@@ -300,9 +315,9 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Trading Name (If applicable), VAT Registration No (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Trading Name (If applicable)
                                                 </label>
                                                 <input
@@ -313,8 +328,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.trading_name && <div className="text-xs text-red-500 mt-1">{errors.trading_name}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     VAT Registration No
                                                 </label>
                                                 <input
@@ -327,10 +342,10 @@ export default function BecomeCustomer() {
                                             </div>
                                         </div>
 
-                                        {/* Company Address (full width, hapus kolom Trading Name kedua/Trading Address) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        {/* Company Address (full width) */}
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Company Address
                                                 </label>
                                                 <input
@@ -341,13 +356,12 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.address && <div className="text-xs text-red-500 mt-1">{errors.address}</div>}
                                             </div>
-                                            {/* Dihapus Trading Name (kedua)/Trading Address */}
                                         </div>
 
-                                        {/* Telephone No (removed Fax No), use only phone */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        {/* Telephone No */}
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Telephone No
                                                 </label>
                                                 <input
@@ -358,12 +372,11 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.phone && <div className="text-xs text-red-500 mt-1">{errors.phone}</div>}
                                             </div>
-                                            {/* Deleted Fax input and error, use only one column */}
                                         </div>
 
-                                        {/* Main Activities (not inline) */}
+                                        {/* Main Activities */}
                                         <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                 Brief details of your company's main activities
                                             </label>
                                             <input
@@ -376,12 +389,11 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Next Button */}
-                                        <div className="flex justify-between mt-6 pt-6 border-t border-[#E8E7E7]">
-                                            <div></div>
+                                        <div className="flex flex-col sm:flex-row justify-end mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[#E8E7E7]">
                                             <button
                                                 type="button"
                                                 onClick={handleNext}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
+                                                className="mt-2 sm:mt-0 px-6 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] w-full sm:w-auto"
                                             >Next</button>
                                         </div>
                                     </div>
@@ -389,13 +401,15 @@ export default function BecomeCustomer() {
 
                                 {/* Step 2: Contact Information */}
                                 {currentStep === 2 && (
-                                    <div className="space-y-6 animate-fade-in">
-                                        <h2 className="font-bold text-lg text-[#002856] mb-0">Contact Information</h2>
+                                    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+                                        <h2 className="font-bold text-base sm:text-lg text-[#002856] mb-0">Contact Information</h2>
 
                                         {/* First/Last Name, Email, Job Title */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">First Name <span className="text-red-500">*</span></label>
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
+                                                    First Name <span className="text-red-500">*</span>
+                                                </label>
                                                 <input
                                                     type="text"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -405,8 +419,10 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.first_name && <div className="text-xs text-red-500 mt-1">{errors.first_name}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Last Name <span className="text-red-500">*</span></label>
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
+                                                    Last Name <span className="text-red-500">*</span>
+                                                </label>
                                                 <input
                                                     type="text"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -417,9 +433,11 @@ export default function BecomeCustomer() {
                                                 {errors.last_name && <div className="text-xs text-red-500 mt-1">{errors.last_name}</div>}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Email <span className="text-red-500">*</span></label>
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
+                                                    Email <span className="text-red-500">*</span>
+                                                </label>
                                                 <input
                                                     type="email"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -429,8 +447,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.email && <div className="text-xs text-red-500 mt-1">{errors.email}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Job Title</label>
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">Job Title</label>
                                                 <select
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
                                                     value={formData.job_title}
@@ -444,7 +462,7 @@ export default function BecomeCustomer() {
 
                                         {/* Purchasing Contact (not inline) */}
                                         <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                 Purchasing Contact
                                             </label>
                                             <input
@@ -457,9 +475,9 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Telephone No, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Telephone No</label>
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">Telephone No</label>
                                                 <input
                                                     type="text"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -468,8 +486,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.purchasing_contact_phone && <div className="text-xs text-red-500 mt-1">{errors.purchasing_contact_phone}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Email</label>
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">Email</label>
                                                 <input
                                                     type="email"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -482,7 +500,7 @@ export default function BecomeCustomer() {
 
                                         {/* Accounts Contact (not inline) */}
                                         <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                 Accounts Contact
                                             </label>
                                             <input
@@ -495,9 +513,9 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Telephone No, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Telephone No</label>
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">Telephone No</label>
                                                 <input
                                                     type="text"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -506,8 +524,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.accounts_contact_phone && <div className="text-xs text-red-500 mt-1">{errors.accounts_contact_phone}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">Email</label>
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">Email</label>
                                                 <input
                                                     type="email"
                                                     className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-0 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
@@ -519,16 +537,16 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Navigation Buttons */}
-                                        <div className="flex justify-between mt-6 pt-6 border-t border-[#E8E7E7]">
+                                        <div className="flex flex-col sm:flex-row justify-between mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[#E8E7E7] gap-2 sm:gap-4">
                                             <button
                                                 type="button"
                                                 onClick={handlePrevious}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
+                                                className="px-6 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] w-full sm:w-auto"
                                             >Previous</button>
                                             <button
                                                 type="button"
                                                 onClick={handleNext}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
+                                                className="px-6 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] w-full sm:w-auto"
                                             >Next</button>
                                         </div>
                                     </div>
@@ -536,13 +554,13 @@ export default function BecomeCustomer() {
 
                                 {/* Step 3: Financial & References */}
                                 {currentStep === 3 && (
-                                    <div className="space-y-6 animate-fade-in">
-                                        <h2 className="font-bold text-lg text-[#002856] mb-0">Financial & References</h2>
+                                    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+                                        <h2 className="font-bold text-base sm:text-lg text-[#002856] mb-0">Financial & References</h2>
 
                                         {/* Bank Name, Address (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Bank Name
                                                 </label>
                                                 <input
@@ -553,8 +571,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.bank_name && <div className="text-xs text-red-500 mt-1">{errors.bank_name}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Bank Address
                                                 </label>
                                                 <input
@@ -568,9 +586,9 @@ export default function BecomeCustomer() {
                                         </div>
 
                                         {/* Sort Code, Account Number (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Sort Code
                                                 </label>
                                                 <input
@@ -581,8 +599,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.bank_sort_code && <div className="text-xs text-red-500 mt-1">{errors.bank_sort_code}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Account Number
                                                 </label>
                                                 <input
@@ -595,12 +613,9 @@ export default function BecomeCustomer() {
                                             </div>
                                         </div>
 
-                                        {/* Credit Limit Required (newly moved up, as per instruction) */}
-
-
                                         {/* Name & Address of Trade Reference 1 */}
                                         <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                 Name & Address of Trade Reference 1
                                             </label>
                                             <input
@@ -612,9 +627,9 @@ export default function BecomeCustomer() {
                                             {errors.trade_ref_1_details && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_1_details}</div>}
                                         </div>
                                         {/* Telephone, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Telephone No
                                                 </label>
                                                 <input
@@ -625,8 +640,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.trade_ref_1_phone && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_1_phone}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Email
                                                 </label>
                                                 <input
@@ -641,7 +656,7 @@ export default function BecomeCustomer() {
 
                                         {/* Name & Address of Trade Reference 2 */}
                                         <div>
-                                            <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                 Name & Address of Trade Reference 2
                                             </label>
                                             <input
@@ -653,9 +668,9 @@ export default function BecomeCustomer() {
                                             {errors.trade_ref_2_details && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_details}</div>}
                                         </div>
                                         {/* Telephone, Email (inline) */}
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Telephone No
                                                 </label>
                                                 <input
@@ -666,8 +681,8 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.trade_ref_2_phone && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_phone}</div>}
                                             </div>
-                                            <div className="flex-1">
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
+                                            <div className="flex-1 min-w-0">
+                                                <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
                                                     Email
                                                 </label>
                                                 <input
@@ -678,41 +693,39 @@ export default function BecomeCustomer() {
                                                 />
                                                 {errors.trade_ref_2_email && <div className="text-xs text-red-500 mt-1">{errors.trade_ref_2_email}</div>}
                                             </div>
-
-
                                         </div>
                                         <div>
-                                                <label className="block mb-2 text-xs font-poppins font-normal text-[#000]">
-                                                    Credit Limit Required
-                                                </label>
-                                                <div className="relative">
-                                                    <span className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[#000] text-xs pl-1 pointer-events-none">£</span>
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-4 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
-                                                        style={{ paddingLeft: '1.2em' }}
-                                                        value={formData.requested_credit_limit}
-                                                        onChange={e => handleChange('requested_credit_limit', e.target.value)}
-                                                    />
-                                                </div>
-                                                {errors.requested_credit_limit && <div className="text-xs text-red-500 mt-1">{errors.requested_credit_limit}</div>}
-                                                <div className="text-xs text-[#000] font-poppins">
+                                            <label className="block mb-1.5 text-xs font-poppins font-normal text-[#000]">
+                                                Credit Limit Required
+                                            </label>
+                                            <div className="relative">
+                                                <span className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[#000] text-xs pl-1 pointer-events-none">£</span>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    className="w-full border-0 border-b border-[#000] text-[#000] font-poppins text-xs px-4 py-2 bg-transparent focus:outline-none focus:border-b-2 focus:border-[#000]"
+                                                    style={{ paddingLeft: '1.2em' }}
+                                                    value={formData.requested_credit_limit}
+                                                    onChange={e => handleChange('requested_credit_limit', e.target.value)}
+                                                />
+                                            </div>
+                                            {errors.requested_credit_limit && <div className="text-xs text-red-500 mt-1">{errors.requested_credit_limit}</div>}
+                                            <div className="text-xs text-[#000] font-poppins mt-0.5">
                                                 * Please Note: References must reflect your required credit limit.
                                             </div>
-                                            </div>
+                                        </div>
 
                                         {/* Navigation and Submit Buttons */}
-                                        <div className="flex justify-between mt-8 pt-6 border-t border-[#E8E7E7] gap-4">
+                                        <div className="flex flex-col sm:flex-row justify-between mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-[#E8E7E7] gap-2 sm:gap-4">
                                             <button
                                                 type="button"
                                                 onClick={handlePrevious}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c]"
+                                                className="px-6 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] w-full sm:w-auto"
                                             >Previous</button>
                                             <button
                                                 type="submit"
                                                 disabled={processing}
-                                                className="px-8 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] flex items-center gap-2"
+                                                className="px-6 py-2 rounded font-medium bg-[#0079C2] text-white hover:bg-[#005b8c] w-full sm:w-auto"
                                             >
                                                 {processing ? 'Registering...' : 'Submit'}
                                             </button>

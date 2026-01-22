@@ -65,12 +65,12 @@
                 </svg>
             </button>
 
-            <!-- Search -->
-            <div class="flex-1 flex justify-center mx-2 md:mx-6">
-                <div class="w-full max-w-lg relative hidden md:block">
+            <!-- Search (visible on both mobile and desktop) -->
+            <div class="flex-1 flex justify-center items-center mx-2 md:mx-6 gap-2">
+                <div class="w-full max-w-xs sm:max-w-md md:max-w-lg relative">
                     <form action="/search" method="GET">
                         <input type="text" name="q" placeholder="Search products..."
-                            class="w-full border rounded-lg pl-4 pr-10 py-2 focus:outline-none border-gray-300 focus:border-yellow-400 transition" />
+                            class="w-full border rounded-lg pl-3 pr-10 py-2 focus:outline-none border-gray-300 focus:border-yellow-400 transition text-sm sm:text-base" />
                         <button type="submit"
                             class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-400">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

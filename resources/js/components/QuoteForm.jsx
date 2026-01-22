@@ -128,10 +128,10 @@ export default function QuoteForm({
                 type={toast.type}
                 onClose={() => setToast((t) => ({ ...t, show: false }))}
             />
-            {showTitle && (
-                <h1 className='text-2xl md:text-3xl font-bold mt-20 mb-10 text-center'>{title}</h1>
-            )}
             <div className={`p-10 ${className}`}>
+                {showTitle && (
+                    <h1 className='text-2xl md:text-3xl font-bold mt-20 mb-10 text-center'>{title}</h1>
+                )}
                 <form id={formId} className="px-8 pt-6 pb-8 mb-4 bg-white" onSubmit={handleSubmit}>
                     {error && (
                         <div className="mb-4 p-3 rounded bg-red-100 text-red-700">
