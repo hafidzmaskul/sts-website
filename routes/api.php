@@ -38,6 +38,8 @@ Route::controller(\App\Http\Controllers\Api\CartController::class)
 Route::middleware(\App\Http\Middleware\OptionalAuth::class)->group(function () {
     Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
     Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+    Route::get('/news', [\App\Http\Controllers\Api\NewsController::class, 'index']);
+    Route::get('/news/{slug}', [\App\Http\Controllers\Api\NewsController::class, 'show']);
 });
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::post('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);

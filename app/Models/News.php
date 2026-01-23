@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class News extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $fillable = [
         'title',
         'slug',
@@ -22,6 +24,16 @@ class News extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        if (str_starts_with($this->image_path, 'http')) {
+            return $this->image_path;
+        }
+        return $this->image_path ? url('storage/' . $this->image_path) : null;
+    }
 
     public function categories()
     {

@@ -6,9 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\News>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\NewsCategory>
  */
-class NewsFactory extends Factory
+class NewsCategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,16 +18,12 @@ class NewsFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(),
+            'name' => $this->faker->word(),
             'slug' => $this->faker->unique()->slug(),
-            'content' => '<p>' . $this->faker->paragraph() . '</p>',
-            'image_path' => 'images/example.jpg',
-            'status' => 'published',
             'created_by' => User::factory(),
             'seo_title' => $this->faker->sentence(),
-            'seo_description' => $this->faker->sentence(10),
+            'seo_description' => $this->faker->sentence(),
             'seo_keywords' => implode(',', $this->faker->words(3)),
-            'published_at' => now(),
         ];
     }
 }
