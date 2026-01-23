@@ -10,7 +10,7 @@ const formatPrice = (price) => {
     const cleanedPrice = price.toString().replace(/[^\d.-]/g, '');
     const parsedPrice = parseFloat(cleanedPrice);
     if (Number.isNaN(parsedPrice)) return '-';
-    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(parsedPrice);
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(parsedPrice);
 };
 
 export default function QuoteCheckout({ quoteIds, auth }) {

@@ -105,7 +105,7 @@ export default function Landing({
             const cleanedPrice = rawPrice.toString().replace(/[^\d.-]/g, '');
             const parsedPrice = parseFloat(cleanedPrice);
             if (!Number.isNaN(parsedPrice)) {
-                productPrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+                productPrice = parsedPrice;
             }
         }
 
