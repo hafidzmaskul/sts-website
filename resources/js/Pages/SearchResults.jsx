@@ -11,18 +11,31 @@ const formatPrice = (amount) =>
         maximumFractionDigits: 0,
     }).format(amount);
 
+// Helper function to get product price with priority: calculated_price -> special_price -> base_price
+const getProductPrice = (product) => {
+    if (product.calculated_price !== null && product.calculated_price !== undefined) {
+        return product.calculated_price;
+    }
+    if (product.special_price !== null && product.special_price !== undefined) {
+        return product.special_price;
+    }
+    return product.base_price;
+};
+
 const transformProduct = (product) => {
     const imagePath = product.images?.[0]?.image_path;
     const image = imagePath
         ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
         : '/assets/logo.png';
 
-    let basePrice = 0;
-    if (product.base_price) {
-        const cleanedPrice = String(product.base_price).replace(/[^\d.-]/g, '');
+    // Get price using priority: calculated_price -> special_price -> base_price
+    const rawPrice = getProductPrice(product);
+    let productPrice = 0;
+    if (rawPrice) {
+        const cleanedPrice = String(rawPrice).replace(/[^\d.-]/g, '');
         const parsedPrice = parseFloat(cleanedPrice);
         if (!Number.isNaN(parsedPrice) && isFinite(parsedPrice)) {
-            basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+            productPrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
         }
     }
 
@@ -30,7 +43,7 @@ const transformProduct = (product) => {
         id: product.id,
         title: product.title || '',
         slug: product.slug || '',
-        price: basePrice,
+        price: productPrice,
         image,
         brand_name: product.brand?.name || product.brand_name || 'STS',
         series: product.series || `Model ${product.slug || product.id}`,
