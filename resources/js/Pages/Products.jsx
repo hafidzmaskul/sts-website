@@ -24,6 +24,17 @@ const formatPrice = (amount) =>
         maximumFractionDigits: 0,
     }).format(amount);
 
+// Helper function to get product price with priority: calculated_price -> special_price -> base_price
+const getProductPrice = (product) => {
+    if (product.calculated_price !== null && product.calculated_price !== undefined) {
+        return product.calculated_price;
+    }
+    if (product.special_price !== null && product.special_price !== undefined) {
+        return product.special_price;
+    }
+    return product.base_price;
+};
+
 const transformProduct = (product, index = 0) => {
     if (!product || typeof product !== 'object') {
         return null;
@@ -34,12 +45,14 @@ const transformProduct = (product, index = 0) => {
         ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
         : sliderImages[index % sliderImages.length];
 
-    let basePrice = 0;
-    if (product.base_price) {
-        const cleanedPrice = String(product.base_price).replace(/[^\d.-]/g, '');
+    // Get price using priority: calculated_price -> special_price -> base_price
+    const rawPrice = getProductPrice(product);
+    let productPrice = 0;
+    if (rawPrice) {
+        const cleanedPrice = String(rawPrice).replace(/[^\d.-]/g, '');
         const parsedPrice = parseFloat(cleanedPrice);
         if (!Number.isNaN(parsedPrice) && isFinite(parsedPrice)) {
-            basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+            productPrice = parsedPrice;
         }
     }
 
@@ -54,7 +67,7 @@ const transformProduct = (product, index = 0) => {
         title: product.title || '',
         name: product.title || '',
         slug: product.slug || '',
-        price: basePrice,
+        price: productPrice,
         image,
         brand_name: product.brand_name || 'STS',
         brand: product.brand_name || 'STS',
@@ -66,6 +79,7 @@ const transformProduct = (product, index = 0) => {
 };
 
 export default function Products({ products = [], baseProducts = [], productCategory = [], logged }) {
+    console.log(products)
     const allProducts = useMemo(() => {
         const sourceProducts = Array.isArray(products) && products.length > 0
             ? products

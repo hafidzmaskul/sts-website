@@ -10,7 +10,18 @@ const formatPrice = (price) => {
     const cleanedPrice = price.toString().replace(/[^\d.-]/g, '');
     const parsedPrice = parseFloat(cleanedPrice);
     if (Number.isNaN(parsedPrice)) return '-';
-    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(parsedPrice);
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(parsedPrice);
+};
+
+// Helper function to get product price with priority: calculated_price -> special_price -> base_price
+const getProductPrice = (product) => {
+    if (product?.calculated_price !== null && product?.calculated_price !== undefined) {
+        return product.calculated_price;
+    }
+    if (product?.special_price !== null && product?.special_price !== undefined) {
+        return product.special_price;
+    }
+    return product?.base_price;
 };
 
 export default function Cart() {
@@ -120,7 +131,8 @@ export default function Cart() {
     };
 
     const totalAmount = cartItems.reduce((s, item) => {
-        const price = parseFloat((item.product?.base_price || '0').toString().replace(/[^\d.-]/g, ''));
+        const productPrice = getProductPrice(item.product);
+        const price = parseFloat((productPrice || '0').toString().replace(/[^\d.-]/g, ''));
         const final = Number.isNaN(price) ? 0 : price;
         return s + final * (item.quantity || 0);
     }, 0);
@@ -158,7 +170,7 @@ export default function Cart() {
                                     </div>
                                     <div className="flex-1">
                                         <div className="font-medium text-[#232323] text-base sm:text-lg">{item.product?.title}</div>
-                                        <div className="text-sm text-gray-600">{formatPrice(item.product?.base_price)}</div>
+                                        <div className="text-sm text-gray-600">{formatPrice(getProductPrice(item.product))}</div>
                                         <div className="mt-3 flex items-center gap-2 sm:hidden">
                                             <button
                                                 onClick={() => decrease(item)}
@@ -174,7 +186,7 @@ export default function Cart() {
                                         </div>
                                         <div className="mt-1 text-xs sm:hidden">
                                             <span className="font-medium">Total: </span>
-                                            {formatPrice(item.product?.base_price * item.quantity)}
+                                            {formatPrice(getProductPrice(item.product) * item.quantity)}
                                         </div>
                                         <div className="mt-2 sm:hidden">
                                             <button
@@ -199,7 +211,7 @@ export default function Cart() {
                                                 disabled={loadingIds.includes(item.id)}
                                             >+</button>
                                         </div>
-                                        <div className="font-medium text-right text-sm">{formatPrice(item.product?.base_price * item.quantity)}</div>
+                                        <div className="font-medium text-right text-sm">{formatPrice(getProductPrice(item.product) * item.quantity)}</div>
                                         <button
                                             onClick={() => removeItem(item)}
                                             className="text-xs text-red-500 mt-2 hover:underline"

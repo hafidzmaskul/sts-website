@@ -80,6 +80,17 @@ export default function Landing({
             .filter((id) => id !== null && id !== undefined);
     }, [user]);
 
+    // Helper function to get product price with priority: calculated_price -> special_price -> base_price
+    const getProductPrice = (product) => {
+        if (product.calculated_price !== null && product.calculated_price !== undefined) {
+            return product.calculated_price;
+        }
+        if (product.special_price !== null && product.special_price !== undefined) {
+            return product.special_price;
+        }
+        return product.base_price;
+    };
+
     // Transform featured products only based on real data (NO FALLBACK PRODUCTS)
     const transformFeaturedProduct = (product, index) => {
         const imagePath = product.images?.[0]?.image_path;
@@ -87,12 +98,14 @@ export default function Landing({
             ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
             : ''; // no fallback
 
-        let basePrice = null;
-        if (product.base_price) {
-            const cleanedPrice = product.base_price.toString().replace(/[^\d.-]/g, '');
+        // Get price using priority: calculated_price -> special_price -> base_price
+        const rawPrice = getProductPrice(product);
+        let productPrice = null;
+        if (rawPrice) {
+            const cleanedPrice = rawPrice.toString().replace(/[^\d.-]/g, '');
             const parsedPrice = parseFloat(cleanedPrice);
             if (!Number.isNaN(parsedPrice)) {
-                basePrice = parsedPrice > 10000 ? parsedPrice : parsedPrice * 1000;
+                productPrice = parsedPrice;
             }
         }
 
@@ -116,7 +129,7 @@ export default function Landing({
         return {
             id,
             title: product.title ?? `Product ${index + 1}`,
-            price: basePrice,
+            price: productPrice,
             image,
             badge: product.badge ?? badge,
             slug,
@@ -171,18 +184,18 @@ export default function Landing({
                 image_url: cat.image_url
                     ? cat.image_url
                     : cat.image_path
-                    ? (cat.image_path.startsWith('http')
-                        ? cat.image_path
-                        : `/storage/${cat.image_path}`)
-                    : "",
+                        ? (cat.image_path.startsWith('http')
+                            ? cat.image_path
+                            : `/storage/${cat.image_path}`)
+                        : "",
                 name: cat.name || `Category ${idx + 1}`,
                 products: Array.isArray(cat.products) ? cat.products : [],
                 products_count:
                     typeof cat.products_count === 'number'
                         ? cat.products_count
                         : Array.isArray(cat.products)
-                        ? cat.products.length
-                        : 0,
+                            ? cat.products.length
+                            : 0,
             }));
         }
         // No fallback, return empty array
@@ -260,7 +273,7 @@ export default function Landing({
             {showSuccessAlert && (
                 <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="mr-2">
-                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                     </svg>
                     Your message has been sent successfully!
                 </div>
@@ -381,13 +394,13 @@ export default function Landing({
             </section>
             <section className='container mx-auto md:px-20 px-10 py-10'>
 
-            <FeaturedProductsSection
-                products={products}
-                title="Featured Products"
-                titleSize="text-2xl"
-                slidesPerView={4}
-                sectionId="product"
-            />
+                <FeaturedProductsSection
+                    products={products}
+                    title="Featured Products"
+                    titleSize="text-2xl"
+                    slidesPerView={4}
+                    sectionId="product"
+                />
             </section>
 
             {/* CATEGORIES SECTION - Tetap ada, tidak diubah */}
@@ -445,7 +458,7 @@ export default function Landing({
                         <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
                             <p className=" mb-4 text-sm lg:text-base max-w-[375px]">
-                            Upgrade your security with our latest deals on access control and surveillance products. Enjoy reliable performance, modern design, and trusted protection—now at special prices for a limited time.
+                                Upgrade your security with our latest deals on access control and surveillance products. Enjoy reliable performance, modern design, and trusted protection—now at special prices for a limited time.
                             </p>
                             <button className="bg-white hover: text-[#0079C2] px-6 py-2 rounded font-semibold transition  self-end flex items-center gap-2">
                                 Shop Now
@@ -475,7 +488,7 @@ export default function Landing({
                         <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
                             <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
-                            From consultation to installation and ongoing support, we deliver end-to-end security services tailored to your needs. Protect your property with expert solutions designed for reliability, safety, and peace of mind.
+                                From consultation to installation and ongoing support, we deliver end-to-end security services tailored to your needs. Protect your property with expert solutions designed for reliability, safety, and peace of mind.
                             </p>
                             <button className="bg-white hover:bg-gray-200 text-[#0079C2] px-6 py-2 rounded font-semibold transition self-start flex items-center gap-2">
                                 Shop Now
@@ -630,10 +643,10 @@ export default function Landing({
                         </div>
                         <div className="flex gap-2">
                             <div className="bg-black rounded-full p-2 ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.2 4.2 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.52 8.52 0 0 1-5.33 1.84q-.51 0-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.2 4.2 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.52 8.52 0 0 1-5.33 1.84q-.51 0-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23"></path></svg>
                             </div>
                             <div className="bg-white text-black rounded-full p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"></path></svg>
                             </div>
                         </div>
                     </div>

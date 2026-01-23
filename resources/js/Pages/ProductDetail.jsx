@@ -22,6 +22,17 @@ const formatPrice = (price) => {
     }).format(parsedPrice);
 };
 
+// Helper function to get product price with priority: calculated_price -> special_price -> base_price
+const getProductPrice = (product) => {
+    if (product.calculated_price !== null && product.calculated_price !== undefined) {
+        return product.calculated_price;
+    }
+    if (product.special_price !== null && product.special_price !== undefined) {
+        return product.special_price;
+    }
+    return product.base_price;
+};
+
 const ImageZoom = ({ src, alt, className }) => {
     const [isZoomed, setIsZoomed] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -160,6 +171,9 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [openAccordion, setOpenAccordion] = useState('description');
 
+    // Get price with priority: calculated_price -> special_price -> base_price
+    const displayPrice = getProductPrice(data);
+
     // Set specs with price conditional, reference latest API shape
     const specs = useMemo(() => [
         { label: 'Brand', value: data.brand?.name || '-' },
@@ -169,15 +183,15 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             value:
                 data.is_sign_up_for_pricing
                     ? (logged
-                        ? formatPrice(data.base_price)
+                        ? formatPrice(displayPrice)
                         : <span className="italic text-gray-400">Login untuk melihat harga</span>)
-                    : formatPrice(data.base_price),
+                    : formatPrice(displayPrice),
         },
         { label: 'Exclusive', value: data.is_exclusive ? 'Yes' : 'No' },
     ], [
         data.brand?.name,
         data.status,
-        data.base_price,
+        displayPrice,
         data.is_exclusive,
         data.is_sign_up_for_pricing,
         logged
@@ -431,13 +445,14 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                     const imgObj = product.images[0];
                     image = imgObj.image_url || (imgObj.image_path?.startsWith('/') ? imgObj.image_path : `/storage/${imgObj.image_path}`);
                 }
-                const basePrice = typeof product.base_price === "number" ? product.base_price : null;
+                // Get price with priority: calculated_price -> special_price -> base_price
+                const productPrice = getProductPrice(product);
                 const badge = index % 3 === 0 ? 'New' : index % 3 === 1 ? 'Best Seller' : 'Limited';
 
                 return {
                     id: product.id,
                     title: product.title || product.name || '',
-                    price: basePrice,
+                    price: productPrice,
                     image,
                     badge: product.badge || badge,
                 };
@@ -580,7 +595,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 <p className="text-[#0079C2] text-lg font-bold mb-2">
                                     {data.is_sign_up_for_pricing && !logged
                                         ? <span className="italic text-gray-400">Login untuk melihat harga</span>
-                                        : formatPrice(data.base_price)
+                                        : formatPrice(displayPrice)
                                     }
                                 </p>
                             </div>
@@ -780,7 +795,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 {data.is_sign_up_for_pricing ? (
                                     logged ? (
                                         <p className="text-md md:text-xl font-semibold font-inter">
-                                            {formatPrice(data.base_price)}
+                                            {formatPrice(displayPrice)}
                                         </p>
                                     ) : (
                                         <p className="text-md  font-semibold font-inter text-black">
@@ -789,7 +804,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     )
                                 ) : (
                                     <p className="text-md md:text-xl font-semibold font-inter">
-                                        {formatPrice(data.base_price)}
+                                        {formatPrice(displayPrice)}
                                     </p>
                                 )}
                             </div>
