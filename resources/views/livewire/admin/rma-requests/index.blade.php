@@ -5,6 +5,47 @@
         </div>
 
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
+            <!-- Card Header: Search & Filter -->
+            <div
+                class="px-4 py-4 border-b bg-gray-50 rounded-t-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="max-w-xl w-full">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-3.5-3.5" />
+                            </svg>
+                        </span>
+                        <input type="text" wire:model.live.debounce.300ms="search"
+                            class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            placeholder="Search order, product, or customer...">
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <div class="w-full md:w-48">
+                        <select wire:model.live="returnType"
+                            class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <option value="">All Types</option>
+                            <option value="exchange">Exchange</option>
+                            <option value="refund">Refund</option>
+                            <option value="repair">Repair</option>
+                            <option value="store_credit">Store Credit</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-48">
+                        <select wire:model.live="status"
+                            class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
