@@ -36,7 +36,13 @@ class QuoteController extends Controller
             $quote = Quote::create($request->all());
 
             // Send Email to Admin
-            $adminEmail = 'gemaantikahr@gmail.com';
+            $adminEmail = \App\Models\Setting::where('key', 'email_notification_admin')->value('value');
+
+            // Fallback if setting is not set
+            if (!$adminEmail) {
+                $adminEmail = 'gemaantikahr@gmail.com';
+            }
+
             $subject = 'New Quote Submission';
             $message = "You have received a new quote submission.\n\n" .
                 "Name: {$quote->first_name} {$quote->last_name}\n" .
@@ -47,10 +53,12 @@ class QuoteController extends Controller
                 "Project Details:\n{$quote->project_details}\n\n" .
                 "View in Admin Panel: " . route('admin.quotes.show', $quote);
 
-            Mail::raw($message, function ($mail) use ($adminEmail, $subject) {
-                $mail->to($adminEmail)
-                    ->subject($subject);
-            });
+            if ($adminEmail) {
+                Mail::raw($message, function ($mail) use ($adminEmail, $subject) {
+                    $mail->to($adminEmail)
+                        ->subject($subject);
+                });
+            }
 
             return response()->json([
                 'status' => 'success',
