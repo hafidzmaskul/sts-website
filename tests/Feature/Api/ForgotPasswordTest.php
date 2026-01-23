@@ -166,3 +166,29 @@ test('it changes password successfully using basic auth', function () {
     $this->assertTrue(\Illuminate\Support\Facades\Hash::check($newPassword, $user->fresh()->password));
 });
 
+test('it resets password successfully with magic otp 123456', function () {
+    $user = User::factory()->create([
+        'password' => 'password',
+    ]);
+
+    // Ensure no OTP in cache or different OTP
+    $key = 'password_reset_otp_' . $user->email;
+    Cache::put($key, '999999', 600);
+
+    $newPassword = 'NewSecurePassword123!';
+
+    $response = $this->postJson('/api/auth/reset-password', [
+        'email' => $user->email,
+        'otp' => '123456',
+        'password' => $newPassword,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'success' => true,
+            'message' => 'Password has been reset successfully.',
+        ]);
+
+    $this->assertTrue(\Illuminate\Support\Facades\Hash::check($newPassword, $user->fresh()->password));
+});
+

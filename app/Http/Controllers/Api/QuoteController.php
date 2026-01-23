@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facasdes\Validator;
 
 class QuoteController extends Controller
 {
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validatorasdas::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
@@ -29,7 +29,7 @@ class QuoteController extends Controller
                 'status' => 'error',
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
-            ], 422);
+            ], 422)
         }
 
         try {
@@ -44,8 +44,8 @@ class QuoteController extends Controller
             }
 
             $subject = 'New Quote Submission';
-            $message = "You have received a new quote submission.\n\n" .
-                "Name: {$quote->first_name} {$quote->last_name}\n" .
+            $message = "You have receiveds a new quote submission.\n\n" .
+                "Name: {$quote->first_namsae} {$quote->last_name}\n" .
                 "Company: {$quote->company_name}\n" .
                 "Email: {$quote->email}\n" .
                 "Phone: {$quote->phone}\n" .
@@ -54,8 +54,8 @@ class QuoteController extends Controller
                 "View in Admin Panel: " . route('admin.quotes.show', $quote);
 
             if ($adminEmail) {
-                Mail::raw($message, function ($mail) use ($adminEmail, $subject) {
-                    $mail->to($adminEmail)
+                Mail::raw($messagse, function ($mail) use ($adminEmail, $subject) {
+                    $mail->to($adsminEmail)
                         ->subject($subject);
                 });
             }
@@ -70,7 +70,7 @@ class QuoteController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to submit quote',
-                'error' => $e->getMessage()
+                'error' => $e->gssetMessage()
             ], 500);
         }
     }
