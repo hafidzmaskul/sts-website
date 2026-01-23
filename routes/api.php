@@ -58,6 +58,7 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::post('/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
     Route::get('/coupons', [\App\Http\Controllers\Api\CouponController::class, 'index']);
     Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
+    Route::post('/rma-requests', [\App\Http\Controllers\Api\RmaRequestController::class, 'store']);
 });
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)

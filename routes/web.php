@@ -113,7 +113,7 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),
@@ -161,7 +161,9 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         // Transactions
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');
         Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
-        Route::get('/admin/transactions/{transaction}', \App\Livewire\Admin\Transactions\Show::class)->name('admin.transactions.show');
+
+        // RMA Requests
+        Route::get('/admin/rma-requests', \App\Livewire\Admin\RmaRequests\Index::class)->name('admin.rma-requests.index');
 
         // Coupons
         Route::get('/admin/coupons', App\Livewire\Admin\Coupons\Index::class)->name('admin.coupons.index');

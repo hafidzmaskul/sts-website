@@ -210,6 +210,11 @@
                         :class="request()->routeIs('admin.product-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Product Requests') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="arrow-path-rounded-square" :href="route('admin.rma-requests.index')"
+                        :current="request()->routeIs('admin.rma-requests.*')" wire:navigate
+                        :class="request()->routeIs('admin.rma-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('RMA Requests') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             @endcanany
 
