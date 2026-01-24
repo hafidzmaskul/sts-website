@@ -231,12 +231,15 @@ export default class ContactUs extends Component {
                                 <p className="text-[#414042] mb-4 text-xs sm:text-sm">
                                     Our team of experts is here to help on all your system integration needs.
                                 </p>
-                                <button className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto">
+                                <a
+                                    href="/system-design"
+                                    className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto"
+                                >
                                     Get Design Support
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path>
                                     </svg>
-                                </button>
+                                </a>
                             </div>
                             {/* Vertical Divider 1 */}
                             <div className="hidden md:flex items-center">
@@ -249,12 +252,15 @@ export default class ContactUs extends Component {
                                 <p className="text-[#414042] mb-4 text-xs sm:text-sm">
                                     For more than 25 years, STS has been the leading security and low-voltage distributor professionals rely on.
                                 </p>
-                                <button className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto">
+                                <a
+                                    href="/about-us"
+                                    className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto"
+                                >
                                     Learn About Us
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path>
                                     </svg>
-                                </button>
+                                </a>
                             </div>
                             {/* Vertical Divider 2 */}
                             <div className="hidden md:flex items-center">
@@ -267,12 +273,15 @@ export default class ContactUs extends Component {
                                 <p className="text-[#414042] mb-4 text-xs sm:text-sm">
                                     With value-added services, installations are easier and more efficient. See how you can save time and money.
                                 </p>
-                                <button className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto">
+                                <a
+                                    href="/commisioning"
+                                    className="mt-auto bg-[#0079C2] text-white px-4 sm:px-5 py-2 rounded font-medium hover:bg-[#005b8c] flex items-center justify-center gap-2 w-full md:w-auto"
+                                >
                                     Explore Services
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m18 8l4 4l-4 4M2 12h20"></path>
                                     </svg>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </section>

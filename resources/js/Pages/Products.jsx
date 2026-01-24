@@ -156,7 +156,7 @@ export default function Products({ products = [], baseProducts = [], productCate
         [allProducts],
     );
 
-    const baseSlidesPerView = 6;
+    const baseSlidesPerView = 5;
     const sliderProducts =
         allProducts.length > baseSlidesPerView
             ? allProducts
@@ -309,7 +309,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                 <section id="img-slider" className="py-10">
                     <Swiper
                         modules={[Autoplay]}
-                        spaceBetween={16}
+                        spaceBetween={20}
                         slidesPerView={1}
                         loop={loopEnabled}
                         autoplay={{

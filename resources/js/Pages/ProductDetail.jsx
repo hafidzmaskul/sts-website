@@ -750,7 +750,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 <ImageZoom
                                     src={productImages[activeImageIndex]}
                                     alt={data.title}
-                                    className="w-full h-full max-h-[420px]"
+                                    className="w-full h-full "
                                 />
                             </div>
                             <div className="grid grid-cols-4 gap-3">
@@ -769,7 +769,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                             <img
                                                 src={imageUrl}
                                                 alt={`${data.title} thumbnail ${index + 1}`}
-                                                className="w-full h-20 md:h-24 object-cover transition-transform duration-200 ease-out group-hover:scale-110"
+                                                className="w-full object-cover transition-transform duration-200 ease-out group-hover:scale-110"
                                                 loading="lazy"
                                             />
                                         </button>

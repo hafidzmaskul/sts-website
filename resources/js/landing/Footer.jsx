@@ -25,7 +25,7 @@ export default function Footer() {
     return (
         <footer className="bg-[#fff] border-t font-inter pt-8 pb-4 px-4">
             {/* Baris 1 */}
-            <div className="container md:px-20 px-10 mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-gray-200">
+            <div className="container min-[1006px]:px-20 px-10 mx-auto grid grid-cols-2 min-[1006px]:grid-cols-4 gap-8 pb-8 border-b border-gray-200">
                 {/* Kiri: Text dan Sosmed */}
                 <div>
                     <div className="mb-6">
@@ -171,7 +171,7 @@ export default function Footer() {
                 <div>
                     <h3 className="text-lg font-medium mb-4 text-[#9A9CAA]">Newsletter</h3>
                     <form className="space-y-3" onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-2">
+                        <div className="grid grid-cols-1 min-[1006px]:grid-cols-[1fr_auto] gap-2">
                             <input
                                 type="text"
                                 placeholder="Your Email"
@@ -183,7 +183,7 @@ export default function Footer() {
                             />
                             <button
                                 type="submit"
-                                className="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition"
+                                className="w-full min-[1006px]:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition"
                                 disabled={loading}
                             >
                                 {loading ? "Subscribing..." : "Subscribe"}

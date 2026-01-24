@@ -75,7 +75,7 @@ export default function AboutUs({ teamMembers = [] }) {
                     id="articles"
                     className="container mx-auto px-4 md:px-10 lg:px-20 py-10"
                 >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:md:grid-cols-3 gap-5 md:gap-8">
                         <AboutArticleCard
                             image="/assets/dummmy/4da057811344b5b24e0cebd05a110367acce6d17.jpg"
                             title="Branch Events, Expos and Tradeshows"
