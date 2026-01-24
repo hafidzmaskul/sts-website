@@ -138,9 +138,9 @@ export default function News({ news, categories }) {
                                 <Link
                                     href={`/news/${item.slug}`}
                                     key={item.id}
-                                    className="group flex flex-col h-full bg-white rounded-lg md:rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-transparent hover:border-gray-100"
+                                    className="group flex flex-col h-full bg-white rounded-lg md:rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-transparent hover:border-gray-100 p-5"
                                 >
-                                    <div className="relative h-40 sm:h-44 md:h-56 lg:h-60 overflow-hidden rounded-lg md:rounded-xl">
+                                    <div className="relative h-40 sm:h-44 md:h-56 lg:h-60 overflow-hidden rounded-lg md:rounded-xl p-3">
                                         <img
                                             src={getImageUrl(item.image_path)}
                                             alt={item.title}

@@ -417,27 +417,39 @@ export default function Landing({
                         className="w-full"
                     >
                         {Array.isArray(brand) && brand.length > 0 ? (
-                            <div className="
-                                grid
-                                grid-cols-2
-                                sm:grid-cols-3
-                                md:grid-cols-4
-                                lg:grid-cols-6
-                                gap-6
-                                justify-center
-                                items-center
+                            <div
+                                className="
+                                    flex flex-wrap justify-center gap-6 w-full
                                 "
                             >
                                 {brand.map((item) => (
-                                    <div key={item.id} className="flex flex-col items-center ">
-                                        <div className="w-24 h-24 flex items-center justify-center mb-3  overflow-hidden">
+                                    <div
+                                        key={item.id}
+                                        className="
+                                            flex flex-col items-center
+                                            w-full
+                                            max-w-[160px]
+                                            flex-shrink-0
+                                            sm:basis-1/3
+                                            md:basis-1/4
+                                            lg:basis-1/5
+                                            xl:basis-1/6
+                                        "
+                                        style={{
+                                            flexBasis: 'calc(100% / 2 - 1.5rem)',
+                                            ...(window.innerWidth >= 640 && { flexBasis: 'calc(100% / 3 - 1.5rem)' }),
+                                            ...(window.innerWidth >= 768 && { flexBasis: 'calc(100% / 4 - 1.5rem)' }),
+                                            ...(window.innerWidth >= 1024 && { flexBasis: 'calc(100% / 5 - 1.5rem)' }),
+                                            ...(window.innerWidth >= 1280 && { flexBasis: 'calc(100% / 6 - 1.5rem)' }),
+                                        }}
+                                    >
+                                        <div className="w-28 h-28 flex items-center justify-center mb-3">
                                             <img
                                                 src={resolveBrandImage(item.image)}
                                                 alt={item.name}
-                                                className="object-contain w-20 h-20"
+                                                className="object-contain w-24 h-24"
                                             />
                                         </div>
-
                                     </div>
                                 ))}
                             </div>

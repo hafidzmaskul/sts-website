@@ -77,7 +77,7 @@ export default function AboutUs({ teamMembers = [] }) {
                     id="articles"
                     className="container mx-auto py-10 px-4 sm:px-6 md:px-10 lg:px-20"
                 >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         <AboutArticleCard
                             image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
                             title="Our customers"
@@ -129,7 +129,12 @@ export default function AboutUs({ teamMembers = [] }) {
                                     <h2 className="font-bold text-xl sm:text-2xl mb-2">Company Headlines</h2>
                                     <p className="text-white text-sm sm:text-base mb-4">Read the latest news and press releases from STS</p>
                                     <div>
-                                        <button className='text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10'>View News</button>
+                                        <a
+                                            href="/news"
+                                            className="text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10 inline-block"
+                                        >
+                                            View News
+                                        </a>
                                     </div>
                                 </div>
                                 <div className="w-full sm:w-2/5 flex justify-center items-center">
@@ -142,7 +147,12 @@ export default function AboutUs({ teamMembers = [] }) {
                                     <h2 className="font-bold text-xl sm:text-2xl mb-2">Solutions</h2>
                                     <p className="text-white text-sm sm:text-base mb-4">Explore how we can help you design best-in-class systems</p>
                                     <div>
-                                        <button className='text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10'>View News</button>
+                                        <a
+                                            href="/news"
+                                            className="text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10 inline-block"
+                                        >
+                                            View News
+                                        </a>
                                     </div>
                                 </div>
                                 <div className="w-full sm:w-2/5 flex justify-center items-center">

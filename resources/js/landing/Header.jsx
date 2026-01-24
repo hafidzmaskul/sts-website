@@ -16,7 +16,7 @@ export default function Header() {
     const [likedProducts, setLikedProducts] = useState([]);
     const [showLikedDropdown, setShowLikedDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth <= 768 : false);
+    const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth <= 1005 : false);
 
     const handleSearch = () => {
         if (!searchQuery.trim()) return;
@@ -74,7 +74,7 @@ export default function Header() {
     // Detect mobile mode (<= 768px)
     useEffect(() => {
         function checkMobile() {
-            setIsMobile(window.innerWidth <= 768);
+            setIsMobile(window.innerWidth <= 1005);
         }
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -503,7 +503,7 @@ export default function Header() {
         <header className="w-full bg-white border-b border-gray-100 text-[#232323] font-sans z-50 relative">
             {/* Top Bar */}
             <div className="bg-[#0079C2] font-inter font-light text-[#fff]">
-                <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center py-2 md:py-4 px-3 sm:px-4 md:px-20 text-xs md:text-sm gap-2 sm:gap-0">
+                <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center py-2 min-[1006px]:py-4 px-3 sm:px-4 min-[1006px]:px-20 text-xs min-[1006px]:text-sm gap-2 sm:gap-0">
                     <div className="flex-shrink-0 text-center">
                         <span>Free shipping on all orders over $50</span>
                     </div>
@@ -515,14 +515,14 @@ export default function Header() {
 
             {/* Navbar */}
             <div className="bg-[#F0F2F3]">
-                <div className="container mx-auto flex items-center justify-between px-3 sm:px-4 md:px-20 relative h-[60px] sm:h-[70px] md:h-[90px]">
+                <div className="container mx-auto flex items-center justify-between px-3 sm:px-4 min-[1006px]:px-20 relative h-[60px] sm:h-[70px] min-[1006px]:h-[90px]">
                     {/* Logo */}
                     <a href="/" className="flex-shrink-0 flex items-center gap-2">
-                        <img src="/assets/logo.png" alt="Logo" className="h-10 sm:h-12 md:h-20 w-auto transition-all" />
+                        <img src="/assets/logo.png" alt="Logo" className="h-10 sm:h-12 min-[1006px]:h-20 w-auto transition-all" />
                     </a>
                     {/* Hamburger menu for mobile and <= 768px */}
                     <button
-                        className="flex items-center px-2 py-1 rounded text-[#007580] focus:outline-none focus:ring-2 focus:ring-blue-500 md:hidden"
+                        className="flex items-center px-2 py-1 rounded text-[#007580] focus:outline-none focus:ring-2 focus:ring-blue-500 min-[1006px]:hidden"
                         style={{ display: isMobile ? 'flex' : 'none' }}
                         onClick={() => setSideNavOpen(true)}
                         aria-label="Open menu"
@@ -533,8 +533,8 @@ export default function Header() {
                     </button>
 
                     {/* Search (desktop and mobile main navbar) */}
-                    <div className="flex-1 flex justify-center items-center mx-2 md:mx-6 gap-2">
-                        <div className="w-full max-w-xs sm:max-w-md md:max-w-lg relative">
+                    <div className="flex-1 flex justify-center items-center mx-2 min-[1006px]:mx-6 gap-2">
+                        <div className="w-full max-w-xs sm:max-w-md min-[1006px]:max-w-lg relative">
                             <input
                                 type="text"
                                 placeholder="Search products..."
@@ -571,8 +571,8 @@ export default function Header() {
                         )}
                     </div>
 
-                    {/* Cart & User - Hide on mobile, show on md+ */}
-                    <div className={`hidden md:flex items-center space-x-3 md:space-x-5`}>
+                    {/* Cart & User - Hide on mobile <= 1005, show on > 1005 */}
+                    <div className={`hidden min-[1006px]:flex items-center space-x-3 md:space-x-5`}>
                         <div
                             className="relative"
                             ref={cartRef}
@@ -718,7 +718,7 @@ export default function Header() {
 
             {/* Sidenav */}
             <nav
-                className={`fixed top-0 left-0 h-full w-[90vw] max-w-sm bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${sideNavOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}
+                className={`fixed top-0 left-0 h-full w-[90vw] max-w-sm bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${sideNavOpen ? "translate-x-0" : "-translate-x-full"} min-[1006px]:hidden`}
             >
                 {/* Mobile Side nav header */}
                 <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 bg-[#F0F2F3]">
@@ -810,7 +810,7 @@ export default function Header() {
 
             {/* Bottom nav bar - only show on desktop */}
             {!isMobile && (
-                <div className="container mx-auto justify-between items-center font-inter py-5 px-4 md:px-20 text-base font-semibold hidden md:flex">
+                <div className="container mx-auto justify-between items-center font-inter py-5 px-4 md:px-20 text-base font-semibold hidden min-[1006px]:flex">
                     <div className="flex items-center space-x-4">{navLinksDesktop}</div>
                     <div className="flex items-center space-x-2">
                         <span className="text-[#636270]">Contact:</span>
