@@ -59,7 +59,17 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::post('/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
     Route::get('/coupons', [\App\Http\Controllers\Api\CouponController::class, 'index']);
     Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
+    Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
     Route::post('/rma-requests', [\App\Http\Controllers\Api\RmaRequestController::class, 'store']);
+
+    // User Management (Staff)
+    Route::prefix('users')->controller(\App\Http\Controllers\Api\UserManagementController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 });
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
