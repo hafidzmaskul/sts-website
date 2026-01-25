@@ -11,6 +11,58 @@ class TransactionController extends Controller
     /**
      * Display a listing of the authenticated customer's transactions.
      */
+    public function summary(Request $request)
+    {
+        $user = $request->user();
+        if (!$user->customer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not a customer.',
+            ], 403);
+        }
+
+        $query = Transaction::query();
+
+        // 1. Determine Scope based on Account Level
+        $isHead = $user->customer->account_level === 'head';
+
+        if ($isHead && $user->customer->company_id) {
+            // Head Account: View all transactions for their Company
+            // We need to find all customers belonging to this company
+            $companyId = $user->customer->company_id;
+            $customerIds = \App\Models\Customer::where('company_id', $companyId)->pluck('id');
+            $query->whereIn('customer_id', $customerIds);
+        } else {
+            // Staff Account (or no company): View only their own transactions
+            $query->where('customer_id', $user->customer->id);
+        }
+
+        // 2. Clone query for Status Counts (before applying other filters if any)
+        $statusQuery = clone $query;
+        $statusCounts = $statusQuery->select('status', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        // 3. Get Transactions
+        // Optional: Apply status filter if requested for the list itself (though not explicitly asked, it is good practice, but I will stick to the plan)
+        // The user asked "get all transaction", so we return them.
+
+        $transactions = $query->with(['items.product.images'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'summary' => $statusCounts,
+                'transactions' => $transactions,
+            ],
+        ]);
+    }
+
+    /**
+     * Display a listing of the authenticated customer's transactions.
+     */
     public function index(Request $request)
     {
         $user = $request->user();

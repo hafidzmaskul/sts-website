@@ -43,6 +43,7 @@ Route::middleware(\App\Http\Middleware\OptionalAuth::class)->group(function () {
 });
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::post('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+    Route::get('/transactions/summary', [\App\Http\Controllers\Api\TransactionController::class, 'summary']);
     Route::get('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
     Route::get('/transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 });
