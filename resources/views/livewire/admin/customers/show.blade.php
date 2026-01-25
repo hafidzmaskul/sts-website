@@ -38,13 +38,12 @@
 
             @if($customer->user_id)
                 @can('customers.edit')
-                    <a href="{{ route('admin.users.masquerade', $customer->user_id) }}"
-                        onclick="return confirm('Are you sure you want to login as this user? You will be redirected to the homepage.')"
+                    <button wire:click="$set('showLoginModal', true)"
                         class="flex items-center px-2 py-2 rounded-lg border border-black bg-white hover:bg-gray-100 text-black"
-                        style="height: 36px;" title="Login Masquerade">
+                        style="height: 36px;" title="Login as User">
                         <flux:icon.arrow-right-start-on-rectangle class="w-4 h-4" />
                         <span class="ml-2 text-sm">Login as User</span>
-                    </a>
+                    </button>
 
                     <a href="{{ route('admin.customers.edit', $customer->id) }}"
                         class="flex items-center px-2 py-2 rounded-lg border border-black bg-white hover:bg-gray-100 text-black"
@@ -408,6 +407,65 @@
                     <button wire:click="decline" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                         Confirm Decline
                     </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Login As User Modal -->
+    @if($showLoginModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg">
+                <h3 class="text-lg font-semibold text-black mb-4 flex items-center gap-2">
+                    <flux:icon.arrow-right-start-on-rectangle class="w-5 h-5" />
+                    Login as {{ $customer->first_name }}
+                </h3>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <flux:icon.exclamation-triangle class="w-5 h-5 text-yellow-600 mt-0.5" />
+                        <div>
+                            <p class="text-sm font-medium text-yellow-800">Important: Use Incognito Mode</p>
+                            <p class="text-xs text-yellow-700 mt-1">
+                                To prevent logging out of your Admin session, please copy the link below and open it in a
+                                <strong>New Incognito/Private Window</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Login URL</label>
+                    <div class="flex gap-2">
+                        <input type="text" readonly
+                            value="{{ URL::signedRoute('admin.users.masquerade', ['userId' => $customer->user_id]) }}"
+                            class="flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-600 select-all font-mono">
+
+                        <div x-data="{
+                                        copy() {
+                                            navigator.clipboard.writeText('{{ URL::signedRoute('admin.users.masquerade', ['userId' => $customer->user_id]) }}');
+                                            $dispatch('notify', { type: 'success', message: 'Link copied to clipboard!' });
+                                        }
+                                    }">
+                            <button @click="copy()"
+                                class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-medium whitespace-nowrap">
+                                Copy Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6">
+                    <button wire:click="$set('showLoginModal', false)"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-black hover:bg-gray-50">
+                        Close
+                    </button>
+                    <a href="{{ URL::signedRoute('admin.users.masquerade', ['userId' => $customer->user_id]) }}"
+                        target="_blank"
+                        onclick="return confirm('This will open in a new tab but may verify logs you out of Admin. Are you sure?')"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
+                        Open Here Anyway
+                    </a>
                 </div>
             </div>
         </div>

@@ -34,7 +34,13 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('invoice', 'invoice')->name('invoice');
     Route::get('checkout', 'checkout')->name('checkout');
     Route::get('/search', 'search')->name('search');
+    Route::get('/search', 'search')->name('search');
 });
+
+// Masquerade Route (Signed, bypasses auth)
+Route::get('/admin/masquerade/{userId}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'masquerade'])
+    ->name('admin.users.masquerade')
+    ->middleware('signed');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -179,8 +185,6 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         // Settings
         Route::get('/admin/settings/general', \App\Livewire\Admin\Settings\General::class)->name('admin.settings.general');
 
-        // User Masquerade
-        Route::get('/admin/masquerade/{userId}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'masquerade'])->name('admin.users.masquerade');
     });
 
     // Parent User Management
