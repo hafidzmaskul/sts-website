@@ -309,7 +309,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                 <section id="img-slider" className="py-10">
                     <Swiper
                         modules={[Autoplay]}
-                        spaceBetween={20}
+                        spaceBetween={28} // tambahkan jarak di antara slide produk
                         slidesPerView={1}
                         loop={loopEnabled}
                         autoplay={{
@@ -319,9 +319,11 @@ export default function Products({ products = [], baseProducts = [], productCate
                         breakpoints={{
                             640: {
                                 slidesPerView: Math.min(3, baseSlidesPerView),
+                                spaceBetween: 28, // jarak antar slide untuk breakpoint kecil
                             },
                             1024: {
                                 slidesPerView: baseSlidesPerView,
+                                spaceBetween: 32, // tambahkan jarak lebih besar pada layar besar
                             },
                         }}
                         grabCursor
@@ -333,7 +335,7 @@ export default function Products({ products = [], baseProducts = [], productCate
 
                             return (
                                 <SwiperSlide key={`${product.slug ?? product.id}-${index}`}>
-                                    <div className=" overflow-hidden ">
+                                    <div className="overflow-hidden mb-4"> {/* Tambahkan margin bawah antar produk */}
                                         <Link
                                             // href={route('products.detail', product.slug)}
                                             className="block"
@@ -341,7 +343,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                             <img
                                                 src={imageUrl}
                                                 alt={title}
-                                                className="w-full h-56 object-cover"
+                                                className="w-full h-56 object-cover rounded-lg" // tambahkan rounding jika ingin tampilan lebih soft
                                                 loading="lazy"
                                             />
                                         </Link>

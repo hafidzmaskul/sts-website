@@ -32,7 +32,7 @@ export default function Footer() {
                         <p className="text-base text-[#272343] font-light mb-1">Vivamus tristique odio sit amet velit semper, eu posuere turpis interdum.</p>
                         <p className="text-base text-[#272343] font-light mb-1">Cras egestas purus</p>
                     </div>
-                    <div className="flex items-center mt-6">
+                    <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 items-center mt-6">
                         <a
                             href="#"
                             className="transition rounded-full group"
@@ -40,13 +40,13 @@ export default function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span className="flex items-center justify-center h-11 w-11 rounded-full group-hover:border group-hover:border-[#007580]">
+                            <span className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full group-hover:border group-hover:border-[#007580]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width={24}
-                                    height={24}
+                                    width={22}
+                                    height={22}
                                     viewBox="0 0 24 24"
-                                    className="  group-hover:text-[#007580] transition-colors"
+                                    className="group-hover:text-[#007580] transition-colors w-5 h-5 sm:w-6 sm:h-6"
                                 >
                                     <path
                                         fill="currentColor"
@@ -62,13 +62,13 @@ export default function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span className="flex items-center justify-center h-11 w-11 rounded-full group-hover:border group-hover:border-[#007580]">
+                            <span className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full group-hover:border group-hover:border-[#007580]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width={24}
-                                    height={24}
+                                    width={22}
+                                    height={22}
                                     viewBox="0 0 24 24"
-                                    className="  group-hover:text-[#007580] transition-colors"
+                                    className="group-hover:text-[#007580] transition-colors w-5 h-5 sm:w-6 sm:h-6"
                                 >
                                     <path
                                         fill="currentColor"
@@ -84,13 +84,13 @@ export default function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span className="flex items-center justify-center h-11 w-11 rounded-full group-hover:border group-hover:border-[#007580]">
+                            <span className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full group-hover:border group-hover:border-[#007580]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width={24}
-                                    height={24}
+                                    width={22}
+                                    height={22}
                                     viewBox="0 0 24 24"
-                                    className="  group-hover:text-[#007580] transition-colors"
+                                    className="group-hover:text-[#007580] transition-colors w-5 h-5 sm:w-6 sm:h-6"
                                 >
                                     <path
                                         fill="currentColor"
@@ -106,13 +106,13 @@ export default function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span className="flex items-center justify-center h-11 w-11 rounded-full group-hover:border group-hover:border-[#007580]">
+                            <span className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full group-hover:border group-hover:border-[#007580]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width={24}
-                                    height={24}
+                                    width={22}
+                                    height={22}
                                     viewBox="0 0 24 24"
-                                    className="  group-hover:text-[#007580] transition-colors"
+                                    className="group-hover:text-[#007580] transition-colors w-5 h-5 sm:w-6 sm:h-6"
                                 >
                                     <path
                                         fill="currentColor"
@@ -128,13 +128,13 @@ export default function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <span className="flex items-center justify-center h-11 w-11 rounded-full group-hover:border group-hover:border-[#007580]">
+                            <span className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full group-hover:border group-hover:border-[#007580]">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width={24}
-                                    height={24}
+                                    width={22}
+                                    height={22}
                                     viewBox="0 0 24 24"
-                                    className="  group-hover:text-[#007580] transition-colors"
+                                    className="group-hover:text-[#007580] transition-colors w-5 h-5 sm:w-6 sm:h-6"
                                 >
                                     <path
                                         fill="currentColor"
