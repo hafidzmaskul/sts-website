@@ -15,6 +15,7 @@ class Show extends Component
 
     // Decline Logic
     public $showDeclineModal = false;
+    public $showLoginModal = false; // Add this
     public $reviewNote = '';
 
     public function mount(Customer $customer)

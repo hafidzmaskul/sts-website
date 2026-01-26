@@ -215,6 +215,11 @@
                         :class="request()->routeIs('admin.rma-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('RMA Requests') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="shopping-cart" :href="route('admin.abandoned-carts.index')"
+                        :current="request()->routeIs('admin.abandoned-carts.*')" wire:navigate
+                        :class="request()->routeIs('admin.abandoned-carts.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Abandoned Carts') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             @endcanany
 
@@ -254,11 +259,17 @@
                         :class="request()->routeIs('admin.banners.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('Banners') }}
                     </flux:navlist.item>
+
                     @can('contact-submissions.view')
                         <flux:navlist.item icon="chat-bubble-left-right" :href="route('admin.contact-submissions.index')"
                             :current="request()->routeIs('admin.contact-submissions.*')" wire:navigate
                             :class="request()->routeIs('admin.contact-submissions.*') ? 'custom-navitem-active' : 'custom-navitem'">
                             {{ __('Messages') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item icon="chat-bubble-bottom-center-text" :href="route('admin.feedback.index')"
+                            :current="request()->routeIs('admin.feedback.*')" wire:navigate
+                            :class="request()->routeIs('admin.feedback.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Feedbacks') }}
                         </flux:navlist.item>
                     @endcan
 

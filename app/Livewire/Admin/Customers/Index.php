@@ -81,6 +81,7 @@ class Index extends Component
                     $query->whereNull('user_id');
                 }
             })
+            ->where('role_applied', '!=', 'guest') // Exclude guest customers
             ->latest()
             ->paginate(10);
 

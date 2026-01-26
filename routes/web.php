@@ -34,7 +34,13 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('invoice', 'invoice')->name('invoice');
     Route::get('checkout', 'checkout')->name('checkout');
     Route::get('/search', 'search')->name('search');
+    Route::get('/search', 'search')->name('search');
 });
+
+// Masquerade Route (Signed, bypasses auth)
+Route::get('/admin/masquerade/{userId}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'masquerade'])
+    ->name('admin.users.masquerade')
+    ->middleware('signed');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -141,8 +147,8 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         // Companies
         Route::get('/admin/companies', \App\Livewire\Admin\Companies\Index::class)->name('admin.companies.index');
         Route::get('/admin/companies/{company}', \App\Livewire\Admin\Companies\Show::class)->name('admin.companies.show');
-
-        // Contact Submissions
+        Route::get('/admin/feedback', \App\Livewire\Admin\Feedback\Index::class)->name('admin.feedback.index');
+        Route::get('/admin/feedback/{feedback}', \App\Livewire\Admin\Feedback\Show::class)->name('admin.feedback.show');
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 
         // Product Requests
@@ -176,11 +182,13 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         Route::get('/admin/pricing-formulas/create', \App\Livewire\Admin\PricingFormulas\Create::class)->name('admin.pricing-formulas.create');
         Route::get('/admin/pricing-formulas/{pricingFormula}/edit', \App\Livewire\Admin\PricingFormulas\Edit::class)->name('admin.pricing-formulas.edit');
 
+        // Abandoned Carts
+        Route::get('/admin/abandoned-carts', \App\Livewire\Admin\AbandonedCarts\Index::class)->name('admin.abandoned-carts.index');
+        Route::get('/admin/abandoned-carts/{user}', \App\Livewire\Admin\AbandonedCarts\Show::class)->name('admin.abandoned-carts.show');
+
         // Settings
         Route::get('/admin/settings/general', \App\Livewire\Admin\Settings\General::class)->name('admin.settings.general');
 
-        // User Masquerade
-        Route::get('/admin/masquerade/{userId}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'masquerade'])->name('admin.users.masquerade');
     });
 
     // Parent User Management

@@ -43,6 +43,7 @@ Route::middleware(\App\Http\Middleware\OptionalAuth::class)->group(function () {
 });
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::post('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+    Route::get('/transactions/summary', [\App\Http\Controllers\Api\TransactionController::class, 'summary']);
     Route::get('/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'index']);
     Route::get('/transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 });
@@ -58,7 +59,18 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::post('/products/unlike', [\App\Http\Controllers\Api\ProductLikeController::class, 'unlike']);
     Route::get('/coupons', [\App\Http\Controllers\Api\CouponController::class, 'index']);
     Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
+    Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
     Route::post('/rma-requests', [\App\Http\Controllers\Api\RmaRequestController::class, 'store']);
+    Route::post('/feedback', [\App\Http\Controllers\Api\FeedbackController::class, 'store']);
+
+    // User Management (Staff)
+    Route::prefix('users')->controller(\App\Http\Controllers\Api\UserManagementController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 });
 
 Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)

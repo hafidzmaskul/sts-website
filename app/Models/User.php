@@ -112,4 +112,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Coupon::class);
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 }

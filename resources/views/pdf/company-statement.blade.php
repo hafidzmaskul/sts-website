@@ -67,6 +67,16 @@
         .page-break {
             page-break-after: always;
         }
+
+        .btn-pay {
+            display: inline-block;
+            background-color: #4338ca;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -125,6 +135,10 @@
             </tr>
         </tfoot>
     </table>
+
+    <div class="text-right" style="margin-top: 15px;">
+        <a href="{{ url('invoice-payment') }}" class="btn-pay">Pay Now</a>
+    </div>
 
     <div class="footer">
         <p>Thank you for your business.</p>
