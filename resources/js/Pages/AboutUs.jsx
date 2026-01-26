@@ -122,11 +122,11 @@ export default function AboutUs({ teamMembers = [] }) {
                 {/* Company headlines & solutions: responsive flex and spacing */}
                 <section className='py-10'>
                     <div className="container mx-auto py-8 px-4 sm:px-6 md:px-10 lg:px-20">
-                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                             {/* Company Headlines Card */}
-                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 sm:p-6 md:p-5 rounded-xl">
+                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 md:p-6 rounded-xl">
                                 <div className="w-full sm:w-3/5 flex flex-col justify-center text-white mb-4 sm:mb-0 sm:mr-5">
-                                    <h2 className="font-bold text-xl sm:text-2xl mb-2">Company Headlines</h2>
+                                    <h2 className="font-bold text-xl md:text-2xl mb-2">Company Headlines</h2>
                                     <p className="text-white text-sm sm:text-base mb-4">Read the latest news and press releases from STS</p>
                                     <div>
                                         <a
@@ -138,25 +138,25 @@ export default function AboutUs({ teamMembers = [] }) {
                                     </div>
                                 </div>
                                 <div className="w-full sm:w-2/5 flex justify-center items-center">
-                                    <img src="/assets/company.svg" alt="Company" className="max-w-[120px] sm:max-w-[140px] md:max-w-full h-auto" />
+                                    <img src="/assets/company.svg" alt="Company" className="max-w-[120px] md:max-w-[140px] h-auto" />
                                 </div>
                             </div>
                             {/* Solutions Card */}
-                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 sm:p-6 md:p-5 rounded-xl">
+                            <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 md:p-6 rounded-xl">
                                 <div className="w-full sm:w-3/5 flex flex-col justify-center text-white mb-4 sm:mb-0 sm:mr-5">
-                                    <h2 className="font-bold text-xl sm:text-2xl mb-2">Solutions</h2>
+                                    <h2 className="font-bold text-xl md:text-2xl mb-2">Solutions</h2>
                                     <p className="text-white text-sm sm:text-base mb-4">Explore how we can help you design best-in-class systems</p>
                                     <div>
                                         <a
-                                            href="/news"
+                                            href="/solutions"
                                             className="text-[#0079C2] text-sm sm:text-base bg-white rounded-lg py-1 px-6 sm:px-10 inline-block"
                                         >
-                                            View News
+                                            View Solutions
                                         </a>
                                     </div>
                                 </div>
                                 <div className="w-full sm:w-2/5 flex justify-center items-center">
-                                    <img src="/assets/solution.svg" alt="Solutions" className="max-w-[120px] sm:max-w-[140px] md:max-w-full h-auto" />
+                                    <img src="/assets/solution.svg" alt="Solutions" className="max-w-[120px] md:max-w-[140px] h-auto" />
                                 </div>
                             </div>
                         </div>

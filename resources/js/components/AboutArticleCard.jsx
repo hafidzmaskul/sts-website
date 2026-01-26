@@ -9,7 +9,7 @@ export default function AboutArticleCard({
   additionnal
 }) {
   return (
-    <div className="flex flex-col w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-sm h-[700px] md:h-[920px] lg:h-[800px]">
+    <div className="flex flex-col w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-sm h-[700px] md:h-[920px] lg:h-[900px]">
       {/* Atas: Image as Background */}
       <div
         className="w-full bg-gray-100 flex items-center justify-center relative bg-center bg-no-repeat bg-cover"
