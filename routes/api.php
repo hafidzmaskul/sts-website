@@ -61,6 +61,7 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
     Route::get('/coupons/{code}', [\App\Http\Controllers\Api\CouponController::class, 'show']);
     Route::post('/rma-requests', [\App\Http\Controllers\Api\RmaRequestController::class, 'store']);
+    Route::post('/feedback', [\App\Http\Controllers\Api\FeedbackController::class, 'store']);
 
     // User Management (Staff)
     Route::prefix('users')->controller(\App\Http\Controllers\Api\UserManagementController::class)->group(function () {

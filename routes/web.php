@@ -147,8 +147,8 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         // Companies
         Route::get('/admin/companies', \App\Livewire\Admin\Companies\Index::class)->name('admin.companies.index');
         Route::get('/admin/companies/{company}', \App\Livewire\Admin\Companies\Show::class)->name('admin.companies.show');
-
-        // Contact Submissions
+        Route::get('/admin/feedback', \App\Livewire\Admin\Feedback\Index::class)->name('admin.feedback.index');
+        Route::get('/admin/feedback/{feedback}', \App\Livewire\Admin\Feedback\Show::class)->name('admin.feedback.show');
         Route::get('/admin/contact-submissions', App\Livewire\Admin\ContactSubmissions\Index::class)->name('admin.contact-submissions.index');
 
         // Product Requests
