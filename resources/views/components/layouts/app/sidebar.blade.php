@@ -215,6 +215,11 @@
                         :class="request()->routeIs('admin.rma-requests.*') ? 'custom-navitem-active' : 'custom-navitem'">
                         {{ __('RMA Requests') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="shopping-cart" :href="route('admin.abandoned-carts.index')"
+                        :current="request()->routeIs('admin.abandoned-carts.*')" wire:navigate
+                        :class="request()->routeIs('admin.abandoned-carts.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                        {{ __('Abandoned Carts') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             @endcanany
 

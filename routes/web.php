@@ -182,6 +182,10 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         Route::get('/admin/pricing-formulas/create', \App\Livewire\Admin\PricingFormulas\Create::class)->name('admin.pricing-formulas.create');
         Route::get('/admin/pricing-formulas/{pricingFormula}/edit', \App\Livewire\Admin\PricingFormulas\Edit::class)->name('admin.pricing-formulas.edit');
 
+        // Abandoned Carts
+        Route::get('/admin/abandoned-carts', \App\Livewire\Admin\AbandonedCarts\Index::class)->name('admin.abandoned-carts.index');
+        Route::get('/admin/abandoned-carts/{user}', \App\Livewire\Admin\AbandonedCarts\Show::class)->name('admin.abandoned-carts.show');
+
         // Settings
         Route::get('/admin/settings/general', \App\Livewire\Admin\Settings\General::class)->name('admin.settings.general');
 
