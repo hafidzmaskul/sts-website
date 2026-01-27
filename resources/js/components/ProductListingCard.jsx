@@ -50,6 +50,7 @@ export default function ProductListingCard({
                     <span className="text-xs text-gray-500">
                         STS: {series}
                     </span>
+                    <br />
                     <span className="text-xs text-gray-500">
                         Model : {series}
                     </span>
