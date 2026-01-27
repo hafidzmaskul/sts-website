@@ -78,27 +78,34 @@ export default function AboutUs({ teamMembers = [] }) {
                     className="container mx-auto py-10 px-4 sm:px-6 md:px-10 lg:px-20"
                 >
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        <AboutArticleCard
-                            image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
-                            title="Our customers"
-                            description="We serve more than 100,000 customers globally, from independent contractors to national business accounts, by offering thousands of products as well as services and expertise. In fact, over 78% of the SDM 100 companies buy from ADI."
-                            buttonLabel="Become a Customer"
-                            additionnal={true}
-                        />
-                        <AboutArticleCard
-                            image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
-                            title="Leading pros rely on STS."
-                            description="Our customers demand a high-performance distributor. See what makes STS stand out from competitors, and why we’re the leading security and low-voltage distributor."
-                            buttonLabel="See Why"
-                            additionnal={false}
-                        />
-                        <AboutArticleCard
-                            image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
-                            title="Services and resources"
-                            description="It’s our mission to deliver an exceptional experience at every touchpoint – in store, by phone and online. We support your business with pre-sales support, on-demand training and other resources to boost your industry knowledge and help you grow."
-                            buttonLabel="Explore Service"
-                            additionnal={false}
-                        />
+                        <div className="w-full max-w-[420px] mx-auto">
+                            <AboutArticleCard
+                                image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
+                                title="Our customers"
+                                description="We serve more than 100,000 customers globally, from independent contractors to national business accounts, by offering thousands of products as well as services and expertise. In fact, over 78% of the SDM 100 companies buy from ADI."
+                                buttonLabel="Become a Customer"
+                                additionnal={true}
+                            />
+                        </div>
+                        <div className="w-full max-w-[420px] mx-auto">
+                            <AboutArticleCard
+                                image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
+                                title="Leading pros rely on STS."
+                                description="Our customers demand a high-performance distributor. See what makes STS stand out from competitors, and why we’re the leading security and low-voltage distributor."
+                                buttonLabel="See Why"
+                                additionnal={false}
+                            />
+                        </div>
+                        {/* Center and keep the last item the same size as others on sm and md */}
+                        <div className="w-full max-w-[420px] mx-auto sm:col-span-2 md:col-span-2 lg:col-span-1 flex justify-center">
+                            <AboutArticleCard
+                                image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
+                                title="Services and resources"
+                                description="It’s our mission to deliver an exceptional experience at every touchpoint – in store, by phone and online. We support your business with pre-sales support, on-demand training and other resources to boost your industry knowledge and help you grow."
+                                buttonLabel="Explore Service"
+                                additionnal={false}
+                            />
+                        </div>
                     </div>
                 </section>
 

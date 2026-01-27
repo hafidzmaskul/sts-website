@@ -314,7 +314,7 @@ export default function Landing({
     object-cover
     rounded-lg
     h-full
-    
+
   "
   loading="lazy"
 />
@@ -474,7 +474,7 @@ export default function Landing({
                     {/* Card Kiri (Hot Deals) */}
                     <div className="bg-[#DADADA] text-[#0079C2] flex flex-col lg:flex-row items-stretch justify-start relative lg:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0">
+                        <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0 lg:pl-10 pl-4">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
                             <p className=" mb-4 text-sm lg:text-base max-w-[375px]">
                                 Upgrade your security with our latest deals on access control and surveillance products. Enjoy reliable performance, modern design, and trusted protection—now at special prices for a limited time.
@@ -504,7 +504,7 @@ export default function Landing({
                     {/* Card Kanan (Services) */}
                     <div className="bg-[#0079C2] flex flex-col lg:flex-row items-stretch justify-end relative lg:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0">
+                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0 lg:pr-10 pr-4">
                             <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
                             <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
                                 From consultation to installation and ongoing support, we deliver end-to-end security services tailored to your needs. Protect your property with expert solutions designed for reliability, safety, and peace of mind.
@@ -532,7 +532,6 @@ export default function Landing({
                         </div>
                     </div>
                 </div>
-
             </section>
             {/* SHOP BY CATEGORY - Loop Categories - Please don't change design, just data and mapping */}
             <section id='shop-by-category' className='bg-[#F3F3F3]'>
