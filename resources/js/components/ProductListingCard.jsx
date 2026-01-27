@@ -42,10 +42,11 @@ export default function ProductListingCard({
                     <span className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-2">
                         {brand}
                     </span>
-                     <a href={`/products/${slug}`} >
+                     <a href={`/products/${slug}`}  className=''>
                         <span className="text-sm font-semibold text-[#232323] mb-2">
                             {name}
                         </span>
+                        <br />
                     <span className="text-xs text-gray-500">
                         STS: {series}
                     </span>
@@ -79,7 +80,7 @@ export default function ProductListingCard({
                         </div>
                     )}
 
-                    
+
                 </div>
             </article>
         </>
