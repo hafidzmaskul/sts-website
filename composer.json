@@ -19,7 +19,8 @@
         "livewire/flux": "^2.1.1",
         "livewire/volt": "^1.7.0",
         "opcodesio/log-viewer": "^3.21",
-        "spatie/laravel-permission": "^6.21"
+        "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-sitemap": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

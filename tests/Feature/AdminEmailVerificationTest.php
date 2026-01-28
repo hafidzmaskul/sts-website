@@ -34,7 +34,7 @@ class AdminEmailVerificationTest extends TestCase
             ->once() // Expect 1 call
             ->andReturn(true); // Mock return
 
-        $response = $this->actingAs($this->user)->postJson('/api/rma-requests', [
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/rma-requests', [
             'orderNumber' => 'ORD-123',
             'productName' => 'Test Product',
             'returnReason' => 'Defective',
@@ -61,7 +61,7 @@ class AdminEmailVerificationTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $response = $this->actingAs($this->user)->postJson('/api/feedback', [
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/feedback', [
             'message' => 'Great website!'
         ]);
 
@@ -168,7 +168,7 @@ class AdminEmailVerificationTest extends TestCase
         $product->status = 'active';
         $product->save();
 
-        $response = $this->actingAs($this->user)->postJson('/api/transactions', [
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/transactions', [
             'contact_email' => 'john@example.com',
             'shipping_first_name' => 'John',
             'shipping_last_name' => 'Doe',

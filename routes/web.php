@@ -35,6 +35,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('checkout', 'checkout')->name('checkout');
     Route::get('/search', 'search')->name('search');
     Route::get('/search', 'search')->name('search');
+    Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 });
 
 // Masquerade Route (Signed, bypasses auth)

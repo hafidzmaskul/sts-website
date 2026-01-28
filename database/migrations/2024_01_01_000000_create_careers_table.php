@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('careers', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('location')->nullable();
             $table->string('type')->nullable(); // Full-time, Part-time, etc.

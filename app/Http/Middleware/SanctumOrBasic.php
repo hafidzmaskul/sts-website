@@ -16,6 +16,11 @@ class SanctumOrBasic
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Check if already authenticated (e.g. via session or actingAs in tests)
+        if (Auth::check()) {
+            return $next($request);
+        }
+
         if ($request->bearerToken()) {
             return app(\Illuminate\Auth\Middleware\Authenticate::class)->handle($request, $next, 'sanctum');
         }

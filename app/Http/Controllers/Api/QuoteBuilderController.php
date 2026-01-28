@@ -49,7 +49,7 @@ class QuoteBuilderController extends Controller
             return $quoteBuilder;
         });
 
-        // $this->sendNotificationEmail($quoteBuilder, 'created');
+        $this->sendNotificationEmail($quoteBuilder, 'created');
 
         return response()->json([
             'message' => 'Quote Builder created successfully',
