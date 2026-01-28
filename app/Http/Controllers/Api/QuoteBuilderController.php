@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\QuoteBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Setting;
 
 class QuoteBuilderController extends Controller
 {
@@ -46,6 +49,8 @@ class QuoteBuilderController extends Controller
             return $quoteBuilder;
         });
 
+        // $this->sendNotificationEmail($quoteBuilder, 'created');
+
         return response()->json([
             'message' => 'Quote Builder created successfully',
             'data' => $quoteBuilder->load('products.images'),
@@ -63,6 +68,8 @@ class QuoteBuilderController extends Controller
         $quoteBuilder->update([
             'name' => $request->name,
         ]);
+
+        $this->sendNotificationEmail($quoteBuilder, 'updated');
 
         return response()->json([
             'message' => 'Quote Builder updated successfully',
@@ -139,7 +146,7 @@ class QuoteBuilderController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('sku', 'like', '%' . $search . '%');
+                    ->orWhere('sku', 'like', '%' . $search . '%');
             });
         } else {
             // Get category IDs from products in the quote
@@ -164,5 +171,52 @@ class QuoteBuilderController extends Controller
             'success' => true,
             'data' => $products,
         ]);
+    }
+
+    private function sendNotificationEmail(QuoteBuilder $quote, string $action)
+    {
+        $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
+        $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
+
+        if (!$adminEmail) {
+            return;
+        }
+
+        $user = $quote->user;
+        $userName = $user ? $user->name : 'Unknown User';
+        $userEmail = $user ? $user->email : 'unknown@example.com';
+
+        $itemCount = $quote->products->count();
+        $actionVerb = $action === 'created' ? 'Created' : 'Updated';
+
+        $emailBody = implode("\n", [
+            "Quote Builder {$actionVerb}",
+            "========================",
+            "",
+            "Quote Name   : " . $quote->name,
+            "Customer     : " . $userName . " (" . $userEmail . ")",
+            "Total Items  : " . $itemCount,
+            "",
+            "Items in Quote:",
+            "---------------",
+        ]);
+
+        foreach ($quote->products as $product) {
+            $qty = $product->pivot->quantity ?? 1;
+            $emailBody .= "\n - " . $product->title . " (Qty: " . $qty . ")";
+        }
+
+        $emailBody .= "\n\n-----------------";
+        $emailBody .= "\nDate: " . now()->format('Y-m-d H:i:s');
+
+        try {
+            Mail::raw($emailBody, function ($m) use ($adminEmail, $userEmail, $userName, $quote, $actionVerb) {
+                $m->to($adminEmail)
+                    ->replyTo($userEmail, $userName)
+                    ->subject("Quote {$actionVerb}: " . $quote->name);
+            });
+        } catch (\Throwable $e) {
+            Log::error("Failed to send Quote Builder notification email: " . $e->getMessage());
+        }
     }
 }

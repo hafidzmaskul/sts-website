@@ -64,7 +64,7 @@ class ContactSubmissionController extends Controller
     private function sendNotificationEmail(ContactSubmission $submission)
     {
         // Get Admin Email from Database (General Settings)
-        $adminEmailSetting = Setting::where('key', 'admin_email')->first();
+        $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
 
         // Fallback to .env mail_from_address if setting is missing
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');

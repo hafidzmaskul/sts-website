@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Setting;
 
 class TransactionController extends Controller
 {
@@ -544,9 +547,43 @@ class TransactionController extends Controller
             ]);
         }
 
+        $this->sendNotificationEmail($transaction);
+
         return response()->json([
             'success' => true,
             'data' => $transaction->load(['items.product.images']),
         ], 201);
+    }
+
+    private function sendNotificationEmail(Transaction $transaction)
+    {
+        $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
+        $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
+
+        if (!$adminEmail) {
+            return;
+        }
+
+        $emailBody = implode("\n", [
+            "New Order Received",
+            "==================",
+            "",
+            "Invoice Code : " . $transaction->invoice_code,
+            "Total Amount : " . number_format($transaction->total_amount, 2),
+            "Customer     : " . $transaction->shipping_first_name . " " . $transaction->shipping_last_name,
+            "Email        : " . $transaction->contact_email,
+            "",
+            "Date: " . now()->format('Y-m-d H:i:s'),
+        ]);
+
+        try {
+            Mail::raw($emailBody, function ($m) use ($adminEmail, $transaction) {
+                $m->to($adminEmail)
+                    ->replyTo($transaction->contact_email, $transaction->shipping_first_name . ' ' . $transaction->shipping_last_name)
+                    ->subject('New Order: ' . $transaction->invoice_code);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Failed to send transaction notification email: ' . $e->getMessage());
+        }
     }
 }

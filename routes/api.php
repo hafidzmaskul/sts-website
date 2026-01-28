@@ -106,4 +106,10 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::get('/my-transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 });
 
+// Public Routes
+Route::post('/newsletter-subscription', [\App\Http\Controllers\Api\NewsletterSubscriptionController::class, 'store']);
+Route::post('/careers', [\App\Http\Controllers\Api\CareerSubmissionController::class, 'store']);
+Route::post('/contact', [\App\Http\Controllers\Api\ContactSubmissionController::class, 'store']); // Alias for testing
+Route::post('/quote-builders', [\App\Http\Controllers\Api\QuoteBuilderController::class, 'store']); // Alias for testing
+
 
