@@ -15,21 +15,43 @@
                 @error('label') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>
 
-            <div class="w-full">
-                <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Type</label>
-                <select wire:model="type" class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2] bg-white">
-                    @foreach ($types as $type)
-                        <option value="{{ $type->value }}">{{ $type->label() }}</option>
-                    @endforeach
-                </select>
-                @error('type') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="w-full">
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Margin (%)</label>
+                    <input type="number" wire:model="margin" step="0.01" placeholder="e.g. 15.00" max="99.99"
+                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
+                    @error('margin') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="w-full">
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Markup (%)</label>
+                    <input type="number" wire:model="markup" step="0.01" placeholder="e.g. 20.00"
+                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
+                    @error('markup') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="w-full">
+                    <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Discount (%)</label>
+                    <input type="number" wire:model="discount" step="0.01" placeholder="e.g. 10.00" max="100"
+                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
+                    @error('discount') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                </div>
             </div>
 
             <div class="w-full">
-                <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Value</label>
-                <input type="number" wire:model="value" step="0.01" placeholder="0.00"
-                    class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
-                @error('value') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+                <label class="block text-sm font-medium mb-2 text-black">Apply to Brands</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 border border-[#D2D2D2] rounded-lg max-h-64 overflow-y-auto bg-white">
+                    @forelse ($brands as $brand)
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" wire:model="brand_ids" value="{{ $brand->id }}"
+                                class="rounded border-gray-300 text-[#0079C2] shadow-sm focus:ring-[#0079C2]">
+                            <span class="text-sm text-gray-700">{{ $brand->name }}</span>
+                        </label>
+                    @empty
+                        <p class="text-sm text-gray-500 italic col-span-full">No active brands available.</p>
+                    @endforelse
+                </div>
+                @error('brand_ids') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="flex justify-end gap-2 pt-4">
@@ -54,8 +76,9 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Date</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">User</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Label</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Value</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Margin</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Markup</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Discount</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -78,12 +101,13 @@
                                 {{ $history->label }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-black">
-                                    {{ $history->type->label() }}
-                                </span>
+                                {{ $history->margin ?? '-' }}%
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
-                                {{ $history->value }}
+                                {{ $history->markup ?? '-' }}%
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
+                                {{ $history->discount ?? '-' }}%
                             </td>
                         </tr>
                     @endforeach

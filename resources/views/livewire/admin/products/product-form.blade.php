@@ -353,6 +353,20 @@
                     <h2 class="text-lg font-semibold" style="color: black;">Pricing</h2>
                 </div>
                 <div class="p-6 space-y-6">
+                    <!-- Brand -->
+                    <div>
+                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
+                        <select wire:model.live="brand_id"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            style="color: black;">
+                            <option value="">Select a Brand</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+
                     <!-- Pricing Mode -->
                     <div>
                         <label class="block text-sm font-medium mb-2" style="color: black;">Pricing Mode</label>
@@ -681,20 +695,6 @@
                     <h2 class="text-lg font-semibold" style="color: black;">Organization</h2>
                 </div>
                 <div class="p-6 space-y-6">
-                    <!-- Brand -->
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
-                        <select wire:model="brand_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
-                            style="color: black;">
-                            <option value="">Select a Brand</option>
-                            @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                    </div>
-
                     <!-- Categories -->
                     <div>
                         <label class="block text-sm font-medium mb-2" style="color: black;">Categories</label>

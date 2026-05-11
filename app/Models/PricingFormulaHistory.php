@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\PricingFormulaType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,13 +13,15 @@ class PricingFormulaHistory extends Model
         'pricing_formula_id',
         'user_id',
         'label',
-        'type',
-        'value',
+        'margin',
+        'markup',
+        'discount',
     ];
 
     protected $casts = [
-        'type' => PricingFormulaType::class,
-        'value' => 'decimal:2',
+        'margin' => 'decimal:2',
+        'markup' => 'decimal:2',
+        'discount' => 'decimal:2',
     ];
 
     public function pricingFormula()

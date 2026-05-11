@@ -142,24 +142,37 @@ class Product extends Model
         if ($this->override_enabled && $this->override_method && $this->override_value !== null) {
             $method = PricingFormulaType::tryFrom($this->override_method);
             $value = (float) $this->override_value;
-        } else {
-            $formula = $this->pricingFormula ?? $this->brand?->pricingFormula;
-            if (! $formula) {
-                return null;
+
+            if ($method && $value > 0) {
+                return $this->applyFormula($method, $value);
             }
-            $method = $formula->type;
-            $value = (float) $formula->value;
         }
 
-        if (! $method || $value <= 0) {
-            return null;
+        $formula = $this->pricingFormula ?? $this->brand?->pricingFormula;
+
+        if ($formula) {
+            $cost = $this->cost ? (float) $this->cost : null;
+            $rsp = $this->rsp ? (float) $this->rsp : null;
+
+            // Apply formula based on available fields and precedence: Discount -> Margin -> Markup
+            if ($rsp && $formula->discount !== null && $formula->discount > 0) {
+                return round($rsp * (1 - $formula->discount / 100), 2);
+            }
+
+            if ($cost && $formula->margin !== null && $formula->margin > 0 && $formula->margin < 100) {
+                return round($cost / (1 - $formula->margin / 100), 2);
+            }
+
+            if ($cost && $formula->markup !== null && $formula->markup > 0) {
+                return round($cost * (1 + $formula->markup / 100), 2);
+            }
         }
 
-        return $this->applyFormula($method, $value);
+        return null;
     }
 
     /**
-     * Apply a pricing formula to compute the final price.
+     * Apply a single pricing formula (used for product overrides).
      */
     protected function applyFormula(PricingFormulaType $method, float $value): ?float
     {

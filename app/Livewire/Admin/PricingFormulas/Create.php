@@ -2,17 +2,18 @@
 
 namespace App\Livewire\Admin\PricingFormulas;
 
-use App\Enums\PricingFormulaType;
+use App\Models\Brand;
 use App\Models\PricingFormula;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Create extends Component
 {
     public string $label = '';
-    public string $type = '';
-    public string $value = '';
+    public ?float $margin = null;
+    public ?float $markup = null;
+    public ?float $discount = null;
+    public array $brand_ids = [];
 
     public function save()
     {
@@ -20,16 +21,24 @@ class Create extends Component
 
         $validated = $this->validate([
             'label' => ['required', 'string', 'max:255'],
-            'type' => ['required', Rule::enum(PricingFormulaType::class)],
-            'value' => ['required', 'numeric', 'min:0'],
+            'margin' => ['nullable', 'numeric', 'min:0', 'max:99.99'],
+            'markup' => ['nullable', 'numeric', 'min:0'],
+            'discount' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'brand_ids' => ['array'],
+            'brand_ids.*' => ['exists:brands,id'],
         ]);
 
-        PricingFormula::create([
+        $formula = PricingFormula::create([
             'user_id' => Auth::id(),
             'label' => $this->label,
-            'type' => $this->type,
-            'value' => $this->value,
+            'margin' => $this->margin === '' ? null : $this->margin,
+            'markup' => $this->markup === '' ? null : $this->markup,
+            'discount' => $this->discount === '' ? null : $this->discount,
         ]);
+
+        if (!empty($this->brand_ids)) {
+            Brand::whereIn('id', $this->brand_ids)->update(['pricing_formula_id' => $formula->id]);
+        }
 
         $this->dispatch('notify', variant: 'success', message: 'Pricing Formula created successfully.');
 
@@ -41,7 +50,7 @@ class Create extends Component
         $this->authorize('pricing-formulas.create');
 
         return view('livewire.admin.pricing-formulas.create', [
-            'types' => PricingFormulaType::cases(),
+            'brands' => Brand::orderBy('name')->get(),
         ])->title('Create Pricing Formula');
     }
 }

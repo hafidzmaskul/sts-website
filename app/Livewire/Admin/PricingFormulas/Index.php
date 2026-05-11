@@ -34,7 +34,9 @@ class Index extends Component
             ->with(['user'])
             ->when($this->search, function ($query) {
                 $query->where('label', 'like', '%' . $this->search . '%')
-                    ->orWhere('value', 'like', '%' . $this->search . '%');
+                    ->orWhere('margin', 'like', '%' . $this->search . '%')
+                    ->orWhere('markup', 'like', '%' . $this->search . '%')
+                    ->orWhere('discount', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);
