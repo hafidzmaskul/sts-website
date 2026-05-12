@@ -75,8 +75,7 @@
                         class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="">None</option>
                         @foreach($pricingFormulas as $formula)
-                            <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
-                                {{ $formula->value }})</option>
+                            <option value="{{ $formula->id }}">{{ $formula->label }} @if($formula->summary)({{ $formula->summary }})@endif</option>
                         @endforeach
                     </select>
                     @error('pricing_formula_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror

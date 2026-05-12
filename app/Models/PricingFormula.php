@@ -24,6 +24,21 @@ class PricingFormula extends Model
         'discount' => 'decimal:2',
     ];
 
+    public function getSummaryAttribute()
+    {
+        if ($this->discount !== null) {
+            return "Discount: {$this->discount}%";
+        }
+        if ($this->margin !== null) {
+            return "Margin: {$this->margin}%";
+        }
+        if ($this->markup !== null) {
+            return "Markup: {$this->markup}%";
+        }
+
+        return '';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

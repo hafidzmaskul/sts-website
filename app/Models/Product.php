@@ -90,6 +90,11 @@ class Product extends Model
         return $this->hasMany(ProductAttachment::class);
     }
 
+    public function quantityPrices()
+    {
+        return $this->hasMany(ProductQuantityPrice::class)->orderBy('quantity');
+    }
+
     protected $appends = [
         'calculated_price',
     ];

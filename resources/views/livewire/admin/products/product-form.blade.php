@@ -503,6 +503,64 @@
                         </div>
                     </div>
 
+                    <!-- Quantity Pricing -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="block text-sm font-medium" style="color: black;">Quantity Pricing</span>
+                                <span class="text-xs" style="color: #6b7280;">Set different prices based on quantity.</span>
+                            </div>
+                            <button type="button" wire:click="addQuantityPrice"
+                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-lg text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                + Add Tier
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            @foreach($quantityPrices as $index => $qp)
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 relative group"
+                                    wire:key="qty-price-{{ $index }}">
+                                    <div class="flex-1 grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-xs font-medium" style="color: #6b7280;">Quantity</label>
+                                            <input type="number" min="1" step="1"
+                                                wire:model="quantityPrices.{{ $index }}.quantity"
+                                                class="mt-1 block w-full rounded-lg border border-[#D2D2D2] px-3 py-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                                                style="color: black;" placeholder="e.g. 10">
+                                            @error("quantityPrices.{$index}.quantity") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium" style="color: #6b7280;">Price (GBP)</label>
+                                            <div class="relative rounded shadow-sm mt-1">
+                                                <div class="pointer-events-none absolute inset-y-0 left-0 pl-2 flex items-center">
+                                                    <span class="sm:text-xs" style="color: #6b7280;">£</span>
+                                                </div>
+                                                <input type="number" step="0.01"
+                                                    wire:model="quantityPrices.{{ $index }}.price"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] text-sm py-1.5 pl-6 pr-3 bg-white focus:ring-indigo-500 focus:border-indigo-500"
+                                                    style="color: black;" placeholder="0.00">
+                                            </div>
+                                            @error("quantityPrices.{$index}.price") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <button type="button" wire:click="removeQuantityPrice({{ $index }})"
+                                        class="mt-5 flex-shrink-0 text-gray-400 hover:text-red-500 transition-colors">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        @if(empty($quantityPrices))
+                            <div class="text-xs text-center italic py-3 bg-gray-50 rounded-lg border border-dashed border-gray-200" style="color: #6b7280;">
+                                No quantity pricing tiers added.
+                            </div>
+                        @endif
+                    </div>
+
                     <!-- Customer Pricing -->
                     <div class="border-t border-gray-200 pt-6">
                         <label class="flex items-start cursor-pointer mb-4">

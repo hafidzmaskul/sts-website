@@ -62,6 +62,8 @@ class Edit extends Component
 
     public $customerPrices = [];
 
+    public $quantityPrices = [];
+
     public $is_exclusive = false;
 
     public $is_cta = false;
@@ -172,13 +174,35 @@ class Edit extends Component
             })->toArray();
         }
 
+        // Load Quantity Pricing
+        $this->quantityPrices = $product->quantityPrices()
+            ->get()
+            ->map(function ($qp) {
+                return [
+                    'id' => $qp->id,
+                    'quantity' => $qp->quantity,
+                    'price' => $qp->price,
+                ];
+            })
+            ->toArray();
+
         // Load brand formula info
         if ($this->brand_id) {
             $brand = Brand::with('pricingFormula')->find($this->brand_id);
             if ($brand?->pricingFormula) {
-                $this->brandFormulaLabel = $brand->pricingFormula->label;
-                $this->brandFormulaType = $brand->pricingFormula->type->label();
-                $this->brandFormulaValue = $brand->pricingFormula->value;
+                $formula = $brand->pricingFormula;
+                $this->brandFormulaLabel = $formula->label;
+
+                if ($formula->discount !== null) {
+                    $this->brandFormulaType = 'Discount';
+                    $this->brandFormulaValue = $formula->discount;
+                } elseif ($formula->margin !== null) {
+                    $this->brandFormulaType = 'Margin';
+                    $this->brandFormulaValue = $formula->margin;
+                } elseif ($formula->markup !== null) {
+                    $this->brandFormulaType = 'Markup';
+                    $this->brandFormulaValue = $formula->markup;
+                }
             }
         }
     }
@@ -195,9 +219,19 @@ class Edit extends Component
         if ($value) {
             $brand = Brand::with('pricingFormula')->find($value);
             if ($brand?->pricingFormula) {
-                $this->brandFormulaLabel = $brand->pricingFormula->label;
-                $this->brandFormulaType = $brand->pricingFormula->type->label();
-                $this->brandFormulaValue = $brand->pricingFormula->value;
+                $formula = $brand->pricingFormula;
+                $this->brandFormulaLabel = $formula->label;
+
+                if ($formula->discount !== null) {
+                    $this->brandFormulaType = 'Discount';
+                    $this->brandFormulaValue = $formula->discount;
+                } elseif ($formula->margin !== null) {
+                    $this->brandFormulaType = 'Margin';
+                    $this->brandFormulaValue = $formula->margin;
+                } elseif ($formula->markup !== null) {
+                    $this->brandFormulaType = 'Markup';
+                    $this->brandFormulaValue = $formula->markup;
+                }
             }
         }
     }
@@ -212,38 +246,50 @@ class Edit extends Component
             return $this->base_price ? (float) $this->base_price : null;
         }
 
+        $cost = $this->cost ? (float) $this->cost : null;
+        $rsp = $this->rsp ? (float) $this->rsp : null;
+
         // Auto mode: use override or brand formula
         if ($this->override_enabled && $this->override_method && $this->override_value) {
             $method = PricingFormulaType::tryFrom($this->override_method);
             $value = (float) $this->override_value;
+
+            if (! $method || $value <= 0) {
+                return null;
+            }
+
+            return match ($method) {
+                PricingFormulaType::MarginPercent => $cost && $value < 100
+                    ? round($cost / (1 - $value / 100), 2)
+                    : null,
+                PricingFormulaType::MarkupPercent => $cost
+                    ? round($cost * (1 + $value / 100), 2)
+                    : null,
+                PricingFormulaType::DiscountPercent => $rsp
+                    ? round($rsp * (1 - $value / 100), 2)
+                    : null,
+            };
         } else {
             $brand = $this->brand_id ? Brand::with('pricingFormula')->find($this->brand_id) : null;
             $formula = $brand?->pricingFormula;
             if (! $formula) {
                 return null;
             }
-            $method = $formula->type;
-            $value = (float) $formula->value;
-        }
 
-        if (! $method || $value <= 0) {
+            if ($rsp && $formula->discount !== null && $formula->discount > 0) {
+                return round($rsp * (1 - $formula->discount / 100), 2);
+            }
+
+            if ($cost && $formula->margin !== null && $formula->margin > 0 && $formula->margin < 100) {
+                return round($cost / (1 - $formula->margin / 100), 2);
+            }
+
+            if ($cost && $formula->markup !== null && $formula->markup > 0) {
+                return round($cost * (1 + $formula->markup / 100), 2);
+            }
+
             return null;
         }
-
-        $cost = $this->cost ? (float) $this->cost : null;
-        $rsp = $this->rsp ? (float) $this->rsp : null;
-
-        return match ($method) {
-            PricingFormulaType::MarginPercent => $cost && $value < 100
-                ? round($cost / (1 - $value / 100), 2)
-                : null,
-            PricingFormulaType::MarkupPercent => $cost
-                ? round($cost * (1 + $value / 100), 2)
-                : null,
-            PricingFormulaType::DiscountPercent => $rsp
-                ? round($rsp * (1 - $value / 100), 2)
-                : null,
-        };
     }
 
     public function addAttachment()
@@ -268,6 +314,20 @@ class Edit extends Component
     {
         unset($this->customerPrices[$index]);
         $this->customerPrices = array_values($this->customerPrices);
+    }
+
+    public function addQuantityPrice()
+    {
+        $this->quantityPrices[] = [
+            'quantity' => null,
+            'price' => null,
+        ];
+    }
+
+    public function removeQuantityPrice($index)
+    {
+        unset($this->quantityPrices[$index]);
+        $this->quantityPrices = array_values($this->quantityPrices);
     }
 
     public function rules()
@@ -319,6 +379,11 @@ class Edit extends Component
             'customerPrices' => 'array',
             'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id',
             'customerPrices.*.price' => 'required_with:customerPrices.*.user_id|numeric|min:0',
+
+            // Quantity Pricing Validation
+            'quantityPrices' => 'array',
+            'quantityPrices.*.quantity' => 'required|integer|min:1',
+            'quantityPrices.*.price' => 'required|numeric|min:0',
         ];
     }
 
@@ -370,6 +435,17 @@ class Edit extends Component
             }
         }
         $product->customerPrices()->sync($syncData);
+
+        // Sync Quantity Pricing
+        $product->quantityPrices()->delete();
+        foreach ($this->quantityPrices as $qp) {
+            if ($qp['quantity'] !== null && $qp['price'] !== null) {
+                $product->quantityPrices()->create([
+                    'quantity' => $qp['quantity'],
+                    'price' => $qp['price'],
+                ]);
+            }
+        }
 
         // Update sequences for existing images
         foreach ($this->storedImages as $imgData) {

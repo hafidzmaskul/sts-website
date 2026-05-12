@@ -18,15 +18,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="w-full">
                     <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Margin (%)</label>
-                    <input type="number" wire:model="margin" step="0.01" placeholder="e.g. 15.00" max="99.99"
-                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
+                    <input type="number" wire:model.live="margin" step="0.01" placeholder="e.g. 15.00" max="99.99"
+                        @disabled(!empty($markup))
+                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2] bg-white disabled:bg-gray-100 disabled:opacity-50">
                     @error('margin') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="w-full">
                     <label class="block text-sm font-medium mb-1" style="color:#AEAEAE;">Markup (%)</label>
-                    <input type="number" wire:model="markup" step="0.01" placeholder="e.g. 20.00"
-                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2]">
+                    <input type="number" wire:model.live="markup" step="0.01" placeholder="e.g. 20.00"
+                        @disabled(!empty($margin))
+                        class="w-full rounded-lg border border-[#D2D2D2] px-3 py-2 text-black placeholder-[#D2D2D2] focus:outline-none focus:border-[#0079C2] bg-white disabled:bg-gray-100 disabled:opacity-50">
                     @error('markup') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
