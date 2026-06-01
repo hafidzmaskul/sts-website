@@ -200,7 +200,7 @@ export default function BecomeCustomer() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Head title="Become Customer" />
+            <Head title="Sign Up Credit Facility" />
             <Header />
 
             <main>

@@ -24,7 +24,7 @@ export default class ContactUs extends Component {
 
         return (
             <div className="min-h-screen flex flex-col">
-                <Head title="Become Customer" />
+                <Head title="Contact Us" />
                 <Header />
 
                 <main className="">

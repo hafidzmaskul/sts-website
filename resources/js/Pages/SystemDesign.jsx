@@ -48,7 +48,7 @@ const whyChooseItems = [
 export default function SystemDesign({ services = [] }) {
     return (
         <div className="min-h-screen flex flex-col">
-            <Head title="Services" />
+            <Head title="System Design" />
             <Header />
             <div className="container px-4 md:px-10">
 

@@ -77,7 +77,7 @@ export default function AboutUs({ teamMembers = [] }) {
                     id="articles"
                     className="container mx-auto py-10 px-4 sm:px-6 md:px-10 lg:px-20"
                 >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
                         <div className="w-full max-w-[420px] mx-auto">
                             <AboutArticleCard
                                 image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
@@ -97,7 +97,7 @@ export default function AboutUs({ teamMembers = [] }) {
                             />
                         </div>
                         {/* Center and keep the last item the same size as others on sm and md */}
-                        <div className="w-full max-w-[420px] mx-auto sm:col-span-2 md:col-span-2 lg:col-span-1 flex justify-center">
+                        <div className="w-full max-w-[420px] mx-auto sm:col-span-2 md:col-span-2 xl:col-span-1 flex justify-center">
                             <AboutArticleCard
                                 image="/assets/dummmy/17cf1c96e5c96541e5cafeff7e5646a03a50ef93.png"
                                 title="Services and resources"
@@ -112,8 +112,8 @@ export default function AboutUs({ teamMembers = [] }) {
                 {/* Stats Grid: responsive spacing and columns */}
                 <section className='bg-[#F0F2F3] py-10'>
                     <h1 className="font-inter font-bold text-2xl sm:text-3xl md:text-4xl text-center py-6 sm:py-10">By the numbers</h1>
-                    <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
+                    <div className="container mx-auto px-4 sm:px-6 md:px-10 xl:px-20">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
                             {aboutStatsData.map((item, idx) => (
                                 <AboutStatsCard
                                     key={idx}
@@ -129,7 +129,7 @@ export default function AboutUs({ teamMembers = [] }) {
                 {/* Company headlines & solutions: responsive flex and spacing */}
                 <section className='py-10'>
                     <div className="container mx-auto py-8 px-4 sm:px-6 md:px-10 lg:px-20">
-                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                        <div className="grid font-nunito-sans grid-cols-1 md:grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
                             {/* Company Headlines Card */}
                             <div className="bg-[#0079C2] flex flex-col sm:flex-row items-center p-4 md:p-6 rounded-xl">
                                 <div className="w-full sm:w-3/5 flex flex-col justify-center text-white mb-4 sm:mb-0 sm:mr-5">

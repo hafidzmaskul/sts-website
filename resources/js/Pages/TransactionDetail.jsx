@@ -93,7 +93,7 @@ export default function TransactionDetail({ id }) {
                     {/* Invoice Card Container */}
                     <div className="flex justify-center">
                         <div
-                            className="relative py-4 sm:py-8 w-full flex flex-col"
+                            className="relative py-4 sm:py-8 w-full flex flex-col "
                             style={{
                                 backgroundImage: "url('/assets/invoice-bg.png')",
                                 backgroundSize: "cover",
@@ -101,7 +101,7 @@ export default function TransactionDetail({ id }) {
                             }}
                         >
                             {/* Content */}
-                            <div className="relative z-10 px-2 sm:px-4 md:p-10 flex flex-col h-full text-[#232323] font-sans">
+                            <div className="relative z-10 my-10 px-2 sm:px-4 md:p-10 flex flex-col h-full text-[#232323] font-sans">
 
                                 {/* Header */}
                                 <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center mb-8 sm:mb-10 gap-4 sm:gap-0">

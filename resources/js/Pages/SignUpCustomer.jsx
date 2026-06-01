@@ -188,7 +188,7 @@ export default function BecomeCustomer() {
 
     return (
         <div className="min-h-screen flex flex-col bg-[#F0F2F3]">
-            <Head title="Become Customer" />
+            <Head title="Sign Up Customer" />
             <Header />
             <main className="flex-grow">
                 <section className="py-6 px-2 sm:px-4 md:px-0 container mx-auto flex flex-col items-center">
