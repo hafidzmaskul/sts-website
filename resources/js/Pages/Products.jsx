@@ -364,9 +364,9 @@ export default function Products({ products = [], baseProducts = [], productCate
                     </h1>
                     <div
                         id="product-and-filter"
-                        className="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start"
+                        className="mt-6 grid grid-cols-1 xl:grid-cols-5 gap-8 items-start"
                     >
-                        <aside className="lg:col-span-1">
+                        <aside className="xl:col-span-1">
                             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold text-[#232323]">
@@ -490,7 +490,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                             </div>
                         </aside>
 
-                        <section className="lg:col-span-4">
+                        <section className="xl:col-span-4">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <p className="text-sm text-gray-600">
                                     Showing{' '}
@@ -538,7 +538,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                             </div>
 
                             {isInitialLoading ? (
-                                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
                                     {Array.from({ length: 8 }).map((_, index) => (
                                         <div
                                             key={index}
@@ -559,7 +559,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                         </p>
                                     ) : (
                                         <>
-                                            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                                            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
                                                 {visibleProducts.map((product) => (
 
                                                     <ProductListingCard

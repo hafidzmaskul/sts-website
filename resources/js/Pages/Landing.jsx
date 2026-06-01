@@ -266,7 +266,7 @@ export default function Landing({
 
     return (
         <div className="min-h-screen  ">
-            <Head title="Home - Absolutely Human Resources" />
+            <Head title="Home" />
             <Header />
 
             {/* Success Alert */}
@@ -472,10 +472,10 @@ export default function Landing({
             <section className='container mx-auto px-10 md:px-20 py-20'>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Card Kiri (Hot Deals) */}
-                    <div className="bg-[#DADADA] text-[#0079C2] flex flex-col lg:flex-row items-stretch justify-start relative lg:h-80 overflow-visible">
+                    <div className="bg-[#DADADA] text-[#0079C2] flex flex-col xl:flex-row items-stretch justify-start relative xl:h-80 overflow-visible">
                         {/* Konten Text */}
                         <div className="flex flex-col justify-center items-end text-right w-full pr-8 py-8 lg:pr-16 lg:py-0 lg:pl-10 pl-4">
-                            <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
+                            <h2 className="font-bold text-2xl xl:text-4xl mb-3 mt-2 font-inter ">Hot Deals</h2>
                             <p className=" mb-4 text-sm lg:text-base max-w-[375px]">
                                 Upgrade your security with our latest deals on access control and surveillance products. Enjoy reliable performance, modern design, and trusted protection—now at special prices for a limited time.
                             </p>
@@ -487,10 +487,10 @@ export default function Landing({
                             <img
                                 src="/assets/sound.png"
                                 alt="Sound"
-                                className="block lg:hidden mt-6 h-44 w-auto object-contain"
+                                className="block xl:hidden mt-6 h-44 w-auto object-contain"
                             />
                         </div>
-                        <div className="hidden lg:block absolute left-0 lg:-left-16 top-1/2 -translate-y-1/2 z-0">
+                        <div className="hidden xl:block absolute left-0 lg:-left-16 top-1/2 -translate-y-1/2 z-0">
                             <img
                                 src="/assets/sound.png"
                                 alt="Sound"
@@ -502,11 +502,11 @@ export default function Landing({
                         </div>
                     </div>
                     {/* Card Kanan (Services) */}
-                    <div className="bg-[#0079C2] flex flex-col lg:flex-row items-stretch justify-end relative lg:h-80 overflow-visible">
+                    <div className="bg-[#0079C2] flex flex-col lg:flex-row items-stretch justify-end relative xl:h-80 overflow-visible">
                         {/* Konten Text */}
-                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 lg:pl-10 lg:py-0 lg:pr-10 pr-4">
-                            <h2 className="font-bold text-2xl lg:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
-                            <p className="text-white/80 mb-4 text-sm lg:text-base max-w-[375px]">
+                        <div className="flex flex-col justify-center items-start text-left w-full pl-8 py-8 xl:pl-10 xl:py-0 xl:pr-10 pr-4">
+                            <h2 className="font-bold text-2xl xl:text-4xl mb-3 mt-2 font-inter  text-white">Services</h2>
+                            <p className="text-white/80 mb-4 text-sm xl:text-base max-w-[375px]">
                                 From consultation to installation and ongoing support, we deliver end-to-end security services tailored to your needs. Protect your property with expert solutions designed for reliability, safety, and peace of mind.
                             </p>
                             <button className="bg-white hover:bg-gray-200 text-[#0079C2] px-6 py-2 rounded font-semibold transition self-start flex items-center gap-2">
@@ -517,10 +517,10 @@ export default function Landing({
                             <img
                                 src="/assets/cctv.png"
                                 alt="CCTV"
-                                className="block lg:hidden mt-6 h-44 w-auto object-contain"
+                                className="block xl:hidden mt-6 h-44 w-auto object-contain"
                             />
                         </div>
-                        <div className="hidden lg:block absolute right-2 lg:-right-6 top-1/3 -translate-y-1/2 z-0">
+                        <div className="hidden xl:block absolute right-2 lg:-right-6 top-1/3 -translate-y-1/2 z-0">
                             <img
                                 src="/assets/cctv.png"
                                 alt="CCTV"

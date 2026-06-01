@@ -36,7 +36,7 @@ const aboutbenefits = [
 export default function Configuration({ services = [] }) {
     return (
         <div className="min-h-screen flex flex-col">
-            <Head title="Services" />
+            <Head title="Configuration" />
             <Header />
             <HeroSection
                 bgUrl="/assets/configuration-hero.jpg"

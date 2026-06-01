@@ -29,7 +29,7 @@ class QuoteController extends Controller
                 'status' => 'error',
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
-            ], 422)
+            ], 422);
         }
 
         try {

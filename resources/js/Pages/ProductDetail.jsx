@@ -696,12 +696,14 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 </Modal>
             )}
 
-            <Head>
-                <title>{data.seo_title ?? 'Product Detail'}</title>
-                <meta name="description" content={data.seo_description} />
-                <meta name="keywords" content={data.seo_keywords} />
-                <meta property="og:title" content={data.seo_title ?? 'Product Detail'} />
-                <meta property="og:description" content={data.seo_description} />
+            <Head title={data.seo_title || data.title || 'Product Detail'}>
+                <meta name="description" content={data.seo_description || data.product_overview || ''} />
+                <meta name="keywords" content={data.seo_keywords || ''} />
+                <meta property="og:title" content={data.seo_title || data.title || 'Product Detail'} />
+                <meta property="og:description" content={data.seo_description || data.product_overview || ''} />
+                {productImages && productImages.length > 0 && (
+                    <meta property="og:image" content={productImages[0]} />
+                )}
             </Head>
             <Header />
 

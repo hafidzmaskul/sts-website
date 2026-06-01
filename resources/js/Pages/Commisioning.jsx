@@ -48,7 +48,7 @@ const whyChooseItems = [
 export default function Commisioning({ services = [] }) {
     return (
         <div className="flex flex-col min-h-screen">
-            <Head title="Services" />
+            <Head title="Commisioning" />
             <Header />
             <div className="container px-4 md:px-10">
                 <nav className="text-xs md:text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
