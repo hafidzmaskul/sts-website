@@ -160,9 +160,7 @@
                                 style="color:#000; border-color:#D2D2D2;">
                                 <option value="">None</option>
                                 @foreach($pricingFormulas as $formula)
-                                    <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
-                                        {{ $formula->value }})
-                                    </option>
+                                    <option value="{{ $formula->id }}">{{ $formula->label }} @if($formula->summary)({{ $formula->summary }})@endif</option>
                                 @endforeach
                             </select>
                             @error('pricing_formula_id') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
