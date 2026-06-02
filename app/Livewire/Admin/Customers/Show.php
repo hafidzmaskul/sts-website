@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Admin\Customers;
 
+use App\Mail\CustomerApprovedWelcomeMail;
+use App\Models\CreditLimit;
 use App\Models\Customer;
 use App\Models\User;
-use App\Models\CreditLimit;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -15,12 +17,14 @@ class Show extends Component
 
     // Decline Logic
     public $showDeclineModal = false;
+
     public $showLoginModal = false; // Add this
+
     public $reviewNote = '';
 
     public function mount(Customer $customer)
     {
-        $this->customer = $customer->load(['user', 'company', 'shippingAddresses', 'creditLimits' => fn($q) => $q->latest()]);
+        $this->customer = $customer->load(['user', 'company', 'shippingAddresses', 'creditLimits' => fn ($q) => $q->latest()]);
     }
 
     public function approve()
@@ -32,10 +36,11 @@ class Show extends Component
         }
 
         // 1. Create User
+        $plainPassword = Str::random(12);
         $user = User::create([
-            'name' => $this->customer->first_name . ' ' . $this->customer->last_name,
+            'name' => $this->customer->first_name.' '.$this->customer->last_name,
             'email' => $this->customer->email,
-            'password' => Hash::make(Str::random(12)), // Generate random password
+            'password' => Hash::make($plainPassword),
             'email_verified_at' => now(), // Auto verify since admin approved
         ]);
 
@@ -73,8 +78,12 @@ class Show extends Component
             ]);
         }
 
-        // Optional: Send "Account Approved" email to user with password reset link or similar
-        // For now, we just approve.
+        // 6. Send "Account Approved" welcome email to user
+        try {
+            Mail::to($user->email)->send(new CustomerApprovedWelcomeMail($user, $plainPassword));
+        } catch (\Exception $e) {
+            logger()->error('Failed to send customer welcome email: '.$e->getMessage());
+        }
 
         $this->dispatch('notify', type: 'success', message: 'Customer approved and user account created.');
         $this->customer->refresh();
