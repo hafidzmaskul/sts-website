@@ -206,4 +206,6 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
     Route::get('/dashboard/company', \App\Livewire\FixedRole\Company\Show::class)->name('dashboard.company.show');
 });
 
+Route::get('/test-send-email', [\App\Http\Controllers\TestEmailController::class, 'sendEmail'])->name('test-send-email');
+
 require __DIR__ . '/auth.php';
