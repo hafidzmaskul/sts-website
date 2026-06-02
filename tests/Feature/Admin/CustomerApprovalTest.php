@@ -3,14 +3,15 @@
 namespace Tests\Feature\Admin;
 
 use App\Livewire\Admin\Customers\Show;
+use App\Mail\CustomerApprovedWelcomeMail;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\User;
-use App\Models\MonthlyCreditLimit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CustomerApprovalTest extends TestCase
@@ -19,6 +20,8 @@ class CustomerApprovalTest extends TestCase
 
     public function test_approving_customer_creates_monthly_credit_limit_record()
     {
+        Mail::fake();
+
         // 1. Setup Admin User with permissions
         $admin = User::factory()->create();
         $role = Role::create(['name' => 'admin']);
@@ -50,7 +53,12 @@ class CustomerApprovalTest extends TestCase
         Livewire::test(Show::class, ['customer' => $customer])
             ->call('approve');
 
-        // 4. Assert MonthlyCreditLimit is created
+        // 4. Assert Mail was sent
+        Mail::assertSent(CustomerApprovedWelcomeMail::class, function ($mail) use ($customer) {
+            return $mail->hasTo($customer->email) && $mail->user->email === $customer->email;
+        });
+
+        // 5. Assert MonthlyCreditLimit is created
         $customer->refresh();
         $this->assertNotNull($customer->user_id, 'Customer should have a user_id assigned');
 
