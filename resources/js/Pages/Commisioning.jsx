@@ -230,7 +230,7 @@ export default function Commisioning({ services = [] }) {
                     className="container mx-auto flex flex-col lg:flex-row gap-10 md:gap-12 my-8 md:my-12 px-2 md:px-8"
                 >
                     {/* How it works */}
-                    <div className="w-full lg:w-2/3 flex flex-col justify-center">
+                    <div className="w-full lg:w-2/2 flex flex-col justify-center">
                         <div className="flex flex-col items-center text-center px-2 md:px-6">
                             <h2 className="text-2xl md:text-4xl font-bold font-inter mt-10 mb-8 md:mt-16 md:mb-12 text-[#002856]">
                                 How it works
@@ -288,8 +288,8 @@ export default function Commisioning({ services = [] }) {
                         </div>
                     </div>
                     {/* QuoteForm: on mobile and tab it displays below, on desktop as a row */}
-                    <div className="w-full lg:w-1/3 flex items-center">
-                        <div className="w-full bg-[#F0F2F3] rounded-xl shadow-md p-4 md:p-8">
+                    <div className="w-full lg:w-2/2 flex items-center">
+                        <div className="w-full bg-[#F0F2F3] rounded-xl shadow-md  md:p-8">
                             <QuoteForm
                                 title="Get a Custom Quote"
                                 submitEndpoint="/api/quotes"

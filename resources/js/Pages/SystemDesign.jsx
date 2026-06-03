@@ -221,50 +221,81 @@ export default function SystemDesign({ services = [] }) {
                 </section>
 
                 {/* How It Works + Quote Section - Responsive Stack */}
-                <section
-                    id='form-quote'
-                    className="container mx-auto px-4 md:px-20 flex flex-col md:flex-row gap-8 md:gap-0 my-8 md:my-10"
+                 {/* How it works + QuoteForm section - improved responsive */}
+                 <section
+                    id="form-quote"
+                    className="container mx-auto flex flex-col lg:flex-row gap-10 md:gap-12 my-8 md:my-12 px-2 md:px-8"
                 >
-                    <div className="w-full md:w-1/2 flex flex-col h-auto">
-                        <div className="flex flex-col items-center text-center px-0 md:px-4">
-                            <h2 className="text-xl md:text-3xl font-bold mt-6 md:mt-20 mb-6 md:mb-10">How it works</h2>
-                            <div className="flex flex-col gap-8 md:gap-10 w-full">
+                    {/* How it works */}
+                    <div className="w-full lg:w-2/2 flex flex-col justify-center">
+                        <div className="flex flex-col items-center text-center px-2 md:px-6">
+                            <h2 className="text-2xl md:text-4xl font-bold font-inter mt-10 mb-8 md:mt-16 md:mb-12 text-[#002856]">
+                                How it works
+                            </h2>
+                            <ol className="flex flex-col gap-10 md:gap-12 w-full">
                                 {/* Step 1 */}
-                                <div className="flex flex-col items-center w-full">
-                                    <img src="/assets/step1.svg" alt="Step 1" className="w-16 h-16 md:w-20 md:h-20 mb-3 md:mb-4" />
-                                    <h3 className="text-base md:text-2xl font-semibold mb-1 md:mb-2 text-[#002856]">Step 1</h3>
-                                    <p className="text-sm md:text-base max-w-md">
+                                <li className="flex flex-col items-center w-full">
+                                    <div className="bg-white p-3 mb-3 md:mb-4">
+                                        <img
+                                            src="/assets/step1.svg"
+                                            alt="Step 1"
+                                            className="w-14 h-14 md:w-20 md:h-20"
+                                        />
+                                    </div>
+                                    <h3 className="text-lg md:text-2xl font-semibold mb-1 md:mb-2 text-[#0079C2] uppercase tracking-wide">
+                                        Step 1
+                                    </h3>
+                                    <p className="text-sm md:text-lg max-w-xs md:max-w-md text-[#002856] opacity-90 font-inter">
                                         Before you purchase your cameras, panels or other programmable product, contact us using the form for a free pre-configuration service quote.
                                     </p>
-                                </div>
+                                </li>
                                 {/* Step 2 */}
-                                <div className="flex flex-col items-center w-full">
-                                    <img src="/assets/step2.png" alt="Step 2" className="w-16 h-16 md:w-20 md:h-20 mb-3 md:mb-4" />
-                                    <h3 className="text-base md:text-2xl font-semibold mb-1 md:mb-2 text-[#002856]">Step 2</h3>
-                                    <p className="text-sm md:text-base max-w-md">
-                                        A representative will gather more information about your programming requirements and the scope of your project. Our pre-configuration services are flexible to meet your needs.
+                                <li className="flex flex-col items-center w-full">
+                                    <div className="bg-white p-3 mb-3 md:mb-4">
+                                        <img
+                                            src="/assets/step2.png"
+                                            alt="Step 2"
+                                            className="w-14 h-14 md:w-20 md:h-20"
+                                        />
+                                    </div>
+                                    <h3 className="text-lg md:text-2xl font-semibold mb-1 md:mb-2 text-[#0079C2] uppercase tracking-wide">
+                                        Step 2
+                                    </h3>
+                                    <p className="text-sm md:text-lg max-w-xs md:max-w-md text-[#002856] opacity-90 font-inter">
+                                        We’ll connect with you to gather more information about your programming needs and project requirements. Our pre-configuration services are flexible to fit your workflow.
                                     </p>
-                                </div>
+                                </li>
                                 {/* Step 3 */}
-                                <div className="flex flex-col items-center w-full">
-                                    <img src="/assets/step3.png" alt="Step 3" className="w-16 h-16 md:w-20 md:h-20 mb-3 md:mb-4" />
-                                    <h3 className="text-base md:text-2xl font-semibold mb-1 md:mb-2 text-[#002856]">Step 3</h3>
-                                    <p className="text-sm md:text-base max-w-md">
-                                        The STS technical team will review your programming needs and design a price based on the level of service you prefer (bronze, silver or gold) or based on your customized project. You'll receive a tailored quote from your account manager.
+                                <li className="flex flex-col items-center w-full">
+                                    <div className="bg-white p-3 mb-3 md:mb-4">
+                                        <img
+                                            src="/assets/step3.png"
+                                            alt="Step 3"
+                                            className="w-14 h-14 md:w-20 md:h-20"
+                                        />
+                                    </div>
+                                    <h3 className="text-lg md:text-2xl font-semibold mb-1 md:mb-2 text-[#0079C2] uppercase tracking-wide">
+                                        Step 3
+                                    </h3>
+                                    <p className="text-sm md:text-lg max-w-xs md:max-w-md text-[#002856] opacity-90 font-inter">
+                                        Our technical team reviews your requirements and creates a tailored quote, whether you need a standardized (bronze, silver, gold) or custom solution. Expect fast, expert feedback from your account manager.
                                     </p>
-                                </div>
-                            </div>
+                                </li>
+                            </ol>
                         </div>
                     </div>
-                    <div className="w-full md:w-1/2 bg-[#F0F2F3] flex items-center justify-center p-4 md:p-0">
-                        <QuoteForm
-                            title="Get Quote"
-                            submitEndpoint="/api/quotes"
-                            successMessage="Thank you! Your quote request has been submitted."
-                            showTitle={true}
-                            className=""
-                            formId="quote"
-                        />
+                    {/* QuoteForm: on mobile and tab it displays below, on desktop as a row */}
+                    <div className="w-full lg:w-2/2 flex items-center">
+                        <div className="w-full bg-[#F0F2F3] rounded-xl shadow-md md:p-8">
+                            <QuoteForm
+                                title="Get a Custom Quote"
+                                submitEndpoint="/api/quotes"
+                                successMessage="Thank you! Your quote request has been submitted."
+                                showTitle={true}
+                                className="w-full"
+                                formId="quote"
+                            />
+                        </div>
                     </div>
                 </section>
             </main>
