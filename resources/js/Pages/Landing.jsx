@@ -737,8 +737,8 @@ export default function Landing({
                         </div>
                         <div>
                             <label className="block mb-3 text-white">Select Subject?</label>
-                            <div className="flex flex-row gap-3">
-                                <label className="inline-flex items-center">
+                            <div className="flex flex-col lg:flex-row gap-3 px-10 md:px-0">
+                                <label className="inline-flex items-center flex-1">
                                     <input
                                         type="radio"
                                         name="subject"
@@ -749,7 +749,7 @@ export default function Landing({
                                     />
                                     <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
-                                <label className="inline-flex items-center">
+                                <label className="inline-flex items-center flex-1">
                                     <input
                                         type="radio"
                                         name="subject"
@@ -760,7 +760,7 @@ export default function Landing({
                                     />
                                     <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
-                                <label className="inline-flex items-center">
+                                <label className="inline-flex items-center flex-1">
                                     <input
                                         type="radio"
                                         name="subject"
@@ -771,7 +771,7 @@ export default function Landing({
                                     />
                                     <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
-                                <label className="inline-flex items-center">
+                                <label className="inline-flex items-center flex-1">
                                     <input
                                         type="radio"
                                         name="subject"
@@ -783,7 +783,9 @@ export default function Landing({
                                     <span className="ml-2 text-white">General Inquiry</span>
                                 </label>
                             </div>
+
                         </div>
+
                         <div>
                             <label className="block mb-2 text-white" htmlFor="message">
                                 Message

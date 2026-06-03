@@ -200,17 +200,17 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     const accordionItems = useMemo(() => [
         {
             id: 'description',
-            title: 'Deskripsi Produk',
+            title: 'Product Description',
             content: data.product_overview ? data.product_overview : '',
         },
         {
             id: 'specs',
-            title: 'Spesifikasi Teknis',
+            title: 'Technical Specification',
             content: specs,
         },
         {
             id: 'information',
-            title: 'Information',
+            title: 'Additional Information',
             content: data.information ? data.information : '',
         },
     ], [data.product_overview, data.information, specs]);
