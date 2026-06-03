@@ -105,7 +105,7 @@ export default function Commisioning({ services = [] }) {
                 {/* Why choose section - improved responsive */}
                 <section className="w-full bg-[#0079C2] py-8 md:py-12 overflow-hidden">
                     <div className="container mx-auto px-4">
-                        <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-10 mb-8">
+                        <div className="flex flex-col lg:flex-row justify-between gap-4 md:gap-10 mb-8">
                             {/* Left: Title */}
                             <div className="flex mb-4 md:mb-0">
                                 <h2 className="text-white font-bold text-lg md:text-2xl text-left">Why Choose STS</h2>

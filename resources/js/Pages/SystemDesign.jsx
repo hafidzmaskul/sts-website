@@ -98,7 +98,7 @@ export default function SystemDesign({ services = [] }) {
 
                 <section className="w-full bg-[#0079C2] py-8 md:py-12 overflow-hidden">
                     <div className="container mx-auto px-4">
-                        <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-2 mb-8">
+                        <div className="flex flex-col lg:flex-row justify-between gap-4 md:gap-2 mb-8">
                             {/* Title */}
                             <div className="flex-1 flex items-start mb-4 md:mb-0">
                                 <h2 className="text-white font-bold text-xl md:text-2xl whitespace-nowrap">
