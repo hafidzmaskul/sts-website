@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Quote extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -36,4 +37,3 @@ class Quote extends Model
         });
     }
 }
-

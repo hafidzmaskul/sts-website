@@ -16,16 +16,16 @@ class ProductController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('sku', 'like', '%' . $search . '%');
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('sku', 'like', '%'.$search.'%');
             });
         }
 
         if ($request->has('category')) {
             $category = $request->category;
             $query->whereHas('categories', function ($q) use ($category) {
-                $q->where('name', 'like', '%' . $category . '%')
-                    ->orWhere('slug', 'like', '%' . $category . '%');
+                $q->where('name', 'like', '%'.$category.'%')
+                    ->orWhere('slug', 'like', '%'.$category.'%');
             });
         }
 
@@ -35,7 +35,7 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $products
+            'data' => $products,
         ]);
     }
 
@@ -46,10 +46,10 @@ class ProductController extends Controller
             ->where('status', 'active')
             ->first();
 
-        if (!$product) {
+        if (! $product) {
             return response()->json([
                 'success' => false,
-                'message' => 'Product not found'
+                'message' => 'Product not found',
             ], 404);
         }
 
@@ -66,7 +66,7 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $product
+            'data' => $product,
         ]);
     }
 }

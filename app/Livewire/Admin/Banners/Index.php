@@ -10,14 +10,18 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
 
     public string $name = '';
+
     public $file; // for file upload
+
     public ?string $cta_url = null;
 
     protected function rules()
@@ -60,7 +64,7 @@ class Index extends Component
         if ($this->editingId) {
             $banner = Banner::findOrFail($this->editingId);
         } else {
-            $banner = new Banner();
+            $banner = new Banner;
             $banner->created_by = auth()->id();
         }
 
@@ -122,7 +126,7 @@ class Index extends Component
         $banners = Banner::query()
             ->with('creator')
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

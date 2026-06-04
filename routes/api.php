@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ContactSubmissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ContactSubmissionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -12,6 +12,7 @@ Route::post('/contact-submissions', [ContactSubmissionController::class, 'store'
 Route::post('/quotes', [\App\Http\Controllers\Api\QuoteController::class, 'store']);
 Route::post('/sign-up', [\App\Http\Controllers\CustomerRegistrationController::class, 'store']);
 Route::post('/guest-register', [\App\Http\Controllers\Api\GuestController::class, 'store']);
+Route::post('/send-email', [\App\Http\Controllers\Api\EmailController::class, 'send']);
 
 Route::controller(\App\Http\Controllers\Api\QuoteBuilderController::class)
     ->middleware(\App\Http\Middleware\SanctumOrBasic::class)
@@ -84,13 +85,12 @@ Route::controller(\App\Http\Controllers\Api\ShippingAddressController::class)
         Route::delete('/{id}', 'destroy');
     });
 
-
 // Authentication Routes
 Route::post('/auth/forgot-password', [\App\Http\Controllers\Api\AuthController::class, 'forgotPassword']);
 Route::post('/auth/reset-password', [\App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
-
+Route::get('/check-email', [\App\Http\Controllers\Api\RegisterController::class, 'checkEmail']);
 
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
@@ -106,4 +106,8 @@ Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function ()
     Route::get('/my-transactions/{id}', [\App\Http\Controllers\Api\TransactionController::class, 'show']);
 });
 
-
+// Public Routes
+Route::post('/newsletter-subscription', [\App\Http\Controllers\Api\NewsletterSubscriptionController::class, 'store']);
+Route::post('/careers', [\App\Http\Controllers\Api\CareerSubmissionController::class, 'store']);
+Route::post('/contact', [\App\Http\Controllers\Api\ContactSubmissionController::class, 'store']); // Alias for testing
+Route::post('/quote-builders', [\App\Http\Controllers\Api\QuoteBuilderController::class, 'store']); // Alias for testing

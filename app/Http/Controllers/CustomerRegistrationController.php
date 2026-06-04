@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\Support\Str;
 
 class CustomerRegistrationController extends Controller
 {
@@ -20,7 +16,7 @@ class CustomerRegistrationController extends Controller
             // Customer Details
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'job_title' => ['required', 'string', 'max:255'],
 
             // Company Details
@@ -97,7 +93,7 @@ class CustomerRegistrationController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'role_applied' => $role,
-                'account_number' => $request->account ?? 'PENDING-' . uniqid(), // Fallback if not provided or generated
+                'account_number' => $request->account ?? 'PENDING-'.uniqid(), // Fallback if not provided or generated
                 'job_title' => $request->job_title,
                 'status' => 'active', // System status active, but review status pending
                 'status_review' => 'pending',

@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Company;
-use App\Models\User;
 
 class StatementHistory extends Model
 {

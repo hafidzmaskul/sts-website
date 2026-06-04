@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -18,7 +17,7 @@ class TransactionSummaryTest extends TestCase
     private function createTransaction($customerId, $status)
     {
         return Transaction::forceCreate([
-            'invoice_code' => 'INV-' . uniqid(),
+            'invoice_code' => 'INV-'.uniqid(),
             'customer_id' => $customerId,
             'subtotal' => 100,
             'tax_amount' => 10,
@@ -32,8 +31,8 @@ class TransactionSummaryTest extends TestCase
     private function createCompany()
     {
         return Company::create([
-            'name' => 'Test Company ' . uniqid(),
-            'email' => 'company' . uniqid() . '@example.com',
+            'name' => 'Test Company '.uniqid(),
+            'email' => 'company'.uniqid().'@example.com',
             'phone' => '1234567890',
             'website' => 'https://example.com',
             'logo' => 'logo.png',
@@ -130,10 +129,12 @@ class TransactionSummaryTest extends TestCase
             'account_level' => 'staff',
         ]);
 
-        for ($i = 0; $i < 3; $i++)
+        for ($i = 0; $i < 3; $i++) {
             $this->createTransaction($customer->id, 'pending');
-        for ($i = 0; $i < 2; $i++)
+        }
+        for ($i = 0; $i < 2; $i++) {
             $this->createTransaction($customer->id, 'processing');
+        }
         $this->createTransaction($customer->id, 'completed');
 
         Sanctum::actingAs($user);
@@ -158,7 +159,7 @@ class TransactionSummaryTest extends TestCase
         ]);
 
         $response = $this->withHeaders([
-            'Authorization' => 'Basic ' . base64_encode($user->email . ':password'),
+            'Authorization' => 'Basic '.base64_encode($user->email.':password'),
         ])->getJson('/api/transactions/summary');
 
         $response->assertStatus(200);

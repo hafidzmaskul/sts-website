@@ -29,14 +29,14 @@ class SettingsController extends Controller
             'payment_method_3_name',
             'payment_method_3_desc',
             'payment_method_3_icon',
-            'transaction_tax'
+            'transaction_tax',
         ];
 
         $settings = Setting::whereIn('key', $keys)->pluck('value', 'key');
 
         $shippingMethods = [];
         for ($i = 1; $i <= 3; $i++) {
-            if (!empty($settings["shipping_method_{$i}_name"])) {
+            if (! empty($settings["shipping_method_{$i}_name"])) {
                 $shippingMethods[] = [
                     'id' => $i,
                     'name' => $settings["shipping_method_{$i}_name"] ?? '',
@@ -48,7 +48,7 @@ class SettingsController extends Controller
 
         $paymentMethods = [];
         for ($i = 1; $i <= 3; $i++) {
-            if (!empty($settings["payment_method_{$i}_name"])) {
+            if (! empty($settings["payment_method_{$i}_name"])) {
                 $iconPath = $settings["payment_method_{$i}_icon"] ?? null;
                 $paymentMethods[] = [
                     'id' => $i,

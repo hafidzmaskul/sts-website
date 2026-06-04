@@ -11,7 +11,9 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $dateStart = '';
+
     public string $dateEnd = '';
 
     public function updatingSearch()
@@ -51,14 +53,14 @@ class Index extends Component
         $query = Quote::query()
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('company_name', 'like', '%' . $this->search . '%');
+                    $q->where('first_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('email', 'like', '%'.$this->search.'%')
+                        ->orWhere('company_name', 'like', '%'.$this->search.'%');
                 });
             })
-            ->when($this->dateStart, fn($q) => $q->whereDate('created_at', '>=', $this->dateStart))
-            ->when($this->dateEnd, fn($q) => $q->whereDate('created_at', '<=', $this->dateEnd));
+            ->when($this->dateStart, fn ($q) => $q->whereDate('created_at', '>=', $this->dateStart))
+            ->when($this->dateEnd, fn ($q) => $q->whereDate('created_at', '<=', $this->dateEnd));
 
         $quotes = $query->clone()
             ->orderByDesc('created_at')

@@ -59,7 +59,7 @@ class Dashboard extends Component
         ];
 
         // Only calculate business stats for Admin/Staff who see the full dashboard
-        if (!in_array($userRole, $fixedRoles)) {
+        if (! in_array($userRole, $fixedRoles)) {
             // 1. Business Stats
             $revenueStatuses = ['paid', 'processing', 'left the storage', 'in transit', 'delivered'];
 

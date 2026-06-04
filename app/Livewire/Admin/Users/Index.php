@@ -2,15 +2,14 @@
 
 namespace App\Livewire\Admin\Users;
 
+use App\Models\PricingFormula;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
-use App\Models\PricingFormula;
-use Livewire\Attributes\Title;
+use Spatie\Permission\Models\Role;
 
 #[Title('User Management')]
 class Index extends Component
@@ -18,27 +17,36 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
+
     public ?int $role_filter = null;
 
     // form fields
     public string $name = '';
+
     public string $email = '';
+
     public ?string $password = null;   // set when creating or resetting
+
     public array $roleIds = [];
+
     public array $permissionIds = [];
+
     public ?int $pricing_formula_id = null;
 
     protected function rules()
     {
         $uniqueEmail = 'unique:users,email';
-        if ($this->editingId)
-            $uniqueEmail .= ',' . $this->editingId;
+        if ($this->editingId) {
+            $uniqueEmail .= ','.$this->editingId;
+        }
 
         return [
             'name' => 'required|string|min:2|max:100',
-            'email' => 'required|email|' . $uniqueEmail,
+            'email' => 'required|email|'.$uniqueEmail,
             'password' => $this->editingId ? 'nullable|min:6' : 'required|min:6',
             'roleIds' => 'array',
             'roleIds.*' => 'integer',
@@ -73,8 +81,8 @@ class Index extends Component
         $this->name = $u->name;
         $this->email = $u->email;
         $this->password = null;
-        $this->roleIds = $u->roles()->pluck('id')->map(fn($v) => (int) $v)->toArray();
-        $this->permissionIds = $u->permissions()->pluck('id')->map(fn($v) => (int) $v)->toArray();
+        $this->roleIds = $u->roles()->pluck('id')->map(fn ($v) => (int) $v)->toArray();
+        $this->permissionIds = $u->permissions()->pluck('id')->map(fn ($v) => (int) $v)->toArray();
         $this->pricing_formula_id = $u->pricing_formula_id;
         $this->showForm = true;
     }
@@ -84,14 +92,14 @@ class Index extends Component
         $this->authorize($this->editingId ? 'users.edit' : 'users.create');
         $data = $this->validate();
 
-        $user = $this->editingId ? User::findOrFail($this->editingId) : new User();
+        $user = $this->editingId ? User::findOrFail($this->editingId) : new User;
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->pricing_formula_id = $data['pricing_formula_id'];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
-        } elseif (!$this->editingId) {
+        } elseif (! $this->editingId) {
             // creating and somehow password is empty (should not happen due to rules)
             $user->password = Hash::make('password');
         }
@@ -112,8 +120,9 @@ class Index extends Component
     public function delete(int $id)
     {
         $this->authorize('users.delete');
-        if (auth()->id() === $id)
-            return; // prevent self-delete
+        if (auth()->id() === $id) {
+            return;
+        } // prevent self-delete
         User::findOrFail($id)->delete();
         $this->dispatch('notify', type: 'success', message: 'User deleted.');
     }

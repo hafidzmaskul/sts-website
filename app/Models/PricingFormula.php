@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\PricingFormulaType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +13,31 @@ class PricingFormula extends Model
     protected $fillable = [
         'user_id',
         'label',
-        'type',
-        'value',
+        'margin',
+        'markup',
+        'discount',
     ];
 
     protected $casts = [
-        'type' => PricingFormulaType::class,
-        'value' => 'decimal:2',
+        'margin' => 'decimal:2',
+        'markup' => 'decimal:2',
+        'discount' => 'decimal:2',
     ];
+
+    public function getSummaryAttribute()
+    {
+        if ($this->discount !== null) {
+            return "Discount: {$this->discount}%";
+        }
+        if ($this->margin !== null) {
+            return "Margin: {$this->margin}%";
+        }
+        if ($this->markup !== null) {
+            return "Markup: {$this->markup}%";
+        }
+
+        return '';
+    }
 
     public function user()
     {
@@ -49,8 +65,9 @@ class PricingFormula extends Model
         $this->histories()->create([
             'user_id' => Auth::id() ?? $this->user_id, // Use Auth user if available (updater), else creator
             'label' => $this->label,
-            'type' => $this->type,
-            'value' => $this->value,
+            'margin' => $this->margin,
+            'markup' => $this->markup,
+            'discount' => $this->discount,
         ]);
     }
 

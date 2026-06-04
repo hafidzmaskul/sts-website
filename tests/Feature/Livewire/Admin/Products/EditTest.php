@@ -3,13 +3,13 @@
 namespace Tests\Feature\Livewire\Admin\Products;
 
 use App\Livewire\Admin\Products\Edit;
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class EditTest extends TestCase
 {

@@ -32,7 +32,8 @@ class News extends Model
         if (str_starts_with($this->image_path, 'http')) {
             return $this->image_path;
         }
-        return $this->image_path ? url('storage/' . $this->image_path) : null;
+
+        return $this->image_path ? url('storage/'.$this->image_path) : null;
     }
 
     public function categories()

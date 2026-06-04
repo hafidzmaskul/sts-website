@@ -2,28 +2,42 @@
 
 namespace App\Livewire\Admin\Coupons;
 
-use Livewire\Component;
 use App\Models\Coupon;
 use App\Models\User;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 
 class Edit extends Component
 {
     public Coupon $coupon;
+
     public $name;
+
     public $code;
+
     public $type;
+
     public $status;
+
     public $quota;
+
     public $used_count;
+
     public $discount_type;
+
     public $discount_value;
+
     public $start_date;
+
     public $end_date;
+
     public $restriction_type = 'none';
+
     public $role_level;
+
     public $specific_users = [];
+
     public $userSearch = '';
 
     public function mount(Coupon $coupon)
@@ -70,18 +84,19 @@ class Edit extends Component
             'role_level' => [
                 'nullable',
                 Rule::requiredIf($this->restriction_type === 'role'),
-                'in:trade account,credit facilities account,guest'
+                'in:trade account,credit facilities account,guest',
             ],
             'specific_users' => [
                 'nullable',
                 Rule::requiredIf($this->restriction_type === 'specific_user'),
-                'array'
+                'array',
             ],
             'specific_users.*' => 'exists:users,id',
         ]);
 
         if ($this->type === 'redeem' && empty($this->code)) {
             $this->addError('code', 'The coupon code field is required when type is redeem.');
+
             return;
         }
 
@@ -114,15 +129,15 @@ class Edit extends Component
         if ($this->restriction_type === 'specific_user') {
             $users = User::query()
                 ->when($this->userSearch, function ($query) {
-                    $query->where('name', 'like', '%' . $this->userSearch . '%')
-                        ->orWhere('email', 'like', '%' . $this->userSearch . '%');
+                    $query->where('name', 'like', '%'.$this->userSearch.'%')
+                        ->orWhere('email', 'like', '%'.$this->userSearch.'%');
                 })
                 ->limit(10)
                 ->get();
         }
 
         return view('livewire.admin.coupons.edit', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 }

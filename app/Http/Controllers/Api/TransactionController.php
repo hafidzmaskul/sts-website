@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -14,7 +17,7 @@ class TransactionController extends Controller
     public function summary(Request $request)
     {
         $user = $request->user();
-        if (!$user->customer) {
+        if (! $user->customer) {
             return response()->json([
                 'success' => false,
                 'message' => 'User is not a customer.',
@@ -66,7 +69,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if (!$user->customer) {
+        if (! $user->customer) {
             return response()->json([
                 'success' => false,
                 'message' => 'User is not a customer.',
@@ -101,7 +104,7 @@ class TransactionController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        if (!$user->customer) {
+        if (! $user->customer) {
             return response()->json([
                 'success' => false,
                 'message' => 'User is not a customer.',
@@ -117,13 +120,14 @@ class TransactionController extends Controller
             'data' => $transaction,
         ]);
     }
+
     /**
      * Store a new transaction.
      */
     public function store(Request $request)
     {
         $user = $request->user();
-        if (!$user->customer) {
+        if (! $user->customer) {
             return response()->json([
                 'success' => false,
                 'message' => 'User is not a customer.',
@@ -170,15 +174,15 @@ class TransactionController extends Controller
         if ($request->filled('shipping_method') || $request->filled('shipping_payment_method')) {
             if ($request->filled('shipping_method')) {
                 // Bypass validation for credit facilities account
-                if (!$user->hasRole('credit facilities account')) {
+                if (! $user->hasRole('credit facilities account')) {
                     $validShippingMethods = [];
                     for ($i = 1; $i <= 3; $i++) {
-                        if (!empty($settings["shipping_method_{$i}_name"])) {
+                        if (! empty($settings["shipping_method_{$i}_name"])) {
                             $validShippingMethods[] = $settings["shipping_method_{$i}_name"];
                         }
                     }
 
-                    if (!in_array($request->shipping_method, $validShippingMethods)) {
+                    if (! in_array($request->shipping_method, $validShippingMethods)) {
                         return response()->json([
                             'success' => false,
                             'message' => 'Invalid shipping method.',
@@ -189,15 +193,15 @@ class TransactionController extends Controller
 
             if ($request->filled('shipping_payment_method')) {
                 // Bypass validation for credit facilities account
-                if (!$user->hasRole('credit facilities account')) {
+                if (! $user->hasRole('credit facilities account')) {
                     $validPaymentMethods = [];
                     for ($i = 1; $i <= 3; $i++) {
-                        if (!empty($settings["payment_method_{$i}_name"])) {
+                        if (! empty($settings["payment_method_{$i}_name"])) {
                             $validPaymentMethods[] = $settings["payment_method_{$i}_name"];
                         }
                     }
 
-                    if (!in_array($request->shipping_payment_method, $validPaymentMethods)) {
+                    if (! in_array($request->shipping_payment_method, $validPaymentMethods)) {
                         return response()->json([
                             'success' => false,
                             'message' => 'Invalid payment method.',
@@ -208,7 +212,7 @@ class TransactionController extends Controller
         }
 
         // Generate Invoice Code
-        $invoiceCode = 'INV-' . strtoupper(uniqid());
+        $invoiceCode = 'INV-'.strtoupper(uniqid());
 
         // Prepare items data to process later
         $itemsToProcess = [];
@@ -221,14 +225,14 @@ class TransactionController extends Controller
             $quantity = $request->input('quantity', 1);
 
             // Create a mock object that mimics a cart item structure for consistent processing
-            // Alternatively, just treat it as a distinct case. 
+            // Alternatively, just treat it as a distinct case.
             // Let's create a generic structure to iterate over.
             $itemsToProcess[] = (object) [
                 'product' => $product,
-                'quantity' => $quantity
+                'quantity' => $quantity,
             ];
 
-        } elseif ($request->has('quote_builder_ids') && !empty($request->quote_builder_ids)) {
+        } elseif ($request->has('quote_builder_ids') && ! empty($request->quote_builder_ids)) {
             $isQuoteBuilder = true;
             $itemsToProcess = \App\Models\QuoteBuilder::whereIn('id', $request->quote_builder_ids)
                 ->where('user_id', $user->id)
@@ -273,7 +277,7 @@ class TransactionController extends Controller
                     if ($product->pivot && isset($product->pivot->quantity)) {
                         $quantity = $product->pivot->quantity;
                     }
-                    $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
+                    $price = $product->calculatePrice($user) ?? 0;
                     $subtotalItem = $price * $quantity;
                     $calculatedSubtotal += $subtotalItem;
 
@@ -290,7 +294,7 @@ class TransactionController extends Controller
             } else {
                 // Cart Logic
                 $product = $item->product;
-                $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
+                $price = $product->calculatePrice($user) ?? 0;
                 $subtotalItem = $price * $item->quantity;
                 $calculatedSubtotal += $subtotalItem;
 
@@ -333,14 +337,14 @@ class TransactionController extends Controller
         if ($request->filled('coupon_id')) {
             $coupon = \App\Models\Coupon::find($request->coupon_id);
 
-            if (!$coupon) {
+            if (! $coupon) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid coupon code.',
                 ], 400);
             }
 
-            if (!$coupon->isEligibleFor($user)) {
+            if (! $coupon->isEligibleFor($user)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Coupon is not valid or you are not eligible.',
@@ -368,7 +372,7 @@ class TransactionController extends Controller
             ];
         }
 
-        // Apply Discount to Taxable Base? 
+        // Apply Discount to Taxable Base?
         // Typically tax is applied AFTER discount.
         // Taxable Amount = (Subtotal - Discount) + Shipping
         // Let's adjust tax calculation.
@@ -392,7 +396,7 @@ class TransactionController extends Controller
         if (abs($calculatedTotal - $request->total_amount) > 0.05) {
             return response()->json([
                 'success' => false,
-                'message' => 'Total amount mismatch. Calculated: ' . number_format($calculatedTotal, 2) . ', Request: ' . number_format($request->total_amount, 2),
+                'message' => 'Total amount mismatch. Calculated: '.number_format($calculatedTotal, 2).', Request: '.number_format($request->total_amount, 2),
                 'data' => [
                     'items' => $debugItems,
                     'shipping' => [
@@ -411,8 +415,8 @@ class TransactionController extends Controller
                         'tax_amount' => $calculatedTaxAmount,
                         'calculated_total' => $calculatedTotal,
                         'request_total' => $request->total_amount,
-                    ]
-                ]
+                    ],
+                ],
             ], 400);
         }
 
@@ -427,13 +431,13 @@ class TransactionController extends Controller
             if ($currentBalance < $calculatedTotal) { // Use calculated total
                 return response()->json([
                     'success' => false,
-                    'message' => 'Insufficient credit balance. Current balance: ' . number_format($currentBalance, 2),
+                    'message' => 'Insufficient credit balance. Current balance: '.number_format($currentBalance, 2),
                 ], 400);
             }
         }
 
         // Create Transaction
-        $transaction = new Transaction();
+        $transaction = new Transaction;
         $transaction->invoice_code = $invoiceCode;
         $transaction->customer_id = $user->customer->id;
         $transaction->subtotal = $calculatedSubtotal;
@@ -486,7 +490,7 @@ class TransactionController extends Controller
                         $quantity = $product->pivot->quantity;
                     }
 
-                    $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
+                    $price = $product->calculatePrice($user) ?? 0;
                     $subtotal += $price * $quantity;
 
                     \App\Models\TransactionItem::create([
@@ -503,7 +507,7 @@ class TransactionController extends Controller
             // Cart Scenario
             foreach ($itemsToProcess as $item) {
                 $product = $item->product;
-                $price = $product->calculatePrice($user) ?? ($product->special_price ?: $product->base_price);
+                $price = $product->calculatePrice($user) ?? 0;
 
                 $subtotal += $price * $item->quantity;
 
@@ -517,7 +521,7 @@ class TransactionController extends Controller
                 ]);
 
                 // Delete Cart Item
-                if (!$isDirectPurchase) {
+                if (! $isDirectPurchase) {
                     $item->delete();
                 }
             }
@@ -538,15 +542,49 @@ class TransactionController extends Controller
                 'credit' => 0,
                 'debit' => $transaction->total_amount,
                 'balance' => $newBalance,
-                'description' => 'Transaction ' . $transaction->invoice_code,
+                'description' => 'Transaction '.$transaction->invoice_code,
                 'transaction_id' => $transaction->id,
                 'user_id' => $user->id,
             ]);
         }
 
+        $this->sendNotificationEmail($transaction);
+
         return response()->json([
             'success' => true,
             'data' => $transaction->load(['items.product.images']),
         ], 201);
+    }
+
+    private function sendNotificationEmail(Transaction $transaction)
+    {
+        $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
+        $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
+
+        if (! $adminEmail) {
+            return;
+        }
+
+        $emailBody = implode("\n", [
+            'New Order Received',
+            '==================',
+            '',
+            'Invoice Code : '.$transaction->invoice_code,
+            'Total Amount : '.number_format($transaction->total_amount, 2),
+            'Customer     : '.$transaction->shipping_first_name.' '.$transaction->shipping_last_name,
+            'Email        : '.$transaction->contact_email,
+            '',
+            'Date: '.now()->format('Y-m-d H:i:s'),
+        ]);
+
+        try {
+            Mail::raw($emailBody, function ($m) use ($adminEmail, $transaction) {
+                $m->to($adminEmail)
+                    ->replyTo($transaction->contact_email, $transaction->shipping_first_name.' '.$transaction->shipping_last_name)
+                    ->subject('New Order: '.$transaction->invoice_code);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Failed to send transaction notification email: '.$e->getMessage());
+        }
     }
 }

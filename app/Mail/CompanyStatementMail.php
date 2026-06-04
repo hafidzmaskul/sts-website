@@ -2,14 +2,13 @@
 
 namespace App\Mail;
 
+use App\Models\Company;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Company;
 
 class CompanyStatementMail extends Mailable
 {
@@ -20,8 +19,7 @@ class CompanyStatementMail extends Mailable
         public $creditLimits,
         public float $totalBalance,
         public string $statementPeriod
-    ) {
-    }
+    ) {}
 
     /**
      * Get the message envelope.
@@ -29,7 +27,7 @@ class CompanyStatementMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Statement of Account - ' . $this->company->name . ' - ' . $this->statementPeriod,
+            subject: 'Statement of Account - '.$this->company->name.' - '.$this->statementPeriod,
         );
     }
 
@@ -58,7 +56,7 @@ class CompanyStatementMail extends Mailable
         ]);
 
         return [
-            Attachment::fromData(fn() => $pdf->output(), 'Statement_' . $this->statementPeriod . '.pdf')
+            Attachment::fromData(fn () => $pdf->output(), 'Statement_'.$this->statementPeriod.'.pdf')
                 ->withMime('application/pdf'),
         ];
     }

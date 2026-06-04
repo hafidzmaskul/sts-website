@@ -31,8 +31,9 @@
                 <thead>
                     <tr class="bg-gray-50">
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Label</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Value</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Margin</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Markup</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Discount</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Created By</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Last Updated</th>
                         <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
@@ -45,12 +46,13 @@
                                 {{ $formula->label }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-black">
-                                    {{ $formula->type->label() }}
-                                </span>
+                                {{ $formula->margin ?? '-' }}%
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
-                                {{ $formula->value }}
+                                {{ $formula->markup ?? '-' }}%
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
+                                {{ $formula->discount ?? '-' }}%
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-black">
                                 <div class="flex items-center gap-2">

@@ -5,8 +5,8 @@ namespace Tests\Feature\Api;
 use App\Models\Coupon;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class CouponApiTest extends TestCase
 {
@@ -26,6 +26,7 @@ class CouponApiTest extends TestCase
     protected function sanctumAuth($user)
     {
         \Laravel\Sanctum\Sanctum::actingAs($user);
+
         return ['Authorization' => 'Bearer test-token'];
     }
 

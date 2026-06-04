@@ -5,7 +5,12 @@
             <h1 class="text-2xl font-bold text-black">{{ $company->name }}</h1>
             <p class="text-sm text-gray-500 mt-1">Registration No: {{ $company->registration_number ?? '-' }}</p>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
+            @can('customers.delete')
+                <flux:button variant="danger" wire:click="confirmDeleteCompany">
+                    Delete Company
+                </flux:button>
+            @endcan
             <a href="{{ route('admin.companies.index') }}"
                 class="px-4 py-2 border border-gray-700 rounded-lg text-black bg-white hover:bg-gray-50 flex items-center justify-center">
                 Back to List
@@ -430,4 +435,21 @@
             <flux:button variant="primary" wire:click="saveLimit">Save</flux:button>
         </div>
     </flux:modal>
+
+    <!-- Company deletion modal -->
+    @can('customers.delete')
+    <flux:modal name="delete-company-modal" class="min-w-[30rem] space-y-6" wire:model="showDeleteModal">
+        <div>
+            <flux:heading size="lg">Delete Company</flux:heading>
+            <flux:subheading>Are you sure you want to delete this company? This action is irreversible and will permanently delete the company, all associated employees (users), their credit limits, statement histories, and all transaction data.</flux:subheading>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">Cancel</flux:button>
+            </flux:modal.close>
+            <flux:button variant="danger" wire:click="deleteCompany">Delete Permanently</flux:button>
+        </div>
+    </flux:modal>
+    @endcan
 </div>

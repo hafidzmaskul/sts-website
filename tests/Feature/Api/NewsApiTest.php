@@ -37,9 +37,9 @@ test('it can list published news', function () {
                         'status',
                         'published_at',
                         'created_at',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
 
     $this->assertCount(1, $response->json('data.data'));
@@ -60,7 +60,7 @@ test('it can show single published news', function () {
             'data' => [
                 'id' => $news->id,
                 'title' => $news->title,
-            ]
+            ],
         ]);
 });
 
@@ -132,6 +132,6 @@ test('it includes full image url', function () {
             'success' => true,
             'data' => [
                 'image_url' => url('storage/news/image.jpg'),
-            ]
+            ],
         ]);
 });

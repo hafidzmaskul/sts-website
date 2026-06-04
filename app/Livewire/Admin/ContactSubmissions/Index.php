@@ -11,11 +11,15 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+
     public $dateStart = null;
+
     public $dateEnd = null;
+
     public $subjectFilter = '';
 
     public $showDetailModal = false;
+
     public $selectedSubmissionId = null;
 
     protected $queryString = [
@@ -50,7 +54,7 @@ class Index extends Component
 
     public function delete($id)
     {
-        if (!auth()->user()->can('contact-submissions.delete')) {
+        if (! auth()->user()->can('contact-submissions.delete')) {
             abort(403);
         }
 
@@ -60,7 +64,7 @@ class Index extends Component
 
     public function render()
     {
-        if (!auth()->user()->can('contact-submissions.view')) {
+        if (! auth()->user()->can('contact-submissions.view')) {
             abort(403);
         }
 
@@ -68,10 +72,10 @@ class Index extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%')
-                    ->orWhere('subject', 'like', '%' . $this->search . '%');
+                $q->where('first_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('subject', 'like', '%'.$this->search.'%');
             });
         }
 
@@ -84,7 +88,7 @@ class Index extends Component
         }
 
         if ($this->subjectFilter) {
-            $query->where('subject', 'like', '%' . $this->subjectFilter . '%');
+            $query->where('subject', 'like', '%'.$this->subjectFilter.'%');
         }
 
         $submissions = $query->latest()->paginate(10);

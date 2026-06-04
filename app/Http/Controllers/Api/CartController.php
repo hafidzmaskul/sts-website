@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -25,7 +24,7 @@ class CartController extends Controller
         ]);
 
         $product = \App\Models\Product::findOrFail($request->product_id);
-        $price = $product->calculatePrice($request->user()) ?? ($product->special_price ?: $product->base_price);
+        $price = $product->calculatePrice($request->user()) ?? 0;
 
         $cartItem = $request->user()->cartItems()->where('product_id', $request->product_id)->first();
 
@@ -60,6 +59,7 @@ class CartController extends Controller
             $cartItem->decrement('quantity', $request->quantity);
         } else {
             $cartItem->delete();
+
             return response()->json([
                 'message' => 'Product removed from cart successfully',
             ]);

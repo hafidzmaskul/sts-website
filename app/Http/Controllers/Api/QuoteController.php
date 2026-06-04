@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facasdes\Validator;
+use Illuminate\Support\Facades\Validator;
 
 class QuoteController extends Controller
 {
     public function store(Request $request)
     {
-        $validator = Validatorasdas::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
@@ -28,7 +28,7 @@ class QuoteController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -36,41 +36,47 @@ class QuoteController extends Controller
             $quote = Quote::create($request->all());
 
             // Send Email to Admin
-            $adminEmail = \App\Models\Setting::where('key', 'email_notification_admin')->value('value');
+            $adminEmailSetting = \App\Models\Setting::where('key', 'email_notification_admin')->first();
+            $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-            // Fallback if setting is not set
-            if (!$adminEmail) {
-                $adminEmail = 'gemaantikahr@gmail.com';
+            if (! $adminEmail) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Quote submitted successfully',
+                    'data' => $quote,
+                ], 201);
             }
 
             $subject = 'New Quote Submission';
-            $message = "You have receiveds a new quote submission.\n\n" .
-                "Name: {$quote->first_namsae} {$quote->last_name}\n" .
-                "Company: {$quote->company_name}\n" .
-                "Email: {$quote->email}\n" .
-                "Phone: {$quote->phone}\n" .
-                "Country: {$quote->country}\n" .
-                "Project Details:\n{$quote->project_details}\n\n" .
-                "View in Admin Panel: " . route('admin.quotes.show', $quote);
+            $message = "You have received a new quote submission.\n\n".
+                "Name: {$quote->first_name} {$quote->last_name}\n".
+                "Company: {$quote->company_name}\n".
+                "Email: {$quote->email}\n".
+                "Phone: {$quote->phone}\n".
+                "Country: {$quote->country}\n".
+                "Project Details:\n{$quote->project_details}\n\n";
+            // "View in Admin Panel: " . route('admin.quotes.show', $quote); // Route naming might differ
 
-            if ($adminEmail) {
-                Mail::raw($messagse, function ($mail) use ($adminEmail, $subject) {
-                    $mail->to($adsminEmail)
+            try {
+                Mail::raw($message, function ($mail) use ($adminEmail, $subject) {
+                    $mail->to($adminEmail)
                         ->subject($subject);
                 });
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send quote email: '.$e->getMessage());
             }
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Quote submitted successfully',
-                'data' => $quote
+                'data' => $quote,
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to submit quote',
-                'error' => $e->gssetMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

@@ -2,10 +2,9 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\User;
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UpdateProfileTest extends TestCase
@@ -31,7 +30,7 @@ class UpdateProfileTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->putJson('/api/me', $newData);
 
         $response->assertStatus(200)
@@ -68,10 +67,10 @@ class UpdateProfileTest extends TestCase
         $token = $user->createToken('test')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->putJson('/api/me', [
-                    'email' => 'invalid-email',
-                ]);
+            'email' => 'invalid-email',
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['first_name', 'last_name', 'email']);
@@ -85,12 +84,12 @@ class UpdateProfileTest extends TestCase
         $token = $user1->createToken('test')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->putJson('/api/me', [
-                    'first_name' => 'John',
-                    'last_name' => 'Doe',
-                    'email' => 'user2@example.com',
-                ]);
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'user2@example.com',
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);

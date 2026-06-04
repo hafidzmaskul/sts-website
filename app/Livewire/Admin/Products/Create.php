@@ -2,17 +2,17 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Enums\PricingFormulaType;
+use App\Models\Brand;
+use App\Models\PricingFormula;
 use App\Models\Product;
 use App\Models\ProductCategory;
-use App\Models\Brand;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-
-use App\Models\PricingFormula;
-
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Title('Create Product')]
 class Create extends Component
@@ -21,31 +21,72 @@ class Create extends Component
 
     // Form Fields
     public $brand_id = null;
+
     public $pricing_formula_id = null;
+
     public $title = '';
+
     public $slug = '';
+
     public $sku = '';
+
     public $is_sign_up_for_pricing = false;
+
     public $base_price = null;
+
+    public $pricing_mode = 'manual';
+
+    public $cost = null;
+
+    public $rsp = null;
+
     public $special_price = null;
+
+    public $special_price_start = null;
+
+    public $special_price_end = null;
+
+    public $override_enabled = false;
+
+    public $override_method = null;
+
+    public $override_value = null;
+
     public $status = 'active';
 
     public $showAdvancePricing = false;
+
     public $customerPrices = []; // [['user_id' => 1, 'price' => 100]]
 
+    public $quantityPrices = []; // [['quantity' => 1, 'price' => 50]]
+
     public $is_exclusive = false;
+
     public $is_cta = false;
+
+    // Brand formula info for display
+    public $brandFormulaLabel = null;
+
+    public $brandFormulaType = null;
+
+    public $brandFormulaValue = null;
 
     // Rich Text Fields
     public $key_feature = '';
+
     public $product_overview = '';
+
     public $main_feature = '';
+
     public $information = '';
+
     public $specification = '';
 
     // SEO
     public $seo_title = '';
+
     public $seo_description = '';
+
     public $seo_keywords = '';
 
     // Relations
@@ -53,15 +94,103 @@ class Create extends Component
 
     // Dynamic Image Management
     public $newImages = []; // Array of ['image' => file, 'sequence' => int, 'key' => unique_id]
+
     public $storedImages = []; // Not used in create but kept for compatibility with form partial
 
     // Attachments
     public $newAttachments = []; // Array of ['file' => file, 'name' => string, 'key' => unique_id]
+
     public $storedAttachments = []; // Not used in create but kept for compatibility
 
     public function mount()
     {
         // Add one empty image slot by default? No, let user add.
+    }
+
+    /**
+     * When brand changes, load the brand's default pricing formula info.
+     */
+    public function updatedBrandId($value): void
+    {
+        $this->brandFormulaLabel = null;
+        $this->brandFormulaType = null;
+        $this->brandFormulaValue = null;
+
+        if ($value) {
+            $brand = Brand::with('pricingFormula')->find($value);
+            if ($brand?->pricingFormula) {
+                $formula = $brand->pricingFormula;
+                $this->brandFormulaLabel = $formula->label;
+
+                if ($formula->discount !== null) {
+                    $this->brandFormulaType = 'Discount';
+                    $this->brandFormulaValue = $formula->discount;
+                } elseif ($formula->margin !== null) {
+                    $this->brandFormulaType = 'Margin';
+                    $this->brandFormulaValue = $formula->margin;
+                } elseif ($formula->markup !== null) {
+                    $this->brandFormulaType = 'Markup';
+                    $this->brandFormulaValue = $formula->markup;
+                }
+            }
+        }
+    }
+
+    /**
+     * Compute a live preview price based on current form inputs.
+     */
+    #[Computed]
+    public function previewPrice(): ?float
+    {
+        if ($this->pricing_mode === 'manual') {
+            return $this->base_price ? (float) $this->base_price : null;
+        }
+
+        $cost = $this->cost ? (float) $this->cost : null;
+        $rsp = $this->rsp ? (float) $this->rsp : null;
+
+        // Auto mode: use override or brand formula
+        if ($this->override_enabled && $this->override_method && $this->override_value) {
+            $method = PricingFormulaType::tryFrom($this->override_method);
+            $value = (float) $this->override_value;
+
+            if (! $method || $value <= 0) {
+                return null;
+            }
+
+            return match ($method) {
+                PricingFormulaType::MarginPercent => $cost && $value < 100
+                    ? round($cost / (1 - $value / 100), 2)
+                    : null,
+                PricingFormulaType::MarkupPercent => $cost
+                    ? round($cost * (1 + $value / 100), 2)
+                    : null,
+                PricingFormulaType::DiscountPercent => $rsp
+                    ? round($rsp * (1 - $value / 100), 2)
+                    : null,
+            };
+        } else {
+            // Look up brand formula
+            $brand = $this->brand_id ? Brand::with('pricingFormula')->find($this->brand_id) : null;
+            $formula = $brand?->pricingFormula;
+            if (! $formula) {
+                return null;
+            }
+
+            if ($rsp && $formula->discount !== null && $formula->discount > 0) {
+                return round($rsp * (1 - $formula->discount / 100), 2);
+            }
+
+            if ($cost && $formula->margin !== null && $formula->margin > 0 && $formula->margin < 100) {
+                return round($cost / (1 - $formula->margin / 100), 2);
+            }
+
+            if ($cost && $formula->markup !== null && $formula->markup > 0) {
+                return round($cost * (1 + $formula->markup / 100), 2);
+            }
+
+            return null;
+        }
     }
 
     public function addImage()
@@ -103,6 +232,20 @@ class Create extends Component
         $this->customerPrices = array_values($this->customerPrices);
     }
 
+    public function addQuantityPrice()
+    {
+        $this->quantityPrices[] = [
+            'quantity' => null,
+            'price' => null,
+        ];
+    }
+
+    public function removeQuantityPrice($index)
+    {
+        unset($this->quantityPrices[$index]);
+        $this->quantityPrices = array_values($this->quantityPrices);
+    }
+
     public function rules()
     {
         return [
@@ -111,8 +254,16 @@ class Create extends Component
             'title' => 'required|string|max:255',
             'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')],
             'sku' => ['nullable', 'string', 'max:255', Rule::unique('products', 'sku')],
+            'pricing_mode' => 'required|in:auto,manual',
+            'cost' => 'nullable|numeric|min:0',
+            'rsp' => 'nullable|numeric|min:0',
             'base_price' => 'nullable|numeric|min:0',
             'special_price' => 'nullable|numeric|min:0',
+            'special_price_start' => 'nullable|date',
+            'special_price_end' => 'nullable|date|after_or_equal:special_price_start',
+            'override_enabled' => 'boolean',
+            'override_method' => 'nullable|required_if:override_enabled,true',
+            'override_value' => 'nullable|required_if:override_enabled,true|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'selectedCategories' => 'array',
 
@@ -141,6 +292,11 @@ class Create extends Component
             'customerPrices' => 'array',
             'customerPrices.*.user_id' => 'required_with:customerPrices.*.price|exists:users,id',
             'customerPrices.*.price' => 'required_with:customerPrices.*.user_id|numeric|min:0',
+
+            // Quantity Pricing Validation
+            'quantityPrices' => 'array',
+            'quantityPrices.*.quantity' => 'required|integer|min:1',
+            'quantityPrices.*.price' => 'required|numeric|min:0',
         ];
     }
 
@@ -155,8 +311,16 @@ class Create extends Component
             'slug' => $this->slug,
             'sku' => $this->sku,
             'is_sign_up_for_pricing' => $this->is_sign_up_for_pricing,
+            'pricing_mode' => $this->pricing_mode,
+            'cost' => $this->cost,
+            'rsp' => $this->rsp,
             'base_price' => $this->base_price,
             'special_price' => $this->special_price,
+            'special_price_start' => $this->special_price_start,
+            'special_price_end' => $this->special_price_end,
+            'override_enabled' => $this->override_enabled,
+            'override_method' => $this->override_enabled ? $this->override_method : null,
+            'override_value' => $this->override_enabled ? $this->override_value : null,
             'status' => $this->status,
             'is_exclusive' => $this->is_exclusive,
             'is_cta' => $this->is_cta,
@@ -175,10 +339,22 @@ class Create extends Component
         $product->categories()->sync($this->selectedCategories);
 
         // Attach Advance Pricing
-        if ($this->showAdvancePricing && !empty($this->customerPrices)) {
+        if ($this->showAdvancePricing && ! empty($this->customerPrices)) {
             foreach ($this->customerPrices as $cp) {
-                if (!empty($cp['user_id']) && $cp['price'] !== null) {
+                if (! empty($cp['user_id']) && $cp['price'] !== null) {
                     $product->customerPrices()->attach($cp['user_id'], ['price' => $cp['price']]);
+                }
+            }
+        }
+
+        // Attach Quantity Pricing
+        if (! empty($this->quantityPrices)) {
+            foreach ($this->quantityPrices as $qp) {
+                if ($qp['quantity'] !== null && $qp['price'] !== null) {
+                    $product->quantityPrices()->create([
+                        'quantity' => $qp['quantity'],
+                        'price' => $qp['price'],
+                    ]);
                 }
             }
         }
@@ -196,7 +372,7 @@ class Create extends Component
         foreach ($this->newAttachments as $attData) {
             if ($attData['file']) {
                 $originalName = $attData['file']->getClientOriginalName();
-                $path = $attData['file']->storeAs('product-attachments/' . $product->id, $originalName, 'public');
+                $path = $attData['file']->storeAs('product-attachments/'.$product->id, $originalName, 'public');
                 $product->attachments()->create([
                     'name' => $attData['name'],
                     'file_path' => $path,
@@ -206,6 +382,7 @@ class Create extends Component
         }
 
         session()->flash('success', 'Product created successfully.');
+
         return redirect()->route('admin.products.index');
     }
 
@@ -221,6 +398,7 @@ class Create extends Component
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
             'pricingFormulas' => PricingFormula::orderBy('label')->get(),
             'customers' => \App\Models\User::role(['customer', 'trade account', 'credit facilities account'])->orderBy('name')->get(),
+            'pricingMethods' => PricingFormulaType::cases(),
         ]);
     }
 }

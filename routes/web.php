@@ -35,6 +35,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('checkout', 'checkout')->name('checkout');
     Route::get('/search', 'search')->name('search');
     Route::get('/search', 'search')->name('search');
+    Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 });
 
 // Masquerade Route (Signed, bypasses auth)
@@ -88,20 +89,19 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
 
     Route::post('/web/product-requests', [\App\Http\Controllers\Api\ProductRequestController::class, 'store']);
 
-
     Route::get('/quote-checkout', function (\Illuminate\Http\Request $request) {
         $quoteIds = $request->input('quote_ids');
         // Ensure quoteIds is always an array or null
-        if ($quoteIds && !is_array($quoteIds)) {
+        if ($quoteIds && ! is_array($quoteIds)) {
             $quoteIds = [$quoteIds];
         }
         $auth = Auth::user()->load(['customer.company', 'roles']);
+
         return \Inertia\Inertia::render('QuoteCheckout', [
             'quoteIds' => $quoteIds,
-            'auth' => $auth
+            'auth' => $auth,
         ]);
     })->name('quote-checkout');
-
 
     Route::get('quote-builder', [\App\Http\Controllers\PageController::class, 'quoteBuilder'])->name('quote-builder');
 
@@ -205,4 +205,6 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
     Route::get('/dashboard/company', \App\Livewire\FixedRole\Company\Show::class)->name('dashboard.company.show');
 });
 
-require __DIR__ . '/auth.php';
+Route::get('/test-send-email', [\App\Http\Controllers\TestEmailController::class, 'sendEmail'])->name('test-send-email');
+
+require __DIR__.'/auth.php';

@@ -3,28 +3,35 @@
 namespace App\Livewire\Admin\ProductCategories;
 
 use App\Models\ProductCategory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
 
     public string $name = '';
+
     public string $slug = '';
+
     public ?int $parent_id = null;
+
     public $image;
 
     public ?string $seo_title = null;
+
     public ?string $seo_description = null;
+
     public ?string $seo_keywords = null;
 
     protected function rules()
@@ -39,7 +46,7 @@ class Index extends Component
                     if ($this->editingId && $value == $this->editingId) {
                         $fail('A category cannot be its own parent.');
                     }
-                }
+                },
             ],
             'image' => ['nullable', 'image', 'max:2048'], // 2MB Max
             'seo_title' => 'nullable|string|max:255',
@@ -50,7 +57,7 @@ class Index extends Component
 
     public function updatedName($value)
     {
-        if (!$this->editingId) {
+        if (! $this->editingId) {
             $this->slug = Str::slug($value);
         }
     }
@@ -89,7 +96,7 @@ class Index extends Component
         if ($this->editingId) {
             $category = ProductCategory::findOrFail($this->editingId);
         } else {
-            $category = new ProductCategory();
+            $category = new ProductCategory;
             $category->created_by = auth()->id();
         }
 
@@ -157,8 +164,8 @@ class Index extends Component
         $categories = ProductCategory::query()
             ->with(['creator', 'parent'])
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('slug', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('slug', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

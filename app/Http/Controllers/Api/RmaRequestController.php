@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RmaRequest;
+use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class RmaRequestController extends Controller
 {
@@ -36,10 +38,59 @@ class RmaRequestController extends Controller
             'status' => 'pending',
         ]);
 
+        $this->sendNotificationEmail($rmaRequest);
+
         return response()->json([
             'success' => true,
             'message' => 'RMA request submitted successfully.',
             'data' => $rmaRequest,
         ], 201);
+    }
+
+    private function sendNotificationEmail(RmaRequest $submission)
+    {
+        $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
+        $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
+
+        if (! $adminEmail) {
+            return;
+        }
+
+        $emailBody = implode("\n", [
+            'New RMA Request Received',
+            '========================',
+            '',
+            'Order Number : '.$submission->order_number,
+            'Product Name : '.$submission->product_name,
+            'Return Type  : '.$submission->return_type,
+            'Return Reason: '.$submission->return_reason,
+            '',
+            'Comments:',
+            '---------',
+            $submission->comments ?? 'No comments provided.',
+            '---------',
+            '',
+            'Proof of purchase is attached if provided.',
+        ]);
+
+        try {
+            Mail::raw($emailBody, function ($m) use ($adminEmail, $submission) {
+                $userEmail = $submission->user ? $submission->user->email : 'noreply@example.com';
+                $userName = $submission->user ? $submission->user->name : 'Customer';
+
+                $m->to($adminEmail)
+                    ->replyTo($userEmail, $userName)
+                    ->subject('RMA Request: '.$submission->order_number);
+
+                if ($submission->proof_of_purchase_path) {
+                    $filePath = storage_path('app/public/'.$submission->proof_of_purchase_path);
+                    if (file_exists($filePath)) {
+                        $m->attach($filePath);
+                    }
+                }
+            });
+        } catch (\Throwable $e) {
+            Log::error('Failed to send RMA notification email: '.$e->getMessage());
+        }
     }
 }

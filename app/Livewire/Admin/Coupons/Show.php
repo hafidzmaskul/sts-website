@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Admin\Coupons;
 
-use Livewire\Component;
 use App\Models\Coupon;
+use Livewire\Component;
 
 class Show extends Component
 {
