@@ -181,52 +181,7 @@ export default function BecomeCustomer() {
         return () => clearTimeout(timerPurchasing);
     }, [formData.purchasing_contact_email]);
 
-    React.useEffect(() => {
-        const checkEmailAvailability = async (field, emailValue) => {
-            if (!emailValue) {
-                setErrors(prev => {
-                    const next = { ...prev };
-                    delete next[field];
-                    return next;
-                });
-                return;
-            }
 
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailValue)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/check-email?email=${encodeURIComponent(emailValue)}`);
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.exists) {
-                        setErrors(prev => ({
-                            ...prev,
-                            [field]: 'This email is already registered.',
-                        }));
-                    } else {
-                        setErrors(prev => {
-                            const next = { ...prev };
-                            if (next[field] === 'This email is already registered.') {
-                                delete next[field];
-                            }
-                            return next;
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error('Error checking email availability:', err);
-            }
-        };
-
-        const timerAccounts = setTimeout(() => {
-            checkEmailAvailability('accounts_contact_email', formData.accounts_contact_email);
-        }, 500);
-
-        return () => clearTimeout(timerAccounts);
-    }, [formData.accounts_contact_email]);
 
     const steps = [
         { number: 1, title: 'Company Information', desc: 'Basic Company Details' },
@@ -626,28 +581,16 @@ export default function BecomeCustomer() {
                                         />
                                         {errors.accounts_contact_name && <div className="text-xs text-red-500 mt-1">{errors.accounts_contact_name}</div>}
                                     </div>
-                                    {/* Accounts Phone / Email */}
-                                    <div className="flex flex-col sm:flex-row gap-4">
-                                        <div className="flex-1">
-                                            <label className="block mb-1 text-xs font-medium text-[#002856]">Telephone No</label>
-                                            <input
-                                                type="text"
-                                                className="w-full border border-[#D1D5DB] rounded-md px-3 py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#0079C2] transition"
-                                                value={formData.accounts_contact_phone}
-                                                onChange={e => handleChange('accounts_contact_phone', e.target.value)}
-                                            />
-                                            {errors.accounts_contact_phone && <div className="text-xs text-red-500 mt-1">{errors.accounts_contact_phone}</div>}
-                                        </div>
-                                        <div className="flex-1">
-                                            <label className="block mb-1 text-xs font-medium text-[#002856]">Email</label>
-                                            <input
-                                                type="email"
-                                                className="w-full border border-[#D1D5DB] rounded-md px-3 py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#0079C2] transition"
-                                                value={formData.accounts_contact_email}
-                                                onChange={e => handleChange('accounts_contact_email', e.target.value)}
-                                            />
-                                            {errors.accounts_contact_email && <div className="text-xs text-red-500 mt-1">{errors.accounts_contact_email}</div>}
-                                        </div>
+                                    {/* Accounts Phone */}
+                                    <div>
+                                        <label className="block mb-1 text-xs font-medium text-[#002856]">Telephone No</label>
+                                        <input
+                                            type="text"
+                                            className="w-full border border-[#D1D5DB] rounded-md px-3 py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#0079C2] transition"
+                                            value={formData.accounts_contact_phone}
+                                            onChange={e => handleChange('accounts_contact_phone', e.target.value)}
+                                        />
+                                        {errors.accounts_contact_phone && <div className="text-xs text-red-500 mt-1">{errors.accounts_contact_phone}</div>}
                                     </div>
                                     {/* Buttons */}
                                     <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 mt-6 pt-4 border-t border-[#E8E7E7]">
