@@ -2,10 +2,10 @@
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">News Articles</h1>
         @can('news.create')
-            <button wire:click="create"
-                class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
-                + New Article
-            </button>
+            <button wire:click="create" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            New Article
+        </button>
         @endcan
     </div>
 
@@ -161,10 +161,10 @@
                         class="px-4 py-2 border border-[#0079C2] text-[#0079C2] rounded-lg hover:cursor-pointer transition">
                         Cancel
                     </button>
-                    <button type="submit"
-                        class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
-                        Save
-                    </button>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Save
+        </button>
                 </div>
             </form>
         </div>
@@ -259,30 +259,21 @@
                                 </td>
                                 <!-- Actions -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <div class="flex justify-end gap-2">
+<div class="flex items-center justify-end gap-2">
+<div class="flex justify-end gap-2">
                                         @can('news.edit')
-                                            <button wire:click="edit({{ $article->id }})"
-                                                class="inline-flex items-center justify-center p-1.5 rounded bg-white border border-gray-200 hover:bg-blue-50 hover:text-blue-600 transition"
-                                                title="Edit">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" stroke="gray" stroke-width="2" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M16.862 4.487a2.063 2.063 0 0 1 2.92 2.92l-9.228 9.23-4.184 1.264 1.264-4.183 9.228-9.23z"/>
-                                                </svg>
-                                            </button>
+                                            <button wire:click="edit({{ $article->id }})" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                                         @endcan
                                         @can('news.delete')
-                                            <button wire:confirm="Are you sure you want to delete this article?"
-                                                wire:click="delete({{ $article->id }})"
-                                                class="inline-flex items-center justify-center p-1.5 rounded bg-white border border-gray-200 hover:bg-red-50 hover:text-red-600 transition"
-                                                title="Delete">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="gray" stroke-width="2" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M6 7v12a2 2 0 002 2h8a2 2 0 002-2V7M4 7h16M10 11v6M14 11v6M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                                                </svg>
-                                            </button>
+                                            <button wire:confirm="Are you sure you want to delete this article?" wire:click="delete({{ $article->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
                                         @endcan
                                     </div>
-                                </td>
+</div>
+</td>
                             </tr>
                         @empty
                             <tr>

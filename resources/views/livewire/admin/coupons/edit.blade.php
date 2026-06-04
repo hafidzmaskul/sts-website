@@ -5,7 +5,7 @@
             <p class="text-sm text-black mt-1">Update coupon details</p>
         </div>
         <a href="{{ route('admin.coupons.index') }}"
-            class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-black bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+            class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-black bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
             Cancel
         </a>
     </div>
@@ -19,14 +19,14 @@
                     <div class="flex items-center space-x-4 mt-2">
                         <div class="flex items-center">
                             <input id="type_redeem" name="type" type="radio" value="redeem" wire:model.live="type"
-                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                                class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300">
                             <label for="type_redeem" class="ml-2 block text-sm font-medium text-black">
                                 Redeem (Use Code)
                             </label>
                         </div>
                         <div class="flex items-center">
                             <input id="type_claim" name="type" type="radio" value="claim" wire:model.live="type"
-                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                                class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300">
                             <label for="type_claim" class="ml-2 block text-sm font-medium text-black">
                                 Claim (Auto-Apply)
                             </label>
@@ -37,7 +37,7 @@
                 <div class="space-y-1">
                     <label for="status" class="block text-sm font-medium text-black">Status</label>
                     <select id="status" wire:model="status"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black">
                         <option value="published">Published</option>
                         <option value="unpublished">Unpublished</option>
                     </select>
@@ -50,7 +50,7 @@
                 <div class="space-y-1">
                     <label for="name" class="block text-sm font-medium text-black">Coupon Name</label>
                     <input type="text" id="name" wire:model="name"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
                     @error('name') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
                 </div>
 
@@ -59,9 +59,9 @@
                         <label for="code" class="block text-sm font-medium text-black">Coupon Code</label>
                         <div class="flex rounded-md shadow-sm">
                             <input type="text" id="code" wire:model="code"
-                                class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-lg border border-[#D2D2D2] focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                                class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-lg border border-[#D2D2D2] focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
                             <button type="button" wire:click="generateCode"
-                                class="inline-flex items-center px-4 py-2 border border-l-0 border-[#D2D2D2] rounded-r-lg bg-gray-50 text-sm font-medium text-black hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="inline-flex items-center px-4 py-2 border border-l-0 border-[#D2D2D2] rounded-r-lg bg-gray-50 text-sm font-medium text-black hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500">
                                 Generate
                             </button>
                         </div>
@@ -75,7 +75,7 @@
                 <div class="space-y-1">
                     <label for="discount_type" class="block text-sm font-medium text-black">Discount Type</label>
                     <select id="discount_type" wire:model.live="discount_type"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black">
                         <option value="fixed">Fixed Amount (£)</option>
                         <option value="percentage">Percentage (%)</option>
                     </select>
@@ -85,7 +85,7 @@
                 <div class="space-y-1">
                     <label for="quota" class="block text-sm font-medium text-black">Quota (Total Usage Limit)</label>
                     <input type="number" id="quota" wire:model="quota" placeholder="Leave blank for unlimited" min="1"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-gray-400">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-gray-400">
                     <div class="flex items-center justify-between">
                         <p class="text-xs text-gray-500">Max number of uses allowed.</p>
                         <p class="text-xs font-semibold text-emerald-600">Sold (Used): {{ $used_count }}</p>
@@ -102,7 +102,7 @@
                             </div>
                         @endif
                         <input type="number" step="0.01" id="discount_value" wire:model="discount_value"
-                            class="block w-full {{ $discount_type === 'fixed' ? 'pl-7' : 'pl-3' }} px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                            class="block w-full {{ $discount_type === 'fixed' ? 'pl-7' : 'pl-3' }} px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
                         @if($discount_type === 'percentage')
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <span class="text-black sm:text-sm">%</span>
@@ -117,14 +117,14 @@
                 <div class="space-y-1">
                     <label for="start_date" class="block text-sm font-medium text-black">Start Date (Optional)</label>
                     <input type="date" id="start_date" wire:model="start_date"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
                     @error('start_date') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="space-y-1">
                     <label for="end_date" class="block text-sm font-medium text-black">End Date (Optional)</label>
                     <input type="date" id="end_date" wire:model="end_date"
-                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                        class="block w-full px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
                     @error('end_date') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -139,7 +139,7 @@
                     <div class="flex items-center">
                         <input id="restrict_none" name="restriction_type" type="radio" value="none"
                             wire:model.live="restriction_type"
-                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300">
                         <label for="restrict_none" class="ml-3 block text-sm font-medium text-black">
                             No Restrictions (Anyone can use)
                         </label>
@@ -147,7 +147,7 @@
                     <div class="flex items-center">
                         <input id="restrict_role" name="restriction_type" type="radio" value="role"
                             wire:model.live="restriction_type"
-                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300">
                         <label for="restrict_role" class="ml-3 block text-sm font-medium text-black">
                             Restrict by User Level (Role)
                         </label>
@@ -155,7 +155,7 @@
                     <div class="flex items-center">
                         <input id="restrict_user" name="restriction_type" type="radio" value="specific_user"
                             wire:model.live="restriction_type"
-                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300">
                         <label for="restrict_user" class="ml-3 block text-sm font-medium text-black">
                             Restrict to Specific Users
                         </label>
@@ -166,7 +166,7 @@
                     <div class="mt-4 pl-7">
                         <label for="role_level" class="block text-sm font-medium text-black">Select User Level</label>
                         <select id="role_level" wire:model="role_level"
-                            class="mt-1 block w-full max-w-md pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black border-[#D2D2D2] border">
+                            class="mt-1 block w-full max-w-md pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm rounded-md text-black border-[#D2D2D2] border">
                             <option value="">Select Level...</option>
                             <option value="trade account">Trade Account</option>
                             <option value="credit facilities account">Credit Facilities Account</option>
@@ -182,7 +182,7 @@
                             <label class="block text-sm font-medium text-black mb-1">Search & Add Users</label>
                             <input type="text" wire:model.live.debounce.300ms="userSearch"
                                 placeholder="Type name or email to search..."
-                                class="block w-full max-w-md px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black placeholder-black">
+                                class="block w-full max-w-md px-3 py-2 border border-[#D2D2D2] rounded-lg shadow-sm focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm text-black placeholder-black">
 
                             @if(!empty($userSearch) && count($users) > 0)
                                 <ul
@@ -239,13 +239,13 @@
 
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
             <a href="{{ route('admin.coupons.index') }}"
-                class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-black bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-black bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
                 Cancel
             </a>
-            <button type="submit"
-                class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                Update Coupon
-            </button>
+            <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Update Coupon
+        </button>
         </div>
     </form>
 </div>

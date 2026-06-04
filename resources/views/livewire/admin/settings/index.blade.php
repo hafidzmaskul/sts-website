@@ -20,10 +20,9 @@
                         <p class="text-lg font-semibold text-black truncate">{{ $adminEmail }}</p>
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('admin_email')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('admin_email')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -42,10 +41,9 @@
                         @endif
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('hero_banner')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('hero_banner')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -59,10 +57,9 @@
                         <p class="text-lg font-semibold text-black truncate">{{ $vatPercentage }}%</p>
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('vat_percentage')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('vat_percentage')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -77,10 +74,9 @@
                         </p>
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('robots_txt_content')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('robots_txt_content')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -95,10 +91,9 @@
                             custom scripts</p>
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('integrations')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('integrations')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -113,10 +108,9 @@
                             and operational hours</p>
                     </div>
                     @can('settings.update')
-                        <button wire:click="edit('landing_page')"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">
-                            Setting
-                        </button>
+                        <button wire:click="edit('landing_page')" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                     @endcan
                 </div>
             </div>
@@ -292,8 +286,10 @@
                     <div class="flex items-center justify-end gap-2">
                         <button type="button" wire:click="closeModal"
                             class="px-4 py-2 rounded-lg border">Cancel</button>
-                        <button type="submit"
-                            class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors">Save</button>
+                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Save
+        </button>
                     </div>
                 </form>
             </div>

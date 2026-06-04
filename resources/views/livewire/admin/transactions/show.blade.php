@@ -176,7 +176,7 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide">Update Status</label>
                     <form wire:submit="updateStatus" class="space-y-4">
                         <select wire:model="newStatus"
-                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-black py-2.5 px-3">
+                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-btn-primary-ring text-black py-2.5 px-3">
                             <option value="pending">Pending</option>
                             <option value="processing">Processing</option>
                             <option value="left the storage">Left the storage</option>
@@ -186,13 +186,13 @@
                         </select>
 
                         <textarea wire:model="notes" rows="3"
-                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-black py-2.5 px-3"
+                            class="block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-btn-primary-ring text-black py-2.5 px-3"
                             placeholder="Add a note (optional)..."></textarea>
 
-                        <button type="submit"
-                            class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
-                            Update Status
-                        </button>
+                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Update Status
+        </button>
                     </form>
                 </div>
 

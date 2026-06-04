@@ -11,7 +11,7 @@
                         <p class="mt-1 text-sm text-gray-500">Upload and manage product gallery.</p>
                     </div>
                     <button type="button" wire:click="addImage"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
                         Add Image
                     </button>
                 </div>
@@ -39,7 +39,7 @@
                                             <div>
                                                 <label class="block text-xs font-medium text-gray-500 mb-1">Order</label>
                                                 <input type="number" wire:model="newImages.{{ $index }}.sequence"
-                                                    class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50"
+                                                    class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-btn-primary-ring focus:border-indigo-500 bg-gray-50"
                                                     style="color: black;">
                                             </div>
                                         </div>
@@ -71,7 +71,7 @@
                                         <div class="p-3 border-t border-gray-100 bg-gray-50/50">
                                             <label class="block text-xs font-medium text-gray-500 mb-1">Order</label>
                                             <input type="number" wire:model="storedImages.{{ $index }}.sequence"
-                                                class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                                                class="block w-full rounded-md border-gray-300 text-xs py-1 px-2 focus:ring-btn-primary-ring focus:border-indigo-500 bg-white"
                                                 style="color: black;">
                                         </div>
                                         <button type="button" wire:confirm="Remove this image?" wire:click="deleteImage({{ $img['id'] }})"
@@ -107,7 +107,7 @@
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">Title <span class="text-red-500">*</span></label>
                         <input type="text" wire:model.live="title" placeholder="e.g. Premium Wireless Headphones"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;">
                         @error('title') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                     </div>
@@ -119,7 +119,7 @@
                                 <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#D2D2D2] bg-gray-50"
                                     style="color: #6b7280;">/product/</span>
                                 <input type="text" wire:model="slug" placeholder="premium-wireless-headphones"
-                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-[#D2D2D2] bg-white focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-[#D2D2D2] bg-white focus:ring-btn-primary-ring focus:border-indigo-500"
                                     style="color: black;">
                             </div>
                             @error('slug') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -127,7 +127,7 @@
                         <div>
                             <label class="block text-sm font-medium" style="color: black;">SKU</label>
                             <input type="text" wire:model="sku" placeholder="e.g. SKU-12345"
-                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                                 style="color: black;">
                             @error('sku') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
@@ -216,7 +216,7 @@
                                             <div>
                                                 <label class="block text-xs font-medium text-gray-700 mb-1">Display Name</label>
                                                 <input type="text" wire:model="newAttachments.{{ $index }}.name" placeholder="e.g. User Manual"
-                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400" style="color: black;">
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-btn-primary-ring text-sm placeholder-gray-400" style="color: black;">
                                                 @error("newAttachments.{$index}.name") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
                                             </div>
                                             <div>
@@ -270,7 +270,7 @@
                                         <div>
                                             <label class="block text-xs font-medium text-gray-500 mb-1">Display Name</label>
                                             <input type="text" wire:model="storedAttachments.{{ $index }}.name"
-                                                class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-indigo-500 text-sm" style="color: black;">
+                                                class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-btn-primary-ring text-sm" style="color: black;">
                                         </div>
                                         <div class="flex items-end justify-between gap-4">
                                              <label class="flex items-center gap-2 cursor-pointer pb-2">
@@ -319,7 +319,7 @@
                             <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_title ?? '') }} / 60</span>
                         </div>
                         <input type="text" wire:model="seo_title"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;">
                     </div>
                     <div>
@@ -329,13 +329,13 @@
                                 160</span>
                         </div>
                         <textarea wire:model="seo_description" rows="3"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">SEO Keywords</label>
                         <input type="text" wire:model="seo_keywords" placeholder="Comma separated keywords"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;">
                     </div>
                 </div>
@@ -356,7 +356,7 @@
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">Status</label>
                         <select wire:model="status"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;">
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -370,7 +370,7 @@
                                 <span style="color: #6b7280;" class="sm:text-sm">£</span>
                             </div>
                             <input type="number" step="0.01" wire:model="base_price"
-                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                                 placeholder="0.00" style="color: black;">
                         </div>
                         @error('base_price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -383,7 +383,7 @@
                                 <span style="color: #6b7280;" class="sm:text-sm">£</span>
                             </div>
                             <input type="number" step="0.01" wire:model="special_price"
-                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                                 placeholder="0.00" style="color: black;">
                         </div>
                         @error('special_price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -394,7 +394,7 @@
                     <div class="space-y-3 pt-2">
                         <label class="flex items-start cursor-pointer">
                             <input type="checkbox" wire:model="is_sign_up_for_pricing"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring mt-1">
                             <span class="ml-2 text-sm" style="color: black;">
                                 <span class="font-medium block" style="color: black;">Sign Up for Pricing</span>
                                 <span style="color: #6b7280;">Hide price and show inquiry form.</span>
@@ -402,7 +402,7 @@
                         </label>
                         <label class="flex items-start cursor-pointer">
                             <input type="checkbox" wire:model.live="showAdvancePricing"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring mt-1">
                             <span class="ml-2 text-sm" style="color: black;">
                                 <span class="font-medium block" style="color: black;">Advance Pricing</span>
                                 <span style="color: #6b7280;">Enable specific pricing for customers.</span>
@@ -410,7 +410,7 @@
                         </label>
                         <label class="flex items-start cursor-pointer">
                             <input type="checkbox" wire:model="is_cta"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring mt-1">
                             <span class="ml-2 text-sm" style="color: black;">
                                 <span class="font-medium block" style="color: black;">Is CTA Product</span>
                                 <span style="color: #6b7280;">Mark this product as a Call to Action product.</span>
@@ -456,7 +456,7 @@
                                                     <!-- Trigger -->
                                                     <button type="button"
                                                         @click="open = !open; if(open) $nextTick(() => $refs.searchInput.focus())"
-                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
+                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-xs"
                                                         style="color: black;">
                                                         <span class="block truncate"
                                                             x-text="selectedCustomer ? selectedCustomer.name + ' (' + selectedCustomer.email + ')' : 'Select Customer'"></span>
@@ -528,7 +528,7 @@
                                                     </div>
                                                     <input type="number" step="0.01"
                                                         wire:model="customerPrices.{{ $index }}.price"
-                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-btn-primary-ring focus:border-indigo-500"
                                                         style="color: black;" placeholder="0.00">
                                                 </div>
                                                 @error("customerPrices.{$index}.price") <span
@@ -565,7 +565,7 @@
                     <div>
                         <label class="block text-sm font-medium" style="color: black;">Brand</label>
                         <select wire:model="brand_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500"
+                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
                             style="color: black;">
                             <option value="">Select a Brand</option>
                             @foreach($brands as $brand)
@@ -587,7 +587,7 @@
                                 <div class="space-y-1">
                                     <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
                                         <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
                                         <span class="ml-2 text-sm font-semibold"
                                             style="color: black;">{{ $parent->name }}</span>
                                     </label>
@@ -596,7 +596,7 @@
                                             @foreach($children as $child)
                                                 <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
                                                     <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
                                                     <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
                                                 </label>
                                             @endforeach
@@ -614,7 +614,7 @@
                                         @foreach($children as $child)
                                             <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
                                                 <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
                                                 <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
                                             </label>
                                         @endforeach

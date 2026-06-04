@@ -62,7 +62,7 @@
                     </div>
                     <input type="text" wire:model.live.debounce.300ms="search"
                         placeholder="Search quotes..."
-                        class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm"
                         style="color: #000; placeholder-color: #888;">
                 </div>
 
@@ -70,19 +70,19 @@
                 <div class="flex items-center gap-2">
                     <label class="text-sm whitespace-nowrap" style="color: #000;">From:</label>
                     <input type="date" wire:model.live="dateStart"
-                        class="block w-full md:w-auto pl-3 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block w-full md:w-auto pl-3 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm"
                         style="color: #000;">
                 </div>
                 <div class="flex items-center gap-2">
                     <label class="text-sm whitespace-nowrap" style="color: #000;">To:</label>
                     <input type="date" wire:model.live="dateEnd"
-                        class="block w-full md:w-auto pl-3 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block w-full md:w-auto pl-3 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm"
                         style="color: #000;">
                 </div>
 
                 <!-- Reset Button -->
                 <button wire:click="resetFilters"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors whitespace-nowrap"
+                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors whitespace-nowrap"
                     style="color: #000;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" style="color: #000;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -130,23 +130,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.quotes.show', $quote) }}" wire:navigate
-                                        class="hover:text-indigo-600 transition-colors"
-                                        style="color: #000;"
-                                        title="View Details"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <a href="{{ route('admin.quotes.show', $quote) }}" class="text-black hover:text-indigo-600 transition-colors inline-flex" title="View details">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     </a>
-                                    <button wire:confirm="Are you sure you want to delete this quote?"
-                                        wire:click="delete({{ $quote->id }})"
-                                        class="hover:text-red-600 transition-colors"
-                                        style="color: #000;"
-                                        title="Delete"
-                                    >
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
+                                    <button wire:confirm="Are you sure you want to delete this quote?" wire:click="delete({{ $quote->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     </button>
                                 </div>
                             </td>

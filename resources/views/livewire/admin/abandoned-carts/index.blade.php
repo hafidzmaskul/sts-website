@@ -17,7 +17,7 @@
                 </div>
                 <input type="text" wire:model.live.debounce.300ms="search"
                     placeholder="Search users by name or email..."
-                    class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white text-black placeholder-black focus:outline-none focus:placeholder-black focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white text-black placeholder-black focus:outline-none focus:placeholder-black focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm">
             </div>
         </div>
 
@@ -65,11 +65,12 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.abandoned-carts.show', $user->id) }}"
-                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
-                                    Detail
-                                </a>
-                            </td>
+<div class="flex items-center justify-end gap-2">
+<a href="{{ route('admin.abandoned-carts.show', $user->id) }}" class="text-black hover:text-indigo-600 transition-colors inline-flex" title="View details">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    </a>
+</div>
+</td>
                         </tr>
                     @empty
                         <tr>

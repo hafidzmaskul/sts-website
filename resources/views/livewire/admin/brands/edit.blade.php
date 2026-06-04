@@ -76,7 +76,7 @@
                     </label>
                     <div class="text-xs text-gray-500 mb-2">Select a pricing formula to apply automatically.</div>
                     <select wire:model="pricing_formula_id" id="pricing_formula_id"
-                        class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500">
+                        class="w-full rounded-lg border px-3 py-2 text-black bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring">
                         <option value="">None</option>
                         @foreach($pricingFormulas as $formula)
                             <option value="{{ $formula->id }}">{{ $formula->label }} ({{ $formula->type->label() }}
@@ -98,7 +98,7 @@
                 <div class="col-span-1 flex items-end pb-2">
                     <div class="flex items-center h-10">
                         <input wire:model="is_active" id="is_active" type="checkbox"
-                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                            class="focus:ring-btn-primary-ring h-4 w-4 text-indigo-600 border-gray-300 rounded">
                         <label for="is_active" class="ml-2 block text-sm font-medium text-black">
                             Active
                         </label>
@@ -111,10 +111,10 @@
                     class="mr-3 inline-flex justify-center rounded-lg border border-[#0079C2] text-[#0079C2] px-4 py-2 font-semibold hover:cursor-pointer transition w-full md:w-auto bg-white">
                     Cancel
                 </a>
-                <button type="submit"
-                    class="inline-flex justify-center w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition font-semibold">
-                    Update Brand
-                </button>
+                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Update Brand
+        </button>
             </div>
         </form>
     </div>

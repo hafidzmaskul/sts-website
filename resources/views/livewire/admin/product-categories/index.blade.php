@@ -2,17 +2,17 @@
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-gray-900">Product Categories</h1>
         @can('product-categories.create')
-            <button wire:click="create"
-                class="w-full md:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 hover:cursor-pointer transition shadow-sm">
-                + New Category
-            </button>
+            <button wire:click="create" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            New Category
+        </button>
         @endcan
     </div>
 
     @if($showForm)
         <div class="p-6 rounded-xl shadow-sm border border-gray-200 bg-white">
             <h2 class="text-xl font-semibold mb-6 text-gray-900 border-b border-gray-100 pb-4">{{ $editingId ? 'Edit Category' : 'Create Category' }}</h2>
-            
+
             @php
                 $isLocked = false;
                 if($editingId) {
@@ -29,7 +29,7 @@
                     <div>
                         <label class="block text-sm font-medium mb-1 text-gray-900">Name</label>
                         <input type="text" wire:model.live="name"
-                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-50 disabled:text-gray-500"
                             placeholder="e.g. Electronics"
                             @disabled($isLocked)>
                         @error('name') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
@@ -43,7 +43,7 @@
                                 /category/
                             </span>
                             <input type="text" wire:model="slug"
-                                class="flex-1 min-w-0 block w-full rounded-none rounded-r-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+                                class="flex-1 min-w-0 block w-full rounded-none rounded-r-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-50 disabled:text-gray-500"
                                 placeholder="electronics"
                                 @disabled($isLocked)>
                         </div>
@@ -54,7 +54,7 @@
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium mb-1 text-gray-900">Parent Category</label>
                         <select wire:model="parent_id"
-                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-50 disabled:text-gray-500"
                             @disabled($isLocked)>
                             <option value="">None (Top Level)</option>
                             @foreach($parentCandidates as $candidate)
@@ -111,7 +111,7 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1 text-gray-900">SEO Title</label>
                                 <input type="text" wire:model="seo_title"
-                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-100 disabled:text-gray-500"
                                     placeholder="Title for search engines"
                                     @disabled($isLocked)>
                                 @error('seo_title') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
@@ -121,7 +121,7 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1 text-gray-900">SEO Description</label>
                                 <textarea wire:model="seo_description" rows="3"
-                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-100 disabled:text-gray-500"
                                     placeholder="Description for search results"
                                     @disabled($isLocked)></textarea>
                                 @error('seo_description') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
@@ -131,7 +131,7 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1 text-gray-900">SEO Keywords</label>
                                 <input type="text" wire:model="seo_keywords"
-                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-btn-primary-ring disabled:bg-gray-100 disabled:text-gray-500"
                                     placeholder="comma, separated, keywords"
                                     @disabled($isLocked)>
                                 @error('seo_keywords') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
@@ -141,13 +141,13 @@
                 </div>
                 <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end space-x-3">
                     <button type="button" wire:click="cancel"
-                        class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
                         Cancel
                     </button>
-                    <button type="submit"
-                        class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                        Save Category
-                    </button>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Save Category
+        </button>
                 </div>
             </form>
         </div>
@@ -237,33 +237,23 @@
 
                                 <!-- Actions -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <div class="flex justify-end gap-2">
+<div class="flex items-center justify-end gap-2">
+<div class="flex justify-end gap-2">
                                         @can('product-categories.edit')
-                                            <button wire:click="edit({{ $category->id }})"
-                                                class="inline-flex items-center justify-center rounded-full p-2 bg-white border border-transparent text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                                title="Edit"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 1200 1200" fill="none">
-                                                    <path fill="currentColor" d="M0 0v1200h1200V424.292l-196.875 196.875v381.958h-806.25v-806.25h381.958L775.708 0zm1050 0l-76.831 76.831l150 150L1200 150zM936.914 113.086L497.168 552.832l150 150l439.746-439.746zM441.943 622.339c-2.225.034-4.493.195-6.738.366v142.09h142.09c0-38.708-18.492-78.039-47.314-105.542c-23.842-22.751-54.675-37.428-88.038-36.914"></path>
-                                                </svg>
-                                            </button>
+                                            <button wire:click="edit({{ $category->id }})" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                                         @endcan
                                         @can('product-categories.delete')
                                             @if(!in_array($category->slug, ['discontinued', 'most-needed']))
-                                                <button wire:confirm="Are you sure you want to delete this category?"
-                                                    wire:click="delete({{ $category->id }})"
-                                                    class="inline-flex items-center justify-center rounded-full p-2 bg-white border border-transparent text-red-500 hover:bg-red-50 hover:border-red-200 transition focus:outline-none focus:ring-2 focus:ring-red-100"
-                                                    title="Delete"
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 12 12" fill="none">
-                                                        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                                                        <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                                                    </svg>
-                                                </button>
+                                                <button wire:confirm="Are you sure you want to delete this category?" wire:click="delete({{ $category->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
                                             @endif
                                         @endcan
                                     </div>
-                                </td>
+</div>
+</td>
                             </tr>
                         @empty
                             <tr>

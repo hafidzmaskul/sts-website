@@ -156,19 +156,9 @@
 
                 <!-- Footer Actions -->
                 <div class="flex items-center justify-between mt-8 pt-4 border-t border-zinc-200">
-                    <button
-                        type="button"
-                        wire:click="delete({{ $selectedSubmission->id }})"
-                        wire:confirm="Are you sure you want to delete this application? This will also delete the resume file."
-                        class="border border-red-600 text-red-600 text-sm font-medium rounded px-2 py-1 transition hover:text-red-800 hover:border-red-800 flex items-center gap-1"
-                        style="background: none;"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" style="color:#000000;" viewBox="0 0 12 12">
-                            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2 2.5h8" stroke-width="1"></path>
-                            <path fill="currentColor" d="M2 4v7c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4zm3 5.5c0 .28-.22.5-.5.5S4 9.78 4 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zm3 0c0 .28-.22.5-.5.5S7 9.78 7 9.5V6c0-.28.22-.5.5-.5s.5.22.5.5zM8 3H4V1c0-.55.45-1 1-1h2c.55 0 1 .45 1 1z"></path>
-                        </svg>
-                        Delete Application
-                    </button>
+                    <button wire:confirm="Are you sure you want to delete this application? This will also delete the resume file." wire:click="delete({{ $selectedSubmission->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
 
                     <button
                         type="button"
