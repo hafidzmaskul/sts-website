@@ -90,6 +90,7 @@ Route::post('/auth/forgot-password', [\App\Http\Controllers\Api\AuthController::
 Route::post('/auth/reset-password', [\App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::post('/register', [\App\Http\Controllers\Api\RegisterController::class, 'register']);
+Route::get('/check-email', [\App\Http\Controllers\Api\RegisterController::class, 'checkEmail']);
 
 Route::middleware(\App\Http\Middleware\SanctumOrBasic::class)->group(function () {
     Route::get('/me', [\App\Http\Controllers\Api\AuthController::class, 'me']);

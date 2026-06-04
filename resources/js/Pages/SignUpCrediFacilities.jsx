@@ -94,6 +94,147 @@ export default function BecomeCustomer() {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
+    React.useEffect(() => {
+        const checkEmailAvailability = async (field, emailValue) => {
+            if (!emailValue) {
+                setErrors(prev => {
+                    const next = { ...prev };
+                    delete next[field];
+                    return next;
+                });
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/check-email?email=${encodeURIComponent(emailValue)}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.exists) {
+                        setErrors(prev => ({
+                            ...prev,
+                            [field]: 'This email is already registered.',
+                        }));
+                    } else {
+                        setErrors(prev => {
+                            const next = { ...prev };
+                            if (next[field] === 'This email is already registered.') {
+                                delete next[field];
+                            }
+                            return next;
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking email availability:', err);
+            }
+        };
+
+        const timerEmail = setTimeout(() => {
+            checkEmailAvailability('email', formData.email);
+        }, 500);
+
+        return () => clearTimeout(timerEmail);
+    }, [formData.email]);
+
+    React.useEffect(() => {
+        const checkEmailAvailability = async (field, emailValue) => {
+            if (!emailValue) {
+                setErrors(prev => {
+                    const next = { ...prev };
+                    delete next[field];
+                    return next;
+                });
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/check-email?email=${encodeURIComponent(emailValue)}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.exists) {
+                        setErrors(prev => ({
+                            ...prev,
+                            [field]: 'This email is already registered.',
+                        }));
+                    } else {
+                        setErrors(prev => {
+                            const next = { ...prev };
+                            if (next[field] === 'This email is already registered.') {
+                                delete next[field];
+                            }
+                            return next;
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking email availability:', err);
+            }
+        };
+
+        const timerPurchasing = setTimeout(() => {
+            checkEmailAvailability('purchasing_contact_email', formData.purchasing_contact_email);
+        }, 500);
+
+        return () => clearTimeout(timerPurchasing);
+    }, [formData.purchasing_contact_email]);
+
+    React.useEffect(() => {
+        const checkEmailAvailability = async (field, emailValue) => {
+            if (!emailValue) {
+                setErrors(prev => {
+                    const next = { ...prev };
+                    delete next[field];
+                    return next;
+                });
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/check-email?email=${encodeURIComponent(emailValue)}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.exists) {
+                        setErrors(prev => ({
+                            ...prev,
+                            [field]: 'This email is already registered.',
+                        }));
+                    } else {
+                        setErrors(prev => {
+                            const next = { ...prev };
+                            if (next[field] === 'This email is already registered.') {
+                                delete next[field];
+                            }
+                            return next;
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking email availability:', err);
+            }
+        };
+
+        const timerAccounts = setTimeout(() => {
+            checkEmailAvailability('accounts_contact_email', formData.accounts_contact_email);
+        }, 500);
+
+        return () => clearTimeout(timerAccounts);
+    }, [formData.accounts_contact_email]);
+
     const steps = [
         { number: 1, title: 'Company Information', desc: 'Basic Company Details' },
         { number: 2, title: 'Contact Information', desc: 'Key personnel contacts' },
