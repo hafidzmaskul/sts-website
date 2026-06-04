@@ -6,8 +6,6 @@ use App\Models\Customer;
 use App\Models\ShippingAddress;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ShippingAddressTest extends TestCase
@@ -30,7 +28,7 @@ class ShippingAddressTest extends TestCase
 
         $token = $user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/shipping-addresses');
 
         $response->assertStatus(200)
@@ -53,7 +51,7 @@ class ShippingAddressTest extends TestCase
             'postal_code' => '10001',
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/shipping-addresses', $data);
 
         $response->assertStatus(201)
@@ -78,7 +76,7 @@ class ShippingAddressTest extends TestCase
 
         $token = $user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson("/api/shipping-addresses/{$shippingAddress->id}");
 
         $response->assertStatus(200)
@@ -105,7 +103,7 @@ class ShippingAddressTest extends TestCase
             'first_name' => 'Jane',
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->putJson("/api/shipping-addresses/{$shippingAddress->id}", $data);
 
         $response->assertStatus(200)
@@ -130,7 +128,7 @@ class ShippingAddressTest extends TestCase
 
         $token = $user->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->deleteJson("/api/shipping-addresses/{$shippingAddress->id}");
 
         $response->assertStatus(200);
@@ -157,7 +155,7 @@ class ShippingAddressTest extends TestCase
 
         $token = $user2->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson("/api/shipping-addresses/{$address1->id}");
 
         $response->assertStatus(404); // Should not find it or 403

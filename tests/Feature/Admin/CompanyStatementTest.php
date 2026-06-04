@@ -94,7 +94,7 @@ class CompanyStatementTest extends TestCase
         Mail::assertQueued(CompanyStatementMail::class, function ($mail) use ($company) {
             // Check that PDF generation logic is present in attachments
             $attachments = $mail->attachments();
-            $hasPdf = !empty($attachments) &&
+            $hasPdf = ! empty($attachments) &&
                 $attachments[0] instanceof \Illuminate\Mail\Mailables\Attachment &&
                 str_contains($attachments[0]->as, 'Statement_');
 
@@ -116,7 +116,7 @@ class CompanyStatementTest extends TestCase
             'period' => now()->format('F Y'),
         ]);
 
-        \Illuminate\Support\Facades\Storage::assertExists('statements/' . $company->id . '/' . time() . '_Statement_' . str_replace(' ', '_', now()->format('F Y')) . '.pdf');
+        \Illuminate\Support\Facades\Storage::assertExists('statements/'.$company->id.'/'.time().'_Statement_'.str_replace(' ', '_', now()->format('F Y')).'.pdf');
     }
 
     public function test_shows_error_if_no_debit_transactions_found()

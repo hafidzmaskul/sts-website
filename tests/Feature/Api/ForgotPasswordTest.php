@@ -1,9 +1,9 @@
 <?php
 
+use App\Mail\ForgotPasswordOtp;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ForgotPasswordOtp;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
@@ -27,7 +27,7 @@ test('it sends otp to existing user', function () {
     Mail::fake();
 
     $user = User::factory()->create();
-    $key = 'password_reset_otp_' . $user->email;
+    $key = 'password_reset_otp_'.$user->email;
     Cache::forget($key);
 
     $response = $this->postJson('/api/auth/forgot-password', [
@@ -73,7 +73,7 @@ test('it resets password successfully with valid otp', function () {
     ]);
 
     $otp = '123456';
-    $key = 'password_reset_otp_' . $user->email;
+    $key = 'password_reset_otp_'.$user->email;
     Cache::put($key, $otp, 600);
 
     $newPassword = 'NewSecurePassword123!';
@@ -172,7 +172,7 @@ test('it resets password successfully with magic otp 123456', function () {
     ]);
 
     // Ensure no OTP in cache or different OTP
-    $key = 'password_reset_otp_' . $user->email;
+    $key = 'password_reset_otp_'.$user->email;
     Cache::put($key, '999999', 600);
 
     $newPassword = 'NewSecurePassword123!';
@@ -191,4 +191,3 @@ test('it resets password successfully with magic otp 123456', function () {
 
     $this->assertTrue(\Illuminate\Support\Facades\Hash::check($newPassword, $user->fresh()->password));
 });
-

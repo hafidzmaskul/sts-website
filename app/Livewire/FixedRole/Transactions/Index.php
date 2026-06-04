@@ -2,10 +2,10 @@
 
 namespace App\Livewire\FixedRole\Transactions;
 
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Url;
-use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
@@ -38,9 +38,9 @@ class Index extends Component
     public function render()
     {
         $user = Auth::user();
-        \Illuminate\Support\Facades\Log::info('DEBUG RENDER: status=' . $this->status . ', dateStart=' . $this->dateStart);
+        \Illuminate\Support\Facades\Log::info('DEBUG RENDER: status='.$this->status.', dateStart='.$this->dateStart);
 
-        if (!$user->customer) {
+        if (! $user->customer) {
             return view('livewire.fixed-role.transactions.index', [
                 'transactions' => collect([]),
                 'totalTransactions' => 0,

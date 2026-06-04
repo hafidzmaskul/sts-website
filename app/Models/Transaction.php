@@ -53,6 +53,7 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionStatusHistory::class)->orderBy('created_at', 'desc');
     }
+
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
@@ -70,9 +71,10 @@ class Transaction extends Model
 
     public function getSavedCouponAttribute()
     {
-        if (!empty($this->coupon_data)) {
+        if (! empty($this->coupon_data)) {
             return $this->coupon_data;
         }
+
         return $this->coupon;
     }
 }

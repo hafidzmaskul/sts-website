@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Coupon;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CouponManagementTest extends TestCase

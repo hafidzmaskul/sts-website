@@ -10,8 +10,11 @@ class Show extends Component
     public Company $company;
 
     public $monthlyCreditLimits;
+
     public $showAddLimitModal = false;
+
     public $newLimitAmount;
+
     public $newLimitDescription;
 
     protected $rules = [
@@ -20,12 +23,16 @@ class Show extends Component
     ];
 
     public $statementMonth;
+
     public $statementYear;
+
     public $showStatementModal = false;
+
+    public $showDeleteModal = false;
 
     public function mount(Company $company)
     {
-        $this->company = $company->load(['customers', 'creditLimits' => fn($q) => $q->latest()]);
+        $this->company = $company->load(['customers', 'creditLimits' => fn ($q) => $q->latest()]);
         $this->refreshMonthlyLimits();
 
         $this->statementMonth = now()->month;
@@ -34,7 +41,7 @@ class Show extends Component
 
     public function getMonthsProperty()
     {
-        return collect(range(1, 12))->mapWithKeys(fn($m) => [$m => \Carbon\Carbon::create(null, $m)->format('F')]);
+        return collect(range(1, 12))->mapWithKeys(fn ($m) => [$m => \Carbon\Carbon::create(null, $m)->format('F')]);
     }
 
     public function getYearsProperty()
@@ -89,6 +96,7 @@ class Show extends Component
 
         if ($creditLimits->isEmpty()) {
             $this->dispatch('notify', type: 'error', message: 'No debit transactions found for the selected period.');
+
             return;
         }
 
@@ -101,6 +109,7 @@ class Show extends Component
 
         if ($emails->isEmpty()) {
             $this->dispatch('notify', type: 'error', message: 'No contact emails found for this company.');
+
             return;
         }
 
@@ -115,7 +124,7 @@ class Show extends Component
         $pdfContent = $pdf->output();
 
         // 1. Store PDF
-        $filename = 'statements/' . $this->company->id . '/' . time() . '_Statement_' . str_replace(' ', '_', $statementPeriod) . '.pdf';
+        $filename = 'statements/'.$this->company->id.'/'.time().'_Statement_'.str_replace(' ', '_', $statementPeriod).'.pdf';
         \Illuminate\Support\Facades\Storage::put($filename, $pdfContent);
 
         // 2. Log History
@@ -139,7 +148,7 @@ class Show extends Component
         }
 
         $this->showStatementModal = false;
-        $this->dispatch('notify', type: 'success', message: 'Statement for ' . $statementPeriod . ' sent and logged successfully.');
+        $this->dispatch('notify', type: 'success', message: 'Statement for '.$statementPeriod.' sent and logged successfully.');
     }
 
     public function downloadStatement(\App\Models\StatementHistory $statement)
@@ -149,6 +158,88 @@ class Show extends Component
         }
 
         $this->dispatch('notify', type: 'error', message: 'File not found.');
+    }
+
+    public function confirmDeleteCompany()
+    {
+        $this->authorize('customers.delete');
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteCompany()
+    {
+        $this->authorize('customers.delete');
+
+        \Illuminate\Support\Facades\DB::transaction(function () {
+            // Find customers associated with this company
+            $customers = $this->company->customers;
+
+            foreach ($customers as $customer) {
+                // Delete associated user if exists
+                if ($customer->user) {
+                    $user = $customer->user;
+
+                    // 1. Detach many-to-many relationships
+                    $user->likedProducts()->detach();
+                    $user->coupons()->detach();
+
+                    // 2. Delete quoteBuilders and their products
+                    $quoteBuilders = $user->quoteBuilders;
+                    foreach ($quoteBuilders as $qb) {
+                        $qb->products()->detach();
+                        $qb->delete();
+                    }
+
+                    // 3. Delete cart items
+                    $user->cartItems()->delete();
+
+                    // 4. Delete feedbacks
+                    $user->feedbacks()->delete();
+
+                    // 5. Delete the user
+                    $user->delete();
+                }
+
+                // Delete customer shipping addresses
+                $customer->shippingAddresses()->delete();
+
+                // Delete customer credit limits
+                $customer->creditLimits()->delete();
+
+                // Delete customer transactions and their items & status history
+                $transactions = $customer->transactions;
+                foreach ($transactions as $transaction) {
+                    $transaction->items()->delete();
+                    $transaction->statusHistory()->delete();
+                    $transaction->delete();
+                }
+
+                // Finally delete the customer
+                $customer->delete();
+            }
+
+            // Delete monthly credit limits
+            $this->company->monthlyCreditLimits()->delete();
+
+            // Delete statement histories and their files
+            $statementHistories = $this->company->statementHistories;
+            foreach ($statementHistories as $history) {
+                if ($history->file_path && \Illuminate\Support\Facades\Storage::exists($history->file_path)) {
+                    \Illuminate\Support\Facades\Storage::delete($history->file_path);
+                }
+                $history->delete();
+            }
+
+            // Delete company credit limits
+            $this->company->creditLimits()->delete();
+
+            // Delete the company
+            $this->company->delete();
+        });
+
+        $this->dispatch('notify', type: 'success', message: 'Company and all related data deleted successfully.');
+
+        return $this->redirect(route('admin.companies.index'), navigate: true);
     }
 
     public function render()

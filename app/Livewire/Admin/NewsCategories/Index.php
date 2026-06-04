@@ -13,14 +13,21 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
 
     public string $name = '';
+
     public string $slug = '';
+
     public ?int $parent_id = null;
+
     public ?string $seo_title = null;
+
     public ?string $seo_description = null;
+
     public ?string $seo_keywords = null;
 
     protected function rules()
@@ -36,7 +43,7 @@ class Index extends Component
                     if ($this->editingId && $value == $this->editingId) {
                         $fail('A category cannot be its own parent.');
                     }
-                }
+                },
             ],
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
@@ -46,7 +53,7 @@ class Index extends Component
 
     public function updatedName($value)
     {
-        if (!$this->editingId) {
+        if (! $this->editingId) {
             $this->slug = Str::slug($value);
         }
     }
@@ -85,7 +92,7 @@ class Index extends Component
         if ($this->editingId) {
             $category = NewsCategory::findOrFail($this->editingId);
         } else {
-            $category = new NewsCategory();
+            $category = new NewsCategory;
             $category->created_by = auth()->id();
         }
 
@@ -144,8 +151,8 @@ class Index extends Component
         $categories = NewsCategory::query()
             ->with(['parent', 'creator'])
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('slug', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('slug', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

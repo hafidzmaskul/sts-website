@@ -2,29 +2,34 @@
 
 namespace App\Livewire\FixedRole\ChildUsers;
 
-use Livewire\Component;
-use Livewire\WithPagination;
+use App\Mail\NewStaffUserCredentials;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\NewStaffUserCredentials;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
     use WithPagination;
 
     public $firstName;
+
     public $listingFor = 'Child User';
 
     public $showForm = false;
+
     public $editingId = null;
 
     // Form fields
     public $name = '';
+
     public $email = '';
+
     public $password = '';
+
     public $password_confirmation = '';
 
     protected function rules()
@@ -44,7 +49,7 @@ class Index extends Component
     public function mount()
     {
         // Safety check: ensure only allowed roles access this
-        if (!auth()->user()->hasAnyRole(['trade account', 'credit facilities account'])) {
+        if (! auth()->user()->hasAnyRole(['trade account', 'credit facilities account'])) {
             abort(403, 'Unauthorized');
         }
     }
@@ -142,7 +147,7 @@ class Index extends Component
         $users = auth()->user()->children()->latest()->paginate(10);
 
         return view('livewire.fixed-role.child-users.index', [
-            'users' => $users
+            'users' => $users,
         ])->title('Manage Users');
     }
 }

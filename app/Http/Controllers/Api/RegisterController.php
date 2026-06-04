@@ -54,4 +54,24 @@ class RegisterController extends Controller
             ], 201);
         });
     }
+
+    /**
+     * Check if email is already registered.
+     */
+    public function checkEmail(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $email = $request->query('email');
+
+        if (! $email) {
+            return response()->json(['exists' => false]);
+        }
+
+        $exists = User::where('email', $email)->exists()
+            || Customer::where('email', $email)->exists()
+            || \App\Models\Company::where('purchasing_contact_email', $email)
+                ->orWhere('accounts_contact_email', $email)
+                ->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
 }

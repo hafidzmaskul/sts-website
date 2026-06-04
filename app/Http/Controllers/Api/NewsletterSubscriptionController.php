@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\NewsletterSubscription;
+use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Setting;
+use Illuminate\Support\Facades\Validator;
 
 class NewsletterSubscriptionController extends Controller
 {
@@ -44,7 +44,8 @@ class NewsletterSubscriptionController extends Controller
             ], 201); // Created
 
         } catch (\Exception $e) {
-            Log::error("Newsletter subscription failed: " . $e->getMessage());
+            Log::error('Newsletter subscription failed: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while subscribing. Please try again.',
@@ -57,27 +58,27 @@ class NewsletterSubscriptionController extends Controller
         $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-        if (!$adminEmail) {
+        if (! $adminEmail) {
             return;
         }
 
         $emailBody = implode("\n", [
-            "New Newsletter Subscription",
-            "===========================",
-            "",
-            "Subscriber Email: " . $email,
-            "",
-            "Date: " . now()->format('Y-m-d H:i:s'),
+            'New Newsletter Subscription',
+            '===========================',
+            '',
+            'Subscriber Email: '.$email,
+            '',
+            'Date: '.now()->format('Y-m-d H:i:s'),
         ]);
 
         try {
             Mail::raw($emailBody, function ($m) use ($adminEmail, $email) {
                 $m->to($adminEmail)
                     ->replyTo($email, 'Subscriber')
-                    ->subject('New Newsletter Subscriber: ' . $email);
+                    ->subject('New Newsletter Subscriber: '.$email);
             });
         } catch (\Throwable $e) {
-            Log::error("Failed to send Newsletter notification email: " . $e->getMessage());
+            Log::error('Failed to send Newsletter notification email: '.$e->getMessage());
         }
     }
 }

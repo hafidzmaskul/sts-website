@@ -24,9 +24,9 @@ class Index extends Component
         $products = Product::with('categories')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('title', 'like', '%' . $this->search . '%')
+                    $q->where('title', 'like', '%'.$this->search.'%')
                         ->orWhereHas('brand', function ($subQ) {
-                            $subQ->where('name', 'like', '%' . $this->search . '%');
+                            $subQ->where('name', 'like', '%'.$this->search.'%');
                         });
                 });
             })

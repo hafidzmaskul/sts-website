@@ -2,26 +2,38 @@
 
 namespace App\Livewire\Admin\Coupons;
 
-use Livewire\Component;
 use App\Models\Coupon;
 use App\Models\User;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 
 class Create extends Component
 {
     public $name;
+
     public $code;
+
     public $type = 'redeem'; // 'redeem', 'claim'
+
     public $status = 'published'; // 'published', 'unpublished'
+
     public $discount_type = 'fixed';
+
     public $discount_value;
+
     public $quota;
+
     public $start_date;
+
     public $end_date;
+
     public $restriction_type = 'none'; // 'role', 'specific_user', 'none'
+
     public $role_level;
+
     public $specific_users = [];
+
     public $userSearch = '';
 
     public function generateCode()
@@ -50,18 +62,19 @@ class Create extends Component
             'role_level' => [
                 'nullable',
                 Rule::requiredIf($this->restriction_type === 'role'),
-                'in:trade account,credit facilities account,guest'
+                'in:trade account,credit facilities account,guest',
             ],
             'specific_users' => [
                 'nullable',
                 Rule::requiredIf($this->restriction_type === 'specific_user'),
-                'array'
+                'array',
             ],
             'specific_users.*' => 'exists:users,id',
         ]);
 
         if ($this->type === 'redeem' && empty($this->code)) {
             $this->addError('code', 'The coupon code field is required when type is redeem.');
+
             return;
         }
 
@@ -93,15 +106,15 @@ class Create extends Component
         if ($this->restriction_type === 'specific_user') {
             $users = User::query()
                 ->when($this->userSearch, function ($query) {
-                    $query->where('name', 'like', '%' . $this->userSearch . '%')
-                        ->orWhere('email', 'like', '%' . $this->userSearch . '%');
+                    $query->where('name', 'like', '%'.$this->userSearch.'%')
+                        ->orWhere('email', 'like', '%'.$this->userSearch.'%');
                 })
                 ->limit(10)
                 ->get();
         }
 
         return view('livewire.admin.coupons.create', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 }

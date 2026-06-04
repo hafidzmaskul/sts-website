@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Setting;
 
 class FeedbackController extends Controller
 {
@@ -33,7 +33,7 @@ class FeedbackController extends Controller
         $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-        if (!$adminEmail) {
+        if (! $adminEmail) {
             return;
         }
 
@@ -42,26 +42,26 @@ class FeedbackController extends Controller
         $userEmail = $user ? $user->email : 'N/A';
 
         $emailBody = implode("\n", [
-            "New User Feedback Received",
-            "========================",
-            "",
-            "User    : " . $userName . " (" . $userEmail . ")",
-            "Message :",
-            "---------",
+            'New User Feedback Received',
+            '========================',
+            '',
+            'User    : '.$userName.' ('.$userEmail.')',
+            'Message :',
+            '---------',
             $message,
-            "---------",
-            "",
-            "Date: " . now()->format('Y-m-d H:i:s'),
+            '---------',
+            '',
+            'Date: '.now()->format('Y-m-d H:i:s'),
         ]);
 
         try {
             Mail::raw($emailBody, function ($m) use ($adminEmail, $userEmail, $userName) {
                 $m->to($adminEmail)
                     ->replyTo($userEmail !== 'N/A' ? $userEmail : $adminEmail, $userName)
-                    ->subject('New Feedback from ' . $userName);
+                    ->subject('New Feedback from '.$userName);
             });
         } catch (\Throwable $e) {
-            Log::error("Failed to send Feedback notification email: " . $e->getMessage());
+            Log::error('Failed to send Feedback notification email: '.$e->getMessage());
         }
     }
 }

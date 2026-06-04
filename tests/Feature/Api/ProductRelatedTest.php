@@ -20,18 +20,18 @@ class ProductRelatedTest extends TestCase
         $brand = Brand::create([
             'name' => 'Brand A',
             'slug' => 'brand-a',
-            'created_by' => $user->id
+            'created_by' => $user->id,
         ]);
 
         $category = ProductCategory::create([
             'name' => 'Category A',
             'slug' => 'category-a',
-            'created_by' => $user->id
+            'created_by' => $user->id,
         ]);
         $otherCategory = ProductCategory::create([
             'name' => 'Category B',
             'slug' => 'category-b',
-            'created_by' => $user->id
+            'created_by' => $user->id,
         ]);
 
         // Main product
@@ -94,9 +94,8 @@ class ProductRelatedTest extends TestCase
         ]);
         $inactiveRelated->categories()->attach($category->id);
 
-
         // ACT
-        $response = $this->getJson('/api/products/' . $product->slug);
+        $response = $this->getJson('/api/products/'.$product->slug);
 
         // ASSERT
         $response->assertStatus(200)
@@ -106,9 +105,9 @@ class ProductRelatedTest extends TestCase
                     'id',
                     'title',
                     'related_products' => [
-                        '*' => ['id', 'title', 'slug', 'sku']
-                    ]
-                ]
+                        '*' => ['id', 'title', 'slug', 'sku'],
+                    ],
+                ],
             ]);
 
         $relatedProducts = $response->json('data.related_products');

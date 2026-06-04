@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class CouponController extends Controller
 {
     /**
      * List valid 'claim' coupons (auto-apply) available for the user.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -42,14 +41,13 @@ class CouponController extends Controller
         });
 
         return response()->json([
-            'data' => $availableCoupons->values()
+            'data' => $availableCoupons->values(),
         ]);
     }
 
     /**
      * Get a valid coupon by code.
      *
-     * @param  string  $code
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Request $request, string $code)
@@ -58,7 +56,7 @@ class CouponController extends Controller
 
         $coupon = Coupon::where('code', $code)->first();
 
-        if (!$coupon) {
+        if (! $coupon) {
             return response()->json(['message' => 'Coupon not found.'], 404);
         }
 
@@ -82,12 +80,12 @@ class CouponController extends Controller
         }
 
         // 4. Check User Restriction
-        if (!$this->isUserEligible($user, $coupon)) {
+        if (! $this->isUserEligible($user, $coupon)) {
             return response()->json(['message' => 'You are not eligible for this coupon.'], 403);
         }
 
         return response()->json([
-            'data' => $coupon
+            'data' => $coupon,
         ]);
     }
 
@@ -101,6 +99,7 @@ class CouponController extends Controller
             if (method_exists($user, 'hasRole')) {
                 return $user->hasRole($coupon->role_level);
             }
+
             // Fallback
             return false;
         } elseif ($coupon->restriction_type === 'specific_user') {

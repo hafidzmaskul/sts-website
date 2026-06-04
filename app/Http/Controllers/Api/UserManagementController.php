@@ -156,7 +156,7 @@ class UserManagementController extends Controller
 
     private function authorizeHeadAccount()
     {
-        if (!auth()->user()->hasAnyRole(['trade account', 'credit facilities account'])) {
+        if (! auth()->user()->hasAnyRole(['trade account', 'credit facilities account'])) {
             abort(403, 'Unauthorized. Only Head Accounts can manage users.');
         }
     }

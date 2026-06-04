@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Admin\Coupons;
 
+use App\Models\Coupon;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Coupon;
 
 class Index extends Component
 {
@@ -22,14 +22,14 @@ class Index extends Component
     {
         $coupons = Coupon::query()
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('code', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('code', 'like', '%'.$this->search.'%');
             })
             ->latest()
             ->paginate(10);
 
         return view('livewire.admin.coupons.index', [
-            'coupons' => $coupons
+            'coupons' => $coupons,
         ]);
     }
 }

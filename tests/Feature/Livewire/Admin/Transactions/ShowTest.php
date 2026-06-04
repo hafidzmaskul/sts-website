@@ -6,11 +6,10 @@ use App\Livewire\Admin\Transactions\Show;
 use App\Models\Coupon;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class ShowTest extends TestCase
 {

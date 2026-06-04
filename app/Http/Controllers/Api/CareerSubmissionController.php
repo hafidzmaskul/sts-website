@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Career;
 use App\Models\CareerSubmission;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -59,7 +58,7 @@ class CareerSubmissionController extends Controller
             ], 201);
 
         } catch (\Exception $e) {
-            Log::error('Career Submission Error: ' . $e->getMessage());
+            Log::error('Career Submission Error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -73,46 +72,46 @@ class CareerSubmissionController extends Controller
         $adminEmailSetting = Setting::where('key', 'email_notification_admin')->first();
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-        if (!$adminEmail) {
+        if (! $adminEmail) {
             return;
         }
 
         $jobTitle = $submission->career ? $submission->career->title : 'Unknown Position';
 
         $emailBody = implode("\n", [
-            "New Job Application Received",
-            "============================",
-            "",
-            "Position: " . $jobTitle,
-            "",
-            "Applicant Details:",
-            "Name: " . $submission->full_name,
-            "Email: " . $submission->email,
-            "Phone: " . $submission->mobile_phone,
-            "",
-            "Message:",
-            "---------",
-            $submission->message ?? "No message provided.",
-            "---------",
-            "",
-            "Resume is attached to this email.",
+            'New Job Application Received',
+            '============================',
+            '',
+            'Position: '.$jobTitle,
+            '',
+            'Applicant Details:',
+            'Name: '.$submission->full_name,
+            'Email: '.$submission->email,
+            'Phone: '.$submission->mobile_phone,
+            '',
+            'Message:',
+            '---------',
+            $submission->message ?? 'No message provided.',
+            '---------',
+            '',
+            'Resume is attached to this email.',
         ]);
 
         try {
             Mail::raw($emailBody, function ($m) use ($adminEmail, $submission, $jobTitle) {
                 $m->to($adminEmail)
                     ->replyTo($submission->email, $submission->full_name)
-                    ->subject('Application for ' . $jobTitle . ': ' . $submission->full_name);
+                    ->subject('Application for '.$jobTitle.': '.$submission->full_name);
 
                 if ($submission->resume_path) {
-                    $filePath = storage_path('app/public/' . $submission->resume_path);
+                    $filePath = storage_path('app/public/'.$submission->resume_path);
                     if (file_exists($filePath)) {
                         $m->attach($filePath);
                     }
                 }
             });
         } catch (\Throwable $e) {
-            Log::error('Failed to send career notification email: ' . $e->getMessage());
+            Log::error('Failed to send career notification email: '.$e->getMessage());
         }
     }
 }

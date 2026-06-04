@@ -11,8 +11,11 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+
     public $status = '';
+
     public $sortField = 'sort_order';
+
     public $sortDirection = 'asc';
 
     protected $queryString = [
@@ -49,8 +52,8 @@ class Index extends Component
         $brands = Brand::query()
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('slug', 'like', '%' . $this->search . '%');
+                    $q->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('slug', 'like', '%'.$this->search.'%');
                 });
             })
             ->when($this->status !== '', function ($query) {

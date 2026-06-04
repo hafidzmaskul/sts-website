@@ -17,7 +17,7 @@ class NewsController extends Controller
             ->with(['categories', 'creator']);
 
         if ($request->has('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         if ($request->has('category')) {

@@ -4,31 +4,41 @@ namespace App\Livewire\Admin\News;
 
 use App\Models\News;
 use App\Models\NewsCategory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
 
     public string $title = '';
+
     public string $slug = '';
+
     public string $content = '';
+
     public $image;
+
     public string $status = 'draft';
+
     public ?string $published_at = null;
+
     public array $selectedCategories = [];
 
     public ?string $seo_title = null;
+
     public ?string $seo_description = null;
+
     public ?string $seo_keywords = null;
 
     protected function rules()
@@ -50,7 +60,7 @@ class Index extends Component
 
     public function updatedTitle($value)
     {
-        if (!$this->editingId) {
+        if (! $this->editingId) {
             $this->slug = Str::slug($value);
         }
     }
@@ -92,7 +102,7 @@ class Index extends Component
         if ($this->editingId) {
             $news = News::findOrFail($this->editingId);
         } else {
-            $news = new News();
+            $news = new News;
             $news->created_by = auth()->id();
         }
 
@@ -166,8 +176,8 @@ class Index extends Component
         $news = News::query()
             ->with(['categories', 'creator'])
             ->when($this->search, function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('slug', 'like', '%' . $this->search . '%');
+                $query->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('slug', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

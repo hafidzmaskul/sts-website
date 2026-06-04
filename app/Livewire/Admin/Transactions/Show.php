@@ -8,7 +8,9 @@ use Livewire\Component;
 class Show extends Component
 {
     public Transaction $transaction;
+
     public $newStatus;
+
     public $notes;
 
     public function mount(Transaction $transaction)
@@ -39,6 +41,6 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.admin.transactions.show')->title('Transaction ' . $this->transaction->invoice_code);
+        return view('livewire.admin.transactions.show')->title('Transaction '.$this->transaction->invoice_code);
     }
 }

@@ -12,7 +12,7 @@ class Show extends Component
         $user = Auth::user();
         $company = $user->customer?->company;
 
-        if (!$company || $statement->company_id !== $company->id) {
+        if (! $company || $statement->company_id !== $company->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -28,7 +28,7 @@ class Show extends Component
         $user = Auth::user();
 
         // Ensure user has correct role
-        if (!$user->hasAnyRole(['trade account', 'credit facilities account'])) {
+        if (! $user->hasAnyRole(['trade account', 'credit facilities account'])) {
             abort(403, 'Unauthorized');
         }
 

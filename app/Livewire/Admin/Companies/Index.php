@@ -24,9 +24,9 @@ class Index extends Component
 
         $companies = Company::query()
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('registration_number', 'like', '%' . $this->search . '%')
-                    ->orWhere('purchasing_contact_email', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('registration_number', 'like', '%'.$this->search.'%')
+                    ->orWhere('purchasing_contact_email', 'like', '%'.$this->search.'%');
             })
             ->with('customers')
             ->latest()

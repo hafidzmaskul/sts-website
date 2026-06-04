@@ -3,8 +3,8 @@
 namespace App\Livewire\FixedRole\Transactions;
 
 use App\Models\Transaction;
-use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class Show extends Component
 {

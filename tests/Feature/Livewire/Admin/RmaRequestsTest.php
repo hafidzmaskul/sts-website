@@ -3,8 +3,8 @@
 use App\Livewire\Admin\RmaRequests\Index;
 use App\Models\RmaRequest;
 use App\Models\User;
-use Livewire\Livewire;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 

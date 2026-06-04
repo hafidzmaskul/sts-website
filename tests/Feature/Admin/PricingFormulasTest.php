@@ -1,9 +1,7 @@
 <?php
 
 use App\Models\PricingFormula;
-use App\Models\PricingFormulaHistory;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 test('pricing formula records history on creation', function () {
     $user = User::factory()->create();

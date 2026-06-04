@@ -11,7 +11,9 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+
     public $status = '';
+
     public $returnType = '';
 
     public function render()
@@ -20,11 +22,11 @@ class Index extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('order_number', 'like', '%' . $this->search . '%')
-                    ->orWhere('product_name', 'like', '%' . $this->search . '%')
+                $q->where('order_number', 'like', '%'.$this->search.'%')
+                    ->orWhere('product_name', 'like', '%'.$this->search.'%')
                     ->orWhereHas('user', function ($u) {
-                        $u->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                        $u->where('name', 'like', '%'.$this->search.'%')
+                            ->orWhere('email', 'like', '%'.$this->search.'%');
                     });
             });
         }

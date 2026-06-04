@@ -15,8 +15,8 @@ class ProductLikeTest extends TestCase
     private function createProduct(User $creator, $overrides = [])
     {
         return Product::create(array_merge([
-            'title' => 'Test Product ' . uniqid(),
-            'slug' => 'test-product-' . uniqid(),
+            'title' => 'Test Product '.uniqid(),
+            'slug' => 'test-product-'.uniqid(),
             'created_by' => $creator->id,
             'status' => 'active',
         ], $overrides));
@@ -31,8 +31,8 @@ class ProductLikeTest extends TestCase
 
         // Like
         $response = $this->withHeaders(['Authorization' => 'Bearer fake-token'])
-            ->postJson("/api/products/like", [
-                'product_id' => $product->id
+            ->postJson('/api/products/like', [
+                'product_id' => $product->id,
             ]);
 
         $response->assertStatus(200)
@@ -40,19 +40,19 @@ class ProductLikeTest extends TestCase
                 'success' => true,
                 'message' => 'Product liked successfully',
                 'data' => [
-                    'liked' => true
-                ]
+                    'liked' => true,
+                ],
             ]);
 
         $this->assertDatabaseHas('product_user_likes', [
             'user_id' => $user->id,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
 
         // Unlike
         $response = $this->withHeaders(['Authorization' => 'Bearer fake-token'])
-            ->postJson("/api/products/unlike", [
-                'product_id' => $product->id
+            ->postJson('/api/products/unlike', [
+                'product_id' => $product->id,
             ]);
 
         $response->assertStatus(200)
@@ -60,13 +60,13 @@ class ProductLikeTest extends TestCase
                 'success' => true,
                 'message' => 'Product unliked successfully',
                 'data' => [
-                    'liked' => false
-                ]
+                    'liked' => false,
+                ],
             ]);
 
         $this->assertDatabaseMissing('product_user_likes', [
             'user_id' => $user->id,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
     }
 
@@ -76,8 +76,8 @@ class ProductLikeTest extends TestCase
         Sanctum::actingAs($user);
 
         $response = $this->withHeaders(['Authorization' => 'Bearer fake-token'])
-            ->postJson("/api/products/like", [
-                'product_id' => 99999
+            ->postJson('/api/products/like', [
+                'product_id' => 99999,
             ]);
 
         $response->assertStatus(422)
@@ -112,8 +112,8 @@ class ProductLikeTest extends TestCase
         $user = User::factory()->create();
         $product = $this->createProduct($user);
 
-        $response = $this->postJson("/api/products/like", [
-            'product_id' => $product->id
+        $response = $this->postJson('/api/products/like', [
+            'product_id' => $product->id,
         ]);
 
         $response->assertStatus(401);
@@ -128,15 +128,15 @@ class ProductLikeTest extends TestCase
         $product = $this->createProduct($user);
 
         $response = $this->withHeaders([
-            'Authorization' => 'Basic ' . base64_encode('test@example.com:password')
-        ])->postJson("/api/products/like", [
-                    'product_id' => $product->id
-                ]);
+            'Authorization' => 'Basic '.base64_encode('test@example.com:password'),
+        ])->postJson('/api/products/like', [
+            'product_id' => $product->id,
+        ]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('product_user_likes', [
             'user_id' => $user->id,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
     }
 }

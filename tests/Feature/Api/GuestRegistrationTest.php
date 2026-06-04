@@ -4,7 +4,6 @@ namespace Tests\Feature\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -41,8 +40,8 @@ class GuestRegistrationTest extends TestCase
                         'user_id',
                         'role_applied',
                         'status',
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $this->assertTrue($response['success']);

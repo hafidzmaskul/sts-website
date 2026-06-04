@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Setting;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\QuoteBuilder;
-use App\Models\Customer;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -40,13 +40,13 @@ class AdminEmailVerificationTest extends TestCase
             'returnReason' => 'Defective',
             'returnType' => 'Refund',
             'comments' => 'It is broken.',
-            'proofOfPurchase' => \Illuminate\Http\UploadedFile::fake()->create('invoice.pdf', 100)
+            'proofOfPurchase' => \Illuminate\Http\UploadedFile::fake()->create('invoice.pdf', 100),
         ]);
 
         // If 401, debug why actingAs isn't working or middleware is strict
         if ($response->status() === 401) {
             // For debugging purposes only
-            fwrite(STDERR, "RMA 401 Response: " . $response->getContent() . "\n");
+            fwrite(STDERR, 'RMA 401 Response: '.$response->getContent()."\n");
         }
 
         $response->assertStatus(201);
@@ -62,7 +62,7 @@ class AdminEmailVerificationTest extends TestCase
             ->andReturn(true);
 
         $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/feedback', [
-            'message' => 'Great website!'
+            'message' => 'Great website!',
         ]);
 
         $response->assertStatus(201);
@@ -75,7 +75,7 @@ class AdminEmailVerificationTest extends TestCase
             ->andReturn(true);
 
         $response = $this->postJson('/api/newsletter-subscription', [
-            'email' => 'newsubscriber@example.com'
+            'email' => 'newsubscriber@example.com',
         ]);
 
         $response->assertStatus(201);
@@ -88,7 +88,7 @@ class AdminEmailVerificationTest extends TestCase
             ->andReturn(true);
 
         // Manual product creation if factory doesn't exist
-        $product = new Product();
+        $product = new Product;
         $product->title = 'Test Product';
         $product->slug = 'test-product';
         $product->base_price = 100;
@@ -105,8 +105,6 @@ class AdminEmailVerificationTest extends TestCase
         $response->assertStatus(201);
     }
 
-
-
     public function test_contact_submission_sends_email()
     {
         Mail::shouldReceive('raw')
@@ -118,7 +116,7 @@ class AdminEmailVerificationTest extends TestCase
             'last_name' => 'Doe',
             'email' => 'john@example.com',
             'subject' => 'Inquiry',
-            'message' => 'Hello there.'
+            'message' => 'Hello there.',
         ]);
 
         $response->assertStatus(201);
@@ -160,7 +158,7 @@ class AdminEmailVerificationTest extends TestCase
         // Create a customer profile for the user
         $customer = Customer::factory()->create(['user_id' => $this->user->id]);
 
-        $product = new Product();
+        $product = new Product;
         $product->title = 'Test Product';
         $product->slug = 'test-product';
         $product->base_price = 100;
@@ -181,12 +179,12 @@ class AdminEmailVerificationTest extends TestCase
             'shipping_payment_method' => 'Credit Card',
             'total_amount' => 115.50,
             'quantity' => 1,
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
 
         // If status is 400, it might be total mismatch
         if ($response->status() === 400) {
-            fwrite(STDERR, "Transaction 400 Response: " . $response->getContent() . "\n");
+            fwrite(STDERR, 'Transaction 400 Response: '.$response->getContent()."\n");
         }
 
         $response->assertStatus(201);

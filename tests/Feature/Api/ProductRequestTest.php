@@ -80,5 +80,4 @@ class ProductRequestTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['product_id']);
     }
-
 }
