@@ -49,7 +49,7 @@ class IndexTest extends TestCase
         Livewire::actingAs($admin)
             ->test(Index::class)
             ->assertViewHas('customers', function ($customers) use ($guestCustomer, $regularCustomer) {
-                return !$customers->contains($guestCustomer) && $customers->contains($regularCustomer);
+                return ! $customers->contains($guestCustomer) && $customers->contains($regularCustomer);
             });
     }
 }

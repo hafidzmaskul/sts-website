@@ -23,7 +23,7 @@ class ProductLikeController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $products
+            'data' => $products,
         ]);
     }
 
@@ -39,7 +39,7 @@ class ProductLikeController extends Controller
         $productId = $request->input('product_id');
         $user = $request->user();
 
-        if (!$user->likedProducts()->where('product_id', $productId)->exists()) {
+        if (! $user->likedProducts()->where('product_id', $productId)->exists()) {
             $user->likedProducts()->attach($productId);
         }
 
@@ -47,8 +47,8 @@ class ProductLikeController extends Controller
             'success' => true,
             'message' => 'Product liked successfully',
             'data' => [
-                'liked' => true
-            ]
+                'liked' => true,
+            ],
         ]);
     }
 
@@ -72,8 +72,8 @@ class ProductLikeController extends Controller
             'success' => true,
             'message' => 'Product unliked successfully',
             'data' => [
-                'liked' => false
-            ]
+                'liked' => false,
+            ],
         ]);
     }
 }

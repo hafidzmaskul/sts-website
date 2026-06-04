@@ -49,7 +49,7 @@ class ContactSubmissionController extends Controller
 
         } catch (\Exception $e) {
             // Handle potential database errors
-            Log::error('Contact Submission Error: ' . $e->getMessage());
+            Log::error('Contact Submission Error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -69,28 +69,28 @@ class ContactSubmissionController extends Controller
         // Fallback to .env mail_from_address if setting is missing
         $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-        if (!$adminEmail) {
+        if (! $adminEmail) {
             return;
         }
 
-        $fullName = $submission->first_name . ' ' . $submission->last_name;
+        $fullName = $submission->first_name.' '.$submission->last_name;
 
         // Construct Email Body
         $emailBody = implode("\n", [
-            "New Contact Form Submission",
-            "===========================",
-            "",
-            "Name: " . $fullName,
-            "Email: " . $submission->email,
-            "Phone: " . ($submission->phone ?? 'N/A'),
-            "Subject: " . $submission->subject,
-            "",
-            "Message:",
-            "---------------------------",
+            'New Contact Form Submission',
+            '===========================',
+            '',
+            'Name: '.$fullName,
+            'Email: '.$submission->email,
+            'Phone: '.($submission->phone ?? 'N/A'),
+            'Subject: '.$submission->subject,
+            '',
+            'Message:',
+            '---------------------------',
             $submission->message,
-            "---------------------------",
-            "",
-            "Received at: " . $submission->created_at->format('Y-m-d H:i:s'),
+            '---------------------------',
+            '',
+            'Received at: '.$submission->created_at->format('Y-m-d H:i:s'),
         ]);
 
         // Send Email
@@ -98,11 +98,11 @@ class ContactSubmissionController extends Controller
             Mail::raw($emailBody, function ($m) use ($adminEmail, $submission, $fullName) {
                 $m->to($adminEmail)
                     ->replyTo($submission->email, $fullName) // Allow admin to reply directly to user
-                    ->subject('New Contact: ' . $submission->subject);
+                    ->subject('New Contact: '.$submission->subject);
             });
         } catch (\Throwable $e) {
             // Log email failure but don't fail the request
-            Log::error('Failed to send contact notification email: ' . $e->getMessage());
+            Log::error('Failed to send contact notification email: '.$e->getMessage());
         }
     }
 }

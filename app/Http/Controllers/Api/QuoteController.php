@@ -28,7 +28,7 @@ class QuoteController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -39,21 +39,21 @@ class QuoteController extends Controller
             $adminEmailSetting = \App\Models\Setting::where('key', 'email_notification_admin')->first();
             $adminEmail = $adminEmailSetting ? $adminEmailSetting->value : config('mail.from.address');
 
-            if (!$adminEmail) {
+            if (! $adminEmail) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Quote submitted successfully',
-                    'data' => $quote
+                    'data' => $quote,
                 ], 201);
             }
 
             $subject = 'New Quote Submission';
-            $message = "You have received a new quote submission.\n\n" .
-                "Name: {$quote->first_name} {$quote->last_name}\n" .
-                "Company: {$quote->company_name}\n" .
-                "Email: {$quote->email}\n" .
-                "Phone: {$quote->phone}\n" .
-                "Country: {$quote->country}\n" .
+            $message = "You have received a new quote submission.\n\n".
+                "Name: {$quote->first_name} {$quote->last_name}\n".
+                "Company: {$quote->company_name}\n".
+                "Email: {$quote->email}\n".
+                "Phone: {$quote->phone}\n".
+                "Country: {$quote->country}\n".
                 "Project Details:\n{$quote->project_details}\n\n";
             // "View in Admin Panel: " . route('admin.quotes.show', $quote); // Route naming might differ
 
@@ -63,20 +63,20 @@ class QuoteController extends Controller
                         ->subject($subject);
                 });
             } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::error("Failed to send quote email: " . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error('Failed to send quote email: '.$e->getMessage());
             }
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Quote submitted successfully',
-                'data' => $quote
+                'data' => $quote,
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to submit quote',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

@@ -67,7 +67,7 @@ class Coupon extends Model
      */
     public function isEligibleFor(User $user): bool
     {
-        if (!$this->isValid()) {
+        if (! $this->isValid()) {
             return false;
         }
 
@@ -75,6 +75,7 @@ class Coupon extends Model
             if (method_exists($user, 'hasRole')) {
                 return $user->hasRole($this->role_level);
             }
+
             return false;
         } elseif ($this->restriction_type === 'specific_user') {
             return $this->users()->where('users.id', $user->id)->exists();

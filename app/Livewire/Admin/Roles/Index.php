@@ -1,21 +1,24 @@
 <?php
 
-
 namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class Index extends Component
 {
     use WithPagination;
 
     public string $search = '';
+
     public bool $showForm = false;
+
     public ?int $editingId = null;
+
     public string $name = '';
+
     public array $selectedPermissions = [];
 
     protected $rules = [
@@ -43,12 +46,13 @@ class Index extends Component
 
         if ($this->isFixedRole($role->name)) {
             $this->dispatch('notify', type: 'error', message: 'This role cannot be modified.');
+
             return;
         }
 
         $this->editingId = $role->id;
         $this->name = $role->name;
-        $this->selectedPermissions = $role->permissions()->pluck('id')->map(fn($v) => (int) $v)->toArray();
+        $this->selectedPermissions = $role->permissions()->pluck('id')->map(fn ($v) => (int) $v)->toArray();
         $this->showForm = true;
     }
 
@@ -61,6 +65,7 @@ class Index extends Component
             $role = Role::findOrFail($this->editingId);
             if ($this->isFixedRole($role->name)) {
                 $this->dispatch('notify', type: 'error', message: 'This role cannot be modified.');
+
                 return;
             }
         } else {
@@ -87,13 +92,15 @@ class Index extends Component
 
         if ($this->isFixedRole($role->name)) {
             $this->dispatch('notify', type: 'error', message: 'This role cannot be deleted.');
+
             return;
         }
 
         $role->delete();
         $this->dispatch('notify', type: 'success', message: 'Role deleted.');
-        if ($this->editingId === $id)
+        if ($this->editingId === $id) {
             $this->resetForm();
+        }
     }
 
     protected function isFixedRole(string $name): bool
@@ -112,11 +119,12 @@ class Index extends Component
     {
         $this->authorize('roles.view');
         $roles = Role::query()
-            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->orderBy('name')
             ->paginate(10);
 
         $permissions = Permission::orderBy('name')->get(['id', 'name']);
+
         return view('livewire.admin.roles.index', compact('roles', 'permissions'))
             ->title('Role Management');
     }

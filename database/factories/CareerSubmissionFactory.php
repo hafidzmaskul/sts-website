@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\CareerSubmission;
 use App\Models\Career;
+use App\Models\CareerSubmission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CareerSubmissionFactory extends Factory

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Career;
+use App\Models\News;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Product;
-use App\Models\News;
-use App\Models\Career;
 
 class SitemapTest extends TestCase
 {
@@ -25,7 +25,7 @@ class SitemapTest extends TestCase
         // Create dummy content
         $user = \App\Models\User::factory()->create();
 
-        $product = new Product();
+        $product = new Product;
         $product->title = 'Test Product';
         $product->slug = 'test-product';
         $product->base_price = 100;

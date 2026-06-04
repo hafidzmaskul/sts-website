@@ -20,7 +20,7 @@ class Show extends Component
     public function render()
     {
         return view('livewire.admin.abandoned-carts.show', [
-            'cartItems' => $this->user->cartItems
+            'cartItems' => $this->user->cartItems,
         ])->title('Abandoned Cart Details');
     }
 

@@ -11,9 +11,13 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $status = '';
+
     public string $statusReview = '';
+
     public string $role = '';
+
     public string $isRegistered = '';
 
     public function updatingSearch()
@@ -55,14 +59,14 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->whereHas('user', function ($u) {
-                        $u->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                        $u->where('name', 'like', '%'.$this->search.'%')
+                            ->orWhere('email', 'like', '%'.$this->search.'%');
                     });
-                    $q->orWhere('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('phone', 'like', '%' . $this->search . '%')
-                        ->orWhere('city', 'like', '%' . $this->search . '%');
+                    $q->orWhere('first_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('email', 'like', '%'.$this->search.'%')
+                        ->orWhere('phone', 'like', '%'.$this->search.'%')
+                        ->orWhere('city', 'like', '%'.$this->search.'%');
                 });
             })
             ->when($this->status, function ($query) {

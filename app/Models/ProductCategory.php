@@ -21,9 +21,8 @@ class ProductCategory extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image_path ? url('storage/' . $this->image_path) : null;
+        return $this->image_path ? url('storage/'.$this->image_path) : null;
     }
-
 
     public function parent()
     {

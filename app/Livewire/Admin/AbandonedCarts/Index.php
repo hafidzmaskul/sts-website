@@ -15,7 +15,6 @@ class Index extends Component
     public function render()
     {
 
-
         // Calculate totals manually or via query if needed, but for now simple display
         // Actually, the requirement says "Total Product in Carts".
         // simple `withCount` gives number of rows.
@@ -26,12 +25,11 @@ class Index extends Component
             ->withSum('cartItems', 'quantity')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                    $q->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('email', 'like', '%'.$this->search.'%');
                 });
             })
             ->paginate(10);
-
 
         return view('livewire.admin.abandoned-carts.index', [
             'users' => $users,

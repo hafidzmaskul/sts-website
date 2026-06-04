@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\User;
 use App\Models\Customer;
 use App\Models\Transaction;
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);

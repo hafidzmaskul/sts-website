@@ -16,17 +16,17 @@ class Index extends Component
     {
         $feedbacks = Feedback::with('user')
             ->when($this->search, function ($query) {
-                $query->where('message', 'like', '%' . $this->search . '%')
+                $query->where('message', 'like', '%'.$this->search.'%')
                     ->orWhereHas('user', function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                        $q->where('name', 'like', '%'.$this->search.'%')
+                            ->orWhere('email', 'like', '%'.$this->search.'%');
                     });
             })
             ->latest()
             ->paginate(10);
 
         return view('livewire.admin.feedback.index', [
-            'feedbacks' => $feedbacks
+            'feedbacks' => $feedbacks,
         ]);
     }
 }

@@ -16,7 +16,7 @@ class Show extends Component
             'images' => function ($query) {
                 $query->orderBy('sequence');
             },
-            'attachments'
+            'attachments',
         ]);
     }
 

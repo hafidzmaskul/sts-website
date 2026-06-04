@@ -14,7 +14,7 @@ class ShippingAddressController extends Controller
     {
         $customer = $request->user()->customer;
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json(['message' => 'Customer profile not found.'], 404);
         }
 
@@ -28,7 +28,7 @@ class ShippingAddressController extends Controller
     {
         $customer = $request->user()->customer;
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json(['message' => 'Customer profile not found.'], 404);
         }
 
@@ -53,13 +53,13 @@ class ShippingAddressController extends Controller
     {
         $customer = $request->user()->customer;
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json(['message' => 'Customer profile not found.'], 404);
         }
 
         $shippingAddress = $customer->shippingAddresses()->find($id);
 
-        if (!$shippingAddress) {
+        if (! $shippingAddress) {
             return response()->json(['message' => 'Shipping address not found.'], 404);
         }
 
@@ -73,13 +73,13 @@ class ShippingAddressController extends Controller
     {
         $customer = $request->user()->customer;
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json(['message' => 'Customer profile not found.'], 404);
         }
 
         $shippingAddress = $customer->shippingAddresses()->find($id);
 
-        if (!$shippingAddress) {
+        if (! $shippingAddress) {
             return response()->json(['message' => 'Shipping address not found.'], 404);
         }
 
@@ -104,13 +104,13 @@ class ShippingAddressController extends Controller
     {
         $customer = $request->user()->customer;
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json(['message' => 'Customer profile not found.'], 404);
         }
 
         $shippingAddress = $customer->shippingAddresses()->find($id);
 
-        if (!$shippingAddress) {
+        if (! $shippingAddress) {
             return response()->json(['message' => 'Shipping address not found.'], 404);
         }
 

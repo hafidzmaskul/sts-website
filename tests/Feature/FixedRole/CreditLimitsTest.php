@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\FixedRole;
 
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-use App\Models\Customer;
 use App\Models\Company;
 use App\Models\CreditLimit;
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CreditLimitsTest extends TestCase
@@ -20,10 +20,10 @@ class CreditLimitsTest extends TestCase
         parent::setUp();
 
         // Ensure roles exist
-        if (!Role::where('name', 'credit facilities account')->exists()) {
+        if (! Role::where('name', 'credit facilities account')->exists()) {
             Role::create(['name' => 'credit facilities account']);
         }
-        if (!Role::where('name', 'trade account')->exists()) {
+        if (! Role::where('name', 'trade account')->exists()) {
             Role::create(['name' => 'trade account']);
         }
     }

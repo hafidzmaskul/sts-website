@@ -2,14 +2,12 @@
 
 namespace App\Livewire\Admin\Customers;
 
-use App\Models\User;
 use App\Models\Customer;
-use Livewire\Component;
-use Illuminate\Validation\Rule;
-
 use App\Models\PricingFormula;
-
+use App\Models\User;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Title('Edit Customer')]
 class Edit extends Component
@@ -17,13 +15,21 @@ class Edit extends Component
     public User $user;
 
     public $name;
+
     public $email;
+
     public $phone;
+
     public $address;
+
     public $city;
+
     public $postal_code;
+
     public $country;
+
     public $status;
+
     public $pricing_formula_id;
 
     public function mount(User $user)

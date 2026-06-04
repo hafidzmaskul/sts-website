@@ -20,7 +20,7 @@ class AuthController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'postal_code' => 'nullable|string',
@@ -29,7 +29,7 @@ class AuthController extends Controller
         ]);
 
         $user->update([
-            'name' => $request->first_name . ' ' . $request->last_name,
+            'name' => $request->first_name.' '.$request->last_name,
             'email' => $request->email,
         ]);
 
@@ -46,6 +46,7 @@ class AuthController extends Controller
 
         return $this->me($request);
     }
+
     /**
      * Handle a login request.
      */
@@ -59,7 +60,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -88,7 +89,6 @@ class AuthController extends Controller
         ]);
     }
 
-
     /**
      * Get the authenticated user.
      */
@@ -111,7 +111,6 @@ class AuthController extends Controller
         ]);
     }
 
-
     /**
      * Send OTP for password reset.
      */
@@ -122,7 +121,7 @@ class AuthController extends Controller
         ]);
 
         $otp = rand(100000, 999999);
-        $key = 'password_reset_otp_' . $request->email;
+        $key = 'password_reset_otp_'.$request->email;
 
         // Store OTP in cache for 10 minutes
         \Illuminate\Support\Facades\Cache::put($key, $otp, 600);
@@ -146,10 +145,10 @@ class AuthController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $key = 'password_reset_otp_' . $request->email;
+        $key = 'password_reset_otp_'.$request->email;
         $cachedOtp = \Illuminate\Support\Facades\Cache::get($key);
 
-        if ($request->otp != '123456' && (!$cachedOtp || $cachedOtp != $request->otp)) {
+        if ($request->otp != '123456' && (! $cachedOtp || $cachedOtp != $request->otp)) {
             throw ValidationException::withMessages([
                 'otp' => ['The OTP is invalid or has expired.'],
             ]);
@@ -180,7 +179,7 @@ class AuthController extends Controller
 
         $user = $request->user();
 
-        if (!Hash::check($request->old_password, $user->password)) {
+        if (! Hash::check($request->old_password, $user->password)) {
             throw ValidationException::withMessages([
                 'old_password' => ['The provided password does not match your current password.'],
             ]);
@@ -195,4 +194,3 @@ class AuthController extends Controller
         ]);
     }
 }
-

@@ -3,9 +3,9 @@
 namespace App\Livewire\Admin\Newsletter;
 
 use App\Models\NewsletterSubscription;
+use Illuminate\Support\Facades\Response;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Response;
 
 class Index extends Component
 {
@@ -33,7 +33,7 @@ class Index extends Component
 
         $subscriptions = NewsletterSubscription::query()
             ->when($this->search, function ($query) {
-                $query->where('email', 'like', '%' . $this->search . '%');
+                $query->where('email', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->get();
@@ -69,7 +69,7 @@ class Index extends Component
 
         $subscriptions = NewsletterSubscription::query()
             ->when($this->search, function ($query) {
-                $query->where('email', 'like', '%' . $this->search . '%');
+                $query->where('email', 'like', '%'.$this->search.'%');
             })
             ->orderByDesc('created_at')
             ->paginate(10);

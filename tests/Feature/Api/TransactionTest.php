@@ -2,26 +2,25 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Product;
-use App\Models\User;
-use App\Models\Customer;
 use App\Models\Brand;
+use App\Models\Customer;
+use App\Models\Product;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Spatie\Permission\Models\Role;
-use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class TransactionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         // Seed roles if necessary or just create the one we need
-        if (!Role::where('name', 'customer')->exists()) {
+        if (! Role::where('name', 'customer')->exists()) {
             Role::create(['name' => 'customer']);
         }
 
@@ -81,7 +80,7 @@ class TransactionTest extends TestCase
         $token = $user->createToken('test-token')->plainTextToken;
 
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ])->postJson('/api/transactions', $data);
 
         $response->assertStatus(201)

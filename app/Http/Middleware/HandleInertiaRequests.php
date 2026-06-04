@@ -37,9 +37,10 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = Auth::user();
+
         return [
             ...parent::share($request),
-            'logged' => $user && !$user->hasRole('guest'),
+            'logged' => $user && ! $user->hasRole('guest'),
             'is_guest' => $user && $user->hasRole('guest'),
             'auth' => $user ? $user->load(['customer.company', 'roles']) : null,
             'productCategories' => \App\Models\ProductCategory::with('children')->whereNull('parent_id')->get(),

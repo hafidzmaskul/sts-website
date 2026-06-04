@@ -12,9 +12,9 @@ class UploadController extends Controller
         if ($request->hasFile('file')) {
             // Store in 'public/editor'
             $path = $request->file('file')->store('editor', 'public');
-            
+
             // TinyMCE expects this specific JSON format: { location: "url" }
-            return response()->json(['location' => url('storage/' . $path)]);
+            return response()->json(['location' => url('storage/'.$path)]);
         }
 
         return response()->json(['error' => 'No file uploaded'], 400);

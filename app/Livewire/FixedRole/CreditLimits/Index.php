@@ -16,7 +16,7 @@ class Index extends Component
         $user = Auth::user();
 
         // Ensure user has correct role (double check, though middleware should handle)
-        if (!$user->hasRole('credit facilities account')) {
+        if (! $user->hasRole('credit facilities account')) {
             abort(403, 'Unauthorized');
         }
 
@@ -36,7 +36,7 @@ class Index extends Component
 
             $currentBalance = $latestLimit ? $latestLimit->balance : 0;
         } else {
-            // Handle case where user has role but no company attached? 
+            // Handle case where user has role but no company attached?
             // Should ideally not happen data-wise but good safeguard.
             $creditLimits = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
         }

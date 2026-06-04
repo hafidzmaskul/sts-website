@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -93,7 +93,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'brands.edit',
             'brands.delete',
 
-
             // 11. Careers (New)
             'careers.view',
             'careers.create',
@@ -148,7 +147,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'guest',
             'trade account',
             'credit facilities account',
-            'child'
+            'child',
         ];
 
         foreach ($fixedRoles as $roleName) {

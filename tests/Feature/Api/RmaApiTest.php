@@ -23,7 +23,7 @@ test('it can submit rma request with valid data', function () {
         'comments' => 'Please hurry',
         'proofOfPurchase' => $file,
     ], [
-        'Authorization' => 'Bearer ' . $token,
+        'Authorization' => 'Bearer '.$token,
     ]);
 
     $response->assertStatus(201)
@@ -47,7 +47,7 @@ test('it fails validation when required fields are missing', function () {
     $token = $user->createToken('test-token')->plainTextToken;
 
     $response = $this->postJson('/api/rma-requests', [], [
-        'Authorization' => 'Bearer ' . $token,
+        'Authorization' => 'Bearer '.$token,
     ]);
 
     $response->assertStatus(422)

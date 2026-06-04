@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Admin\Settings;
 
-use Livewire\Component;
-
 use App\Models\Setting;
 use Livewire\Attributes\Title;
-
+use Livewire\Component;
 use Livewire\WithFileUploads;
 
 #[Title('General Settings')]
@@ -16,13 +14,21 @@ class General extends Component
 
     // Mail Settings
     public $mail_mailer;
+
     public $mail_scheme;
+
     public $mail_host;
+
     public $mail_port;
+
     public $mail_username;
+
     public $mail_password;
+
     public $mail_encryption;
+
     public $mail_from_address;
+
     public $mail_from_name;
 
     // Email Notification Settings
@@ -33,52 +39,83 @@ class General extends Component
 
     // SEO Settings
     public $seo_meta_title;
+
     public $seo_meta_description;
+
     public $seo_share_image;
+
     public $seo_share_image_path;
+
     public $seo_canonical_url;
+
     public $seo_schema_enabled = false;
 
     // Integration Settings
     public $integration_ga_measurement_id;
+
     public $integration_gtm_container_id;
+
     public $integration_custom_script_header;
+
     public $integration_custom_script_footer;
 
     // Site Information
     public $site_title;
+
     public $site_logo;
+
     public $site_logo_path;
+
     public $contact_name;
+
     public $contact_email;
+
     public $contact_phone;
+
     public $contact_address;
 
     // Payment Methods
     public $payment_method_1_name;
+
     public $payment_method_1_desc;
+
     public $payment_method_1_icon;
+
     public $payment_method_1_icon_path;
 
     public $payment_method_2_name;
+
     public $payment_method_2_desc;
+
     public $payment_method_2_icon;
+
     public $payment_method_2_icon_path;
 
     public $payment_method_3_name;
+
     public $payment_method_3_desc;
+
     public $payment_method_3_icon;
+
     public $payment_method_3_icon_path;
 
     // Shipping Settings
     public $shipping_method_1_name;
+
     public $shipping_method_1_desc;
+
     public $shipping_method_1_price;
+
     public $shipping_method_2_name;
+
     public $shipping_method_2_desc;
+
     public $shipping_method_2_price;
+
     public $shipping_method_3_name;
+
     public $shipping_method_3_desc;
+
     public $shipping_method_3_price;
 
     // Tax Settings
@@ -290,7 +327,7 @@ class General extends Component
 
         $this->dispatch('modal-close', name: 'shipping-settings');
         $this->dispatch('notify', message: 'Shipping settings updated successfully.');
-        // If Flux listens to specific event, maybe 'flux:close'? 
+        // If Flux listens to specific event, maybe 'flux:close'?
         // Let's keep 'close-modal' and fix the listener.
     }
 
@@ -323,12 +360,15 @@ class General extends Component
         }
 
         // Also update local paths so UI updates immediately without refresh (optional but good UX)
-        if ($this->payment_method_1_icon)
+        if ($this->payment_method_1_icon) {
             $this->payment_method_1_icon_path = $settings['payment_method_1_icon'];
-        if ($this->payment_method_2_icon)
+        }
+        if ($this->payment_method_2_icon) {
             $this->payment_method_2_icon_path = $settings['payment_method_2_icon'];
-        if ($this->payment_method_3_icon)
+        }
+        if ($this->payment_method_3_icon) {
             $this->payment_method_3_icon_path = $settings['payment_method_3_icon'];
+        }
 
         // Reset inputs
         $this->payment_method_1_icon = null;

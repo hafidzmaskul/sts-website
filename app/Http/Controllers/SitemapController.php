@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Career;
 use App\Models\News;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 

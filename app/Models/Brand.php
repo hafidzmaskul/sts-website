@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
@@ -24,7 +24,7 @@ class Brand extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image ? url('storage/' . $this->image) : null;
+        return $this->image ? url('storage/'.$this->image) : null;
     }
 
     protected $casts = [

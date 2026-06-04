@@ -10,9 +10,13 @@ use Livewire\Component;
 class Create extends Component
 {
     public string $label = '';
+
     public ?float $margin = null;
+
     public ?float $markup = null;
+
     public ?float $discount = null;
+
     public array $brand_ids = [];
 
     public function save()
@@ -36,7 +40,7 @@ class Create extends Component
             'discount' => $this->discount === '' ? null : $this->discount,
         ]);
 
-        if (!empty($this->brand_ids)) {
+        if (! empty($this->brand_ids)) {
             Brand::whereIn('id', $this->brand_ids)->update(['pricing_formula_id' => $formula->id]);
         }
 

@@ -3,15 +3,13 @@
 namespace App\Livewire\Admin\Brands;
 
 use App\Models\Brand;
+use App\Models\PricingFormula;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
-
-use App\Models\PricingFormula;
-
-use Livewire\Attributes\Title;
 
 #[Title('Edit Brand')]
 class Edit extends Component
@@ -21,13 +19,21 @@ class Edit extends Component
     public Brand $brand;
 
     public $name = '';
+
     public $slug = '';
+
     public $image; // New image
+
     public $existingImage; // Old image
+
     public $description = '';
+
     public $website = '';
+
     public $is_active = true;
+
     public $sort_order = 0;
+
     public $pricing_formula_id = null;
 
     public function mount(Brand $brand)

@@ -5,12 +5,12 @@ namespace Tests\Feature\Admin;
 use App\Livewire\Admin\Companies\Show;
 use App\Models\Company;
 use App\Models\Customer;
-use App\Models\User;
 use App\Models\MonthlyCreditLimit;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CompanyMonthlyCreditLimitTest extends TestCase
@@ -110,4 +110,3 @@ class CompanyMonthlyCreditLimitTest extends TestCase
         $this->assertEquals(1000, $limits->last()->amount);
     }
 }
-

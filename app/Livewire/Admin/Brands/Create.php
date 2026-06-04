@@ -3,13 +3,11 @@
 namespace App\Livewire\Admin\Brands;
 
 use App\Models\Brand;
+use App\Models\PricingFormula;
+use Illuminate\Support\Str;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-
-use App\Models\PricingFormula;
-
-use Livewire\Attributes\Title;
 
 #[Title('Create Brand')]
 class Create extends Component
@@ -17,12 +15,19 @@ class Create extends Component
     use WithFileUploads;
 
     public $name = '';
+
     public $slug = '';
+
     public $image;
+
     public $description = '';
+
     public $website = '';
+
     public $is_active = true;
+
     public $sort_order = 0;
+
     public $pricing_formula_id = null;
 
     public function updatedName($value)

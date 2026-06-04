@@ -9,13 +9,9 @@ use App\Models\Brand;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\ProductCategory;
-use App\Models\QuoteBuilder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-
-use function Livewire\Volt\with;
 
 class PageController
 {
@@ -36,6 +32,7 @@ class PageController
             // Ambil image_path dari gambar dengan sequence == 1 (atau null jika tidak ada)
             $mainImage = $product->images->firstWhere('sequence', 1);
             $product->images = $mainImage ? $mainImage->image_path : null;
+
             return $product;
         });
         $categories = ProductCategory::withCount('products')
@@ -43,21 +40,22 @@ class PageController
             ->orderByDesc('products_count')
             ->get();
 
-
-        $brand =  Brand::get(); //is_active
+        $brand = Brand::get(); // is_active
         $user = Auth::user()?->load('likedProducts');
+
         return Inertia::render('Landing', [
             'banners' => $banners,
             'featured' => $featured,
             'categories' => $categories,
             'brand' => $brand,
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
     public function services(): Response
     {
         $articles = News::with('categories')->where('status', 'Published')->get();
+
         return Inertia::render('Service', [
             'services' => $articles,
 
@@ -116,7 +114,7 @@ class PageController
 
         return Inertia::render('News', [
             'news' => $news,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -138,15 +136,15 @@ class PageController
 
     public function products(): Response
     {
-        $products =  Product::with('images')->with('categories')->get();
-        $baseProducts =  Product::with('images')->get();
+        $products = Product::with('images')->with('categories')->get();
+        $baseProducts = Product::with('images')->get();
         $productCategory = ProductCategory::with('children')->whereNull('parent_id')->get();
+
         // $categories =
         return Inertia::render('Products', [
             'products' => $products,
             'baseProducts' => $baseProducts,
             'productCategory' => $productCategory,
-
 
         ]);
     }
@@ -163,7 +161,6 @@ class PageController
         return Inertia::render('ProductDetail', [
             'product' => $product,
             'products' => $relatedProducts,
-
 
         ]);
     }
@@ -191,35 +188,41 @@ class PageController
         return Inertia::render('BecomeCustomer');
     }
 
-
     public function signUpCustomer()
     {
         return Inertia::render('SignUpCustomer');
     }
+
     public function signUpFacility()
     {
         return Inertia::render('SignUpCrediFacilities');
     }
+
     public function signUp()
     {
         return Inertia::render('SignUp');
     }
+
     public function contactUs()
     {
         return Inertia::render('ContactUs');
     }
+
     public function training()
     {
         return Inertia::render('Training');
     }
+
     public function commisioning()
     {
         return Inertia::render('Commisioning');
     }
+
     public function systemDesign()
     {
         return Inertia::render('SystemDesign');
     }
+
     public function login()
     {
         return Inertia::render('Login');
@@ -230,17 +233,18 @@ class PageController
 
         return Inertia::render('QuoteBuilder');
     }
+
     public function invoice()
     {
         return Inertia::render('Invoice');
     }
 
-
     public function checkout()
     {
         $auth = Auth::user()->load(['customer.company', 'roles']);
+
         return Inertia::render('Checkout', [
-            'auth' => $auth
+            'auth' => $auth,
         ]);
     }
 
@@ -262,7 +266,7 @@ class PageController
 
         return Inertia::render('SearchResults', [
             'products' => $products,
-            'query' => $query
+            'query' => $query,
         ]);
     }
 }

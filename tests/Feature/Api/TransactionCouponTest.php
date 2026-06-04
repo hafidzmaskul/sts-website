@@ -14,11 +14,11 @@ class TransactionCouponTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        if (!Role::where('name', 'customer')->exists()) {
+        if (! Role::where('name', 'customer')->exists()) {
             Role::create(['name' => 'customer']);
         }
     }
@@ -64,7 +64,7 @@ class TransactionCouponTest extends TestCase
         $token = $user->createToken('test-token')->plainTextToken;
 
         // 5. Test List API
-        $responseList = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $responseList = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->getJson('/api/transactions');
 
         $responseList->assertStatus(200);
@@ -81,15 +81,15 @@ class TransactionCouponTest extends TestCase
                         'name',
                         'discount_value',
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->assertEquals($coupon->code, $responseList->json('data.0.saved_coupon.code'));
 
         // 6. Test Detail API
-        $responseDetail = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->getJson('/api/transactions/' . $transaction->id);
+        $responseDetail = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->getJson('/api/transactions/'.$transaction->id);
 
         $responseDetail->assertStatus(200);
         $responseDetail->assertJsonStructure([
@@ -102,7 +102,7 @@ class TransactionCouponTest extends TestCase
                     'name',
                     'discount_value',
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals($coupon->code, $responseDetail->json('data.saved_coupon.code'));
@@ -138,8 +138,8 @@ class TransactionCouponTest extends TestCase
         $token = $user->createToken('test-token')->plainTextToken;
 
         // 4. Test Detail API
-        $responseDetail = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->getJson('/api/transactions/' . $transaction->id);
+        $responseDetail = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->getJson('/api/transactions/'.$transaction->id);
 
         $responseDetail->assertStatus(200);
 
@@ -184,7 +184,7 @@ class TransactionCouponTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 1,
             'contact_email' => $user->email,
-            'total_amount' => 80000, // 20% off 100k = 80k. Assuming tax/shipping 0 for this test context or we simple-math it? 
+            'total_amount' => 80000, // 20% off 100k = 80k. Assuming tax/shipping 0 for this test context or we simple-math it?
             // Logic in controller adds shipping/tax. Let's provide necessary fields to validate totals.
             // We'll mock Settings in Test Case setUp or rely on default 0 if not seeded.
             // Controller checks total amount match.
@@ -193,12 +193,12 @@ class TransactionCouponTest extends TestCase
             // But we want to test "store" logic saving the data. So we DO need to hit the store API.
         ];
 
-        // Actually, let's just create the Transaction manually with coupon_data populated, 
+        // Actually, let's just create the Transaction manually with coupon_data populated,
         // to test the READ part independently of the complex CREATE calculation.
         // Then we can assume the CREATE part works if we tested it separately or via coverage.
         // Wait, the user wants us to implement the saving logic too.
 
-        // Let's manually create a transaction with coupon_data set, 
+        // Let's manually create a transaction with coupon_data set,
         // delete the coupon, and verify the API still returns the data.
 
         $couponSnapshot = [
@@ -224,8 +224,8 @@ class TransactionCouponTest extends TestCase
         $coupon->delete();
 
         // 5. Call API
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->getJson('/api/transactions/' . $transaction->id);
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->getJson('/api/transactions/'.$transaction->id);
 
         $response->assertStatus(200);
         $this->assertEquals('HISTORY', $response->json('data.saved_coupon.code'));

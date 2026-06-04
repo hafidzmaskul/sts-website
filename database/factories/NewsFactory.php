@@ -20,7 +20,7 @@ class NewsFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'slug' => $this->faker->unique()->slug(),
-            'content' => '<p>' . $this->faker->paragraph() . '</p>',
+            'content' => '<p>'.$this->faker->paragraph().'</p>',
             'image_path' => 'images/example.jpg',
             'status' => 'published',
             'created_by' => User::factory(),

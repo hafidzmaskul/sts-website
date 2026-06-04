@@ -1,13 +1,11 @@
 <?php
 
-use App\Models\User;
 use App\Models\Customer;
 use App\Models\Transaction;
-use Spatie\Permission\Models\Role;
-use Livewire\Livewire;
-use App\Models\Product;
-
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -76,7 +74,7 @@ test('trade account users can view transaction details', function () {
 
 test('transaction list filters and summary work', function () {
     // Ensure role exists
-    if (!Role::where('name', 'trade account')->exists()) {
+    if (! Role::where('name', 'trade account')->exists()) {
         Role::create(['name' => 'trade account']);
     }
 
