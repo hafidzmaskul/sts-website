@@ -96,10 +96,10 @@
                         wire:navigate
                         class="px-4 py-2 rounded-lg border text-black bg-white"
                     >Cancel</a>
-                    <button
-                        type="submit"
-                        class="px-4 py-2 rounded-lg bg-zinc-900 text-white transition-colors"
-                    >Save</button>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Save
+        </button>
                 </div>
             </form>
         </div>

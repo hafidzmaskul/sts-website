@@ -2,10 +2,10 @@
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-black">News Categories</h1>
         @can('news-categories.create')
-            <button wire:click="create"
-                class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">
-                + New Category
-            </button>
+            <button wire:click="create" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            New Category
+        </button>
         @endcan
     </div>
 
@@ -106,8 +106,10 @@
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" wire:click="cancel"
                         class="w-full md:w-auto border border-[#0079C2] px-4 py-2 rounded-lg text-[#0079C2] hover:cursor-pointer transition bg-white">Cancel</button>
-                    <button type="submit"
-                        class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:cursor-pointer transition">Save</button>
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Save
+        </button>
                 </div>
             </form>
         </div>
@@ -179,35 +181,21 @@
                                 </td>
                                 <!-- Actions -->
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <div class="flex justify-end gap-2">
+<div class="flex items-center justify-end gap-2">
+<div class="flex justify-end gap-2">
                                         @can('news-categories.edit')
-                                            <button wire:click="edit({{ $category->id }})"
-                                                class="p-2 rounded hover:bg-blue-50 text-black hover:text-blue-600 transition"
-                                                aria-label="Edit"
-                                                title="Edit"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                          d="M17.414 2.586a2 2 0 0 1 0 2.828l-9.193 9.193-3.515.439.438-3.515 9.192-9.193a2 2 0 0 1 2.83 0zm0 0L15 5m-7 12h10"/>
-                                                </svg>
-                                            </button>
+                                            <button wire:click="edit({{ $category->id }})" class="text-black hover:text-blue-600 transition-colors inline-flex" title="Edit">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
                                         @endcan
                                         @can('news-categories.delete')
-                                            <button
-                                                wire:confirm="Are you sure you want to delete this category?"
-                                                wire:click="delete({{ $category->id }})"
-                                                class="p-2 rounded hover:bg-red-50 text-black hover:text-red-600 transition"
-                                                aria-label="Delete"
-                                                title="Delete"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                        d="M6 8v8m4-8v8m4-10v10m-5-4h4m-1-4h5m-7-4h6.5a1 1 0 0 1 1 1V5m2 0a1 1 0 0 1 1 1v1M12.73 5l1.364-1.364a2 2 0 1 0-2.828-2.828L9.9 2.172"/>
-                                                </svg>
-                                            </button>
+                                            <button wire:confirm="Are you sure you want to delete this category?" wire:click="delete({{ $category->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
                                         @endcan
                                     </div>
-                                </td>
+</div>
+</td>
                             </tr>
                         @empty
                             <tr>

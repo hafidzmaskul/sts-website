@@ -61,10 +61,10 @@
                     class="px-4 py-2 rounded-lg border border-[#0079C2] text-[#0079C2] bg-transparent transition hover:bg-blue-50">
                     Cancel
                 </a>
-                <button type="submit"
-                    class="w-full md:w-auto bg-[#0079C2] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
-                    Create Formula
-                </button>
+                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Create Formula
+        </button>
             </div>
         </form>
     </div>

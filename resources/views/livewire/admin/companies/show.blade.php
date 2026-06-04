@@ -391,7 +391,7 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium text-black mb-2">Month</label>
-                <select wire:model="statementMonth" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 text-black">
+                <select wire:model="statementMonth" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-btn-primary-ring sm:text-sm py-2 px-3 text-black">
                     @foreach($this->months as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
@@ -400,7 +400,7 @@
             
             <div>
                 <label class="block text-sm font-medium text-black mb-2">Year</label>
-                <select wire:model="statementYear" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 text-black">
+                <select wire:model="statementYear" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-btn-primary-ring sm:text-sm py-2 px-3 text-black">
                     @foreach($this->years as $year)
                         <option value="{{ $year }}">{{ $year }}</option>
                     @endforeach

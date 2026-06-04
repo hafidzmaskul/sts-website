@@ -5,7 +5,7 @@
             <p class="text-sm text-black mt-1">Manage your catalog products</p>
         </div>
         <a href="{{ route('admin.products.create') }}"
-            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-btn-primary hover:bg-btn-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-btn-primary-ring transition-colors">
             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -24,7 +24,7 @@
                 </div>
                 <input type="text" wire:model.live.debounce.300ms="search"
                     placeholder="Search products by title, brand, or category..."
-                    class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white text-black placeholder-black focus:outline-none focus:placeholder-black focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white text-black placeholder-black focus:outline-none focus:placeholder-black focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm">
             </div>
         </div>
 

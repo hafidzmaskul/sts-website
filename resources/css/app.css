@@ -60,6 +60,11 @@
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
     --color-accent-foreground: var(--color-white);
+
+    /* Primary Button Colors (You can change these variables anytime) */
+    --color-btn-primary: #4f46e5; /* indigo-600 */
+    --color-btn-primary-hover: #4338ca; /* indigo-700 */
+    --color-btn-primary-ring: #6366f1; /* indigo-500 */
 }
 
 @layer theme {

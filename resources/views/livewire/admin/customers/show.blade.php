@@ -140,7 +140,7 @@
                     </h2>
                     @if($customer->company)
                         <a href="{{ route('admin.companies.show', $customer->company->id) }}"
-                            class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-full shadow-sm transition-colors">
+                            class="text-xs bg-btn-primary hover:bg-btn-primary-hover text-white px-3 py-1 rounded-full shadow-sm transition-colors">
                             View Company
                         </a>
                     @endif
@@ -463,7 +463,7 @@
                     <a href="{{ URL::signedRoute('admin.users.masquerade', ['userId' => $customer->user_id]) }}"
                         target="_blank"
                         onclick="return confirm('This will open in a new tab but may verify logs you out of Admin. Are you sure?')"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium">
+                        class="px-4 py-2 bg-btn-primary text-white rounded-lg hover:bg-btn-primary-hover text-sm font-medium">
                         Open Here Anyway
                     </a>
                 </div>
