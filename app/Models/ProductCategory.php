@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ProductCategory extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'slug',
         'parent_id',
+        'is_parent',
         'image_path',
         'seo_title',
         'seo_description',
@@ -20,6 +22,10 @@ class ProductCategory extends Model
     ];
 
     protected $appends = ['image_url'];
+
+    protected $casts = [
+        'is_parent' => 'boolean',
+    ];
 
     public function getImageUrlAttribute()
     {
@@ -31,9 +37,9 @@ class ProductCategory extends Model
         return $this->belongsTo(ProductCategory::class, 'parent_id');
     }
 
-    public function children()
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(ProductCategory::class, 'parent_id')->with('children');
+        return $this->hasMany(ProductCategory::class, 'parent_id')->orderBy('created_at')->with('children');
     }
 
     public function products()
