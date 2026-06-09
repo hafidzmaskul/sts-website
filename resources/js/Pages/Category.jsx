@@ -174,7 +174,7 @@ const transformProduct = (product, index = 0) => {
     };
 };
 
-export default function Products({ products = [], baseProducts = [], productCategory = [], logged }) {
+export default function Category({ products = [], baseProducts = [], productCategory = [], logged, currentCategory }) {
     console.log(products)
     const allProducts = useMemo(() => {
         const sourceProducts = Array.isArray(products) && products.length > 0
@@ -211,10 +211,6 @@ export default function Products({ products = [], baseProducts = [], productCate
     }, [searchQuery]);
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const catId = params.get('category');
-        const subId = params.get('subcategory');
-
         const findPathToCategory = (categories, targetId, path = []) => {
             for (const cat of categories) {
                 if (cat.id === targetId) return [...path, cat.id];
@@ -226,22 +222,14 @@ export default function Products({ products = [], baseProducts = [], productCate
             return null;
         };
 
-        if (catId) {
-            const id = parseInt(catId);
-            if (!isNaN(id)) {
-                setSelectedCategories([id]);
-            }
-        }
-
-        if (subId) {
-            const id = parseInt(subId);
-            if (!isNaN(id)) {
-                setSelectedSubCategories([id]);
+        if (currentCategory) {
+            // Check if it's a subcategory by checking if it has a parent_id
+            if (currentCategory.parent_id) {
+                setSelectedSubCategories([currentCategory.id]);
                 // Automatically expand all parents up to this subcategory
                 if (Array.isArray(productCategory)) {
-                    const path = findPathToCategory(productCategory, id);
+                    const path = findPathToCategory(productCategory, currentCategory.id);
                     if (path && path.length > 1) {
-                        // All elements in path except the last one (which is the selected child) should be expanded
                         const parentsToExpand = path.slice(0, -1);
                         setExpandedCategories(prev => {
                             const newSet = new Set([...prev, ...parentsToExpand]);
@@ -249,9 +237,11 @@ export default function Products({ products = [], baseProducts = [], productCate
                         });
                     }
                 }
+            } else {
+                setSelectedCategories([currentCategory.id]);
             }
         }
-    }, [productCategory]);
+    }, [productCategory, currentCategory]);
 
     const featuredProducts = useMemo(
         () =>
@@ -409,8 +399,11 @@ export default function Products({ products = [], baseProducts = [], productCate
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Head title="Products" />
-            <Header />
+            <Head>
+                <title>{currentCategory?.seo_title || currentCategory?.name || 'Category'}</title>
+                <meta name="description" content={currentCategory?.seo_description || `View products in ${currentCategory?.name} category`} />
+                {currentCategory?.seo_keywords && <meta name="keywords" content={currentCategory.seo_keywords} />}
+            </Head>            <Header />
 
             <main className="flex-1 container mx-auto px-6 md:px-10 lg:px-20 py-10">
                 <h1 className="font-bebas-neue text-4xl md:text-5xl mb-6 text-[#232323]">

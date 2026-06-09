@@ -149,6 +149,21 @@ class PageController
         ]);
     }
 
+    public function category(string $slug): Response
+    {
+        $category = ProductCategory::where('slug', $slug)->firstOrFail();
+        $products = Product::with('images')->with('categories')->get();
+        $baseProducts = Product::with('images')->get();
+        $productCategory = ProductCategory::with('children')->whereNull('parent_id')->get();
+
+        return Inertia::render('Category', [
+            'products' => $products,
+            'baseProducts' => $baseProducts,
+            'productCategory' => $productCategory,
+            'currentCategory' => $category,
+        ]);
+    }
+
     public function productDetail(string $slug): Response
     {
         $product = Product::with('images')->where('slug', $slug)->with('categories')->with('brand')->firstOrFail();

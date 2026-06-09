@@ -15,6 +15,7 @@ Route::controller(\App\Http\Controllers\PageController::class)->group(function (
     Route::get('/configuration', 'configuration')->name('configuration');
     Route::get('/services/{slug}', 'serviceDetail')->name('services.detail');
     Route::get('/products', 'products')->name('products');
+    Route::get('/category/{slug}', 'category')->name('category');
     Route::get('/products/{slug}', 'productDetail')->name('products.detail');
     Route::get('/news', 'news')->name('news');
     Route::get('/news/{slug}', 'newsDetail')->name('news.detail');
