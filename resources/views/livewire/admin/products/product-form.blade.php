@@ -596,7 +596,7 @@
                                         allCustomers: @js($customers->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'email' => $c->email])->values())
                                     }">
                                 @foreach($customerPrices as $index => $cp)
-                                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 relative group">
+                                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 relative group" wire:key="cust-price-{{ $index }}">
                                         <div class="space-y-3">
                                             <div>
                                                 <label class="block text-xs font-medium"
@@ -620,7 +620,7 @@
                                                     <!-- Trigger -->
                                                     <button type="button"
                                                         @click="open = !open; if(open) $nextTick(() => $refs.searchInput.focus())"
-                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-xs"
+                                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
                                                         style="color: black;">
                                                         <span class="block truncate"
                                                             x-text="selectedCustomer ? selectedCustomer.name + ' (' + selectedCustomer.email + ')' : 'Select Customer'"></span>
@@ -648,132 +648,72 @@
                                                                 style="color: black;" placeholder="Search...">
                                                         </div>
 
-                                <div class="space-y-3" x-data="{
-                                            allCustomers: @js($customers->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'email' => $c->email])->values())
-                                        }">
-                                    @foreach($customerPrices as $index => $cp)
-                                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 relative group">
-                                            <div class="space-y-3">
-                                                <div>
-                                                    <label class="block text-xs font-medium"
-                                                        style="color: #6b7280;">Customer</label>
-
-                                                    <div x-data="{
-                                                                                    open: false,
-                                                                                    search: '',
-                                                                                    get filteredCustomers() {
-                                                                                        if (this.search === '') return this.allCustomers;
-                                                                                        return this.allCustomers.filter(c =>
-                                                                                            c.name.toLowerCase().includes(this.search.toLowerCase()) ||
-                                                                                            c.email.toLowerCase().includes(this.search.toLowerCase())
-                                                                                        );
-                                                                                    },
-                                                                                    get selectedCustomer() {
-                                                                                        return this.allCustomers.find(c => c.id == $wire.customerPrices[{{ $index }}].user_id);
-                                                                                    }
-                                                                                }" @click.outside="open = false" class="relative">
-
-                                                        <!-- Trigger -->
-                                                        <button type="button"
-                                                            @click="open = !open; if(open) $nextTick(() => $refs.searchInput.focus())"
-                                                            class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
-                                                            style="color: black;">
-                                                            <span class="block truncate"
-                                                                x-text="selectedCustomer ? selectedCustomer.name + ' (' + selectedCustomer.email + ')' : 'Select Customer'"></span>
-                                                            <span
-                                                                class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                                <svg class="h-4 w-4" style="color: #9ca3af;" viewBox="0 0 20 20"
-                                                                    fill="none" stroke="currentColor">
-                                                                    <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" stroke-width="1.5"
-                                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                                </svg>
-                                                            </span>
-                                                        </button>
-
-                                                        <!-- Dropdown -->
-                                                        <div x-show="open" x-transition:leave="transition ease-in duration-100"
-                                                            x-transition:leave-start="opacity-100"
-                                                            x-transition:leave-end="opacity-0"
-                                                            class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
-                                                            style="display: none;">
-
-                                                            <div
-                                                                class="sticky top-0 z-10 bg-white px-2 py-1.5 border-b border-gray-100">
-                                                                <input x-ref="searchInput" x-model="search" type="text"
-                                                                    class="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-500 focus:ring-0 sm:text-xs rounded px-2 py-1"
-                                                                    style="color: black;" placeholder="Search...">
-                                                            </div>
-
-                                                            <ul class="max-h-56 overflow-auto py-1">
-                                                                <template x-for="customer in filteredCustomers" :key="customer.id">
-                                                                    <li @click="$wire.customerPrices[{{ $index }}].user_id = customer.id; open = false; search = '';"
-                                                                        class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50"
-                                                                        style="color: black;">
-                                                                        <div class="flex flex-col">
-                                                                            <span class="font-medium truncate"
-                                                                                x-text="customer.name"></span>
-                                                                            <span class="text-xs"
-                                                                                style="color: #6b7280; font-weight: normal;"
-                                                                                x-text="customer.email"></span>
-                                                                        </div>
-                                                                        <span
-                                                                            x-show="$wire.customerPrices[{{ $index }}].user_id == customer.id"
-                                                                            class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                                                            <svg class="h-4 w-4" viewBox="0 0 20 20"
-                                                                                fill="currentColor">
-                                                                                <path fill-rule="evenodd"
-                                                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                                                    clip-rule="evenodd" />
-                                                                            </svg>
-                                                                        </span>
-                                                                    </li>
-                                                                </template>
-                                                                <li x-show="filteredCustomers.length === 0"
-                                                                    class="text-xs p-3 text-center" style="color: #6b7280;">
-                                                                    No matches found
+                                                        <ul class="max-h-56 overflow-auto py-1">
+                                                            <template x-for="customer in filteredCustomers" :key="customer.id">
+                                                                <li @click="$wire.customerPrices[{{ $index }}].user_id = customer.id; open = false; search = '';"
+                                                                    class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50"
+                                                                    style="color: black;">
+                                                                    <div class="flex flex-col">
+                                                                        <span class="font-medium truncate"
+                                                                            x-text="customer.name"></span>
+                                                                        <span class="text-xs"
+                                                                            style="color: #6b7280; font-weight: normal;"
+                                                                            x-text="customer.email"></span>
+                                                                    </div>
+                                                                    <span
+                                                                        x-show="$wire.customerPrices[{{ $index }}].user_id == customer.id"
+                                                                        class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
+                                                                        <svg class="h-4 w-4" viewBox="0 0 20 20"
+                                                                            fill="currentColor">
+                                                                            <path fill-rule="evenodd"
+                                                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                                clip-rule="evenodd" />
+                                                                        </svg>
+                                                                    </span>
                                                                 </li>
-                                                            </ul>
-                                                        </div>
+                                                            </template>
+                                                            <li x-show="filteredCustomers.length === 0"
+                                                                class="text-xs p-3 text-center" style="color: #6b7280;">
+                                                                No matches found
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                    @error("customerPrices.{$index}.user_id") <span
-                                                    class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                                 </div>
-                                                <div>
-                                                    <label class="block text-xs font-medium" style="color: #6b7280;">Price
-                                                        (GBP)</label>
-                                                    <div class="relative rounded shadow-sm">
-                                                        <div
-                                                            class="pointer-events-none absolute inset-y-0 left-0 pl-2 flex items-center">
-                                                            <span class="sm:text-xs" style="color: #6b7280;">£</span>
-                                                        </div>
-                                                        <input type="number" step="0.01"
-                                                            wire:model="customerPrices.{{ $index }}.price"
-                                                            class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                                            style="color: black;" placeholder="0.00">
+                                                @error("customerPrices.{$index}.user_id") <span
+                                                    class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-xs font-medium" style="color: #6b7280;">Price (GBP)</label>
+                                                <div class="relative rounded shadow-sm mt-1">
+                                                    <div class="pointer-events-none absolute inset-y-0 left-0 pl-2 flex items-center">
+                                                        <span class="sm:text-xs" style="color: #6b7280;">£</span>
                                                     </div>
                                                     <input type="number" step="0.01"
                                                         wire:model="customerPrices.{{ $index }}.price"
-                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-btn-primary-ring focus:border-indigo-500"
+                                                        class="block w-full rounded border-gray-300 text-xs py-1.5 pl-6 px-2 focus:ring-indigo-500 focus:border-indigo-500"
                                                         style="color: black;" placeholder="0.00">
                                                 </div>
+                                                @error("customerPrices.{$index}.price") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                             </div>
-                                            <button type="button" wire:click="removeCustomerPrice({{ $index }})"
-                                                class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                            </button>
                                         </div>
-                                    @endforeach
-                                </div>
-
-                                @if(empty($customerPrices))
-                                    <div class="text-xs text-center italic py-2" style="color: #6b7280;">No customer prices added.
+                                        <button type="button" wire:click="removeCustomerPrice({{ $index }})"
+                                            class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
                                     </div>
-                                @endif
+                                @endforeach
                             </div>
-                        @endif
+
+                            @if(empty($customerPrices))
+                                <div class="text-xs text-center italic py-2" style="color: #6b7280;">No customer prices added.
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                     </div>
                 </div>
             </div>
