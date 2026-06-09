@@ -166,7 +166,7 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Image</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Is Parent</th>
+
                             <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -188,8 +188,8 @@
                                                 <img src="{{ Storage::url($category->image_path) }}" class="h-10 w-10 object-cover rounded-lg" alt="Category image">
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs text-gray-400 font-medium">
-                                                No Image
+                                            <span class="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-indigo-100 text-indigo-600 font-bold text-base select-none">
+                                                {{ strtoupper(mb_substr($category->name, 0, 1)) }}
                                             </span>
                                         @endif
                                     </td>
@@ -201,22 +201,8 @@
                                             @endif
                                             {{ $category->name }}
                                         </div>
-                                        <div class="text-xs text-gray-500">
-                                            #{{ $category->id }}
-                                        </div>
                                     </td>
-                                    <!-- Is Parent -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($category->is_parent)
-                                            <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-                                                Yes
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-400 font-medium">
-                                                No
-                                            </span>
-                                        @endif
-                                    </td>
+
                                     <!-- Actions -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <div class="flex items-center justify-end gap-3">
@@ -255,8 +241,8 @@
                                                 <img src="{{ Storage::url($category->image_path) }}" class="h-10 w-10 object-cover rounded-lg" alt="Category image">
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs text-gray-400 font-medium">
-                                                No Image
+                                            <span class="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-indigo-100 text-indigo-600 font-bold text-base select-none">
+                                                {{ strtoupper(mb_substr($category->name, 0, 1)) }}
                                             </span>
                                         @endif
                                     </td>
@@ -265,16 +251,8 @@
                                         <div class="text-sm font-bold text-gray-900">
                                             {{ $category->name }}
                                         </div>
-                                        <div class="text-xs text-gray-500">
-                                            #{{ $category->id }}
-                                        </div>
                                     </td>
-                                    <!-- Is Parent -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-                                            Yes
-                                        </span>
-                                    </td>
+
                                     <!-- Actions -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <div class="flex items-center justify-end gap-3">
@@ -307,7 +285,7 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-10">
+                                <td colspan="4" class="px-6 py-10">
                                     <div class="flex flex-col items-center justify-center text-center space-y-3">
                                         <svg class="h-12 w-12 text-gray-200 mb-2" fill="none" viewBox="0 0 48 48" stroke="currentColor">
                                             <rect width="36" height="24" x="6" y="12" fill="currentColor" rx="4" class="text-gray-100"/>

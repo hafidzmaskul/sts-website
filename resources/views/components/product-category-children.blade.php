@@ -31,8 +31,8 @@
                     <img src="{{ Storage::url($child->image_path) }}" class="h-10 w-10 object-cover rounded-lg" alt="Category image">
                 </span>
             @else
-                <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs text-gray-400 font-medium">
-                    No Image
+                <span class="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-indigo-100 text-indigo-600 font-bold text-base select-none">
+                    {{ strtoupper(mb_substr($child->name, 0, 1)) }}
                 </span>
             @endif
         </td>
@@ -42,26 +42,7 @@
             <div class="flex items-center text-sm {{ $textColor }}">
                 <span class="text-gray-400 mr-2">└───</span>
                 {{ $child->name }}
-                @if($isParent)
-                    <span class="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">parent</span>
-                @endif
             </div>
-            <div class="text-xs text-gray-500 pl-8">
-                #{{ $child->id }}
-            </div>
-        </td>
-
-        {{-- Is Parent --}}
-        <td class="px-6 py-4 whitespace-nowrap">
-            @if($child->is_parent)
-                <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-                    Yes
-                </span>
-            @else
-                <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-400 font-medium">
-                    No
-                </span>
-            @endif
         </td>
 
         {{-- Actions --}}
