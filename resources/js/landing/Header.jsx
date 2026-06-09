@@ -2,6 +2,80 @@ import React, { useState, useRef, useEffect } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import axios from 'axios';
 
+const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const hasChildren = category.children && category.children.length > 0;
+
+    return (
+        <div 
+            className="relative px-2"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div className={`flex items-center justify-between w-full rounded-lg transition-colors ${isHovered ? 'bg-gray-100' : 'hover:bg-gray-100'}`}>
+                <button
+                    onClick={() => {
+                        router.get(`/category/${category.slug}`);
+                        onClose();
+                    }}
+                    className={`flex-1 px-3 py-2 text-left text-sm transition-colors ${
+                        level === 0 ? "font-medium text-gray-700 py-2.5" : "text-gray-600 hover:text-[#0079C2]"
+                    }`}
+                >
+                    {category.name}
+                </button>
+                {hasChildren && (
+                    <div className="pr-3 text-gray-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                )}
+            </div>
+            {hasChildren && (
+                <div 
+                    className={`absolute left-full top-0 w-64 bg-white border border-gray-200 shadow-xl rounded-xl py-2 ml-0 transition-all duration-200 z-[60] ${
+                        isHovered ? "visible opacity-100" : "invisible opacity-0"
+                    }`}
+                >
+                    {category.children.map((child) => (
+                        <RecursiveCategoryItem key={child.id} category={child} onClose={onClose} level={level + 1} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const MobileRecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
+    const hasChildren = category.children && category.children.length > 0;
+
+    return (
+        <div className="space-y-1">
+            <button
+                onClick={() => {
+                    router.get(`/category/${category.slug}`);
+                    onClose();
+                }}
+                className={`w-full text-left transition-all ${
+                    level === 0 
+                        ? "px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-[#F0F2F3] rounded-lg" 
+                        : "block w-full px-4 py-1.5 text-xs text-gray-500 hover:text-[#0079C2]"
+                }`}
+            >
+                {category.name}
+            </button>
+            {hasChildren && (
+                <div className="ml-4 border-l border-gray-200 space-y-1 pl-2">
+                    {category.children.map((child) => (
+                        <MobileRecursiveCategoryItem key={child.id} category={child} onClose={onClose} level={level + 1} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 export default function Header() {
     const [showLang, setShowLang] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
@@ -212,43 +286,11 @@ export default function Header() {
                     <div className="absolute left-0 mt-2 w-64 bg-white border border-gray-200 shadow-xl z-50 rounded-xl overflow-visible py-2">
                         {Array.isArray(productCategories) && productCategories.length > 0 ? (
                             productCategories.map((category) => (
-                                <div key={category.id} className="group relative px-2">
-                                    <div className="flex items-center justify-between w-full rounded-lg hover:bg-gray-100 transition-colors">
-                                        <button
-                                            onClick={() => {
-                                                router.get('/products', { category: category.id });
-                                                setShowCategories(false);
-                                            }}
-                                            className="flex-1 px-3 py-2.5 text-left text-sm font-medium text-gray-700"
-                                        >
-                                            {category.name}
-                                        </button>
-                                        {category.children && category.children.length > 0 && (
-                                            <div className="pr-3 text-gray-400">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </div>
-                                        )}
-                                    </div>
-                                    {category.children && category.children.length > 0 && (
-                                        <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute left-full top-0 w-64 bg-white border border-gray-200 shadow-xl rounded-xl py-2 ml-0 transition-all duration-200 z-[60]">
-                                            {category.children.map((child) => (
-                                                <div key={child.id} className="px-2">
-                                                    <button
-                                                        onClick={() => {
-                                                            router.get('/products', { subcategory: child.id });
-                                                            setShowCategories(false);
-                                                        }}
-                                                        className="block w-full px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-50 hover:text-[#0079C2] rounded-lg transition-colors"
-                                                    >
-                                                        {child.name}
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                <RecursiveCategoryItem 
+                                    key={category.id} 
+                                    category={category} 
+                                    onClose={() => setShowCategories(false)} 
+                                />
                             ))
                         ) : (
                             <div className="px-4 py-3 text-sm text-gray-500 italic">
@@ -381,33 +423,11 @@ export default function Header() {
                         <div className="mt-1 space-y-1 bg-gray-50 rounded-xl p-2 border border-gray-100 absolute left-0 top-full w-[260px] z-50">
                             {Array.isArray(productCategories) && productCategories.length > 0 ? (
                                 productCategories.map((category) => (
-                                    <div key={category.id} className="space-y-1">
-                                        <button
-                                            onClick={() => {
-                                                router.get('/products', { category: category.id });
-                                                setShowCategories(false);
-                                            }}
-                                            className="w-full px-4 py-2 text-left text-sm font-medium text-gray-700 bg-white hover:bg-[#F0F2F3] rounded-lg transition-all"
-                                        >
-                                            {category.name}
-                                        </button>
-                                        {category.children && category.children.length > 0 && (
-                                            <div className="ml-4 border-l border-gray-200 space-y-1 pl-2">
-                                                {category.children.map((child) => (
-                                                    <button
-                                                        key={child.id}
-                                                        onClick={() => {
-                                                            router.get('/products', { subcategory: child.id });
-                                                            setShowCategories(false);
-                                                        }}
-                                                        className="block w-full px-4 py-1.5 text-left text-xs text-gray-500 hover:text-[#0079C2]"
-                                                    >
-                                                        {child.name}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+                                    <MobileRecursiveCategoryItem 
+                                        key={category.id} 
+                                        category={category} 
+                                        onClose={() => setShowCategories(false)} 
+                                    />
                                 ))
                             ) : (
                                 <div className="px-4 py-2 text-xs text-gray-400 italic">No categories</div>
