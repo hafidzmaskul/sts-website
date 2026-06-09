@@ -18,9 +18,10 @@ const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
                         router.get(`/category/${category.slug}`);
                         onClose();
                     }}
-                    className={`flex-1 px-3 py-2 text-left text-sm transition-colors ${
+                    className={`flex-1 min-w-0 break-words whitespace-normal px-3 py-2 text-left text-sm transition-colors ${
                         level === 0 ? "font-medium text-gray-700 py-2.5" : "text-gray-600 hover:text-[#0079C2]"
                     }`}
+                    title={category.name}
                 >
                     {category.name}
                 </button>
@@ -48,24 +49,63 @@ const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
 };
 
 const MobileRecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
     const hasChildren = category.children && category.children.length > 0;
+    const itemRef = useRef(null);
 
     return (
-        <div className="space-y-1">
-            <button
-                onClick={() => {
-                    router.get(`/category/${category.slug}`);
-                    onClose();
-                }}
-                className={`w-full text-left transition-all ${
-                    level === 0
-                        ? "px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-[#F0F2F3] rounded-lg"
-                        : "block w-full px-4 py-1.5 text-xs text-gray-500 hover:text-[#0079C2]"
-                }`}
-            >
-                {category.name}
-            </button>
-            {hasChildren && (
+        <div className="space-y-1 min-w-max pr-2" ref={itemRef}>
+            <div className={`flex items-center justify-between w-full transition-all ${
+                level === 0 ? "bg-white hover:bg-[#F0F2F3] rounded-lg" : "hover:bg-gray-50 rounded"
+            }`}>
+                <button
+                    onClick={() => {
+                        router.get(`/category/${category.slug}`);
+                        onClose();
+                    }}
+                    className={`flex-1 text-left whitespace-nowrap min-w-0 pr-4 ${
+                        level === 0
+                            ? "px-4 py-2 text-sm font-medium text-gray-700"
+                            : "px-4 py-1.5 text-xs text-gray-500 hover:text-[#0079C2]"
+                    }`}
+                >
+                    {category.name}
+                </button>
+                {hasChildren && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsExpanded(!isExpanded);
+                            if (!isExpanded) {
+                                setTimeout(() => {
+                                    if (itemRef.current) {
+                                        const container = itemRef.current.closest('.overflow-y-auto');
+                                        if (container) {
+                                            const containerRect = container.getBoundingClientRect();
+                                            const itemRect = itemRef.current.getBoundingClientRect();
+                                            container.scrollBy({
+                                                top: itemRect.top - containerRect.top - 10,
+                                                behavior: 'smooth'
+                                            });
+                                        }
+                                    }
+                                }, 150);
+                            }
+                        }}
+                        className="p-2 text-gray-400 hover:text-[#0079C2] shrink-0"
+                    >
+                        <svg
+                            className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                )}
+            </div>
+            {isExpanded && hasChildren && (
                 <div className="ml-4 border-l border-gray-200 space-y-1 pl-2">
                     {category.children.map((child) => (
                         <MobileRecursiveCategoryItem key={child.id} category={child} onClose={onClose} level={level + 1} />
@@ -420,7 +460,7 @@ export default function Header() {
                         </svg>
                     </button>
                     {showCategories && (
-                        <div className="mt-1 space-y-1 bg-gray-50 rounded-xl p-2 border border-gray-100 absolute left-0 top-full w-[260px] z-50">
+                        <div className="mt-1 space-y-1 bg-gray-50 rounded-xl p-2 border border-gray-100 absolute left-0 top-full w-[260px] z-50 overflow-x-auto overflow-y-auto max-h-[60vh]">
                             {Array.isArray(productCategories) && productCategories.length > 0 ? (
                                 productCategories.map((category) => (
                                     <MobileRecursiveCategoryItem
