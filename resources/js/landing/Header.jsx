@@ -7,7 +7,7 @@ const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
     const hasChildren = category.children && category.children.length > 0;
 
     return (
-        <div 
+        <div
             className="relative px-2"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -33,8 +33,8 @@ const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
                 )}
             </div>
             {hasChildren && (
-                <div 
-                    className={`absolute left-full top-0 w-64 bg-white border border-gray-200 shadow-xl rounded-xl py-2 ml-0 transition-all duration-200 z-[60] ${
+                <div
+                    className={`absolute left-full top-0 w-40 bg-white border border-gray-200 shadow-xl rounded-xl ml-0 transition-all duration-200 z-[60] ${
                         isHovered ? "visible opacity-100" : "invisible opacity-0"
                     }`}
                 >
@@ -58,8 +58,8 @@ const MobileRecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
                     onClose();
                 }}
                 className={`w-full text-left transition-all ${
-                    level === 0 
-                        ? "px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-[#F0F2F3] rounded-lg" 
+                    level === 0
+                        ? "px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-[#F0F2F3] rounded-lg"
                         : "block w-full px-4 py-1.5 text-xs text-gray-500 hover:text-[#0079C2]"
                 }`}
             >
@@ -283,13 +283,13 @@ export default function Header() {
                     </svg>
                 </button>
                 {showCategories && (
-                    <div className="absolute left-0 mt-2 w-64 bg-white border border-gray-200 shadow-xl z-50 rounded-xl overflow-visible py-2">
+                    <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-200 shadow-xl z-50 rounded-xl overflow-visible ">
                         {Array.isArray(productCategories) && productCategories.length > 0 ? (
                             productCategories.map((category) => (
-                                <RecursiveCategoryItem 
-                                    key={category.id} 
-                                    category={category} 
-                                    onClose={() => setShowCategories(false)} 
+                                <RecursiveCategoryItem
+                                    key={category.id}
+                                    category={category}
+                                    onClose={() => setShowCategories(false)}
                                 />
                             ))
                         ) : (
@@ -376,7 +376,7 @@ export default function Header() {
                     </svg>
                 </button>
                 {showBecomeCustomer && (
-                    <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 shadow-lg z-50 rounded">
+                    <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg z-50 rounded">
                         {becomeCustomerMenu.map(link => (
                             <a
                                 key={link.href}
@@ -423,10 +423,10 @@ export default function Header() {
                         <div className="mt-1 space-y-1 bg-gray-50 rounded-xl p-2 border border-gray-100 absolute left-0 top-full w-[260px] z-50">
                             {Array.isArray(productCategories) && productCategories.length > 0 ? (
                                 productCategories.map((category) => (
-                                    <MobileRecursiveCategoryItem 
-                                        key={category.id} 
-                                        category={category} 
-                                        onClose={() => setShowCategories(false)} 
+                                    <MobileRecursiveCategoryItem
+                                        key={category.id}
+                                        category={category}
+                                        onClose={() => setShowCategories(false)}
                                     />
                                 ))
                             ) : (
