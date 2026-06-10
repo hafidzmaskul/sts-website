@@ -128,8 +128,8 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     const [newQuoteName, setNewQuoteName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // Default quantity for quote builder logic
-    const DEFAULT_QUANTITY = 1;
+    // Quantity state for Cart and Quote Builder
+    const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
         if (toast.show) {
@@ -271,7 +271,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             await Promise.all(selectedQuoteIds.map(quoteId =>
                 axios.post(`/web/quote-builder/${quoteId}/products`, {
                     product_id: data.id,
-                    quantity: DEFAULT_QUANTITY
+                    quantity: quantity
                 })
             ));
 
@@ -312,7 +312,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 items: [
                     {
                         product_id: data.id,
-                        quantity: DEFAULT_QUANTITY
+                        quantity: quantity
                     }
                 ]
             });
@@ -412,7 +412,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         setIsAddingToCart(true);
         animateAddToCart();
         try {
-            await axios.post('/web/cart', { product_id: data.id, quantity: 1 });
+            await axios.post('/web/cart', { product_id: data.id, quantity: quantity });
             setToast({ show: true, message: 'Product added to cart', type: 'success' });
 
             // Handle guest first-time refresh
@@ -732,7 +732,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     <li className="mx-1 text-gray-400">/</li>
                                     <li>
                                         <Link
-                                            href={`/categories/${data.categories[0].slug}`}
+                                            href={`/category/${data.categories[0].slug}`}
                                             className="hover:text-[#0079C2]"
                                         >
                                             {data.categories[0].name}
@@ -794,6 +794,13 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                 </h1>
                             </div>
                             <div className="space-y-3">
+                                <p className="text-sm font-medium">
+                                    Stock: {data.status === 'active' ? (
+                                        <span className="text-green-600">Ready Stock</span>
+                                    ) : (
+                                        <span className="text-red-600">Unavailable</span>
+                                    )}
+                                </p>
                                 {data.is_sign_up_for_pricing ? (
                                     logged ? (
                                         <p className="text-md md:text-xl font-semibold font-inter">
@@ -810,8 +817,51 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     </p>
                                 )}
                             </div>
+
+                            {/* Quantity Input */}
+                            {!isDiscontinued && (
+                                <div className="flex items-center gap-4 mt-4">
+                                    <span className="text-sm font-medium text-gray-700">Qty:</span>
+                                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                        <button
+                                            type="button"
+                                            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition text-gray-600"
+                                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                        >
+                                            -
+                                        </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            className="w-16 text-center py-1 border-none outline-none focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                            value={quantity}
+                                            onChange={(e) => {
+                                                const val = parseInt(e.target.value);
+                                                if (!isNaN(val) && val > 0) {
+                                                    setQuantity(val);
+                                                } else if (e.target.value === '') {
+                                                    setQuantity('');
+                                                }
+                                            }}
+                                            onBlur={(e) => {
+                                                if (e.target.value === '' || parseInt(e.target.value) < 1) {
+                                                    setQuantity(1);
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition text-gray-600"
+                                            onClick={() => setQuantity((prev) => (prev === '' ? 1 : prev + 1))}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             {data.is_sign_up_for_pricing && !logged && !isDiscontinued && (
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-3 mt-4">
                                     <button
                                         type="button"
                                         className="inline-flex items-center justify-center rounded-xl bg-[#0079C2] px-20 py-3 text-sm font-light text-white hover:bg-[#005a91] transition"
