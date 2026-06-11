@@ -112,25 +112,7 @@
                                 $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
                             @endphp
                             @foreach($parents as $parent)
-                                <div class="space-y-1">
-                                    <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                        <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                        <span class="ml-2 text-sm font-semibold"
-                                            style="color: black;">{{ $parent->name }}</span>
-                                    </label>
-                                    @if($children = $groupedCategories->get($parent->id))
-                                        <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
-                                            @foreach($children as $child)
-                                                <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                                    <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
+                                <x-product-category-checkbox :category="$parent" :grouped-categories="$groupedCategories" />
                             @endforeach
                             <!-- Handling orphans if any -->
                             @foreach($groupedCategories as $parentId => $children)
@@ -140,11 +122,7 @@
                                             style="color: #9ca3af;">
                                             Uncategorized</div>
                                         @foreach($children as $child)
-                                            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                                <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                                <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
-                                            </label>
+                                            <x-product-category-checkbox :category="$child" :grouped-categories="$groupedCategories" />
                                         @endforeach
                                     </div>
                                 @endif
@@ -395,7 +373,7 @@
                                         </div>
 
                                         <!-- Variant Inputs -->
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                                             <div>
                                                 <label class="block text-xs font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
                                                 <input type="text" wire:model.live="variants.{{ $vIndex }}.title" placeholder="e.g. Red / XL"
@@ -416,6 +394,34 @@
                                                     <option value="inactive">Inactive</option>
                                                 </select>
                                                 @error("variants.{$vIndex}.status") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Variant Image</label>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    @if(!empty($variant['image_path']))
+                                                        <div class="relative group h-10 w-10 border rounded overflow-hidden flex-shrink-0">
+                                                            <img src="{{ Storage::url($variant['image_path']) }}" class="h-full w-full object-cover">
+                                                            <button type="button" wire:confirm="Remove this variant image?" wire:click="deleteVariantImage({{ $vIndex }})"
+                                                                class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                            </button>
+                                                        </div>
+                                                    @elseif(isset($variant['image']) && $variant['image'])
+                                                        <div class="relative group h-10 w-10 border rounded overflow-hidden flex-shrink-0">
+                                                            <img src="{{ $variant['image']->temporaryUrl() }}" class="h-full w-full object-cover">
+                                                            <button type="button" wire:click="deleteVariantImage({{ $vIndex }})"
+                                                                class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
+                                                        </div>
+                                                    @else
+                                                        <div class="h-10 w-10 border border-dashed rounded flex-shrink-0 flex items-center justify-center bg-gray-100 text-gray-400">
+                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                                        </div>
+                                                    @endif
+                                                    <input type="file" wire:model="variants.{{ $vIndex }}.image" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+                                                </div>
+                                                @error("variants.{$vIndex}.image") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
 

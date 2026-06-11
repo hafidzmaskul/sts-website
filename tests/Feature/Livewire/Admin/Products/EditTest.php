@@ -137,4 +137,107 @@ class EditTest extends TestCase
         $this->assertEquals(50.00, $variant->cost);
         $this->assertEquals(80.00, $variant->rsp);
     }
+
+    public function test_can_upload_variant_image()
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'customer', 'guard_name' => 'web']);
+        Role::create(['name' => 'trade account', 'guard_name' => 'web']);
+        Role::create(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $brand = Brand::create(['name' => 'Test Brand', 'slug' => 'test-brand', 'is_active' => true]);
+
+        $product = Product::create([
+            'title' => 'Parent Product',
+            'slug' => 'parent-product',
+            'sku' => 'PP-001',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'base_price' => 100,
+            'created_by' => $admin->id,
+        ]);
+
+        $file = \Illuminate\Http\UploadedFile::fake()->image('variant.jpg');
+
+        Livewire::actingAs($admin)
+            ->test(Edit::class, ['product' => $product])
+            ->call('addVariant')
+            ->set('variants.0.title', 'Image Variant')
+            ->set('variants.0.sku', 'IMG-VAR-001')
+            ->set('variants.0.base_price', 120.00)
+            ->set('variants.0.status', 'active')
+            ->set('variants.0.image', $file)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $variant = Product::where('sku', 'IMG-VAR-001')->first();
+        $this->assertNotNull($variant);
+        $this->assertCount(1, $variant->images);
+
+        $imagePath = $variant->images->first()->image_path;
+        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($imagePath);
+    }
+
+    public function test_can_delete_variant_image()
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'customer', 'guard_name' => 'web']);
+        Role::create(['name' => 'trade account', 'guard_name' => 'web']);
+        Role::create(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $brand = Brand::create(['name' => 'Test Brand', 'slug' => 'test-brand', 'is_active' => true]);
+
+        $product = Product::create([
+            'title' => 'Parent Product',
+            'slug' => 'parent-product',
+            'sku' => 'PP-001',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'base_price' => 100,
+            'created_by' => $admin->id,
+        ]);
+
+        // Create variant with image
+        $variant = Product::create([
+            'parent_id' => $product->id,
+            'brand_id' => $brand->id,
+            'title' => 'Variant Image Delete',
+            'slug' => 'variant-image-delete',
+            'sku' => 'DEL-VAR-001',
+            'status' => 'active',
+            'created_by' => $admin->id,
+        ]);
+
+        $imagePath = 'products/fake-variant.jpg';
+        \Illuminate\Support\Facades\Storage::disk('public')->put($imagePath, 'contents');
+        $variant->images()->create([
+            'image_path' => $imagePath,
+            'sequence' => 0,
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(Edit::class, ['product' => $product])
+            ->assertCount('variants', 1)
+            ->assertSet('variants.0.image_path', $imagePath)
+            ->call('deleteVariantImage', 0)
+            ->assertSet('variants.0.image_path', null)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        // Verify image deleted
+        $this->assertDatabaseMissing('product_images', [
+            'image_path' => $imagePath,
+        ]);
+        \Illuminate\Support\Facades\Storage::disk('public')->assertMissing($imagePath);
+    }
 }

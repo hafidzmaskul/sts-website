@@ -210,7 +210,7 @@ class Edit extends Component
 
         // Load variants
         $this->variants = $product->variants()
-            ->with(['quantityPrices', 'customerPrices'])
+            ->with(['quantityPrices', 'customerPrices', 'images'])
             ->get()
             ->map(function ($variant) {
                 return [
@@ -245,6 +245,8 @@ class Edit extends Component
                         ];
                     })->toArray(),
                     'showAdvancePricing' => $variant->customerPrices->isNotEmpty(),
+                    'image' => null,
+                    'image_path' => $variant->images->first()?->image_path,
                 ];
             })
             ->toArray();
@@ -368,6 +370,8 @@ class Edit extends Component
             'quantityPrices' => [],
             'customerPrices' => [],
             'showAdvancePricing' => false,
+            'image' => null,
+            'image_path' => null,
         ];
     }
 
@@ -375,6 +379,25 @@ class Edit extends Component
     {
         unset($this->variants[$index]);
         $this->variants = array_values($this->variants);
+    }
+
+    public function deleteVariantImage(int $vIndex): void
+    {
+        $variantData = $this->variants[$vIndex] ?? null;
+        if ($variantData) {
+            if (! empty($variantData['id']) && ! empty($variantData['image_path'])) {
+                $variant = Product::find($variantData['id']);
+                if ($variant) {
+                    foreach ($variant->images as $img) {
+                        Storage::disk('public')->delete($img->image_path);
+                        $img->delete();
+                    }
+                }
+            }
+
+            $this->variants[$vIndex]['image'] = null;
+            $this->variants[$vIndex]['image_path'] = null;
+        }
     }
 
     public function addVariantQuantityPrice($vIndex)
@@ -530,6 +553,7 @@ class Edit extends Component
             'variants.*.customerPrices' => 'array',
             'variants.*.customerPrices.*.user_id' => 'required_with:variants.*.customerPrices.*.price|exists:users,id',
             'variants.*.customerPrices.*.price' => 'required_with:variants.*.customerPrices.*.user_id|numeric|min:0',
+            'variants.*.image' => 'nullable|image|max:2048',
         ];
     }
 
@@ -635,7 +659,7 @@ class Edit extends Component
         // Delete variants not present anymore
         $product->variants()->whereNotIn('id', $vIds)->delete();
 
-        foreach ($this->variants as $variantData) {
+        foreach ($this->variants as $vIndex => $variantData) {
             $slug = Str::slug($product->title.'-'.$variantData['title'].'-'.($variantData['sku'] ?: Str::random(5)));
 
             // Ensure unique slug
@@ -695,6 +719,23 @@ class Edit extends Component
                         'price' => $qp['price'],
                     ]);
                 }
+            }
+
+            // Sync Variant Image
+            if (isset($variantData['image']) && $variantData['image']) {
+                foreach ($variant->images as $oldImage) {
+                    Storage::disk('public')->delete($oldImage->image_path);
+                    $oldImage->delete();
+                }
+
+                $path = $variantData['image']->store('products', 'public');
+                $variant->images()->create([
+                    'image_path' => $path,
+                    'sequence' => 0,
+                ]);
+
+                $this->variants[$vIndex]['image_path'] = $path;
+                $this->variants[$vIndex]['image'] = null;
             }
         }
 
