@@ -12,11 +12,17 @@ class Show extends Component
     public function mount(Product $product)
     {
         $this->product = $product->load([
+            'parent',
             'categories',
             'images' => function ($query) {
                 $query->orderBy('sequence');
             },
             'attachments',
+            'variants.brand',
+            'variants.categories',
+            'variants.images',
+            'variants.quantityPrices',
+            'variants.customerPrices',
         ]);
     }
 

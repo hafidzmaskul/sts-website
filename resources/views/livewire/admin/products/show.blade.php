@@ -31,6 +31,26 @@
         </div>
     </div>
 
+    @if($product->parent)
+        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg shadow-sm">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-indigo-900 font-medium font-sans">
+                        This is a variant of parent product:
+                        <a href="{{ route('admin.products.show', $product->parent->id) }}" class="underline hover:text-indigo-700 font-bold ml-1">
+                            {{ $product->parent->title }}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column (Details) -->
@@ -109,6 +129,124 @@
                     </dl>
                 </div>
             </div>
+
+            <!-- Variants Card -->
+            @if($product->variants->isNotEmpty())
+                <div class="space-y-4">
+                    <h2 class="text-xl font-bold text-black px-1">Product Variants ({{ $product->variants->count() }})</h2>
+                    <div class="grid grid-cols-1 gap-6">
+                        @foreach($product->variants as $variant)
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between">
+                                <!-- Variant Title & Details Header -->
+                                <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex items-center gap-3">
+                                            @if($variant->images->isNotEmpty())
+                                                <img src="{{ Storage::url($variant->images->first()->image_path) }}" class="h-10 w-10 object-contain rounded border bg-white shadow-sm flex-shrink-0">
+                                            @endif
+                                            <div>
+                                                <h3 class="text-base font-semibold text-black">{{ $variant->title }}</h3>
+                                                <p class="text-xs text-gray-500 font-mono mt-0.5">SKU: {{ $variant->sku ?? '-' }}</p>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $variant->status === 'active' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-600 border border-gray-200' }}">
+                                            {{ ucfirst($variant->status) }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Pricing details content -->
+                                <div class="p-6 space-y-4 flex-1">
+                                    <!-- Base/Special Prices -->
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <span class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Base Price</span>
+                                            <span class="text-sm font-semibold text-black mt-0.5 block">
+                                                @if($variant->is_sign_up_for_pricing)
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                                        Sign up for pricing
+                                                    </span>
+                                                @else
+                                                    {{ $variant->base_price ? '£' . number_format($variant->base_price, 2) : 'N/A' }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Special Price</span>
+                                            <span class="text-sm font-semibold text-black mt-0.5 block">
+                                                @if($variant->special_price)
+                                                    <span class="text-red-600 font-bold">£{{ number_format($variant->special_price, 2) }}</span>
+                                                    @if($variant->special_price_start || $variant->special_price_end)
+                                                        <span class="block text-[10px] text-gray-400 font-normal mt-0.5">
+                                                            @if($variant->special_price_start) From: {{ $variant->special_price_start->format('d/m/Y') }} @endif
+                                                            @if($variant->special_price_end) To: {{ $variant->special_price_end->format('d/m/Y') }} @endif
+                                                        </span>
+                                                    @endif
+                                                @else
+                                                    <span class="text-gray-400">N/A</span>
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quantity Pricing tiers -->
+                                    @if($variant->quantityPrices->isNotEmpty())
+                                        <div class="border-t border-gray-100 pt-3">
+                                            <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quantity Pricing Tiers</span>
+                                            <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-150">
+                                                <table class="min-w-full divide-y divide-gray-200">
+                                                    <thead class="bg-gray-100">
+                                                        <tr>
+                                                            <th scope="col" class="px-3 py-1.5 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">Min Qty</th>
+                                                            <th scope="col" class="px-3 py-1.5 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">Price (GBP)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="bg-white divide-y divide-gray-100">
+                                                        @foreach($variant->quantityPrices as $qp)
+                                                            <tr>
+                                                                <td class="px-3 py-1.5 text-xs text-gray-700 font-medium">{{ $qp->quantity }}+</td>
+                                                                <td class="px-3 py-1.5 text-xs text-gray-900 font-bold">£{{ number_format($qp->price, 2) }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <!-- Customer specific pricing -->
+                                    @if($variant->customerPrices->isNotEmpty())
+                                        <div class="border-t border-gray-100 pt-3">
+                                            <span class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Customer Specific Prices</span>
+                                            <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-150 max-h-40 overflow-y-auto">
+                                                <table class="min-w-full divide-y divide-gray-200">
+                                                    <thead class="bg-gray-100">
+                                                        <tr>
+                                                            <th scope="col" class="px-3 py-1.5 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                                            <th scope="col" class="px-3 py-1.5 text-left text-xxs font-medium text-gray-500 uppercase tracking-wider">Price (GBP)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="bg-white divide-y divide-gray-100">
+                                                        @foreach($variant->customerPrices as $customer)
+                                                            <tr>
+                                                                <td class="px-3 py-1.5 text-xs text-gray-700 truncate max-w-[120px]" title="{{ $customer->name }} ({{ $customer->email }})">
+                                                                    <span class="font-medium block text-gray-900 truncate">{{ $customer->name }}</span>
+                                                                    <span class="block text-[10px] text-gray-400 truncate">{{ $customer->email }}</span>
+                                                                </td>
+                                                                <td class="px-3 py-1.5 text-xs text-gray-900 font-bold">£{{ number_format($customer->pivot->price, 2) }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <!-- Rich Text Content Sections -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">

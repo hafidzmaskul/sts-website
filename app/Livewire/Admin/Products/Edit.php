@@ -68,6 +68,8 @@ class Edit extends Component
 
     public $is_cta = false;
 
+    public $variants = [];
+
     // Brand formula info for display
     public $brandFormulaLabel = null;
 
@@ -114,7 +116,7 @@ class Edit extends Component
         $this->title = $product->title;
         $this->slug = $product->slug;
         $this->sku = $product->sku;
-        $this->is_sign_up_for_pricing = $product->is_sign_up_for_pricing;
+        $this->is_sign_up_for_pricing = (bool) $product->is_sign_up_for_pricing;
         $this->pricing_mode = $product->pricing_mode ?? 'manual';
         $this->cost = $product->cost;
         $this->rsp = $product->rsp;
@@ -122,12 +124,12 @@ class Edit extends Component
         $this->special_price = $product->special_price;
         $this->special_price_start = $product->special_price_start?->format('Y-m-d\TH:i');
         $this->special_price_end = $product->special_price_end?->format('Y-m-d\TH:i');
-        $this->override_enabled = $product->override_enabled;
+        $this->override_enabled = (bool) $product->override_enabled;
         $this->override_method = $product->override_method;
         $this->override_value = $product->override_value;
         $this->status = $product->status;
-        $this->is_exclusive = $product->is_exclusive;
-        $this->is_cta = $product->is_cta;
+        $this->is_exclusive = (bool) $product->is_exclusive;
+        $this->is_cta = (bool) $product->is_cta;
         $this->key_feature = $product->key_feature;
         $this->product_overview = $product->product_overview;
         $this->main_feature = $product->main_feature;
@@ -205,6 +207,47 @@ class Edit extends Component
                 }
             }
         }
+
+        // Load variants
+        $this->variants = $product->variants()
+            ->with(['quantityPrices', 'customerPrices'])
+            ->get()
+            ->map(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'title' => $variant->title,
+                    'sku' => $variant->sku,
+                    'pricing_mode' => $variant->pricing_mode ?? 'manual',
+                    'cost' => $variant->cost,
+                    'rsp' => $variant->rsp,
+                    'base_price' => $variant->base_price,
+                    'special_price' => $variant->special_price,
+                    'special_price_start' => $variant->special_price_start?->format('Y-m-d\TH:i'),
+                    'special_price_end' => $variant->special_price_end?->format('Y-m-d\TH:i'),
+                    'override_enabled' => (bool) $variant->override_enabled,
+                    'override_method' => $variant->override_method,
+                    'override_value' => $variant->override_value,
+                    'status' => $variant->status ?? 'active',
+                    'is_sign_up_for_pricing' => (bool) $variant->is_sign_up_for_pricing,
+                    'is_cta' => (bool) $variant->is_cta,
+                    'is_exclusive' => (bool) $variant->is_exclusive,
+                    'quantityPrices' => $variant->quantityPrices->map(function ($qp) {
+                        return [
+                            'id' => $qp->id,
+                            'quantity' => $qp->quantity,
+                            'price' => $qp->price,
+                        ];
+                    })->toArray(),
+                    'customerPrices' => $variant->customerPrices->map(function ($user) {
+                        return [
+                            'user_id' => $user->id,
+                            'price' => $user->pivot->price,
+                        ];
+                    })->toArray(),
+                    'showAdvancePricing' => $variant->customerPrices->isNotEmpty(),
+                ];
+            })
+            ->toArray();
     }
 
     /**
@@ -302,6 +345,66 @@ class Edit extends Component
         ];
     }
 
+    public function addVariant()
+    {
+        $this->variants[] = [
+            'id' => null,
+            'title' => '',
+            'sku' => '',
+            'pricing_mode' => 'manual',
+            'cost' => null,
+            'rsp' => null,
+            'base_price' => null,
+            'special_price' => null,
+            'special_price_start' => null,
+            'special_price_end' => null,
+            'override_enabled' => false,
+            'override_method' => null,
+            'override_value' => null,
+            'status' => 'active',
+            'is_sign_up_for_pricing' => false,
+            'is_cta' => false,
+            'is_exclusive' => false,
+            'quantityPrices' => [],
+            'customerPrices' => [],
+            'showAdvancePricing' => false,
+        ];
+    }
+
+    public function removeVariant($index)
+    {
+        unset($this->variants[$index]);
+        $this->variants = array_values($this->variants);
+    }
+
+    public function addVariantQuantityPrice($vIndex)
+    {
+        $this->variants[$vIndex]['quantityPrices'][] = [
+            'quantity' => null,
+            'price' => null,
+        ];
+    }
+
+    public function removeVariantQuantityPrice($vIndex, $qpIndex)
+    {
+        unset($this->variants[$vIndex]['quantityPrices'][$qpIndex]);
+        $this->variants[$vIndex]['quantityPrices'] = array_values($this->variants[$vIndex]['quantityPrices']);
+    }
+
+    public function addVariantCustomerPrice($vIndex)
+    {
+        $this->variants[$vIndex]['customerPrices'][] = [
+            'user_id' => '',
+            'price' => null,
+        ];
+    }
+
+    public function removeVariantCustomerPrice($vIndex, $cpIndex)
+    {
+        unset($this->variants[$vIndex]['customerPrices'][$cpIndex]);
+        $this->variants[$vIndex]['customerPrices'] = array_values($this->variants[$vIndex]['customerPrices']);
+    }
+
     public function addCustomerPrice()
     {
         $this->customerPrices[] = [
@@ -384,6 +487,49 @@ class Edit extends Component
             'quantityPrices' => 'array',
             'quantityPrices.*.quantity' => 'required|integer|min:1',
             'quantityPrices.*.price' => 'required|numeric|min:0',
+
+            // Variants Validation
+            'variants' => 'array',
+            'variants.*.title' => 'required|string|max:255',
+            'variants.*.sku' => ['required', 'string', 'max:255', function ($attribute, $value, $fail) {
+                preg_match('/variants\.(\d+)\.sku/', $attribute, $matches);
+                $index = $matches[1] ?? null;
+                $id = $index !== null ? ($this->variants[$index]['id'] ?? null) : null;
+
+                $exists = \App\Models\Product::where('sku', $value)
+                    ->when($id, fn ($q) => $q->where('id', '!=', $id))
+                    ->exists();
+                if ($exists) {
+                    $fail('The SKU has already been taken.');
+                }
+            }],
+            'variants.*.base_price' => 'nullable|numeric|min:0',
+            'variants.*.special_price' => 'nullable|numeric|min:0',
+            'variants.*.special_price_start' => 'nullable|date',
+            'variants.*.special_price_end' => [
+                'nullable',
+                'date',
+                function ($attribute, $value, $fail) {
+                    preg_match('/variants\.(\d+)\.special_price_end/', $attribute, $matches);
+                    $index = $matches[1] ?? null;
+                    if ($index !== null) {
+                        $start = $this->variants[$index]['special_price_start'] ?? null;
+                        if ($start && strtotime($value) < strtotime($start)) {
+                            $fail('The end date must be after or equal to the start date.');
+                        }
+                    }
+                },
+            ],
+            'variants.*.status' => 'required|in:active,inactive',
+            'variants.*.is_sign_up_for_pricing' => 'boolean',
+            'variants.*.is_cta' => 'boolean',
+            'variants.*.is_exclusive' => 'boolean',
+            'variants.*.quantityPrices' => 'array',
+            'variants.*.quantityPrices.*.quantity' => 'required|integer|min:1',
+            'variants.*.quantityPrices.*.price' => 'required|numeric|min:0',
+            'variants.*.customerPrices' => 'array',
+            'variants.*.customerPrices.*.user_id' => 'required_with:variants.*.customerPrices.*.price|exists:users,id',
+            'variants.*.customerPrices.*.price' => 'required_with:variants.*.customerPrices.*.user_id|numeric|min:0',
         ];
     }
 
@@ -481,6 +627,74 @@ class Edit extends Component
                     'file_path' => $path,
                     'is_public' => $attData['is_public'] ?? false,
                 ]);
+            }
+        }
+
+        // Sync Variants
+        $vIds = collect($this->variants)->pluck('id')->filter()->toArray();
+        // Delete variants not present anymore
+        $product->variants()->whereNotIn('id', $vIds)->delete();
+
+        foreach ($this->variants as $variantData) {
+            $slug = Str::slug($product->title.'-'.$variantData['title'].'-'.($variantData['sku'] ?: Str::random(5)));
+
+            // Ensure unique slug
+            $originalSlug = $slug;
+            $count = 1;
+            while (Product::where('slug', $slug)->when($variantData['id'], fn ($q) => $q->where('id', '!=', $variantData['id']))->exists()) {
+                $slug = $originalSlug.'-'.$count++;
+            }
+
+            $variantFields = [
+                'parent_id' => $product->id,
+                'brand_id' => $product->brand_id,
+                'title' => $variantData['title'],
+                'slug' => $slug,
+                'sku' => $variantData['sku'],
+                'pricing_mode' => null,
+                'cost' => null,
+                'rsp' => null,
+                'base_price' => $variantData['base_price'] !== '' ? $variantData['base_price'] : null,
+                'special_price' => $variantData['special_price'] !== '' ? $variantData['special_price'] : null,
+                'special_price_start' => $variantData['special_price_start'] ?: null,
+                'special_price_end' => $variantData['special_price_end'] ?: null,
+                'override_enabled' => null,
+                'override_method' => null,
+                'override_value' => null,
+                'status' => $variantData['status'],
+                'is_sign_up_for_pricing' => $variantData['is_sign_up_for_pricing'],
+                'is_cta' => $variantData['is_cta'],
+                'is_exclusive' => $variantData['is_exclusive'],
+                'created_by' => $product->created_by,
+            ];
+
+            if ($variantData['id']) {
+                $variant = Product::findOrFail($variantData['id']);
+                $variant->update($variantFields);
+            } else {
+                $variant = Product::create($variantFields);
+            }
+
+            // Sync Advance Pricing for variant
+            $vSyncData = [];
+            if ($variantData['showAdvancePricing'] && ! empty($variantData['customerPrices'])) {
+                foreach ($variantData['customerPrices'] as $cp) {
+                    if (! empty($cp['user_id']) && $cp['price'] !== null && $cp['price'] !== '') {
+                        $vSyncData[$cp['user_id']] = ['price' => $cp['price']];
+                    }
+                }
+            }
+            $variant->customerPrices()->sync($vSyncData);
+
+            // Sync Quantity Pricing for variant
+            $variant->quantityPrices()->delete();
+            foreach ($variantData['quantityPrices'] as $qp) {
+                if ($qp['quantity'] !== null && $qp['quantity'] !== '' && $qp['price'] !== null && $qp['price'] !== '') {
+                    $variant->quantityPrices()->create([
+                        'quantity' => $qp['quantity'],
+                        'price' => $qp['price'],
+                    ]);
+                }
             }
         }
 

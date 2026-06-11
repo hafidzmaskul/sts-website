@@ -1,4 +1,4 @@
-<div class="p-6 space-y-6">
+<div class="p-6 space-y-6" x-data="{ expandedParents: @js($search ? $products->pluck('id')->toArray() : []) }">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-2xl font-bold text-black">Products</h1>
@@ -56,16 +56,36 @@
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-black">
-                                    {{ $product->title }}
-                                    @if($product->is_cta)
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 ml-2">
-                                            CTA
-                                        </span>
+                                <div class="flex items-center">
+                                    @if($product->variants->isNotEmpty())
+                                        <button @click="expandedParents.includes({{ $product->id }}) ? expandedParents = expandedParents.filter(id => id !== {{ $product->id }}) : expandedParents.push({{ $product->id }})" 
+                                            class="mr-2 text-black hover:text-indigo-600 focus:outline-none transition-transform duration-200"
+                                            :class="expandedParents.includes({{ $product->id }}) ? 'rotate-90' : ''">
+                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    @else
+                                        <!-- Spacer to align single products with parent products -->
+                                        <span class="w-6"></span>
                                     @endif
+                                    <div>
+                                        <div class="text-sm font-medium text-black flex items-center">
+                                            {{ $product->title }}
+                                            @if($product->variants->isNotEmpty())
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 ml-2">
+                                                    {{ $product->variants->count() }} variants
+                                                </span>
+                                            @endif
+                                            @if($product->is_cta)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 ml-2">
+                                                    CTA
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="text-xs text-black">{{ $product->slug }}</div>
+                                    </div>
                                 </div>
-                                <div class="text-xs text-black">{{ $product->slug }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-black">{{ $product->brand->name ?? '-' }}</div>
@@ -131,6 +151,57 @@
                                 </div>
                             </td>
                         </tr>
+                        @if($product->variants->isNotEmpty())
+                            @foreach($product->variants as $variant)
+                                <tr class="bg-gray-50/50 hover:bg-gray-100/70 transition-colors border-l-4 border-indigo-500" 
+                                    x-show="expandedParents.includes({{ $product->id }})" 
+                                    x-transition>
+                                    <td class="px-6 py-3 whitespace-nowrap pl-14">
+                                        <div class="flex items-center">
+                                            <!-- Visual connector -->
+                                            <span style="color: #6b7280;" class="mr-2 font-mono">↳</span>
+                                            <div>
+                                                <div class="text-sm font-medium text-black">{{ $variant->title }}</div>
+                                                <div class="text-xs text-black">{{ $variant->slug }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm text-black">{{ $variant->brand->name ?? $product->brand->name ?? '-' }}</div>
+                                    </td>
+                                    <td class="px-6 py-3">
+                                        <div class="flex flex-wrap gap-1">
+                                            @forelse($variant->categories->isNotEmpty() ? $variant->categories : $product->categories as $cat)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-black">
+                                                    {{ $cat->name }}
+                                                </span>
+                                            @empty
+                                                <span class="text-xs text-black">No categories</span>
+                                            @endforelse
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        @if($variant->is_sign_up_for_pricing)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                Sign Up for Pricing
+                                            </span>
+                                        @else
+                                            <div class="text-sm font-medium text-black">
+                                                {{ $variant->base_price ? '£' . number_format($variant->base_price, 2) : '-' }}
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $variant->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-black' }}">
+                                            <span class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $variant->status === 'active' ? 'bg-green-600' : 'bg-gray-500' }}"></span>
+                                            {{ ucfirst($variant->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center">

@@ -52,4 +52,89 @@ class EditTest extends TestCase
             ->assertSet('customerPrices.0.user_id', $customer->id)
             ->assertSet('customerPrices.0.price', 80.00);
     }
+
+    public function test_can_add_variants_to_product()
+    {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'customer', 'guard_name' => 'web']);
+        Role::create(['name' => 'trade account', 'guard_name' => 'web']);
+        Role::create(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $brand = Brand::create(['name' => 'Test Brand', 'slug' => 'test-brand', 'is_active' => true]);
+
+        $product = Product::create([
+            'title' => 'Parent Product',
+            'slug' => 'parent-product',
+            'sku' => 'PP-001',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'base_price' => 100,
+            'created_by' => $admin->id,
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(Edit::class, ['product' => $product])
+            ->call('addVariant')
+            ->set('variants.0.title', 'Red Variant')
+            ->set('variants.0.sku', 'RED-VAR-001')
+            ->set('variants.0.pricing_mode', 'manual')
+            ->set('variants.0.base_price', 120.00)
+            ->set('variants.0.status', 'active')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('products', [
+            'parent_id' => $product->id,
+            'title' => 'Red Variant',
+            'sku' => 'RED-VAR-001',
+            'base_price' => 120.00,
+        ]);
+    }
+
+    public function test_variant_inherits_parent_pricing_mode_and_costs()
+    {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'customer', 'guard_name' => 'web']);
+        Role::create(['name' => 'trade account', 'guard_name' => 'web']);
+        Role::create(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $brand = Brand::create(['name' => 'Test Brand', 'slug' => 'test-brand', 'is_active' => true]);
+
+        $product = Product::create([
+            'title' => 'Parent Product',
+            'slug' => 'parent-product',
+            'sku' => 'PP-001',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'pricing_mode' => 'auto',
+            'cost' => 50.00,
+            'rsp' => 80.00,
+            'created_by' => $admin->id,
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(Edit::class, ['product' => $product])
+            ->call('addVariant')
+            ->set('variants.0.title', 'Inherited Pricing Variant')
+            ->set('variants.0.sku', 'RED-VAR-002')
+            ->set('variants.0.status', 'active')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $variant = Product::where('sku', 'RED-VAR-002')->first();
+        $this->assertNotNull($variant);
+        $this->assertEquals($product->id, $variant->parent_id);
+        $this->assertNull($variant->getAttributes()['pricing_mode']);
+        $this->assertNull($variant->getAttributes()['cost']);
+        $this->assertNull($variant->getAttributes()['rsp']);
+        $this->assertEquals('auto', $variant->pricing_mode);
+        $this->assertEquals(50.00, $variant->cost);
+        $this->assertEquals(80.00, $variant->rsp);
+    }
 }

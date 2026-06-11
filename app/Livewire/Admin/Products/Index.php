@@ -21,12 +21,17 @@ class Index extends Component
 
     public function render()
     {
-        $products = Product::with('categories')
+        $products = Product::with(['categories', 'brand', 'variants.categories', 'variants.brand'])
+            ->whereNull('parent_id')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%'.$this->search.'%')
                         ->orWhereHas('brand', function ($subQ) {
                             $subQ->where('name', 'like', '%'.$this->search.'%');
+                        })
+                        ->orWhereHas('variants', function ($subQ) {
+                            $subQ->where('title', 'like', '%'.$this->search.'%')
+                                ->orWhere('sku', 'like', '%'.$this->search.'%');
                         });
                 });
             })

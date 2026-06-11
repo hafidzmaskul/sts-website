@@ -97,6 +97,63 @@
                 </div>
             </div>
 
+            <!-- Categories Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold" style="color: black;">Categories</h2>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Categories -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2" style="color: black;">Categories</label>
+                        <div class="border border-gray-200 rounded-lg p-4 max-h-60 overflow-y-auto custom-scrollbar">
+                            @php
+                                $groupedCategories = $categories->groupBy('parent_id');
+                                $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
+                            @endphp
+                            @foreach($parents as $parent)
+                                <div class="space-y-1">
+                                    <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
+                                        <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
+                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
+                                        <span class="ml-2 text-sm font-semibold"
+                                            style="color: black;">{{ $parent->name }}</span>
+                                    </label>
+                                    @if($children = $groupedCategories->get($parent->id))
+                                        <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
+                                            @foreach($children as $child)
+                                                <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
+                                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
+                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
+                                                    <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            <!-- Handling orphans if any -->
+                            @foreach($groupedCategories as $parentId => $children)
+                                @if($parentId && !$categories->contains('id', $parentId))
+                                    <div class="space-y-1">
+                                        <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2"
+                                            style="color: #9ca3af;">
+                                            Uncategorized</div>
+                                        @foreach($children as $child)
+                                            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
+                                                <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
+                                                <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- General Info Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
@@ -305,42 +362,209 @@
 
                 </div>
 
-            <!-- SEO Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-xl font-semibold" style="color: black;">SEO Optimized</h2>
-                    <p class="mt-1 text-sm" style="color: #6b7280;">Improve your product's visibility on search engines.
-                    </p>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div>
-                        <div class="flex justify-between">
-                            <label class="block text-sm font-medium" style="color: black;">SEO Title</label>
-                            <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_title ?? '') }} / 60</span>
-                        </div>
-                        <input type="text" wire:model="seo_title"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                            style="color: black;">
-                    </div>
-                    <div>
-                        <div class="flex justify-between">
-                            <label class="block text-sm font-medium" style="color: black;">SEO Description</label>
-                            <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_description ?? '') }} /
-                                160</span>
-                        </div>
-                        <textarea wire:model="seo_description" rows="3"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                            style="color: black;"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">SEO Keywords</label>
-                        <input type="text" wire:model="seo_keywords" placeholder="Comma separated keywords"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                            style="color: black;">
-                    </div>
-                </div>
             </div>
-            </div>
+
+            <!-- Variants Card -->
+            @if(isset($productId))
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-xl font-semibold" style="color: black;">Product Variants</h2>
+                            <p class="mt-1 text-sm text-gray-500">Manage multiple options/variants for this product.</p>
+                        </div>
+                        <button type="button" wire:click="addVariant"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors shadow-sm">
+                            <svg class="h-5 w-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Add Variant
+                        </button>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        @if(count($variants) > 0)
+                            <div class="space-y-6">
+                                @foreach($variants as $vIndex => $variant)
+                                    <div class="p-6 bg-gray-50 rounded-xl border border-gray-200 relative space-y-6" wire:key="variant-{{ $vIndex }}">
+                                        <!-- Variant Header -->
+                                        <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+                                            <h3 class="text-md font-semibold text-gray-900">
+                                                Variant #{{ $vIndex + 1 }}: {{ $variant['title'] ?: 'New Variant' }}
+                                            </h3>
+                                            <button type="button" wire:click="removeVariant({{ $vIndex }})"
+                                                class="inline-flex items-center px-2 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-200">
+                                                Remove Variant
+                                            </button>
+                                        </div>
+
+                                        <!-- Variant Inputs -->
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
+                                                <input type="text" wire:model.live="variants.{{ $vIndex }}.title" placeholder="e.g. Red / XL"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-btn-primary-ring text-sm" style="color: black;">
+                                                @error("variants.{$vIndex}.title") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">SKU <span class="text-red-500">*</span></label>
+                                                <input type="text" wire:model.live="variants.{{ $vIndex }}.sku" placeholder="e.g. SKU-RED-XL"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-btn-primary-ring text-sm" style="color: black;">
+                                                @error("variants.{$vIndex}.sku") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                                                <select wire:model="variants.{{ $vIndex }}.status"
+                                                    class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-2 bg-white focus:border-indigo-500 focus:ring-btn-primary-ring text-sm" style="color: black;">
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                </select>
+                                                @error("variants.{$vIndex}.status") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Variant Pricing Details -->
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 space-y-4">
+                                            <h4 class="text-sm font-semibold text-gray-800 border-b pb-1">Pricing Configuration</h4>
+                                            
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-xs font-medium text-gray-700 mb-1">Base Price (GBP)</label>
+                                                    <input type="number" step="0.01" wire:model.live="variants.{{ $vIndex }}.base_price" placeholder="0.00"
+                                                        class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-1.5 bg-white text-xs" style="color: black;">
+                                                    @error("variants.{$vIndex}.base_price") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                                </div>
+                                                <div class="flex items-end text-xs text-gray-500 pb-2 italic">
+                                                    Calculated Price matches parent Pricing formula if Base Price is not set.
+                                                </div>
+                                            </div>
+
+                                            <!-- Special Price inside Variant -->
+                                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <div>
+                                                        <label class="block text-xs font-medium text-gray-700 mb-1">Special Price (GBP)</label>
+                                                        <input type="number" step="0.01" wire:model.live="variants.{{ $vIndex }}.special_price" placeholder="0.00"
+                                                            class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-1.5 bg-white text-xs" style="color: black;">
+                                                        @error("variants.{$vIndex}.special_price") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-xs font-medium text-gray-700 mb-1">Start Date</label>
+                                                        <input type="datetime-local" wire:model.live="variants.{{ $vIndex }}.special_price_start"
+                                                            class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-1 text-xs bg-white" style="color: black;">
+                                                        @error("variants.{$vIndex}.special_price_start") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-xs font-medium text-gray-700 mb-1">End Date</label>
+                                                        <input type="datetime-local" wire:model.live="variants.{{ $vIndex }}.special_price_end"
+                                                            class="block w-full rounded-lg border border-[#D2D2D2] px-3 py-1 text-xs bg-white" style="color: black;">
+                                                        @error("variants.{$vIndex}.special_price_end") <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Checkboxes inside Variant -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+                                                <label class="flex items-center cursor-pointer">
+                                                    <input type="checkbox" wire:model="variants.{{ $vIndex }}.is_sign_up_for_pricing" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                    <span class="ml-2 text-xs text-gray-700 font-medium">Sign Up for Pricing</span>
+                                                </label>
+                                                <label class="flex items-center cursor-pointer">
+                                                    <input type="checkbox" wire:model="variants.{{ $vIndex }}.is_cta" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                    <span class="ml-2 text-xs text-gray-700 font-medium">Is CTA Product</span>
+                                                </label>
+                                            </div>
+
+                                            <!-- Quantity Pricing Tiers for Variant -->
+                                            <div class="border-t border-gray-200 pt-4">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="text-xs font-semibold text-gray-700">Quantity Pricing Tiers</span>
+                                                    <button type="button" wire:click="addVariantQuantityPrice({{ $vIndex }})"
+                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                                                        + Add Tier
+                                                    </button>
+                                                </div>
+                                                @if(count($variant['quantityPrices'] ?? []) > 0)
+                                                    <div class="space-y-2">
+                                                        @foreach($variant['quantityPrices'] as $qpIndex => $qp)
+                                                            <div class="flex items-center gap-3 p-2 bg-gray-50 rounded border border-gray-200" wire:key="var-{{ $vIndex }}-qp-{{ $qpIndex }}">
+                                                                <div class="flex-1 grid grid-cols-2 gap-2">
+                                                                    <div>
+                                                                        <input type="number" min="1" step="1" wire:model="variants.{{ $vIndex }}.quantityPrices.{{ $qpIndex }}.quantity" placeholder="Qty"
+                                                                            class="block w-full rounded border border-[#D2D2D2] px-2 py-1 bg-white text-xs" style="color: black;">
+                                                                        @error("variants.{$vIndex}.quantityPrices.{$qpIndex}.quantity") <span class="text-red-500 text-xxs block mt-0.5">{{ $message }}</span> @enderror
+                                                                    </div>
+                                                                    <div>
+                                                                        <input type="number" step="0.01" wire:model="variants.{{ $vIndex }}.quantityPrices.{{ $qpIndex }}.price" placeholder="Price (GBP)"
+                                                                            class="block w-full rounded border border-[#D2D2D2] px-2 py-1 bg-white text-xs" style="color: black;">
+                                                                        @error("variants.{$vIndex}.quantityPrices.{$qpIndex}.price") <span class="text-red-500 text-xxs block mt-0.5">{{ $message }}</span> @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <button type="button" wire:click="removeVariantQuantityPrice({{ $vIndex }}, {{ $qpIndex }})"
+                                                                    class="text-gray-400 hover:text-red-500 transition-colors">
+                                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                                </button>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Advance Customer Pricing for Variant -->
+                                            <div class="border-t border-gray-200 pt-4">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <label class="flex items-center cursor-pointer">
+                                                        <input type="checkbox" wire:model.live="variants.{{ $vIndex }}.showAdvancePricing" class="h-3.5 w-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        <span class="ml-2 text-xs font-semibold text-gray-700">Customer Specific Prices</span>
+                                                    </label>
+                                                    @if($variant['showAdvancePricing'])
+                                                        <button type="button" wire:click="addVariantCustomerPrice({{ $vIndex }})"
+                                                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                                                            + Add Customer
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                                @if($variant['showAdvancePricing'] && count($variant['customerPrices'] ?? []) > 0)
+                                                    <div class="space-y-2">
+                                                        @foreach($variant['customerPrices'] as $cpIndex => $cp)
+                                                            <div class="flex items-center gap-3 p-2 bg-gray-50 rounded border border-gray-200" wire:key="var-{{ $vIndex }}-cp-{{ $cpIndex }}">
+                                                                <div class="flex-1 grid grid-cols-2 gap-2">
+                                                                    <div>
+                                                                        <select wire:model="variants.{{ $vIndex }}.customerPrices.{{ $cpIndex }}.user_id"
+                                                                            class="block w-full rounded border border-[#D2D2D2] px-2 py-1 bg-white text-xs" style="color: black;">
+                                                                            <option value="">Select Customer</option>
+                                                                            @foreach($customers as $c)
+                                                                                <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->email }})</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        @error("variants.{$vIndex}.customerPrices.{$cpIndex}.user_id") <span class="text-red-500 text-xxs block mt-0.5">{{ $message }}</span> @enderror
+                                                                    </div>
+                                                                    <div>
+                                                                        <input type="number" step="0.01" wire:model="variants.{{ $vIndex }}.customerPrices.{{ $cpIndex }}.price" placeholder="Price"
+                                                                            class="block w-full rounded border border-[#D2D2D2] px-2 py-1 bg-white text-xs" style="color: black;">
+                                                                        @error("variants.{$vIndex}.customerPrices.{$cpIndex}.price") <span class="text-red-500 text-xxs block mt-0.5">{{ $message }}</span> @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <button type="button" wire:click="removeVariantCustomerPrice({{ $vIndex }}, {{ $cpIndex }})"
+                                                                    class="text-gray-400 hover:text-red-500 transition-colors">
+                                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                                </button>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-8 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                <p class="mt-2 text-sm text-gray-500 font-medium">No variants created for this product yet.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
 
         </div>
 
@@ -381,14 +605,16 @@
 
                     <!-- Pricing Mode -->
                     <div>
-                        <label class="block text-sm font-medium" style="color: black;">Base Price (GBP)</label>
-                        <div class="relative rounded-lg shadow-sm">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                                <span style="color: #6b7280;" class="sm:text-sm">£</span>
-                            </div>
-                            <input type="number" step="0.01" wire:model="base_price"
-                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                                placeholder="0.00" style="color: black;">
+                        <label class="block text-sm font-medium mb-2" style="color: black;">Pricing Mode</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" wire:model.live="pricing_mode" value="auto" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Auto (Formula)</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" wire:model.live="pricing_mode" value="manual" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Manual (Fixed)</span>
+                            </label>
                         </div>
                     </div>
 
@@ -590,14 +816,6 @@
                                 <span style="color: #6b7280;">Mark this product as a Call to Action product.</span>
                             </span>
                         </label>
-                        <label class="flex items-start cursor-pointer">
-                            <input type="checkbox" wire:model="is_exclusive"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring mt-1">
-                            <span class="ml-2 text-sm" style="color: black;">
-                                <span class="font-medium block" style="color: black;">Is Exclusive Product</span>
-                                <span style="color: #6b7280;">Mark this product as a trade-only exclusive product.</span>
-                            </span>
-                        </label>
                     </div>
 
                     @if($showAdvancePricing)
@@ -738,63 +956,44 @@
 
 
 
-            <!-- Organization Card (Categories + Brand) -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold" style="color: black;">Categories</h2>
-                </div>
-                <div class="p-6 space-y-6">
-                    <!-- Categories -->
-                    <div>
-                        <label class="block text-sm font-medium mb-2" style="color: black;">Categories</label>
-                        <div class="border border-gray-200 rounded-lg p-4 max-h-60 overflow-y-auto custom-scrollbar">
-                            @php
-                                $groupedCategories = $categories->groupBy('parent_id');
-                                $parents = $groupedCategories->get('') ?? $groupedCategories->get(null) ?? collect();
-                            @endphp
-                            @foreach($parents as $parent)
-                                <div class="space-y-1">
-                                    <label class="flex items-center p-2 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                        <input type="checkbox" wire:model="selectedCategories" value="{{ $parent->id }}"
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                        <span class="ml-2 text-sm font-semibold"
-                                            style="color: black;">{{ $parent->name }}</span>
-                                    </label>
-                                    @if($children = $groupedCategories->get($parent->id))
-                                        <div class="pl-6 space-y-1 border-l-2 border-gray-100 ml-2">
-                                            @foreach($children as $child)
-                                                <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                                    <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                                    <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                            <!-- Handling orphans if any -->
-                            @foreach($groupedCategories as $parentId => $children)
-                                @if($parentId && !$categories->contains('id', $parentId))
-                                    <div class="space-y-1">
-                                        <div class="text-xs font-semibold uppercase tracking-wider px-2 mt-2"
-                                            style="color: #9ca3af;">
-                                            Uncategorized</div>
-                                        @foreach($children as $child)
-                                            <label class="flex items-center p-1.5 rounded hover:bg-gray-50 w-full cursor-pointer">
-                                                <input type="checkbox" wire:model="selectedCategories" value="{{ $child->id }}"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring">
-                                                <span class="ml-2 text-sm" style="color: black;">{{ $child->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+
+        </div>
+    </div>
+
+    <!-- SEO Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-8">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold" style="color: black;">SEO Optimized</h2>
+            <p class="mt-1 text-sm" style="color: #6b7280;">Improve your product's visibility on search engines.
+            </p>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <div class="flex justify-between">
+                    <label class="block text-sm font-medium" style="color: black;">SEO Title</label>
+                    <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_title ?? '') }} / 60</span>
+                </div>
+                <input type="text" wire:model="seo_title"
+                    class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
+                    style="color: black;">
+            </div>
+            <div>
+                <div class="flex justify-between">
+                    <label class="block text-sm font-medium" style="color: black;">SEO Description</label>
+                    <span class="text-xs" style="color: #6b7280;">{{ strlen($seo_description ?? '') }} /
+                        160</span>
+                </div>
+                <textarea wire:model="seo_description" rows="3"
+                    class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
+                    style="color: black;"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium" style="color: black;">SEO Keywords</label>
+                <input type="text" wire:model="seo_keywords" placeholder="Comma separated keywords"
+                    class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
+                    style="color: black;">
+            </div>
         </div>
     </div>
 

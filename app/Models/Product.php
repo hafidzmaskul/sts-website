@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 class Product extends Model
 {
     protected $fillable = [
+        'parent_id',
         'brand_id',
         'title',
         'slug',
@@ -40,6 +41,7 @@ class Product extends Model
     ];
 
     protected $casts = [
+        'parent_id' => 'integer',
         'is_sign_up_for_pricing' => 'boolean',
         'is_exclusive' => 'boolean',
         'is_cta' => 'boolean',
@@ -56,6 +58,16 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Product::class, 'parent_id');
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(Product::class, 'parent_id');
     }
 
     public function pricingFormula()
@@ -229,5 +241,68 @@ class Product extends Model
     public function likes()
     {
         return $this->belongsToMany(User::class, 'product_user_likes')->withTimestamps();
+    }
+
+    public function getCostAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return $this->parent?->cost;
+        }
+
+        return $value;
+    }
+
+    public function getRspAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return $this->parent?->rsp;
+        }
+
+        return $value;
+    }
+
+    public function getPricingModeAttribute($value)
+    {
+        if ($this->parent_id && ($value === null || $value === '')) {
+            return $this->parent?->pricing_mode;
+        }
+
+        return $value;
+    }
+
+    public function getPricingFormulaIdAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return $this->parent?->pricing_formula_id;
+        }
+
+        return $value;
+    }
+
+    public function getOverrideEnabledAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return (bool) $this->parent?->override_enabled;
+        }
+
+        return (bool) $value;
+    }
+
+    public function getOverrideMethodAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return $this->parent?->override_method;
+        }
+
+        return $value;
+    }
+
+    public function getOverrideValueAttribute($value)
+    {
+        if ($this->parent_id && $value === null) {
+            return $this->parent?->override_value;
+        }
+
+        return $value;
     }
 }
