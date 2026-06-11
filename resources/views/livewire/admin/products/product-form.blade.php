@@ -353,18 +353,30 @@
                     <h2 class="text-lg font-semibold" style="color: black;">Pricing</h2>
                 </div>
                 <div class="p-6 space-y-6">
-                    <!-- Brand -->
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">Status</label>
-                        <select wire:model="status"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                            style="color: black;">
-                            <option value="">Select a Brand</option>
-                            @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    <!-- Brand & Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium" style="color: black;">Brand <span class="text-red-500">*</span></label>
+                            <select wire:model.live="brand_id"
+                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
+                                style="color: black;">
+                                <option value="">Select a Brand</option>
+                                @foreach($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('brand_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium" style="color: black;">Status <span class="text-red-500">*</span></label>
+                            <select wire:model="status"
+                                class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
+                                style="color: black;">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            @error('status') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                        </div>
                     </div>
 
                     <!-- Pricing Mode -->
@@ -498,9 +510,7 @@
                                 <input type="datetime-local" wire:model="special_price_end"
                                     class="mt-1 w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-indigo-500 text-sm" style="color: black;">
                             </div>
-                            <input type="number" step="0.01" wire:model="special_price"
-                                class="w-full rounded-lg border pl-7 pr-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                                placeholder="0.00" style="color: black;">
+
                         </div>
                     </div>
 
@@ -578,6 +588,14 @@
                             <span class="ml-2 text-sm" style="color: black;">
                                 <span class="font-medium block" style="color: black;">Is CTA Product</span>
                                 <span style="color: #6b7280;">Mark this product as a Call to Action product.</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start cursor-pointer">
+                            <input type="checkbox" wire:model="is_exclusive"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-btn-primary-ring mt-1">
+                            <span class="ml-2 text-sm" style="color: black;">
+                                <span class="font-medium block" style="color: black;">Is Exclusive Product</span>
+                                <span style="color: #6b7280;">Mark this product as a trade-only exclusive product.</span>
                             </span>
                         </label>
                     </div>
@@ -718,47 +736,12 @@
                 </div>
             </div>
 
-            <!-- Settings Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold" style="color: black;">Settings</h2>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium" style="color: black;">Brand</label>
-                        <select wire:model="brand_id"
-                            class="w-full rounded-lg border px-3 py-2 bg-white border-[#D2D2D2] focus:border-indigo-500 focus:ring-btn-primary-ring"
-                            style="color: black;">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
 
-                    <div class="space-y-3 pt-2">
-                        <label class="flex items-start cursor-pointer">
-                            <input type="checkbox" wire:model="is_sign_up_for_pricing"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
-                            <span class="ml-2 text-sm" style="color: black;">
-                                <span class="font-medium block" style="color: black;">Sign Up for Pricing</span>
-                                <span style="color: #6b7280;">Hide price and show inquiry form.</span>
-                            </span>
-                        </label>
-                        <label class="flex items-start cursor-pointer">
-                            <input type="checkbox" wire:model="is_cta"
-                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1">
-                            <span class="ml-2 text-sm" style="color: black;">
-                                <span class="font-medium block" style="color: black;">Is CTA Product</span>
-                                <span style="color: #6b7280;">Mark this product as a Call to Action product.</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
 
             <!-- Organization Card (Categories + Brand) -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold" style="color: black;">Organization</h2>
+                    <h2 class="text-lg font-semibold" style="color: black;">Categories</h2>
                 </div>
                 <div class="p-6 space-y-6">
                     <!-- Categories -->
