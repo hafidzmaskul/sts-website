@@ -46,11 +46,11 @@ const RecursiveSidebarCategoryItem = ({
 
     return (
         <div className={`pb-3 ${level === 0 ? 'border-b border-gray-200 last:border-b-0 last:pb-0' : 'mt-2'}`}>
-            <div className="flex items-center justify-between">
-                <label className={`flex items-center gap-2 font-medium text-[#232323] ${level === 0 ? 'text-sm' : 'text-sm text-gray-700 font-normal cursor-pointer'}`}>
+            <div className="flex items-center justify-between gap-2">
+                <label className={`flex items-center gap-2 font-medium text-[#232323] whitespace-nowrap ${level === 0 ? 'text-sm' : 'text-sm text-gray-700 font-normal cursor-pointer'}`}>
                     <input
                         type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-[#0079C2]"
+                        className="shrink-0 h-4 w-4 rounded border-gray-300 text-[#0079C2]"
                         checked={isChecked}
                         ref={el => {
                             if (el && level === 0) {
@@ -68,7 +68,7 @@ const RecursiveSidebarCategoryItem = ({
                     <button
                         type="button"
                         onClick={() => onToggleExpand(category.id)}
-                        className="ml-2"
+                        className="ml-2 shrink-0"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +514,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                     </div>
                                 </div>
 
-                                <div className="mt-6 space-y-4">
+                                <div className="mt-6 space-y-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                                     {Array.isArray(productCategory) && productCategory.length > 0 ? (
                                         productCategory.map((category) => (
                                             <RecursiveSidebarCategoryItem
