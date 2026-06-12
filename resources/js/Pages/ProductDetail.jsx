@@ -101,9 +101,15 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 };
 
 export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false, variants = [] }) {
+    const [activeProduct, setActiveProduct] = useState(product);
+
+    useEffect(() => {
+        setActiveProduct(product);
+    }, [product]);
+
     // Check if any category has name 'Discontinued'
-    const isDiscontinued = Array.isArray(product?.categories)
-        ? product.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
+    const isDiscontinued = Array.isArray(activeProduct?.categories)
+        ? activeProduct.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
         : false;
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -154,7 +160,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         );
     }
 
-    const data = product;
+    const data = activeProduct;
 
     // SAFE access for images (api returns image_url directly)
     const productImages = useMemo(() => {
@@ -850,19 +856,31 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     <div className="relative max-w-xs">
                                         <select
                                             id="variant-select"
-                                            value={product.id}
+                                            value={activeProduct.id}
                                             onChange={(e) => {
                                                 const selectedId = parseInt(e.target.value);
                                                 const selectedVariant = variants.find(v => v.id === selectedId);
-                                                if (selectedVariant && selectedVariant.slug) {
-                                                    router.visit(`/products/${selectedVariant.slug}`);
+                                                if (selectedVariant) {
+                                                    setActiveProduct(selectedVariant);
+                                                    if (selectedVariant.slug) {
+                                                        window.history.pushState(null, '', `/products/${selectedVariant.slug}`);
+                                                    }
+                                                    // Automatically select the first image of the variant if it exists
+                                                    if (Array.isArray(selectedVariant.images) && selectedVariant.images.length > 0) {
+                                                        const firstImage = selectedVariant.images[0];
+                                                        const formatted = firstImage.image_url || (firstImage.image_path?.startsWith('/') ? firstImage.image_path : `/storage/${firstImage.image_path}`);
+                                                        const index = productImages.findIndex(img => img === formatted);
+                                                        if (index !== -1) {
+                                                            setActiveImageIndex(index);
+                                                        }
+                                                    }
                                                 }
                                             }}
                                             className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm font-medium text-gray-900 shadow-sm focus:border-[#0079C2] focus:outline-none focus:ring-1 focus:ring-[#0079C2] transition-colors appearance-none cursor-pointer"
                                         >
                                             {variants.map((variant) => (
                                                 <option key={variant.id} value={variant.id}>
-                                                    {variant.id === product.parent_id || (!product.parent_id && variant.id === product.id)
+                                                    {!variant.parent_id
                                                         ? `${variant.title} (Default)`
                                                         : variant.title
                                                     }
