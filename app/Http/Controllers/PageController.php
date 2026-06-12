@@ -166,7 +166,19 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::with('images')->where('slug', $slug)->with('categories')->with('brand')->firstOrFail();
+        $product = Product::with(['images', 'categories', 'brand', 'variants'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $variants = collect();
+
+        if ($product->parent_id) {
+            $parent = Product::with(['variants', 'images', 'categories', 'brand'])->findOrFail($product->parent_id);
+            $variants = collect([$parent])->concat($parent->variants);
+        } elseif ($product->variants->isNotEmpty()) {
+            $variants = collect([$product])->concat($product->variants);
+        }
+
         $relatedProducts = Product::with('images')
             ->where('id', '!=', $product->id)
             ->where('status', 'active')
@@ -176,7 +188,7 @@ class PageController
         return Inertia::render('ProductDetail', [
             'product' => $product,
             'products' => $relatedProducts,
-
+            'variants' => $variants->values(),
         ]);
     }
 

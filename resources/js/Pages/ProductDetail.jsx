@@ -100,7 +100,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
     );
 };
 
-export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false }) {
+export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false, variants = [] }) {
     // Check if any category has name 'Discontinued'
     const isDiscontinued = Array.isArray(product?.categories)
         ? product.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
@@ -817,6 +817,43 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     </p>
                                 )}
                             </div>
+
+                            {/* Variant Selector Dropdown */}
+                            {variants && variants.length > 1 && (
+                                <div className="space-y-2 mt-4">
+                                    <label htmlFor="variant-select" className="block text-sm font-medium text-gray-700">
+                                        Select Variant:
+                                    </label>
+                                    <div className="relative max-w-xs">
+                                        <select
+                                            id="variant-select"
+                                            value={product.id}
+                                            onChange={(e) => {
+                                                const selectedId = parseInt(e.target.value);
+                                                const selectedVariant = variants.find(v => v.id === selectedId);
+                                                if (selectedVariant && selectedVariant.slug) {
+                                                    router.visit(`/products/${selectedVariant.slug}`);
+                                                }
+                                            }}
+                                            className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm font-medium text-gray-900 shadow-sm focus:border-[#0079C2] focus:outline-none focus:ring-1 focus:ring-[#0079C2] transition-colors appearance-none cursor-pointer"
+                                        >
+                                            {variants.map((variant) => (
+                                                <option key={variant.id} value={variant.id}>
+                                                    {variant.id === product.parent_id || (!product.parent_id && variant.id === product.id)
+                                                        ? `${variant.title} (Default)`
+                                                        : variant.title
+                                                    }
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                                            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Quantity Input */}
                             {!isDiscontinued && (
