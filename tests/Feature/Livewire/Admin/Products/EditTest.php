@@ -240,4 +240,36 @@ class EditTest extends TestCase
         ]);
         \Illuminate\Support\Facades\Storage::disk('public')->assertMissing($imagePath);
     }
+
+    public function test_can_add_and_remove_new_images_on_edit()
+    {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'customer', 'guard_name' => 'web']);
+        Role::create(['name' => 'trade account', 'guard_name' => 'web']);
+        Role::create(['name' => 'credit facilities account', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $brand = Brand::create(['name' => 'Test Brand', 'slug' => 'test-brand', 'is_active' => true]);
+
+        $product = Product::create([
+            'title' => 'Parent Product',
+            'slug' => 'parent-product',
+            'sku' => 'PP-001',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'base_price' => 100,
+            'created_by' => $admin->id,
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(Edit::class, ['product' => $product])
+            ->assertCount('newImages', 0)
+            ->call('addImage')
+            ->assertCount('newImages', 1)
+            ->assertSet('newImages.0.sequence', 1)
+            ->call('removeNewImage', 0)
+            ->assertCount('newImages', 0);
+    }
 }

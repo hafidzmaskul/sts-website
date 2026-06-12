@@ -744,6 +744,21 @@ class Edit extends Component
         return redirect()->route('admin.products.index');
     }
 
+    public function addImage()
+    {
+        $this->newImages[] = [
+            'image' => null,
+            'sequence' => count($this->newImages) + 1,
+            'key' => Str::random(10),
+        ];
+    }
+
+    public function removeNewImage($index)
+    {
+        unset($this->newImages[$index]);
+        $this->newImages = array_values($this->newImages);
+    }
+
     public function deleteImage($imageId)
     {
         $image = ProductImage::findOrFail($imageId);
