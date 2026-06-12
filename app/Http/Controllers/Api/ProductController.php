@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['brand', 'categories', 'images'])
+        $query = Product::with(['brand', 'categories', 'images', 'variants.images'])
             ->where('status', 'active');
 
         if ($request->has('search')) {
@@ -41,7 +41,7 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        $product = Product::with(['brand', 'categories', 'images'])
+        $product = Product::with(['brand', 'categories', 'images', 'variants.images'])
             ->where('slug', $slug)
             ->where('status', 'active')
             ->first();
@@ -52,6 +52,21 @@ class ProductController extends Controller
                 'message' => 'Product not found',
             ], 404);
         }
+
+        $variants = collect();
+
+        if ($product->parent_id) {
+            $parent = Product::with(['variants.images', 'images', 'categories', 'brand'])
+                ->where('status', 'active')
+                ->find($product->parent_id);
+            if ($parent) {
+                $variants = collect([$parent])->concat($parent->variants);
+            }
+        } elseif ($product->variants->isNotEmpty()) {
+            $variants = collect([$product])->concat($product->variants);
+        }
+
+        $product->setRelation('variants', $variants->values());
 
         $relatedProducts = Product::with(['brand', 'categories', 'images'])
             ->where('status', 'active')
