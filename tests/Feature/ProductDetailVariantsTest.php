@@ -50,6 +50,7 @@ test('product detail page passes variants prop for parent product', function () 
     $response->assertInertia(fn (Assert $page) => $page
         ->component('ProductDetail')
         ->has('variants', 3)
+        ->has('variants.0.images')
         ->where('variants.0.id', $parent->id)
         ->where('variants.1.id', $variant1->id)
         ->where('variants.2.id', $variant2->id)
@@ -87,6 +88,7 @@ test('product detail page passes variants prop for child variant', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('ProductDetail')
         ->has('variants', 2)
+        ->has('variants.0.images')
         ->where('variants.0.id', $parent->id)
         ->where('variants.1.id', $variant1->id)
     );

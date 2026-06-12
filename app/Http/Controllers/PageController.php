@@ -166,14 +166,14 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::with(['images', 'categories', 'brand', 'variants'])
+        $product = Product::with(['images', 'categories', 'brand', 'variants.images'])
             ->where('slug', $slug)
             ->firstOrFail();
 
         $variants = collect();
 
         if ($product->parent_id) {
-            $parent = Product::with(['variants', 'images', 'categories', 'brand'])->findOrFail($product->parent_id);
+            $parent = Product::with(['variants.images', 'images', 'categories', 'brand'])->findOrFail($product->parent_id);
             $variants = collect([$parent])->concat($parent->variants);
         } elseif ($product->variants->isNotEmpty()) {
             $variants = collect([$product])->concat($product->variants);

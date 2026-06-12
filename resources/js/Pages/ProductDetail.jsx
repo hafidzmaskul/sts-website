@@ -158,13 +158,36 @@ export default function ProductDetail({ product, products = [], logged, is_guest
 
     // SAFE access for images (api returns image_url directly)
     const productImages = useMemo(() => {
+        const imagesList = [];
+        const formatImg = (img) => img.image_url || (img.image_path?.startsWith('/') ? img.image_path : `/storage/${img.image_path}`);
+
         if (Array.isArray(data.images) && data.images.length > 0) {
-            return data.images
-                .sort((a, b) => (a.sequence || 0) - (b.sequence || 0))
-                .map((img) => img.image_url || (img.image_path?.startsWith('/') ? img.image_path : `/storage/${img.image_path}`));
+            const sortedMain = [...data.images].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+            sortedMain.forEach(img => {
+                imagesList.push(formatImg(img));
+            });
         }
+
+        if (Array.isArray(variants)) {
+            variants.forEach(v => {
+                if (v.id !== data.id && Array.isArray(v.images)) {
+                    const sortedV = [...v.images].sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+                    sortedV.forEach(img => {
+                        const formatted = formatImg(img);
+                        if (!imagesList.includes(formatted)) {
+                            imagesList.push(formatted);
+                        }
+                    });
+                }
+            });
+        }
+
+        if (imagesList.length > 0) {
+            return imagesList;
+        }
+
         return ['/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'];
-    }, [data.images]);
+    }, [data.images, data.id, variants]);
 
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const imageContainerRef = useRef(null);
