@@ -1,22 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { usePage } from '@inertiajs/react';
-
-const formatPrice = (price) => {
-    if (price === null || price === undefined) {
-        return '';
-    }
-
-    if (typeof price === 'number') {
-        return new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'GBP',
-            maximumFractionDigits: 0,
-        }).format(price);
-    }
-
-    return price;
-};
+import { formatPrice } from '../helpers/currency';
 
 // Fungsi untuk menentukan warna badge berdasarkan nilai badge
 const getBadgeBgColor = (badge) => {

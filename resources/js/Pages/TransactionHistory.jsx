@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
+import { formatPrice } from '../helpers/currency';
 
 export default function TransactionHistory() {
     const [transactions, setTransactions] = useState([]);
@@ -30,9 +31,7 @@ export default function TransactionHistory() {
         });
     };
 
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(price);
-    };
+
 
     return (
         <div className="min-h-screen flex flex-col bg-[#F3F3F3]">

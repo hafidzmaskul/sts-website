@@ -14,6 +14,8 @@ class Index extends Component
 {
     use WithFileUploads, WithPagination;
 
+    public array $expandedCategories = [];
+
     public string $search = '';
 
     public bool $showForm = false;
@@ -146,10 +148,20 @@ class Index extends Component
         }
 
         $category->delete();
+        $this->expandedCategories = array_diff($this->expandedCategories, [$id]);
         $this->dispatch('notify', type: 'success', message: 'Category deleted successfully.');
 
         if ($this->editingId === $id) {
             $this->resetForm();
+        }
+    }
+
+    public function toggleCategory(int $id): void
+    {
+        if (in_array($id, $this->expandedCategories)) {
+            $this->expandedCategories = array_diff($this->expandedCategories, [$id]);
+        } else {
+            $this->expandedCategories[] = $id;
         }
     }
 

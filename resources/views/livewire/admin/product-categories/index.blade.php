@@ -250,6 +250,18 @@
                                 <tr class="hover:bg-blue-50/30 transition-colors group border-l-4 border-l-indigo-400">
                                     <td class="px-6 py-3">
                                         <div class="flex items-center gap-3">
+                                            @if($category->children->isNotEmpty())
+                                                <button type="button" wire:click="toggleCategory({{ $category->id }})" 
+                                                    class="text-gray-400 hover:text-indigo-600 focus:outline-none shrink-0" 
+                                                    title="{{ in_array($category->id, $expandedCategories) ? 'Collapse' : 'Expand' }}">
+                                                    <svg class="w-4 h-4 transform transition-transform duration-200 {{ in_array($category->id, $expandedCategories) ? 'rotate-90' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                                                    </svg>
+                                                </button>
+                                            @else
+                                                <div class="w-4 h-4 shrink-0"></div>
+                                            @endif
+
                                             @if($category->image_path)
                                                 <img src="{{ Storage::url($category->image_path) }}" class="h-10 w-10 rounded-xl object-cover ring-2 ring-indigo-100 shrink-0" alt="{{ $category->name }}">
                                             @else
@@ -294,8 +306,8 @@
                                 </tr>
 
                                 {{-- Children --}}
-                                @if($category->children->isNotEmpty())
-                                    <x-product-category-children :children="$category->children" :depth="1" />
+                                @if($category->children->isNotEmpty() && in_array($category->id, $expandedCategories))
+                                    <x-product-category-children :children="$category->children" :depth="1" :expanded-categories="$expandedCategories" />
                                 @endif
                             @endif
 

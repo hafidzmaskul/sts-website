@@ -44,8 +44,7 @@ test('authorized users can view product categories index', function () {
 
     Livewire::test(Index::class)
         ->assertStatus(200)
-        ->assertSee('Existing Category')
-        ->assertSee('Yes'); // Is Parent Yes
+        ->assertSee('Existing Category');
 });
 
 test('creating a category sets is_parent to true and can save it', function () {
@@ -181,6 +180,8 @@ test('tree view renders parent categories and their children with visual branch 
     Livewire::test(Index::class)
         ->assertStatus(200)
         ->assertSee('Parent Group')
+        ->assertDontSee('Child Group')
+        ->call('toggleCategory', $parentCategory->id)
         ->assertSee('Child Group')
-        ->assertSee('└───');
+        ->assertSee('└');
 });

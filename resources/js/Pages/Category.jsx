@@ -6,6 +6,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import ProductListingCard from '../components/ProductListingCard';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
+import { formatPrice } from '../helpers/currency';
 import 'swiper/css';
 
 const hasSelectedDescendants = (category, selectedSubCategories) => {
@@ -112,13 +113,6 @@ const sliderImages = [
 ];
 
 const PRODUCT_PAGE_SIZE = 28;
-
-const formatPrice = (amount) =>
-    new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP',
-        maximumFractionDigits: 0,
-    }).format(amount);
 
 // Helper function to get product price with priority: calculated_price -> special_price -> base_price
 const getProductPrice = (product) => {

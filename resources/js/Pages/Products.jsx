@@ -6,6 +6,7 @@ import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import ProductListingCard from '../components/ProductListingCard';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
+import { formatPrice } from '../helpers/currency';
 import 'swiper/css';
 
 const hasSelectedDescendants = (category, selectedSubCategories) => {
@@ -112,13 +113,6 @@ const sliderImages = [
 ];
 
 const PRODUCT_PAGE_SIZE = 28;
-
-const formatPrice = (amount) =>
-    new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP',
-        maximumFractionDigits: 0,
-    }).format(amount);
 
 // Helper function to get product price with priority: calculated_price -> special_price -> base_price
 const getProductPrice = (product) => {
@@ -474,9 +468,9 @@ export default function Products({ products = [], baseProducts = [], productCate
                     </h1>
                     <div
                         id="product-and-filter"
-                        className="mt-6 grid grid-cols-1 xl:grid-cols-5 gap-8 items-start"
+                        className="mt-6 grid grid-cols-1 xl:grid-cols-10 gap-8 items-start"
                     >
-                        <aside className="xl:col-span-1">
+                        <aside className="xl:col-span-3">
                             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold text-[#232323]">
@@ -535,7 +529,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                             </div>
                         </aside>
 
-                        <section className="xl:col-span-4">
+                        <section className="xl:col-span-7">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <p className="text-sm text-gray-600">
                                     Showing{' '}
@@ -583,7 +577,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                             </div>
 
                             {isInitialLoading ? (
-                                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                                     {Array.from({ length: 8 }).map((_, index) => (
                                         <div
                                             key={index}
@@ -604,7 +598,7 @@ export default function Products({ products = [], baseProducts = [], productCate
                                         </p>
                                     ) : (
                                         <>
-                                            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                                            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                                                 {visibleProducts.map((product) => (
 
                                                     <ProductListingCard
