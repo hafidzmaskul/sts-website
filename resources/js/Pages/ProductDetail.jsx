@@ -6,21 +6,7 @@ import Footer from '../landing/Footer';
 import FeaturedProductsSection from '../components/FeaturedProductsSection';
 import LoginModal from '../components/LoginModal';
 import Toast from '../components/Toast';
-
-const formatPrice = (price) => {
-    if (!price && price !== 0) {
-        return '-';
-    }
-    const parsedPrice = parseFloat(String(price).replace(/[^\d.-]/g, ''));
-    if (Number.isNaN(parsedPrice)) {
-        return '-';
-    }
-    return new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP',
-        maximumFractionDigits: 0,
-    }).format(parsedPrice);
-};
+import { formatPrice } from '../helpers/currency';
 
 // Helper function to get product price with priority: calculated_price -> special_price -> base_price
 const getProductPrice = (product) => {

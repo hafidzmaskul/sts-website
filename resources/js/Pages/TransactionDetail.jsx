@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
+import { formatPrice } from '../helpers/currency';
 
 export default function TransactionDetail({ id }) {
     const [transaction, setTransaction] = useState(null);
@@ -24,11 +25,7 @@ export default function TransactionDetail({ id }) {
         fetchTransaction();
     }, [id]);
 
-    const formatPrice = (price) => {
-        let p = Number(price);
-        if (isNaN(p)) return '-';
-        return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(p);
-    };
+
 
     const formatDate = (dateString, format = 'long') => {
         if (!dateString) return '-';

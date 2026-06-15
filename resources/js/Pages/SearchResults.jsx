@@ -3,13 +3,7 @@ import { Head } from '@inertiajs/react';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import ProductListingCard from '../components/ProductListingCard';
-
-const formatPrice = (amount) =>
-    new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP',
-        maximumFractionDigits: 0,
-    }).format(amount);
+import { formatPrice } from '../helpers/currency';
 
 // Helper function to get product price with priority: calculated_price -> special_price -> base_price
 const getProductPrice = (product) => {

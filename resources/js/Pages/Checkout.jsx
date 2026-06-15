@@ -4,14 +4,7 @@ import axios from 'axios';
 import Header from '../landing/Header';
 import Footer from '../landing/Footer';
 import Toast from '../components/Toast';
-
-const formatPrice = (price) => {
-    if (!price && price !== 0) return '-';
-    const cleanedPrice = price.toString().replace(/[^\d.-]/g, '');
-    const parsedPrice = parseFloat(cleanedPrice);
-    if (Number.isNaN(parsedPrice)) return '-';
-    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(parsedPrice);
-};
+import { formatPrice } from '../helpers/currency';
 
 export default function Checkout({ auth }) {
     console.log(auth)
