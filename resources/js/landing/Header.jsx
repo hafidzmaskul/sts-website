@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import axios from 'axios';
+import { formatPrice } from '../helpers/currency';
 
 const RecursiveCategoryItem = ({ category, onClose, level = 0 }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -198,7 +199,9 @@ export default function Header() {
     const {
         logged: isLoggedIn = false,
         is_guest: isGuest = false,
-        productCategories = []
+        productCategories = [],
+        auth,
+        credit_limit_balance
     } = usePage().props;
 
     const pages = [
@@ -556,6 +559,16 @@ export default function Header() {
                     </div>
                 )}
             </li>
+            {isLoggedIn && (
+                <li>
+                    <button
+                        onClick={() => router.post('/logout')}
+                        className="w-full text-left block py-3 px-4 rounded-xl hover:bg-red-50 text-red-600 font-semibold transition-colors cursor-pointer"
+                    >
+                        Logout
+                    </button>
+                </li>
+            )}
         </ul>
     );
 
@@ -567,8 +580,21 @@ export default function Header() {
                     <div className="flex-shrink-0 text-center">
                         <span>Free shipping on all orders over $50</span>
                     </div>
-                    <div className="flex space-x-4 items-center justify-center">
+                    <div className="flex space-x-4 items-center justify-center flex-wrap">
+                    {isLoggedIn && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-white">Hi, {auth?.name}</span>
+                                {auth?.roles?.some(role => role.name === 'credit facilities account') && (
+                                    <span className="text-[#FFD600]">
+                                       (Credit: {credit_limit_balance ? formatPrice(credit_limit_balance) : '£0.00'})
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                                <span className="opacity-60">|</span>
+
                         <a href="/contact-us" className={`hover:underline ${isActive('/contact-us') ? 'text-[#FFD600]' : ''}`}>Need help?</a>
+                        
                     </div>
                 </div>
             </div>
@@ -619,14 +645,17 @@ export default function Header() {
                                 </svg>
                             </button>
                         </div>
-                        {/* Show Login button next to search bar on mobile AND user not logged in */}
-                        {isMobile && (!isLoggedIn || isGuest) && (
-                            <a
-                                href="/login"
-                                className="flex-shrink-0 inline-flex items-center px-4 py-2 rounded-xl font-semibold bg-[#0079C2] hover:bg-[#00609C] text-white transition text-sm whitespace-nowrap"
-                                style={{ minWidth: 72, height: 38 }}
+                        {/* Show Cart icon next to search bar on mobile */}
+                        {isMobile && (
+                            <a 
+                                href="/cart" 
+                                className={`flex-shrink-0 flex items-center bg-white rounded-xl p-2 relative ${isActive('/cart') ? "text-[#007580]" : "text-gray-800"}`}
+                                style={{ height: 38 }}
                             >
-                                Login
+                                <svg xmlns="http://www.w3.org/2000/svg" width={22} height={22} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
+                                <div className="absolute -top-1 -right-1 inline-flex items-center justify-center h-4 w-4 text-[9px] font-bold rounded-full bg-[#007580] text-white">
+                                    {cartCount}
+                                </div>
                             </a>
                         )}
                     </div>
@@ -641,7 +670,6 @@ export default function Header() {
                         >
                             <a href="/cart" className={`flex items-center bg-white rounded-xl p-2 md:p-3 relative ${isActive('/cart') ? "text-[#007580]" : ""}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M4 3.75a.75.75 0 0 0 0 1.5h1.374l1.888 10.384A.75.75 0 0 0 8 16.25h10a.75.75 0 0 0 .728-.568l2-8A.75.75 0 0 0 20 6.75H7.171l-.433-2.384A.75.75 0 0 0 6 3.75zm4.626 11l-1.182-6.5H19.04l-1.625 6.5zm2.514-4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zm-1.39 6.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m5 1.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" clipRule="evenodd"></path></svg>
-                                <span className="font-semibold mr-2 hidden md:inline">Cart</span>
                                 <div className="inline-flex items-center justify-center h-5 w-5 text-xs font-bold rounded-full bg-[#007580] text-white ">
                                     {cartCount}
                                 </div>
@@ -701,7 +729,6 @@ export default function Header() {
                             <>
                                 <a href="/my-transactions" className={`flex items-center bg-white rounded-xl p-2 md:p-3 ${isActive('/my-transactions') ? "text-[#007580]" : "text-[#636270] hover:text-[#007580]"}`} title="My Transactions">
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0a9 9 0 0 1 18 0Z" /></svg>
-                                    <span className="font-semibold ml-2 hidden md:inline">History</span>
                                 </a>
                                 {!isGuest && (
                                     <div
@@ -763,6 +790,12 @@ export default function Header() {
                                 <a className={`bg-white rounded-xl p-2 md:p-3 hidden md:flex ${isActive('/dashboard') ? "text-[#007580]" : ""}`} href='/dashboard'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={1.5}><path d="M5.4 21h13.2c.636 0 1.247-.24 1.697-.67c.45-.428.703-1.01.703-1.616a5.58 5.58 0 0 0-1.757-4.04A6.16 6.16 0 0 0 15 13H9a6.16 6.16 0 0 0-4.243 1.674A5.58 5.58 0 0 0 3 18.714c0 .607.253 1.188.703 1.617c.45.428 1.06.669 1.697.669" clipRule="evenodd"></path><path d="M16 6a4 4 0 1 1-8 0a4 4 0 0 1 8 0"></path></g></svg>
                                 </a>
+                                <button 
+                                    onClick={() => router.post('/logout')}
+                                    className="hidden md:flex text-xs bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2.5 rounded-xl transition-colors font-semibold border border-red-100 cursor-pointer"
+                                >
+                                    Logout
+                                </button>
                             </>
                         )}
                     </div>
@@ -862,8 +895,19 @@ export default function Header() {
                     )}
                 </div>
                 <div className="px-4 pb-6 text-sm sm:text-base mt-2">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 flex-wrap gap-y-2">
                         <a href="/contact-us" className={`hover:underline text-[#232323] ${isActive('/contact-us') ? 'text-[#007580]' : ''}`}>Need help?</a>
+                        {isLoggedIn && (
+                            <div className="flex items-center gap-2 text-sm text-[#232323]">
+                                <span className="opacity-40">|</span>
+                                <span>Hi, {auth?.name}</span>
+                                {auth?.roles?.some(role => role.name === 'credit facilities account') && (
+                                    <span className="text-[#007580]">
+                                        (Credit: {credit_limit_balance ? formatPrice(credit_limit_balance) : '£0.00'})
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </nav>
