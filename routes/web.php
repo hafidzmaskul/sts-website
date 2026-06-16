@@ -7,8 +7,6 @@ use Livewire\Volt\Volt;
 // Create route names and controller-based routes for main and right navigation items
 // Public Routes
 
-
-
 Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
     Route::get('/', 'landing')->name('home');
     Route::get('/services', 'services')->name('services');
@@ -167,6 +165,10 @@ Route::middleware([\App\Http\Middleware\EnsureGuestUser::class])->group(function
         // Quotes
         Route::get('/admin/quotes', \App\Livewire\Admin\Quotes\Index::class)->name('admin.quotes.index');
         Route::get('/admin/quotes/{quote}', \App\Livewire\Admin\Quotes\Show::class)->name('admin.quotes.show');
+
+        // Quote Builders
+        Route::get('/admin/quote-builders', \App\Livewire\Admin\QuoteBuilders\Index::class)->name('admin.quote-builders.index');
+        Route::get('/admin/quote-builders/{quoteBuilder}', \App\Livewire\Admin\QuoteBuilders\Show::class)->name('admin.quote-builders.show');
 
         // Transactions
         Route::get('/admin/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('admin.transactions.index');

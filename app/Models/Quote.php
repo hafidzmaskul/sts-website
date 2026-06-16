@@ -19,6 +19,7 @@ class Quote extends Model
         'postal_code',
         'project_details',
         'marketing_opt_in',
+        'source_page',
     ];
 
     protected $casts = [

@@ -93,10 +93,43 @@ export default function ProductDetail({ product, products = [], logged, is_guest
         setActiveProduct(product);
     }, [product]);
 
+    // Find the parent product in variants (the one with parent_id = null/undefined)
+    const parentProduct = useMemo(() => {
+        if (variants && variants.length > 0) {
+            return variants.find(v => !v.parent_id) || null;
+        }
+        return null;
+    }, [variants]);
+
+    // Merge active product with parent fallbacks for descriptive/specification/SEO fields
+    const data = useMemo(() => {
+        if (!activeProduct) {
+            return {};
+        }
+
+        return {
+            ...activeProduct,
+            key_feature: activeProduct.key_feature || parentProduct?.key_feature || '',
+            product_overview: activeProduct.product_overview || parentProduct?.product_overview || '',
+            main_feature: activeProduct.main_feature || parentProduct?.main_feature || '',
+            information: activeProduct.information || parentProduct?.information || '',
+            specification: activeProduct.specification || parentProduct?.specification || '',
+            seo_title: activeProduct.seo_title || parentProduct?.seo_title || '',
+            seo_description: activeProduct.seo_description || parentProduct?.seo_description || '',
+            seo_keywords: activeProduct.seo_keywords || parentProduct?.seo_keywords || '',
+            brand: activeProduct.brand || parentProduct?.brand || null,
+            categories: (activeProduct.categories && activeProduct.categories.length > 0)
+                ? activeProduct.categories
+                : (parentProduct?.categories || []),
+        };
+    }, [activeProduct, parentProduct]);
+
     // Check if any category has name 'Discontinued'
-    const isDiscontinued = Array.isArray(activeProduct?.categories)
-        ? activeProduct.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
-        : false;
+    const isDiscontinued = useMemo(() => {
+        return Array.isArray(data?.categories)
+            ? data.categories.some(cat => (cat?.name || '').toLowerCase() === 'discontinued')
+            : false;
+    }, [data.categories]);
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -145,8 +178,6 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             </div>
         );
     }
-
-    const data = activeProduct;
 
     // SAFE access for images (api returns image_url directly)
     const productImages = useMemo(() => {

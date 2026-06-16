@@ -22,7 +22,8 @@ export default function QuoteForm({
     successMessage = "Thank you! Your quote request has been submitted.",
     showTitle = true,
     className = "",
-    formId = "quote"
+    formId = "quote",
+    sourcePage = ""
 }) {
     const [form, setForm] = useState(initialFormState);
     const [submitting, setSubmitting] = useState(false);
@@ -79,7 +80,7 @@ export default function QuoteForm({
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, source_page: sourcePage }),
             });
 
             const data = await response.json();

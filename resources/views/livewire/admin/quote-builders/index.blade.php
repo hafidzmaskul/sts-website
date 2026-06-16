@@ -1,8 +1,8 @@
 <div class="p-6 space-y-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-black">Quote Submission</h1>
-            <p class="text-sm mt-1" style="color: #000;">Manage requested quotes</p>
+            <h1 class="text-2xl font-bold text-black">Quote Builders</h1>
+            <p class="text-sm mt-1" style="color: #000;">Manage customer quote builder drafts</p>
         </div>
     </div>
 
@@ -16,8 +16,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium" style="color: #000;">Total Quotes</p>
-                    <p class="text-2xl font-semibold text-black">{{ number_format($totalQuotes) }}</p>
+                    <p class="text-sm font-medium" style="color: #000;">Total Draft Builders</p>
+                    <p class="text-2xl font-semibold text-black">{{ number_format($totalBuilders) }}</p>
                 </div>
             </div>
         </div>
@@ -29,8 +29,8 @@
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium" style="color: #000;">Today</p>
-                    <p class="text-2xl font-semibold text-black">{{ number_format($quotesToday) }}</p>
+                    <p class="text-sm font-medium" style="color: #000;">Created Today</p>
+                    <p class="text-2xl font-semibold text-black">{{ number_format($buildersToday) }}</p>
                 </div>
             </div>
         </div>
@@ -38,12 +38,12 @@
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-50" style="color: #000;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium" style="color: #000;">This Month</p>
-                    <p class="text-2xl font-semibold text-black">{{ number_format($quotesThisMonth) }}</p>
+                    <p class="text-sm font-medium" style="color: #000;">Total Configured Items</p>
+                    <p class="text-2xl font-semibold text-black">{{ number_format($totalItems) }}</p>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                         </svg>
                     </div>
                     <input type="text" wire:model.live.debounce.300ms="search"
-                        placeholder="Search quotes..."
+                        placeholder="Search quote builders by name, customer, or company..."
                         class="block w-full pl-10 pr-3 py-2 border border-[#D2D2D2] rounded-lg leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-btn-primary-ring focus:border-indigo-500 sm:text-sm"
                         style="color: #000; placeholder-color: #888;">
                 </div>
@@ -97,19 +97,19 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
-                            Name
+                            Builder Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
+                            Customer Name
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
                             Company
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
-                            Email
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider" style="color: #000;">
+                            Total Items
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
-                            Source
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
-                            Date
+                            Last Updated
                         </th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style="color: #000;">
                             Actions
@@ -117,29 +117,46 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($quotes as $quote)
+                    @forelse($quoteBuilders as $builder)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium" style="color: #000;">{{ $quote->first_name }} {{ $quote->last_name }}</div>
+                                <div class="text-sm font-semibold" style="color: #000;">
+                                    <a href="{{ route('admin.quote-builders.show', $builder) }}" class="hover:underline text-indigo-600">
+                                        {{ $builder->name }}
+                                    </a>
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm" style="color: #000;">{{ $quote->company_name }}</div>
+                                <div class="text-sm" style="color: #000;">
+                                    @if($builder->user)
+                                        <a href="{{ route('admin.customers.show', $builder->user->customer?->id ?? '#') }}" class="hover:underline">
+                                            {{ $builder->user->name }}
+                                        </a>
+                                        <div class="text-xs text-gray-500">{{ $builder->user->email }}</div>
+                                    @else
+                                        <span class="text-gray-400 italic">Unknown</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm" style="color: #000;">{{ $quote->email }}</div>
+                                <div class="text-sm" style="color: #000;">
+                                    {{ $builder->user->customer?->company?->name ?? '-' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {{ $builder->products->count() }} items
+                                </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm" style="color: #000;">{{ $quote->source_page ?? 'Direct API' }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm" style="color: #000;">{{ $quote->created_at->format('M d, Y H:i') }}</div>
+                                <div class="text-sm" style="color: #000;">{{ $builder->updated_at->format('M d, Y H:i') }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.quotes.show', $quote) }}" class="text-black hover:text-indigo-600 transition-colors inline-flex" title="View details">
+                                    <a href="{{ route('admin.quote-builders.show', $builder) }}" class="text-black hover:text-indigo-600 transition-colors inline-flex" title="View details">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     </a>
-                                    <button wire:confirm="Are you sure you want to delete this quote?" wire:click="delete({{ $quote->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
+                                    <button wire:confirm="Are you sure you want to delete this quote builder draft?" wire:click="delete({{ $builder->id }})" class="text-black hover:text-red-600 transition-colors inline-flex" title="Delete">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     </button>
                                 </div>
@@ -152,7 +169,7 @@
                                     <svg class="w-12 h-12 mb-4" style="color: #bbb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <p class="text-lg font-medium">No quotes found</p>
+                                    <p class="text-lg font-medium">No quote builders found</p>
                                 </div>
                             </td>
                         </tr>
@@ -162,7 +179,7 @@
         </div>
 
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            {{ $quotes->links() }}
+            {{ $quoteBuilders->links() }}
         </div>
     </div>
 </div>
