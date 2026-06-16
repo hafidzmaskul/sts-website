@@ -192,6 +192,11 @@
                             :class="request()->routeIs('admin.quotes.*') ? 'custom-navitem-active' : 'custom-navitem'">
                             {{ __('Quotes') }}
                         </flux:navlist.item>
+                        <flux:navlist.item icon="clipboard-document" :href="route('admin.quote-builders.index')"
+                            :current="request()->routeIs('admin.quote-builders.*')" wire:navigate
+                            :class="request()->routeIs('admin.quote-builders.*') ? 'custom-navitem-active' : 'custom-navitem'">
+                            {{ __('Quote Builders') }}
+                        </flux:navlist.item>
                     @endcan
                     {{-- @can('transactions.view') --}}
                     <flux:navlist.item icon="banknotes" :href="route('admin.transactions.index')"
