@@ -38,11 +38,27 @@ class HandleInertiaRequests extends Middleware
     {
         $user = Auth::user();
 
+        $creditLimitBalance = null;
+        if ($user && $user->hasRole('credit facilities account')) {
+            $latestLimit = null;
+            if ($user->customer?->company_id) {
+                $latestLimit = \App\Models\CreditLimit::where('company_id', $user->customer->company_id)
+                    ->latest()
+                    ->first();
+            } elseif ($user->customer?->id) {
+                $latestLimit = \App\Models\CreditLimit::where('customer_id', $user->customer->id)
+                    ->latest()
+                    ->first();
+            }
+            $creditLimitBalance = $latestLimit ? $latestLimit->balance : 0;
+        }
+
         return [
             ...parent::share($request),
             'logged' => $user && ! $user->hasRole('guest'),
             'is_guest' => $user && $user->hasRole('guest'),
             'auth' => $user ? $user->load(['customer.company', 'roles']) : null,
+            'credit_limit_balance' => $creditLimitBalance,
             'productCategories' => \App\Models\ProductCategory::with('children')->whereNull('parent_id')->get(),
         ];
     }
