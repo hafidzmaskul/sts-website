@@ -22,6 +22,7 @@ class QuoteController extends Controller
             'postal_code' => 'required|string|max:20',
             'project_details' => 'required|string',
             'marketing_opt_in' => 'boolean',
+            'source_page' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -54,6 +55,7 @@ class QuoteController extends Controller
                 "Email: {$quote->email}\n".
                 "Phone: {$quote->phone}\n".
                 "Country: {$quote->country}\n".
+                'Source Page: '.($quote->source_page ?? 'Direct API')."\n".
                 "Project Details:\n{$quote->project_details}\n\n";
             // "View in Admin Panel: " . route('admin.quotes.show', $quote); // Route naming might differ
 

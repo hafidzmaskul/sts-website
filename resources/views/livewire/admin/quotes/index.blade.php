@@ -1,7 +1,7 @@
 <div class="p-6 space-y-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-black">Quotes</h1>
+            <h1 class="text-2xl font-bold text-black">Quote Submission</h1>
             <p class="text-sm mt-1" style="color: #000;">Manage requested quotes</p>
         </div>
     </div>
@@ -106,6 +106,9 @@
                             Email
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
+                            Source
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #000;">
                             Date
                         </th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style="color: #000;">
@@ -126,6 +129,9 @@
                                 <div class="text-sm" style="color: #000;">{{ $quote->email }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm" style="color: #000;">{{ $quote->source_page ?? 'Direct API' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm" style="color: #000;">{{ $quote->created_at->format('M d, Y H:i') }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -141,7 +147,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center" style="color: #000;">
                                     <svg class="w-12 h-12 mb-4" style="color: #bbb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

@@ -285,6 +285,7 @@ export default function Configuration({ services = [] }) {
                             showTitle={true}
                             className="w-full max-w-lg"
                             formId="quote"
+                            sourcePage="Configuration"
                         />
                     </div>
                 </section>

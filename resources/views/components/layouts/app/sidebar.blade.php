@@ -190,7 +190,7 @@
                         <flux:navlist.item icon="currency-dollar" :href="route('admin.quotes.index')"
                             :current="request()->routeIs('admin.quotes.*')" wire:navigate
                             :class="request()->routeIs('admin.quotes.*') ? 'custom-navitem-active' : 'custom-navitem'">
-                            {{ __('Quotes') }}
+                            {{ __('Quote Submission') }}
                         </flux:navlist.item>
                         <flux:navlist.item icon="clipboard-document" :href="route('admin.quote-builders.index')"
                             :current="request()->routeIs('admin.quote-builders.*')" wire:navigate

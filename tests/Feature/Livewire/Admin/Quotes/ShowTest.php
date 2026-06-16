@@ -147,4 +147,16 @@ class ShowTest extends TestCase
             ->assertSee('Hammer')
             ->assertSee('Nails');
     }
+
+    public function test_admin_can_view_quote_source_page()
+    {
+        $quote = Quote::factory()->create([
+            'source_page' => 'System Design',
+        ]);
+
+        Livewire::actingAs($this->admin)
+            ->test(Show::class, ['quote' => $quote])
+            ->assertOk()
+            ->assertSee('System Design');
+    }
 }
