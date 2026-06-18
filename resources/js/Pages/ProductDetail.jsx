@@ -133,6 +133,18 @@ export default function ProductDetail({ product, products = [], logged, is_guest
     }, [data.categories]);
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [activePopoverId, setActivePopoverId] = useState(null);
+    const popoverRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (activePopoverId !== null && popoverRef.current && !popoverRef.current.contains(event.target)) {
+                setActivePopoverId(null);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [activePopoverId]);
 
     // Toast state
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
@@ -533,6 +545,8 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
             />
+
+
 
             {/* Product Request Modal CTA */}
             {!isDiscontinued && (
@@ -1115,32 +1129,82 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                             </div>
 
                             {/* Downloads / Attachments Card */}
-                            {data.attachments && data.attachments.filter(att => att.is_public == 1).length > 0 && (
+                            {data.attachments && data.attachments.length > 0 && (
                                 <div className="mt-6 space-y-4">
                                     <div className="font-inter font-bold text-lg mb-2">
                                         Downloads
                                     </div>
                                     <div className="flex flex-col items-start gap-3">
-                                        {data.attachments.filter(att => att.is_public == 1).map((attachment) => {
+                                        {data.attachments.map((attachment) => {
                                             const filename = attachment.file_path ? attachment.file_path.split('/').pop() : '';
                                             const downloadUrl = attachment.file_path ? (attachment.file_path.startsWith('http') ? attachment.file_path : `/storage/${attachment.file_path}`) : '#';
                                             const displayName = attachment.name ? attachment.name.toUpperCase() : 'DOWNLOAD';
+                                            const isDownloadable = attachment.is_public == 1 || logged;
 
-                                            return (
-                                                <a
-                                                    key={attachment.id}
-                                                    href={downloadUrl}
-                                                    download
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-3 px-6 py-3.5 bg-[#0079C2] hover:bg-[#00609C] text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-200 group"
-                                                >
-                                                    <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                    </svg>
-                                                    <span>{displayName} - {filename}</span>
-                                                </a>
-                                            );
+                                            if (isDownloadable) {
+                                                return (
+                                                    <a
+                                                        key={attachment.id}
+                                                        href={downloadUrl}
+                                                        download
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-3 px-6 py-3.5 bg-[#0079C2] hover:bg-[#00609C] text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-200 group"
+                                                    >
+                                                        <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                        </svg>
+                                                        <span>{displayName} - {filename}</span>
+                                                    </a>
+                                                );
+                                            } else {
+                                                const isPopoverActive = activePopoverId === attachment.id;
+                                                return (
+                                                    <div 
+                                                        key={attachment.id} 
+                                                        ref={isPopoverActive ? popoverRef : null} 
+                                                        className="relative w-full sm:w-auto"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setActivePopoverId(isPopoverActive ? null : attachment.id);
+                                                            }}
+                                                            className="inline-flex items-center gap-3 px-6 py-3.5 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-200 group cursor-pointer text-left w-full sm:w-auto"
+                                                        >
+                                                            <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                                            </svg>
+                                                            <span>{displayName} - {filename}</span>
+                                                        </button>
+
+                                                        {isPopoverActive && (
+                                                            <div className="absolute left-0 bottom-full mb-3 z-[60] w-66 p-4 bg-white border border-gray-200 rounded-xl shadow-xl animate-fade-in-up">
+                                                                <div className="text-sm text-gray-600 mb-3 font-normal">
+                                                                    You need to be logged in to download <strong>{displayName}</strong>.
+                                                                </div>
+                                                                <div className="flex gap-2 justify-end">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setActivePopoverId(null)}
+                                                                        className="px-3 py-1.5 text-xs border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+                                                                    >
+                                                                        Close
+                                                                    </button>
+                                                                    <a
+                                                                        href="/login"
+                                                                        className="px-3 py-1.5 text-xs bg-[#0079C2] hover:bg-[#005a91] text-white rounded-lg transition font-medium"
+                                                                    >
+                                                                        Login
+                                                                    </a>
+                                                                </div>
+                                                                {/* Arrow */}
+                                                                <div className="absolute top-full left-6 -translate-y-1/2 rotate-45 w-2.5 h-2.5 bg-white border-r border-b border-gray-200"></div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            }
                                         })}
                                     </div>
                                 </div>
