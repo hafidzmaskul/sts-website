@@ -166,7 +166,7 @@ class PageController
 
     public function productDetail(string $slug): Response
     {
-        $product = Product::with(['images', 'categories', 'brand', 'variants.images'])
+        $product = Product::with(['images', 'categories', 'brand', 'variants.images', 'attachments'])
             ->where('slug', $slug)
             ->firstOrFail();
 

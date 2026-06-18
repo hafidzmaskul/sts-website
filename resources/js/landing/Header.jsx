@@ -406,34 +406,36 @@ export default function Header() {
                 </a>
             )}
             {/* Become Customer Dropdown Desktop */}
-            <div className="relative" ref={becomeCustomerRef}>
-                <button
-                    className={`flex items-center px-3 py-2 rounded-xl transition ${becomeCustomerMenu.some(link => isActive(link.href)) ? 'text-[#007580]' : 'text-[#636270] hover:text-[#007580]'
-                        }`}
-                    onClick={() => setShowBecomeCustomer(s => !s)}
-                    type="button"
-                >
-                    Become Customer
-                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                {showBecomeCustomer && (
-                    <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg z-50 rounded">
-                        {becomeCustomerMenu.map(link => (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                className={`block px-4 py-2 hover:bg-gray-100 ${isActive(link.href) ? 'text-[#007580]' : 'text-[#636270]'
-                                    }`}
-                                onClick={() => setShowBecomeCustomer(false)}
-                            >
-                                {link.label}
-                            </a>
-                        ))}
-                    </div>
-                )}
-            </div>
+            {!isLoggedIn && (
+                <div className="relative" ref={becomeCustomerRef}>
+                    <button
+                        className={`flex items-center px-3 py-2 rounded-xl transition ${becomeCustomerMenu.some(link => isActive(link.href)) ? 'text-[#007580]' : 'text-[#636270] hover:text-[#007580]'
+                            }`}
+                        onClick={() => setShowBecomeCustomer(s => !s)}
+                        type="button"
+                    >
+                        Become Customer
+                        <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    {showBecomeCustomer && (
+                        <div className="absolute left-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg z-50 rounded">
+                            {becomeCustomerMenu.map(link => (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`block px-4 py-2 hover:bg-gray-100 ${isActive(link.href) ? 'text-[#007580]' : 'text-[#636270]'
+                                        }`}
+                                    onClick={() => setShowBecomeCustomer(false)}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </>
     );
 
@@ -533,32 +535,34 @@ export default function Header() {
                     </a>
                 </li>
             )}
-            <li className="relative">
-                <button
-                    className={`flex items-center w-full py-3 px-4 rounded-xl hover:bg-gray-100 transition text-left ${becomeCustomerMenu.some(link => isActive(link.href)) ? 'text-[#007580] font-bold' : 'text-[#636270]'
-                        }`}
-                    onClick={() => setShowBecomeCustomerMobile(s => !s)}
-                >
-                    Become Customer
-                    <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                {showBecomeCustomerMobile && (
-                    <div className="mt-1 ml-3 bg-white border border-gray-200 shadow-lg z-50 rounded w-48 absolute left-0">
-                        {becomeCustomerMenu.map(link => (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                className={`block px-4 py-2 hover:bg-gray-100 ${isActive(link.href) ? 'text-[#007580] font-bold' : 'text-[#636270]'}`}
-                                onClick={() => setShowBecomeCustomerMobile(false)}
-                            >
-                                {link.label}
-                            </a>
-                        ))}
-                    </div>
-                )}
-            </li>
+            {!isLoggedIn && (
+                <li className="relative">
+                    <button
+                        className={`flex items-center w-full py-3 px-4 rounded-xl hover:bg-gray-100 transition text-left ${becomeCustomerMenu.some(link => isActive(link.href)) ? 'text-[#007580] font-bold' : 'text-[#636270]'
+                            }`}
+                        onClick={() => setShowBecomeCustomerMobile(s => !s)}
+                    >
+                        Become Customer
+                        <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    {showBecomeCustomerMobile && (
+                        <div className="mt-1 ml-3 bg-white border border-gray-200 shadow-lg z-50 rounded w-48 absolute left-0">
+                            {becomeCustomerMenu.map(link => (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`block px-4 py-2 hover:bg-gray-100 ${isActive(link.href) ? 'text-[#007580] font-bold' : 'text-[#636270]'}`}
+                                    onClick={() => setShowBecomeCustomerMobile(false)}
+                                >
+                                    {link.label}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </li>
+            )}
             {isLoggedIn && (
                 <li>
                     <button
