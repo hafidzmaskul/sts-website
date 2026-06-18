@@ -88,7 +88,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
 export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false, variants = [] }) {
     const [activeProduct, setActiveProduct] = useState(product);
-
+    console.log(product)
     useEffect(() => {
         setActiveProduct(product);
     }, [product]);
@@ -121,6 +121,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             categories: (activeProduct.categories && activeProduct.categories.length > 0)
                 ? activeProduct.categories
                 : (parentProduct?.categories || []),
+            attachments: activeProduct.attachments || parentProduct?.attachments || [],
         };
     }, [activeProduct, parentProduct]);
 
@@ -1003,49 +1004,57 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                             )}
 
                             {data.key_feature && (
-                                <div>
-                                    <div className="font-inter font-bold text-lg mb-2">
-                                        Key Feature
+                                <>
+                                    <div>
+                                        <div className="font-inter font-bold text-lg mb-2">
+                                            Key Feature
+                                        </div>
+                                        <div className="font-poppins font-normal text-md">
+                                            <div dangerouslySetInnerHTML={{ __html: data.key_feature }} />
+                                        </div>
                                     </div>
-                                    <div className="font-poppins font-normal text-md">
-                                        <div dangerouslySetInnerHTML={{ __html: data.key_feature }} />
-                                    </div>
-                                </div>
+                                    <hr />
+                                </>
                             )}
-                            <hr />
                             {data.product_overview && (
-                                <div>
-                                    <div className="font-inter font-bold text-lg mb-2">
-                                        Product Overview
+                                <>
+                                    <div>
+                                        <div className="font-inter font-bold text-lg mb-2">
+                                            Product Overview
+                                        </div>
+                                        <div className="font-poppins font-normal text-md">
+                                            <div dangerouslySetInnerHTML={{ __html: data.product_overview }} />
+                                        </div>
                                     </div>
-                                    <div className="font-poppins font-normal text-md">
-                                        <div dangerouslySetInnerHTML={{ __html: data.product_overview }} />
-                                    </div>
-                                </div>
+                                    <hr />
+                                </>
                             )}
-                            <hr />
                             {data.main_feature && (
-                                <div>
-                                    <div className="font-inter font-bold text-lg mb-2">
-                                        Main Features
+                                <>
+                                    <div>
+                                        <div className="font-inter font-bold text-lg mb-2">
+                                            Main Features
+                                        </div>
+                                        <div className="font-poppins font-normal text-md">
+                                            <div dangerouslySetInnerHTML={{ __html: data.main_feature }} />
+                                        </div>
                                     </div>
-                                    <div className="font-poppins font-normal text-md">
-                                        <div dangerouslySetInnerHTML={{ __html: data.main_feature }} />
-                                    </div>
-                                </div>
+                                    <hr />
+                                </>
                             )}
-                            <hr />
                             {data.information && (
-                                <div>
-                                    <div className="font-inter font-bold text-lg mb-2">
-                                        Information
+                                <>
+                                    <div>
+                                        <div className="font-inter font-bold text-lg mb-2">
+                                            Information
+                                        </div>
+                                        <div className="font-poppins font-normal text-md">
+                                            <div dangerouslySetInnerHTML={{ __html: data.information }} />
+                                        </div>
                                     </div>
-                                    <div className="font-poppins font-normal text-md">
-                                        <div dangerouslySetInnerHTML={{ __html: data.information }} />
-                                    </div>
-                                </div>
+                                    <hr />
+                                </>
                             )}
-                            <hr />
 
                             <div className="mt-4 space-y-3">
                                 <div className="font-inter font-bold text-lg mb-2">
@@ -1104,6 +1113,38 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     );
                                 })}
                             </div>
+
+                            {/* Downloads / Attachments Card */}
+                            {data.attachments && data.attachments.filter(att => att.is_public == 1).length > 0 && (
+                                <div className="mt-6 space-y-4">
+                                    <div className="font-inter font-bold text-lg mb-2">
+                                        Downloads
+                                    </div>
+                                    <div className="flex flex-col items-start gap-3">
+                                        {data.attachments.filter(att => att.is_public == 1).map((attachment) => {
+                                            const filename = attachment.file_path ? attachment.file_path.split('/').pop() : '';
+                                            const downloadUrl = attachment.file_path ? (attachment.file_path.startsWith('http') ? attachment.file_path : `/storage/${attachment.file_path}`) : '#';
+                                            const displayName = attachment.name ? attachment.name.toUpperCase() : 'DOWNLOAD';
+
+                                            return (
+                                                <a
+                                                    key={attachment.id}
+                                                    href={downloadUrl}
+                                                    download
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-3 px-6 py-3.5 bg-[#0079C2] hover:bg-[#00609C] text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition duration-200 group"
+                                                >
+                                                    <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    </svg>
+                                                    <span>{displayName} - {filename}</span>
+                                                </a>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
