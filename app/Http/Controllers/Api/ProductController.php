@@ -41,7 +41,7 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        $product = Product::with(['brand', 'categories', 'images', 'variants.images'])
+        $product = Product::with(['brand', 'categories', 'images', 'attachments', 'variants.images', 'variants.attachments'])
             ->where('slug', $slug)
             ->where('status', 'active')
             ->first();
@@ -56,7 +56,7 @@ class ProductController extends Controller
         $variants = collect();
 
         if ($product->parent_id) {
-            $parent = Product::with(['variants.images', 'images', 'categories', 'brand'])
+            $parent = Product::with(['variants.images', 'variants.attachments', 'images', 'attachments', 'categories', 'brand'])
                 ->where('status', 'active')
                 ->find($product->parent_id);
             if ($parent) {

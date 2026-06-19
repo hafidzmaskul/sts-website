@@ -2,11 +2,46 @@
 
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\ProductAttachment;
 use App\Models\ProductImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
+
+test('detail product api includes attachments with is_public flag', function () {
+    $user = User::factory()->create();
+    $brand = Brand::create(['name' => 'Brand Test', 'slug' => 'brand-test']);
+
+    $product = Product::create([
+        'title' => 'Product With Attachment',
+        'slug' => 'product-with-attachment',
+        'sku' => 'ATT1',
+        'base_price' => 100,
+        'status' => 'active',
+        'brand_id' => $brand->id,
+        'created_by' => $user->id,
+    ]);
+
+    $attachment = ProductAttachment::create([
+        'product_id' => $product->id,
+        'name' => 'Datasheet',
+        'file_path' => 'attachments/datasheet.pdf',
+        'is_public' => true,
+    ]);
+
+    $response = $this->getJson('/api/products/'.$product->slug);
+
+    $response->assertSuccessful();
+
+    $data = $response->json('data');
+    expect($data['attachments'])->toBeArray();
+    expect($data['attachments'])->toHaveCount(1);
+    expect($data['attachments'][0]['id'])->toBe($attachment->id);
+    expect($data['attachments'][0]['name'])->toBe('Datasheet');
+    expect($data['attachments'][0]['file_path'])->toBe('attachments/datasheet.pdf');
+    expect($data['attachments'][0]['is_public'])->toBeTrue();
+});
 
 test('list product api includes variants and their images', function () {
     $user = User::factory()->create();

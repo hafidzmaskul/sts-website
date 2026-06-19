@@ -10,7 +10,18 @@ class ProductAttachment extends Model
         'product_id',
         'name',
         'file_path',
+        'is_public',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_public' => 'boolean',
+        ];
+    }
 
     public function product()
     {
