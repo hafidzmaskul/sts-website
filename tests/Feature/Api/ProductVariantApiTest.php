@@ -6,6 +6,7 @@ use App\Models\ProductAttachment;
 use App\Models\ProductImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -40,7 +41,35 @@ test('detail product api includes attachments with is_public flag', function () 
     expect($data['attachments'][0]['id'])->toBe($attachment->id);
     expect($data['attachments'][0]['name'])->toBe('Datasheet');
     expect($data['attachments'][0]['file_path'])->toBe('attachments/datasheet.pdf');
+    expect($data['attachments'][0]['file_url'])->toBe(Storage::disk('public')->url('attachments/datasheet.pdf'));
+    expect($data['attachments'][0]['file_url'])->toStartWith('http');
     expect($data['attachments'][0]['is_public'])->toBeTrue();
+});
+
+test('detail product api returns external attachment urls unchanged', function () {
+    $user = User::factory()->create();
+    $brand = Brand::create(['name' => 'Brand Test', 'slug' => 'brand-test']);
+
+    $product = Product::create([
+        'title' => 'Product With External Attachment',
+        'slug' => 'product-external-attachment',
+        'sku' => 'ATT2',
+        'base_price' => 100,
+        'status' => 'active',
+        'brand_id' => $brand->id,
+        'created_by' => $user->id,
+    ]);
+
+    ProductAttachment::create([
+        'product_id' => $product->id,
+        'name' => 'External Doc',
+        'file_path' => 'https://cdn.example.com/docs/manual.pdf',
+        'is_public' => true,
+    ]);
+
+    $data = $this->getJson('/api/products/'.$product->slug)->json('data');
+
+    expect($data['attachments'][0]['file_url'])->toBe('https://cdn.example.com/docs/manual.pdf');
 });
 
 test('list product api includes variants and their images', function () {

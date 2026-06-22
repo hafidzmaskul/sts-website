@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductAttachment extends Model
 {
@@ -21,6 +23,26 @@ class ProductAttachment extends Model
         return [
             'is_public' => 'boolean',
         ];
+    }
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'file_url',
+    ];
+
+    public function getFileUrlAttribute(): ?string
+    {
+        if (! $this->file_path) {
+            return null;
+        }
+
+        if (Str::startsWith($this->file_path, ['http://', 'https://'])) {
+            return $this->file_path;
+        }
+
+        return Storage::disk('public')->url($this->file_path);
     }
 
     public function product()
