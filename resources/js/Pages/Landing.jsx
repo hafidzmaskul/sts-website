@@ -16,7 +16,6 @@ export default function Landing({
     brand = [],
     user
 }) {
-    console.log(user)
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const productSwiperRef = useRef(null);
     const shopSwiper1Ref = useRef(null);

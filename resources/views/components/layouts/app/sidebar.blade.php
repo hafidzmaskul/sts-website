@@ -8,9 +8,9 @@
         $user = auth()->user();
         $isAdmin = $user && $user->hasRole('admin');
 
-        $sidebarBg = $isAdmin ? '#0078c2' : '#000';
-        $sidebarBorder = $isAdmin ? '#00619e' : '#000';
-        $navitemActiveColor = $isAdmin ? '#0078c2' : '#000';
+        $sidebarBg = '#0078c2';
+        $sidebarBorder = '#00619e';
+        $navitemActiveColor = '#0078c2';
     @endphp
     <style>
         /* Custom sidebar background color */

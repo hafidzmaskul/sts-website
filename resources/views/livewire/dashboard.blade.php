@@ -1,7 +1,15 @@
 @if(isset($simpleView) && $simpleView)
-    <div class="p-6">
-        <h1 class="text-2xl font-bold text-black">Hello {{ $userName }}</h1>
-        <p class="text-lg text-gray-700">Role: <span class="font-medium">{{ ucfirst($userRole) }}</span></p>
+    <div class="p-6 space-y-6">
+        <!-- Premium Greeting Section -->
+        <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-zinc-900">Welcome back, {{ $userName }}! 👋</h1>
+                <p class="text-sm text-zinc-500 mt-1">Here is your account overview. Your role: <span class="font-semibold text-[#0079C2]">{{ ucfirst($userRole) }}</span></p>
+            </div>
+            <div class="text-sm text-zinc-500 bg-zinc-50 px-4 py-2 rounded-xl border border-zinc-100 self-start md:self-auto font-medium">
+                {{ now()->format('l, j F Y') }}
+            </div>
+        </div>
 
         @if($userRole === 'credit facilities account' && isset($currentBalance))
             <div class="mt-6 mb-8">
@@ -75,7 +83,16 @@
     </div>
 @else
     <div class="p-6 space-y-6">
-        <h1 class="text-2xl font-bold" style="color: #000;">Dashboard</h1>
+        <!-- Premium Greeting Section -->
+        <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-zinc-900">Welcome back, {{ auth()->user()->name }}! 👋</h1>
+                <p class="text-sm text-zinc-500 mt-1">Here is the overview of your platform for today. Your role: <span class="font-semibold text-[#0079C2]">{{ ucfirst(auth()->user()->getRoleNames()->first() ?? 'User') }}</span></p>
+            </div>
+            <div class="text-sm text-zinc-500 bg-zinc-50 px-4 py-2 rounded-xl border border-zinc-100 self-start md:self-auto font-medium">
+                {{ now()->format('l, j F Y') }}
+            </div>
+        </div>
 
         <!-- Business Overview -->
         <h2 class="text-xl font-bold mb-4" style="color: #000;">Business Overview</h2>

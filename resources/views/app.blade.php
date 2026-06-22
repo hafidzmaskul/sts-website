@@ -17,8 +17,11 @@
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
+                if (registrations.length > 0) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                    window.location.reload();
                 }
             });
         }

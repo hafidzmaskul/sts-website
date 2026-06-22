@@ -41,24 +41,21 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="mt-4 flex flex-col gap-6">
-    <flux:text class="text-center">
-        {{ __('Please verify your email address by clicking on the link we just emailed to you.') }}
-    </flux:text>
+<div class="flex flex-col gap-6 bg-white p-10 rounded-2xl">
+    <x-auth-header :title="__('Verify email')" :description="__('Please verify your email address by clicking on the link we just emailed to you.')" />
 
     @if (session('status') == 'verification-link-sent')
-        <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-        </flux:text>
+        <x-auth-session-status class="text-center" :status="__('A new verification link has been sent to the email address you provided during registration.')" />
     @endif
 
-    <div class="flex flex-col items-center justify-between space-y-3">
+    <div class="flex flex-col gap-6">
         <flux:button wire:click="sendVerification" variant="primary" class="w-full">
             {{ __('Resend verification email') }}
         </flux:button>
+    </div>
 
-        <flux:link class="text-sm cursor-pointer" wire:click="logout" data-test="logout-button">
-            {{ __('Log out') }}
-        </flux:link>
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-400">
+        <span>{{ __('Or,') }}</span>
+        <flux:link class="cursor-pointer" wire:click="logout" data-test="logout-button">{{ __('log out') }}</flux:link>
     </div>
 </div>

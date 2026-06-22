@@ -88,7 +88,6 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
 export default function ProductDetail({ product, products = [], logged, is_guest: isGuest = false, variants = [] }) {
     const [activeProduct, setActiveProduct] = useState(product);
-    console.log(product)
     useEffect(() => {
         setActiveProduct(product);
     }, [product]);
