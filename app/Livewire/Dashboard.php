@@ -43,7 +43,7 @@ class Dashboard extends Component
                 'userRole' => $userRole,
                 'recentTransactions' => $recentTransactions,
                 'currentBalance' => $currentBalance,
-            ])->title('Dashboard');
+            ])->title($userRole ? 'Hi '.ucfirst($userRole) : 'Hi Dashboard');
         }
 
         // Initialize default values for the view
@@ -108,6 +108,6 @@ class Dashboard extends Component
             'chartData' => $chartData,
             'recent_news' => News::latest()->take(5)->get(),
             'recent_subscriptions' => NewsletterSubscription::latest()->take(5)->get(),
-        ])->title('Dashboard');
+        ])->title($userRole ? 'Hi '.ucfirst($userRole) : 'Hi Dashboard');
     }
 }

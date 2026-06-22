@@ -7,7 +7,6 @@ import Toast from '../components/Toast';
 import { formatPrice } from '../helpers/currency';
 
 export default function Checkout({ auth }) {
-    console.log(auth)
     const isCreditAccount = auth?.roles?.some(role => role.name === 'credit facilities account');
     const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -139,7 +138,6 @@ export default function Checkout({ auth }) {
     const taxAmount = taxableAmount * (taxPercentage / 100);
     const totalAmount = Math.max(0, subtotal - discountAmount) + shippingPrice + taxAmount;
 
-    console.log(shippingSelected)
     // PATCH HERE: shipping_method di payload diubah dari objek jadi string name saja
     const handleCheckout = async () => {
         setIsSubmitting(true);

@@ -169,7 +169,6 @@ const transformProduct = (product, index = 0) => {
 };
 
 export default function Category({ products = [], baseProducts = [], productCategory = [], logged, currentCategory }) {
-    console.log(products)
     const allProducts = useMemo(() => {
         const sourceProducts = Array.isArray(products) && products.length > 0
             ? products
