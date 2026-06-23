@@ -10,32 +10,76 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <!-- Card Header: Search & Filter -->
-        <div
-            class="px-4 py-4 border-b bg-gray-50 rounded-t-xl flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div class="max-w-xl w-full">
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="7" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-3.5-3.5" />
-                        </svg>
-                    </span>
-                    <input type="text" wire:model.live="search"
-                        class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        placeholder="Search name or email..." />
+        <!-- Card Header: Search & Filters -->
+        <div class="px-4 py-4 border-b bg-gray-50 rounded-t-xl space-y-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="max-w-xl w-full">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-3.5-3.5" />
+                            </svg>
+                        </span>
+                        <input type="text" wire:model.live="search"
+                            class="block w-full md:w-96 pl-10 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                            placeholder="Search name or email..." />
+                    </div>
                 </div>
+
+                <button type="button" wire:click="resetFilters"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 text-sm transition-colors">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset
+                </button>
             </div>
 
-            <div class="w-full md:w-48">
-                <select wire:model.live="role_filter"
-                    class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    <option value="">All Roles</option>
-                    @foreach($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                    @endforeach
-                </select>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Role</label>
+                    <select wire:model.live="role_filter"
+                        class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="">All Roles</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Pricing Formula</label>
+                    <select wire:model.live="pricing_formula_filter"
+                        class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="">All Formulas</option>
+                        @foreach($pricingFormulas as $formula)
+                            <option value="{{ $formula->id }}">{{ $formula->label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Verified Status</label>
+                    <select wire:model.live="verified_filter"
+                        class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="">All</option>
+                        <option value="verified">Verified</option>
+                        <option value="unverified">Unverified</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Registered Between</label>
+                    <div class="flex items-center gap-2">
+                        <input type="date" wire:model.live="date_from"
+                            class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                        <span class="text-gray-400 text-sm">–</span>
+                        <input type="date" wire:model.live="date_to"
+                            class="block w-full rounded-lg border border-gray-300 bg-white text-black py-2 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                    </div>
+                </div>
             </div>
         </div>
 

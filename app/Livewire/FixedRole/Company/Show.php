@@ -32,10 +32,12 @@ class Show extends Component
             abort(403, 'Unauthorized');
         }
 
-        $company = $user->customer?->company;
+        $customer = $user->customer;
+        $company = $customer?->company;
 
         return view('livewire.fixed-role.company.show', [
             'company' => $company,
+            'accountEmail' => $customer?->email ?? $user->email,
         ])->layout('components.layouts.app');
     }
 }

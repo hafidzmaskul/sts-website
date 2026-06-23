@@ -24,6 +24,14 @@ class Index extends Component
 
     public ?int $role_filter = null;
 
+    public ?int $pricing_formula_filter = null;
+
+    public ?string $verified_filter = null;
+
+    public ?string $date_from = null;
+
+    public ?string $date_to = null;
+
     // form fields
     public string $name = '';
 
@@ -63,6 +71,32 @@ class Index extends Component
 
     public function updatingRoleFilter()
     {
+        $this->resetPage();
+    }
+
+    public function updatingPricingFormulaFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingVerifiedFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDateTo()
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'role_filter', 'pricing_formula_filter', 'verified_filter', 'date_from', 'date_to']);
         $this->resetPage();
     }
 
@@ -153,6 +187,21 @@ class Index extends Component
                 $q->whereHas('roles', function ($q) {
                     $q->where('id', $this->role_filter);
                 });
+            })
+            ->when($this->pricing_formula_filter, function ($q) {
+                $q->where('pricing_formula_id', $this->pricing_formula_filter);
+            })
+            ->when($this->verified_filter === 'verified', function ($q) {
+                $q->whereNotNull('email_verified_at');
+            })
+            ->when($this->verified_filter === 'unverified', function ($q) {
+                $q->whereNull('email_verified_at');
+            })
+            ->when($this->date_from, function ($q) {
+                $q->whereDate('created_at', '>=', $this->date_from);
+            })
+            ->when($this->date_to, function ($q) {
+                $q->whereDate('created_at', '<=', $this->date_to);
             })
             ->orderBy('name')
             ->paginate(10);

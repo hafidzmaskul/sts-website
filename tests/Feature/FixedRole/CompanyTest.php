@@ -68,6 +68,26 @@ class CompanyTest extends TestCase
             ->assertSee('Credit Company');
     }
 
+    public function test_company_page_shows_account_email()
+    {
+        $company = Company::create(['name' => 'Email Company']);
+        $user = User::factory()->create();
+        $user->assignRole('trade account');
+
+        Customer::create([
+            'user_id' => $user->id,
+            'company_id' => $company->id,
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'accounts@emailcompany.test',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('dashboard.company.show'))
+            ->assertStatus(200)
+            ->assertSee('accounts@emailcompany.test');
+    }
+
     public function test_unauthorized_user_cannot_access_company_page()
     {
         $user = User::factory()->create();
