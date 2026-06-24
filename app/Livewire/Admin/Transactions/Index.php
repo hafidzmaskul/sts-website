@@ -31,6 +31,7 @@ class Index extends Component
         $transactions = Transaction::with(['customer.user'])
             ->when($this->search, function ($query) {
                 $query->where('invoice_code', 'like', '%'.$this->search.'%')
+                    ->orWhere('order_code', 'like', '%'.$this->search.'%')
                     ->orWhereHas('customer.user', function ($q) {
                         $q->where('name', 'like', '%'.$this->search.'%')
                             ->orWhere('email', 'like', '%'.$this->search.'%');

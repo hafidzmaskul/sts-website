@@ -214,6 +214,9 @@ class TransactionController extends Controller
         // Generate Invoice Code
         $invoiceCode = 'INV-'.strtoupper(uniqid());
 
+        // Generate Order Code
+        $orderCode = Transaction::generateOrderCode();
+
         // Prepare items data to process later
         $itemsToProcess = [];
         $isQuoteBuilder = false;
@@ -439,6 +442,7 @@ class TransactionController extends Controller
         // Create Transaction
         $transaction = new Transaction;
         $transaction->invoice_code = $invoiceCode;
+        $transaction->order_code = $orderCode;
         $transaction->customer_id = $user->customer->id;
         $transaction->subtotal = $calculatedSubtotal;
         $transaction->tax_amount = $calculatedTaxAmount;

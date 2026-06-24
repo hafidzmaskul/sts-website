@@ -103,4 +103,69 @@ class TransactionTest extends TestCase
             'total_price' => 100000,
         ]);
     }
+
+    public function test_transaction_creation_generates_order_code_and_returns_it_in_api()
+    {
+        $user = User::factory()->create();
+        $user->assignRole('customer');
+
+        $customer = Customer::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => '08123456789',
+        ]);
+
+        $brand = Brand::create(['name' => 'Brand B', 'slug' => 'brand-b', 'created_by' => $user->id]);
+        $product = Product::create([
+            'title' => 'Coded Product',
+            'slug' => 'coded-product',
+            'sku' => 'SKU-CODE',
+            'brand_id' => $brand->id,
+            'status' => 'active',
+            'base_price' => 50000,
+            'created_by' => $user->id,
+        ]);
+
+        $subtotal = 50000;
+        $shippingPrice = 10000;
+        $taxAmount = ($subtotal + $shippingPrice) * 0.10;
+        $totalAmount = $subtotal + $shippingPrice + $taxAmount;
+
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        $createResponse = $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->postJson('/api/transactions', [
+                'product_id' => $product->id,
+                'quantity' => 1,
+                'contact_email' => 'buyer@example.com',
+                'shipping_method' => 'JNE',
+                'shipping_payment_method' => 'Bank Transfer',
+                'total_amount' => $totalAmount,
+            ]);
+
+        $createResponse->assertStatus(201);
+
+        $orderCode = $createResponse->json('data.order_code');
+        $transactionId = $createResponse->json('data.id');
+
+        // Generated, persisted, and matches the ORD-YYYYMMDD-XXXX format
+        $this->assertMatchesRegularExpression('/^ORD-\d{8}-[A-Z0-9]{4}$/', $orderCode);
+        $this->assertDatabaseHas('transactions', [
+            'id' => $transactionId,
+            'order_code' => $orderCode,
+        ]);
+
+        // Returned in the customer detail API
+        $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->getJson('/api/transactions/'.$transactionId)
+            ->assertStatus(200)
+            ->assertJsonPath('data.order_code', $orderCode);
+
+        // Returned in the customer list API
+        $this->withHeaders(['Authorization' => 'Bearer '.$token])
+            ->getJson('/api/transactions')
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.order_code', $orderCode);
+    }
 }

@@ -3,11 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Transaction extends Model
 {
+    /**
+     * Generate a unique order code in the format ORD-YYYYMMDD-XXXX.
+     */
+    public static function generateOrderCode(): string
+    {
+        do {
+            $code = 'ORD-'.now()->format('Ymd').'-'.strtoupper(Str::random(4));
+        } while (static::where('order_code', $code)->exists());
+
+        return $code;
+    }
+
     protected $fillable = [
         'invoice_code',
+        'order_code',
         'customer_id',
         'subtotal',
         'tax_amount',

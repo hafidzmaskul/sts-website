@@ -198,6 +198,10 @@
 
                 <div class="pt-4 border-t border-gray-100">
                     <div class="mb-4">
+                        <p class="text-xs font-medium text-black uppercase">Order Code</p>
+                        <p class="text-black">{{ $transaction->order_code ?? '-' }}</p>
+                    </div>
+                    <div class="mb-4">
                         <p class="text-xs font-medium text-black uppercase">Payment Method</p>
                         <p class="text-black">
                             {{ $transaction->payment_method ?? $transaction->shipping_payment_method ?? 'Not Set' }}
