@@ -217,9 +217,9 @@
             </div>
 
             <!-- Pagination Footer -->
-            <div class="border-t border-gray-100 px-4 py-3 bg-gray-50">
-                {{ $categories->links() }}
-            </div>
+            <div class="border-t border-gray-100 px-4 py-3 bg-gray-50 overflow-x-auto">
+            {{ $categories->links() }}
+        </div>
         </div>
     @endif
 </div>

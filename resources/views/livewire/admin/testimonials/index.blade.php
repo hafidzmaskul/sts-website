@@ -86,7 +86,9 @@
             </table>
         </div>
 
-        <div>{{ $testimonials->links() }}</div>
+        <div class="overflow-x-auto">
+            {{ $testimonials->links() }}
+        </div>
 
         @if($showForm)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

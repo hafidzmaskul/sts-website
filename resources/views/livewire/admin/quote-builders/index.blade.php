@@ -178,7 +178,7 @@
             </table>
         </div>
 
-        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 overflow-x-auto">
             {{ $quoteBuilders->links() }}
         </div>
     </div>

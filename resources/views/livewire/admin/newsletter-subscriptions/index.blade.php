@@ -72,7 +72,9 @@
             </table>
         </div>
 
-        <div>{{ $subscriptions->links() }}</div>
+        <div class="overflow-x-auto">
+            {{ $subscriptions->links() }}
+        </div>
 
     </div>
 </div>

@@ -86,7 +86,9 @@
             </table>
         </div>
 
-        <div>{{ $services->links() }}</div>
+        <div class="overflow-x-auto">
+            {{ $services->links() }}
+        </div>
 
     </div>
 </div>

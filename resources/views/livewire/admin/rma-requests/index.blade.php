@@ -136,9 +136,9 @@
             </div>
 
             @if($rmaRequests->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                    {{ $rmaRequests->links() }}
-                </div>
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 overflow-x-auto">
+            {{ $rmaRequests->links() }}
+        </div>
             @endif
         </div>
     </div>

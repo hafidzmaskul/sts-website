@@ -106,7 +106,7 @@
             </table>
         </div>
         <!-- Pagination/ Footer -->
-        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
+        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 overflow-x-auto">
             {{ $roles->links() }}
         </div>
     </div>

@@ -69,6 +69,8 @@
             </table>
         </div>
 
-        <div>{{ $careers->links() }}</div>
+        <div class="overflow-x-auto">
+            {{ $careers->links() }}
+        </div>
     </div>
 </div>

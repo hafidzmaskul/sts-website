@@ -188,9 +188,9 @@
                 <div>
                     {{-- You may display count/page info here if desired --}}
                 </div>
-                <div>
-                    {{ $banners->links() }}
-                </div>
+                <div class="overflow-x-auto">
+            {{ $banners->links() }}
+        </div>
             </div>
         </div>
     @endif

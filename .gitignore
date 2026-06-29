@@ -23,3 +23,5 @@ yarn-error.log
 /.zed
 database/seeders/DatabaseSeeder.php
 .DS_Store
+PAGES_GUIDE.html
+PAGES_GUIDE.md
