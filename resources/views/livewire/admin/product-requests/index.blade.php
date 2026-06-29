@@ -91,7 +91,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-4 border-t border-gray-200">
+        <div class="px-6 py-4 border-t border-gray-200 overflow-x-auto">
             {{ $productRequests->links() }}
         </div>
     </div>

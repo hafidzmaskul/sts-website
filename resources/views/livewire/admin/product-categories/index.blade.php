@@ -339,9 +339,9 @@
             </div>
 
             {{-- Pagination --}}
-            <div class="border-t border-gray-100 bg-gray-50/60 px-6 py-3 flex justify-end">
-                {{ $categories->links() }}
-            </div>
+            <div class="border-t border-gray-100 bg-gray-50/60 px-6 py-3 flex justify-end overflow-x-auto">
+            {{ $categories->links() }}
+        </div>
         </div>
     @endif
 

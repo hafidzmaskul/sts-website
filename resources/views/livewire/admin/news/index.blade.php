@@ -294,9 +294,9 @@
             </div>
 
             <!-- Pagination Footer -->
-            <div class="px-6 py-3 border-t bg-gray-50 rounded-b-xl">
-                {{ $news->links() }}
-            </div>
+            <div class="px-6 py-3 border-t bg-gray-50 rounded-b-xl overflow-x-auto">
+            {{ $news->links() }}
+        </div>
         </div>
     @endif
 </div>

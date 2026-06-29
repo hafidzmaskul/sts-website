@@ -92,9 +92,9 @@
         </div>
 
         @if($users->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                {{ $users->links() }}
-            </div>
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 overflow-x-auto">
+            {{ $users->links() }}
+        </div>
         @endif
     </div>
 </div>

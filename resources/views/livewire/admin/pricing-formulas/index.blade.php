@@ -103,8 +103,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
-             {{ $formulas->links() }}
+        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 overflow-x-auto">
+            {{ $formulas->links() }}
         </div>
     </div>
 </div>

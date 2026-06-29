@@ -80,7 +80,9 @@
             </table>
         </div>
 
-        <div>{{ $submissions->links() }}</div>
+        <div class="overflow-x-auto">
+            {{ $submissions->links() }}
+        </div>
 
         <!-- View Details Modal -->
         @if($showModal && $selectedSubmission)

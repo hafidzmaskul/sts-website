@@ -139,9 +139,9 @@
         </div>
 
         @if($coupons->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                {{ $coupons->links() }}
-            </div>
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 overflow-x-auto">
+            {{ $coupons->links() }}
+        </div>
         @endif
     </div>
 </div>
