@@ -142,7 +142,9 @@
                                     <div class="flex items-start justify-between gap-4">
                                         <div class="flex items-center gap-3">
                                             @if($variant->images->isNotEmpty())
-                                                <img src="{{ Storage::url($variant->images->first()->image_path) }}" class="h-10 w-10 object-contain rounded border bg-white shadow-sm flex-shrink-0">
+                                                <img src="{{ Storage::url($variant->images->first()->image_path) }}" class="h-10 w-10 object-contain rounded border bg-white shadow-sm flex-shrink-0" onerror="this.onerror=null;this.src='/assets/logo.png';">
+                                            @else
+                                                <img src="{{ asset('assets/logo.png') }}" class="h-10 w-10 object-contain rounded border bg-white shadow-sm flex-shrink-0" alt="{{ $variant->title }}">
                                             @endif
                                             <div>
                                                 <h3 class="text-base font-semibold text-black">{{ $variant->title }}</h3>
@@ -524,13 +526,9 @@
                                 @endif
                             </div>
                         @else
-                            <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                    style="color: #aaa;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p class="mt-2 text-sm" style="color: #555;">No images available.</p>
+                            <div class="aspect-square w-full rounded-lg overflow-hidden border border-gray-200 bg-white p-6 flex flex-col items-center justify-center">
+                                <img src="{{ asset('assets/logo.png') }}" class="max-h-48 max-w-full object-contain mb-3" alt="Default Product Image">
+                                <p class="text-xs text-gray-400">Default product image</p>
                             </div>
                         @endif
                     </div>

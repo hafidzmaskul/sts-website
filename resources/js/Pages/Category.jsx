@@ -106,10 +106,7 @@ const RecursiveSidebarCategoryItem = ({
 };
 
 const sliderImages = [
-    '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-    '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-    '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
-    '/assets/dummmy/f58bbfe80051d14bcd96790ff72c7c32a3edff31.jpg',
+    '/assets/logo.png',
 ];
 
 const PRODUCT_PAGE_SIZE = 28;
@@ -133,7 +130,7 @@ const transformProduct = (product, index = 0) => {
     const imagePath = product.images?.[0]?.image_path;
     const image = imagePath
         ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
-        : sliderImages[index % sliderImages.length];
+        : '/assets/logo.png';
 
     // Get price using priority: calculated_price -> special_price -> base_price
     const rawPrice = getProductPrice(product);
@@ -426,7 +423,7 @@ export default function Category({ products = [], baseProducts = [], productCate
                     >
                         {sliderProducts.map((product, index) => {
                             const imageUrl = product.image
-                                ?? sliderImages[index % sliderImages.length];
+                                || '/assets/logo.png';
                             const title = product.title || product.name || 'Product';
 
                             return (
@@ -439,8 +436,9 @@ export default function Category({ products = [], baseProducts = [], productCate
                                             <img
                                                 src={imageUrl}
                                                 alt={title}
-                                                className="w-full h-56 object-cover rounded-lg" // tambahkan rounding jika ingin tampilan lebih soft
+                                                className="w-full h-56 object-contain rounded-lg bg-white" // tambahkan rounding jika ingin tampilan lebih soft
                                                 loading="lazy"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                             />
                                         </Link>
                                         <div className="p-3">

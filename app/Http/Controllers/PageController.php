@@ -29,16 +29,56 @@ class PageController
         $featured = Product::with(['images' => function ($query) {
             $query->orderBy('sequence');
         }])->get()->map(function ($product) {
-            // Ambil image_path dari gambar dengan sequence == 1 (atau null jika tidak ada)
-            $mainImage = $product->images->firstWhere('sequence', 1);
-            $product->images = $mainImage ? $mainImage->image_path : null;
+            $mainImage = $product->images->firstWhere('sequence', 1) ?? $product->images->first();
+            $product->image = $mainImage ? ($mainImage->image_url ?? (str_starts_with($mainImage->image_path, 'http') ? $mainImage->image_path : url('storage/'.$mainImage->image_path))) : null;
 
             return $product;
         });
-        $categories = ProductCategory::withCount('products')
-            ->with('products.images')
-            ->orderByDesc('products_count')
-            ->get();
+        $cctv = ProductCategory::where('slug', 'cctv')->first();
+
+        $categories = $cctv
+            ? ProductCategory::where('parent_id', $cctv->id)
+                ->orderBy('id')
+                ->get()
+            : ProductCategory::whereIn('slug', ['ip', 'analogue', 'cctv-kits', 'cctv-cables', 'cctv-accessories'])
+                ->orderBy('id')
+                ->get();
+
+        $allCategories = ProductCategory::all(['id', 'parent_id']);
+        $getCategoryIds = function ($parentId) use (&$getCategoryIds, $allCategories) {
+            $ids = [$parentId];
+            $children = $allCategories->where('parent_id', $parentId);
+            foreach ($children as $child) {
+                $ids = array_merge($ids, $getCategoryIds($child->id));
+            }
+
+            return $ids;
+        };
+
+        $categories->each(function ($category) use ($getCategoryIds) {
+            $catIds = $getCategoryIds($category->id);
+            $products = Product::where(function ($query) use ($catIds) {
+                $query->whereHas('categories', function ($q) use ($catIds) {
+                    $q->whereIn('product_categories.id', $catIds);
+                })->orWhereHas('parent.categories', function ($q) use ($catIds) {
+                    $q->whereIn('product_categories.id', $catIds);
+                });
+            })
+                ->where('status', 'active')
+                ->with(['images' => function ($query) {
+                    $query->orderBy('sequence');
+                }])
+                ->get()
+                ->map(function ($product) {
+                    $mainImage = $product->images->firstWhere('sequence', 1) ?? $product->images->first();
+                    $product->image = $mainImage ? ($mainImage->image_url ?? (str_starts_with($mainImage->image_path, 'http') ? $mainImage->image_path : url('storage/'.$mainImage->image_path))) : null;
+
+                    return $product;
+                });
+
+            $category->setRelation('products', $products);
+            $category->products_count = $products->count();
+        });
 
         $brand = Brand::get(); // is_active
         $user = Auth::user()?->load('likedProducts');
@@ -47,6 +87,7 @@ class PageController
             'banners' => $banners,
             'featured' => $featured,
             'categories' => $categories,
+            'cctvCategory' => $cctv,
             'brand' => $brand,
             'user' => $user,
         ]);

@@ -103,6 +103,9 @@ export default function FeaturedProductsSection({
                 }}
                 breakpoints={{
                     0: {
+                        slidesPerView: 1,
+                    },
+                    640: {
                         slidesPerView: Math.min(maxSlidesPerView, 2),
                     },
                     768: {

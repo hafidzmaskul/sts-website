@@ -13,14 +13,13 @@ export default function Landing({
     landingPageData = {},
     featured = [],
     categories = [],
+    cctvCategory = null,
     brand = [],
     user
 }) {
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const productSwiperRef = useRef(null);
-    const shopSwiper1Ref = useRef(null);
-    const shopSwiper2Ref = useRef(null);
-    const shopSwiper3Ref = useRef(null);
+    const shopSwiperRefs = useRef({});
 
     // Form state
     const [formData, setFormData] = useState({
@@ -55,7 +54,7 @@ export default function Landing({
     const activeBanner = banners[currentBannerIndex] ?? null;
     const heroImage = activeBanner?.file_path
         ? `/storage/${activeBanner.file_path}`
-        : 'https://placehold.co/900x700/302F2F/FFFFFF?text=No+Banner';
+        : '/assets/logo.png';
     const ctaHref = activeBanner?.cta_url ?? '/products';
 
     const goToSlide = (index) => {
@@ -90,12 +89,53 @@ export default function Landing({
         return product.base_price;
     };
 
+    // Helper to resolve product image from all possible sources
+    const getProductImage = (product) => {
+        if (!product) return '/assets/logo.png';
+
+        // 1. Direct image property
+        if (typeof product.image === 'string' && product.image.trim() !== '') {
+            return product.image.startsWith('http') || product.image.startsWith('/')
+                ? product.image
+                : `/storage/${product.image}`;
+        }
+
+        // 2. Direct image_url property
+        if (typeof product.image_url === 'string' && product.image_url.trim() !== '') {
+            return product.image_url;
+        }
+
+        // 3. images as string
+        if (typeof product.images === 'string' && product.images.trim() !== '') {
+            return product.images.startsWith('http') || product.images.startsWith('/')
+                ? product.images
+                : `/storage/${product.images}`;
+        }
+
+        // 4. images as array
+        if (Array.isArray(product.images) && product.images.length > 0) {
+            const mainImg = product.images.find(img => img?.sequence === 1) || product.images[0];
+            if (typeof mainImg === 'string' && mainImg.trim() !== '') {
+                return mainImg.startsWith('http') || mainImg.startsWith('/')
+                    ? mainImg
+                    : `/storage/${mainImg}`;
+            }
+            if (mainImg?.image_url) {
+                return mainImg.image_url;
+            }
+            if (mainImg?.image_path) {
+                return mainImg.image_path.startsWith('http') || mainImg.image_path.startsWith('/')
+                    ? mainImg.image_path
+                    : `/storage/${mainImg.image_path}`;
+            }
+        }
+
+        return '/assets/logo.png';
+    };
+
     // Transform featured products only based on real data (NO FALLBACK PRODUCTS)
     const transformFeaturedProduct = (product, index) => {
-        const imagePath = product.images?.[0]?.image_path;
-        const image = imagePath
-            ? (imagePath.startsWith('/') ? imagePath : `/storage/${imagePath}`)
-            : ''; // no fallback
+        const image = getProductImage(product);
 
         // Get price using priority: calculated_price -> special_price -> base_price
         const rawPrice = getProductPrice(product);
@@ -175,38 +215,41 @@ export default function Landing({
         return products;
     }, [products, visibleSlides]);
 
-    // Transform categories (NO fallbackCategories at all)
-    const getTransformedCategories = () => {
-        if (categories && categories.length > 0) {
-            return categories.map((cat, idx) => ({
-                ...cat,
-                image_url: cat.image_url
-                    ? cat.image_url
-                    : cat.image_path
-                        ? (cat.image_path.startsWith('http')
-                            ? cat.image_path
-                            : `/storage/${cat.image_path}`)
-                        : "",
-                name: cat.name || `Category ${idx + 1}`,
-                products: Array.isArray(cat.products) ? cat.products : [],
-                products_count:
-                    typeof cat.products_count === 'number'
-                        ? cat.products_count
-                        : Array.isArray(cat.products)
-                            ? cat.products.length
-                            : 0,
-            }));
+    // Transform categories and products for Shop By Category
+    const transformedCategories = useMemo(() => {
+        if (!categories || categories.length === 0) {
+            return [];
         }
-        // No fallback, return empty array
-        return [];
-    };
-    const transformedCategories = useMemo(() => getTransformedCategories(), [categories]);
+
+        return categories.map((cat, idx) => {
+            const rawProducts = Array.isArray(cat.products) ? cat.products : [];
+            const normalizedProducts = rawProducts.map((product, pIdx) =>
+                transformFeaturedProduct(product, pIdx)
+            );
+
+            // Ensure enough slides for seamless infinite loop in Swiper (min 8 slides for slidesPerView 4)
+            let loopedProducts = normalizedProducts;
+            if (normalizedProducts.length > 0 && normalizedProducts.length < 8) {
+                const multiplier = Math.ceil(8 / normalizedProducts.length);
+                loopedProducts = Array(multiplier).fill(normalizedProducts).flat();
+            }
+
+            return {
+                id: cat.id ?? idx,
+                name: cat.name || `Category ${idx + 1}`,
+                slug: cat.slug || '',
+                products: normalizedProducts,
+                loopedProducts: loopedProducts,
+                products_count: cat.products_count ?? normalizedProducts.length,
+            };
+        });
+    }, [categories]);
 
     // Brands section sectionId
     const resolveBrandImage = (img) => {
         // Accept already complete urls or storage paths, otherwise prepend /storage/
         if (!img) {
-            return '/assets/dummmy/default-brand.png';
+            return '/assets/logo.png';
         }
         if (img.startsWith('http') || img.startsWith('/')) {
             return img;
@@ -252,15 +295,11 @@ export default function Landing({
     };
 
     const goToNextShop = () => {
-        shopSwiper1Ref.current?.slideNext();
-        shopSwiper2Ref.current?.slideNext();
-        shopSwiper3Ref.current?.slideNext();
+        Object.values(shopSwiperRefs.current).forEach((swiper) => swiper?.slideNext());
     };
 
     const goToPreviousShop = () => {
-        shopSwiper1Ref.current?.slidePrev();
-        shopSwiper2Ref.current?.slidePrev();
-        shopSwiper3Ref.current?.slidePrev();
+        Object.values(shopSwiperRefs.current).forEach((swiper) => swiper?.slidePrev());
     };
 
     return (
@@ -454,6 +493,7 @@ export default function Landing({
                                                 src={resolveBrandImage(item.image)}
                                                 alt={item.name}
                                                 className="object-contain w-24 h-24"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                             />
                                         </div>
                                     </div>
@@ -558,29 +598,23 @@ export default function Landing({
                             </button>
                         </div>
                     </div>
-                    {/* Loop categories, 3 rows if possible */}
-                    {[0, 1, 2].map((row) => {
-                        // Get 3 sets of categories for 3 swiper rows
-                        // You can also split evenly. Safe so will always render 3 rows if available (else empty)
-                        const categoriesRow = transformedCategories.filter((_, idx) => idx % 3 === row);
-                        return (
-                            <div className="flex mt-20 items-center gap-8" key={row}>
-                                <div className="w-2/10 flex justify-center">
-                                    {/* category name. Use first slide name or fallback */}
+                    {/* Loop categories (child of CCTV), each row has its products in swiper */}
+                    {transformedCategories.map((category) => (
+                        <div className="flex mt-20 items-center gap-8" key={category.id}>
+                            <div className="w-2/10 flex justify-center">
+                                {/* Category name (child of CCTV, rotated sideways) */}
+                                <a href={`/category/${category.slug || '#'}`} className="hover:text-[#0079C2] transition">
                                     <h1 className='font-bebas-neue font-bold text-4xl -rotate-90 whitespace-nowrap'>
-                                        {categoriesRow[0]?.name || "No Category"}
+                                        {category.name}
                                     </h1>
-                                </div>
-                                <div className="w-8/10">
+                                </a>
+                            </div>
+                            <div className="w-8/10">
+                                {category.products.length > 0 ? (
                                     <Swiper
                                         modules={[Autoplay]}
-                                        onSwiper={swiperInstance => {
-                                            if (row === 0)
-                                                shopSwiper1Ref.current = swiperInstance;
-                                            else if (row === 1)
-                                                shopSwiper2Ref.current = swiperInstance;
-                                            else if (row === 2)
-                                                shopSwiper3Ref.current = swiperInstance;
+                                        onSwiper={(swiperInstance) => {
+                                            shopSwiperRefs.current[category.id] = swiperInstance;
                                         }}
                                         loop={true}
                                         slidesPerView={4}
@@ -606,34 +640,38 @@ export default function Landing({
                                             },
                                         }}
                                     >
-                                        {/* Loop per category in this row */}
-                                        {categoriesRow.map((category, idx) => (
-                                            <SwiperSlide key={category?.id ?? `catrow${row}-slide${idx}`}>
-                                                <div className="rounded-xl bg-white text-white pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
-                                                    <img
-                                                        src={category?.image_url || "/assets/2b07321eb9e9f6684dfbbafe4438118d7838fa9f.png"}
-                                                        className='h-40 py-2 w-full object-contain'
-                                                        alt=""
-                                                    />
-                                                    {/* category name */}
-                                                    <span className="font-bebas-neue font-bold px-3 text-2xl ">
-                                                        {category?.name || "Unknown"}
-                                                    </span>
-                                                    <br />
-                                                    {/* product count */}
-                                                    <span className="font-inter font-light text-xs px-3 ">
-                                                        {category?.products_count} product
-                                                    </span>
-                                                    {/* product name(s) */}
-
-                                                </div>
+                                        {category.loopedProducts.map((product, pIdx) => (
+                                            <SwiperSlide key={`${category.id}-${product?.id ?? 'p'}-${pIdx}`}>
+                                                <a href={`/products/${product?.slug || product?.id}`}>
+                                                    <div className="rounded-xl bg-white text-[#1E1E1E] pb-2 hover:text-[#fff] hover:bg-[#0079C2] transition cursor-pointer">
+                                                        <img
+                                                            src={product?.image || "/assets/logo.png"}
+                                                            className='h-40 py-2 w-full object-contain'
+                                                            alt={product?.title || ""}
+                                                            onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
+                                                        />
+                                                        {/* product title */}
+                                                        <span className="font-bebas-neue font-bold px-3 text-2xl block truncate">
+                                                            {product?.title || "Unknown"}
+                                                        </span>
+                                                        <br />
+                                                        {/* product price */}
+                                                        <span className="font-inter font-light text-xs px-3 ">
+                                                            {product?.price ? `£${product.price}` : ''}
+                                                        </span>
+                                                    </div>
+                                                </a>
                                             </SwiperSlide>
                                         ))}
                                     </Swiper>
-                                </div>
+                                ) : (
+                                    <div className="py-12 px-6 rounded-xl bg-white text-[#1E1E1E] text-center font-inter text-sm italic">
+                                        No products available in this category yet.
+                                    </div>
+                                )}
                             </div>
-                        );
-                    })}
+                        </div>
+                    ))}
                 </div>
             </section>
             <section className="w-full mt-20  flex flex-col md:flex-row bg-[#0079C2]">

@@ -98,12 +98,11 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($brand->image)
                                     <img src="{{ Storage::url($brand->image) }}" alt="{{ $brand->name }}"
-                                        class="h-10 w-10 rounded-full object-cover">
+                                        class="h-10 w-10 rounded-full object-cover"
+                                        onerror="this.onerror=null;this.src='/assets/logo.png';">
                                 @else
-                                    <div
-                                        class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                        <span class="text-xs font-medium text-gray-500">No Img</span>
-                                    </div>
+                                    <img src="{{ asset('assets/logo.png') }}" alt="{{ $brand->name }}"
+                                        class="h-10 w-10 rounded-full object-contain bg-white border border-gray-100 p-0.5">
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

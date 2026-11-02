@@ -182,10 +182,11 @@ export default function ProductCard({
                 <div className="relative overflow-hidden rounded-[22px] ">
                     <img
                         ref={imageRef}
-                        src={image}
+                        src={image || '/assets/logo.png'}
                         alt={title}
                         className="aspect-[4/5] h-full w-full object-contain transition duration-700 ease-out group-hover:scale-105"
                         loading="lazy"
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                     />
                 </div>
             </a>

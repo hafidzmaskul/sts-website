@@ -15,9 +15,10 @@ export default function ServiceArticleCard({
         <div className="flex flex-col h-full">
             {/* Atas: Image as Background */}
             <img
-                src={image ? `/storage/${image}` : 'https://placehold.co/600x400?text=No+Image'}
+                src={image ? `/storage/${image}` : '/assets/logo.png'}
                 alt={title}
-                className="flex-1 w-full object-cover bg-gray-100"
+                className="flex-1 w-full object-contain bg-gray-100 max-h-56"
+                onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
             />
             {/* Bawah: Text */}
             <div className="flex-1 flex flex-col space-y-4 px-4 py-6  md:py-8 ">
