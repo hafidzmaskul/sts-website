@@ -33,6 +33,6 @@ class TransactionItem extends Model
     {
         return $this->product && $this->product->images->first()
             ? $this->product->images->first()->image_url
-            : null;
+            : asset('assets/logo.png');
     }
 }

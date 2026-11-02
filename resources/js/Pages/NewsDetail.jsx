@@ -30,7 +30,7 @@ export default function NewsDetail({ news, otherNews }) {
 
     // Helper for image path
     const getImageUrl = (path) => {
-        if (!path) return 'https://placehold.co/800x600?text=No+Image';
+        if (!path) return '/assets/logo.png';
         if (path.startsWith('http')) return path;
         return `/storage/${path}`;
     };

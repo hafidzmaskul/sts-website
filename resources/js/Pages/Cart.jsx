@@ -156,9 +156,10 @@ export default function Cart() {
                                                 ? (item.product.images[0].image_path.startsWith('/')
                                                     ? item.product.images[0].image_path
                                                     : `/storage/${item.product.images[0].image_path}`)
-                                                : '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'}
+                                                : '/assets/logo.png'}
                                             alt={item.product?.title}
-                                            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded mb-2 sm:mb-0"
+                                            className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded mb-2 sm:mb-0"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                         />
                                     </div>
                                     <div className="flex-1">

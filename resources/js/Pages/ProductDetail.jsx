@@ -221,7 +221,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             return imagesList;
         }
 
-        return ['/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png'];
+        return ['/assets/logo.png'];
     }, [data.images, data.id, variants]);
 
     const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -498,7 +498,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             .filter((p) => p.id !== data.id)
             .slice(0, 8)
             .map((product, index) => {
-                let image = '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png';
+                let image = '/assets/logo.png';
                 if (Array.isArray(product.images) && product.images.length > 0) {
                     const imgObj = product.images[0];
                     image = imgObj.image_url || (imgObj.image_path?.startsWith('/') ? imgObj.image_path : `/storage/${imgObj.image_path}`);
@@ -527,9 +527,9 @@ export default function ProductDetail({ product, products = [], logged, is_guest
             if (imagePath?.startsWith("http")) {
                 return imagePath;
             }
-            return imagePath ? `/storage/${imagePath}` : "/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png";
+            return imagePath ? `/storage/${imagePath}` : "/assets/logo.png";
         }
-        return "/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png";
+        return "/assets/logo.png";
     };
 
     return (
@@ -649,6 +649,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                     src={productImages[activeImageIndex]}
                                     alt={data.title}
                                     className="w-32 h-32 object-contain mb-3 border rounded-lg bg-white"
+                                    onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                 />
                                 <h3 className="text-xl font-semibold mb-2 text-[#232323]">{data.title}</h3>
                                 <p className="text-gray-500 text-sm mb-1">{data.brand?.name}</p>
@@ -691,6 +692,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                                                         alt={prod.title}
                                                                         className="w-full h-full object-contain"
                                                                         loading="lazy"
+                                                                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                                                     />
                                                                 </div>
                                                                 <span className="mt-1 text-[10px] text-center text-gray-700 line-clamp-2 break-words w-full">{prod.title || prod.name}</span>
@@ -833,6 +835,7 @@ export default function ProductDetail({ product, products = [], logged, is_guest
                                                 alt={`${data.title} thumbnail ${index + 1}`}
                                                 className="w-full object-cover transition-transform duration-200 ease-out group-hover:scale-110"
                                                 loading="lazy"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                             />
                                         </button>
                                     );

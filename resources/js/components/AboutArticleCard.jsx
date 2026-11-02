@@ -14,7 +14,7 @@ export default function AboutArticleCard({
       <div
         className="w-full bg-gray-100 flex items-center justify-center relative bg-center bg-no-repeat bg-cover"
         style={{
-          backgroundImage: `url(${image})`,
+          backgroundImage: `url(${image || '/assets/logo.png'})`,
           height: '45%',
         }}
         aria-label={title}

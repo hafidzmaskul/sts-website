@@ -149,9 +149,12 @@ export default function Header() {
                 if (Array.isArray(res.data.data)) {
                     items = res.data.data.map((item) => {
                         const product = item.product || {};
-                        let imageUrl = '';
+                        let imageUrl = '/assets/logo.png';
                         if (Array.isArray(product.images) && product.images.length > 0) {
-                            imageUrl = product.images[0]?.image_url || '';
+                            const raw = product.images[0]?.image_url || product.images[0]?.image_path || '';
+                            imageUrl = raw
+                                ? (raw.startsWith('http') || raw.startsWith('/') ? raw : `/storage/${raw}`)
+                                : '/assets/logo.png';
                         }
                         return {
                             id: item.id,
@@ -261,12 +264,12 @@ export default function Header() {
                 const items = Array.isArray(paginator?.data) ? paginator.data : [];
 
                 const mapped = items.map((product) => {
-                    let imageUrl = '';
+                    let imageUrl = '/assets/logo.png';
                     if (Array.isArray(product.images) && product.images.length > 0) {
                         const raw = product.images[0]?.image_path || product.images[0]?.image_url || '';
                         imageUrl = raw
-                            ? (raw.startsWith('/') ? raw : `/storage/${raw}`)
-                            : '';
+                            ? (raw.startsWith('/') || raw.startsWith('http') ? raw : `/storage/${raw}`)
+                            : '/assets/logo.png';
                     }
                     return {
                         id: product.id,
@@ -684,21 +687,12 @@ export default function Header() {
                                         {cartProducts && cartProducts.length > 0 ? (
                                             cartProducts.map((item, idx) => (
                                                 <div key={item.id || idx} className="flex items-center px-4 py-2 border-b last:border-b-0">
-                                                    {item.image ? (
-                                                        <img
-                                                            src={item.image}
-                                                            alt={item.title}
-                                                            className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
-                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                <rect width="24" height="24" rx="4" fill="#e5e7eb" />
-                                                                <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
-                                                                <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
-                                                            </svg>
-                                                        </div>
-                                                    )}
+                                                    <img
+                                                        src={item.image || '/assets/logo.png'}
+                                                        alt={item.title}
+                                                        className="w-10 h-10 object-contain rounded mr-3 flex-shrink-0 bg-white border border-gray-100"
+                                                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
+                                                    />
                                                     <div className="flex flex-col">
                                                         <span className="font-medium text-sm truncate max-w-[140px]">{item.title}</span>
                                                         <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
@@ -755,21 +749,12 @@ export default function Header() {
                                                                 className={`flex items-center px-4 py-2 border-b last:border-b-0 hover:bg-gray-50 ${isActive(item.slug ? `/products/${item.slug}` : '') ? "text-[#007580]" : ""
                                                                     }`}
                                                             >
-                                                                {item.image ? (
-                                                                    <img
-                                                                        src={item.image}
-                                                                        alt={item.title}
-                                                                        className="w-10 h-10 object-cover rounded mr-3 flex-shrink-0"
-                                                                    />
-                                                                ) : (
-                                                                    <div className="w-10 h-10 bg-gray-200 rounded mr-3 flex flex-shrink-0 items-center justify-center text-gray-400">
-                                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                            <rect width="24" height="24" rx="4" fill="#e5e7eb" />
-                                                                            <path d="M16 17v-.5a2.5 2.5 0 0 0-2.5-2.5h-3A2.5 2.5 0 0 0 8 16.5V17" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
-                                                                            <circle cx="12" cy="10" r="2" stroke="#9ca3af" strokeWidth="1.5" />
-                                                                        </svg>
-                                                                    </div>
-                                                                )}
+                                                                <img
+                                                                    src={item.image || '/assets/logo.png'}
+                                                                    alt={item.title}
+                                                                    className="w-10 h-10 object-contain rounded mr-3 flex-shrink-0 bg-white border border-gray-100"
+                                                                    onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
+                                                                />
                                                                 <div className="flex-1">
                                                                     <span className="font-medium text-sm truncate max-w-[160px]">{item.title}</span>
                                                                 </div>

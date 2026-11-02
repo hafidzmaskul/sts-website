@@ -69,10 +69,11 @@ export default function LikedProducts() {
                                                 ? (product.images[0].image_path.startsWith('/')
                                                     ? product.images[0].image_path
                                                     : `/storage/${product.images[0].image_path}`)
-                                                : '/assets/notfound.png'
+                                                : '/assets/logo.png'
                                         }
                                         alt={product.title}
-                                        className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded flex-shrink-0 border order-1 xs:order-2"
+                                        className="w-16 h-16 xs:w-20 xs:h-20 object-contain rounded flex-shrink-0 border order-1 xs:order-2 bg-white"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = '/assets/logo.png'; }}
                                     />
                                     <div className="flex-1 order-3">
                                         <div className="font-medium text-sm md:text-base text-[#232323] line-clamp-2 mb-1">

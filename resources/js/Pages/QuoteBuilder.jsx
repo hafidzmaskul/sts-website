@@ -691,7 +691,7 @@ export default function QuoteBuilder() {
                                                                         src={
                                                                             product.images && product.images.length > 0 && product.images[0].image_path
                                                                                 ? (product.images[0].image_path.startsWith('/') ? product.images[0].image_path : `/storage/${product.images[0].image_path}`)
-                                                                                : (product.image || product.image_url || '/assets/dummmy/427e6a38b9f21cabf9f278b8d278b378ad645ab1.png')
+                                                                                : (product.image || product.image_url || '/assets/logo.png')
                                                                         }
                                                                         alt={product.title || product.name || 'Product'}
                                                                         className="max-h-full max-w-full object-contain"
