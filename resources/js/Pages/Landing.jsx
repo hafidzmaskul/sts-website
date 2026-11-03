@@ -674,55 +674,66 @@ export default function Landing({
                     ))}
                 </div>
             </section>
-            <section className="w-full mt-20  flex flex-col md:flex-row bg-[#0079C2]">
+            <section className="w-full mt-12 md:mt-20 flex flex-col lg:flex-row bg-[#0079C2]">
                 {/* Left Column */}
-                <div className=" flex-1 flex flex-col  px-20 py-10 text-white">
-                    <h2 className="text-3xl font-bold mb-6 ">Contact Information</h2>
-                    <p className="mb-7  text-lg">Say something to start a live chat!</p>
-                    <div className="flex flex-col gap-6 ">
-                        <div className='flex'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}><path fill="currentColor" fillOpacity={0} strokeDasharray={64} strokeDashoffset={64} d="M8 3c0.5 0 2.5 4.5 2.5 5c0 1 -1.5 2 -2 3c-0.5 1 0.5 2 1.5 3c0.39 0.39 2 2 3 1.5c1 -0.5 2 -2 3 -2c0.5 0 5 2 5 2.5c0 2 -1.5 3.5 -3 4c-1.5 0.5 -2.5 0.5 -4.5 0c-2 -0.5 -3.5 -1 -6 -3.5c-2.5 -2.5 -3 -4 -3.5 -6c-0.5 -2 -0.5 -3 0 -4.5c0.5 -1.5 2 -3 4 -3Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"></animate><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"></animate></path><path strokeDasharray={4} strokeDashoffset={4} d="M15.76 8.28c-0.5 -0.51 -1.1 -0.93 -1.76 -1.24M15.76 8.28c0.49 0.49 0.9 1.08 1.2 1.72"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.2s" dur="0.3s" values="4;0"></animate></path><path strokeDasharray={6} strokeDashoffset={6} d="M18.67 5.35c-1 -1 -2.26 -1.73 -3.67 -2.1M18.67 5.35c0.99 1 1.72 2.25 2.08 3.65"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.4s" dur="0.3s" values="6;0"></animate></path></g></svg>
-                            <div className="text-lg font-medium mb-1 ml-10">+1012 3456 789</div>
-                        </div>
-                        <div className='flex'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M2 20V4h20v16zm10-7l8-5V6l-8 5l-8-5v2z"></path></svg>
-                            <div className="text-lg font-medium mb-1 ml-10">demo@gmail.com</div>
-                        </div>
-                        <div className="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M11.291 21.706L12 21zM12 21l.708.706a1 1 0 0 1-1.417 0l-.006-.007l-.017-.017l-.062-.063a48 48 0 0 1-1.04-1.106a50 50 0 0 1-2.456-2.908c-.892-1.15-1.804-2.45-2.497-3.734C4.535 12.612 4 11.248 4 10c0-4.539 3.592-8 8-8s8 3.461 8 8c0 1.248-.535 2.612-1.213 3.87c-.693 1.286-1.604 2.585-2.497 3.735a50 50 0 0 1-3.496 4.014l-.062.063l-.017.017l-.006.006zm0-8a3 3 0 1 0 0-6a3 3 0 0 0 0 6" clipRule="evenodd"></path></svg>
-                            <div className="ml-10">
-                                <div className="text-base">132 Dartmouth Street</div>
-                                <div className="text-base">Boston, Massachusetts 02156</div>
-                                <div className="text-base">United States</div>
+                <div className="flex-1 flex flex-col justify-between px-6 sm:px-10 md:px-12 lg:px-20 py-8 sm:py-10 text-white">
+                    <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Contact Information</h2>
+                        <p className="mb-6 sm:mb-8 text-base sm:text-lg text-white/90">Say something to start a live chat!</p>
+                        <div className="flex flex-col gap-5 sm:gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}><path fill="currentColor" fillOpacity={0} strokeDasharray={64} strokeDashoffset={64} d="M8 3c0.5 0 2.5 4.5 2.5 5c0 1 -1.5 2 -2 3c-0.5 1 0.5 2 1.5 3c0.39 0.39 2 2 3 1.5c1 -0.5 2 -2 3 -2c0.5 0 5 2 5 2.5c0 2 -1.5 3.5 -3 4c-1.5 0.5 -2.5 0.5 -4.5 0c-2 -0.5 -3.5 -1 -6 -3.5c-2.5 -2.5 -3 -4 -3.5 -6c-0.5 -2 -0.5 -3 0 -4.5c0.5 -1.5 2 -3 4 -3Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.5s" values="0;1"></animate><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"></animate></path><path strokeDasharray={4} strokeDashoffset={4} d="M15.76 8.28c-0.5 -0.51 -1.1 -0.93 -1.76 -1.24M15.76 8.28c0.49 0.49 0.9 1.08 1.2 1.72"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.2s" dur="0.3s" values="4;0"></animate></path><path strokeDasharray={6} strokeDashoffset={6} d="M18.67 5.35c-1 -1 -2.26 -1.73 -3.67 -2.1M18.67 5.35c0.99 1 1.72 2.25 2.08 3.65"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1.4s" dur="0.3s" values="6;0"></animate></path></g></svg>
+                                </div>
+                                <a href="tel:+10123456789" className="text-base sm:text-lg font-medium hover:underline break-all">+1012 3456 789</a>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M2 20V4h20v16zm10-7l8-5V6l-8 5l-8-5v2z"></path></svg>
+                                </div>
+                                <a href="mailto:demo@gmail.com" className="text-base sm:text-lg font-medium hover:underline break-all">demo@gmail.com</a>
+                            </div>
+                            <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M11.291 21.706L12 21zM12 21l.708.706a1 1 0 0 1-1.417 0l-.006-.007l-.017-.017l-.062-.063a48 48 0 0 1-1.04-1.106a50 50 0 0 1-2.456-2.908c-.892-1.15-1.804-2.45-2.497-3.734C4.535 12.612 4 11.248 4 10c0-4.539 3.592-8 8-8s8 3.461 8 8c0 1.248-.535 2.612-1.213 3.87c-.693 1.286-1.604 2.585-2.497 3.735a50 50 0 0 1-3.496 4.014l-.062.063l-.017.017l-.006.006zm0-8a3 3 0 1 0 0-6a3 3 0 0 0 0 6" clipRule="evenodd"></path></svg>
+                                </div>
+                                <div className="text-sm sm:text-base leading-relaxed">
+                                    <div>132 Dartmouth Street</div>
+                                    <div>Boston, Massachusetts 02156</div>
+                                    <div>United States</div>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex gap-2">
-                            <a
-                                href="https://twitter.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white text-black rounded-full p-2 transition-colors duration-200 hover:bg-black hover:text-white"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.2 4.2 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.52 8.52 0 0 1-5.33 1.84q-.51 0-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23"></path></svg>
-                            </a>
-                            <a
-                                href="https://instagram.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white text-black rounded-full p-2 transition-colors duration-200 hover:bg-black hover:text-white"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"></path></svg>
-                            </a>
-                        </div>
+                    </div>
 
+                    <div className="flex items-center gap-3 mt-8 sm:mt-10">
+                        <a
+                            href="https://twitter.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white text-black rounded-full p-2.5 transition-colors duration-200 hover:bg-black hover:text-white"
+                            aria-label="Twitter"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M22.46 6c-.77.35-1.6.58-2.46.69c.88-.53 1.56-1.37 1.88-2.38c-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29c0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15c0 1.49.75 2.81 1.91 3.56c-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.2 4.2 0 0 1-1.93.07a4.28 4.28 0 0 0 4 2.98a8.52 8.52 0 0 1-5.33 1.84q-.51 0-1.02-.06C3.44 20.29 5.7 21 8.12 21C16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56c.84-.6 1.56-1.36 2.14-2.23"></path></svg>
+                        </a>
+                        <a
+                            href="https://instagram.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white text-black rounded-full p-2.5 transition-colors duration-200 hover:bg-black hover:text-white"
+                            aria-label="Instagram"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"></path></svg>
+                        </a>
                     </div>
                 </div>
+
                 {/* Right Column (Form) */}
-                <div className="flex-1  px-8 py-10">
-                    <form className="space-y-6" id='contact-submission' onSubmit={handleSubmit}>
-                        <div className="flex flex-col md:flex-row gap-6">
-                            <div className="flex-1">
-                                <label className="block mb-2 text-white" htmlFor="first_name">
+                <div className="flex-1 px-6 sm:px-10 md:px-12 lg:px-12 py-8 sm:py-10">
+                    <form className="space-y-6" id="contact-submission" onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                            <div>
+                                <label className="block mb-2 text-sm sm:text-base font-medium text-white" htmlFor="first_name">
                                     First Name
                                 </label>
                                 <input
@@ -731,13 +742,13 @@ export default function Landing({
                                     name="first_name"
                                     value={formData.first_name}
                                     onChange={handleInputChange}
-                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#000] outline-none py-2"
+                                    className="w-full border-0 border-b-2 border-white/40 bg-transparent text-white placeholder-white/50 focus:border-white focus:ring-0 outline-none py-2 transition-colors"
                                     autoComplete="off"
                                     required
                                 />
                             </div>
-                            <div className="flex-1">
-                                <label className="block mb-2 text-white" htmlFor="last_name">
+                            <div>
+                                <label className="block mb-2 text-sm sm:text-base font-medium text-white" htmlFor="last_name">
                                     Last Name
                                 </label>
                                 <input
@@ -746,15 +757,16 @@ export default function Landing({
                                     name="last_name"
                                     value={formData.last_name}
                                     onChange={handleInputChange}
-                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#000] outline-none py-2"
+                                    className="w-full border-0 border-b-2 border-white/40 bg-transparent text-white placeholder-white/50 focus:border-white focus:ring-0 outline-none py-2 transition-colors"
                                     autoComplete="off"
                                     required
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-6">
-                            <div className='flex-1'>
-                                <label className="block mb-2 text-white" htmlFor="email">
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                            <div>
+                                <label className="block mb-2 text-sm sm:text-base font-medium text-white" htmlFor="email">
                                     Email
                                 </label>
                                 <input
@@ -763,13 +775,13 @@ export default function Landing({
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#000] outline-none py-2"
+                                    className="w-full border-0 border-b-2 border-white/40 bg-transparent text-white placeholder-white/50 focus:border-white focus:ring-0 outline-none py-2 transition-colors"
                                     autoComplete="off"
                                     required
                                 />
                             </div>
-                            <div className='flex-1'>
-                                <label className="block mb-2 text-white" htmlFor="phone">
+                            <div>
+                                <label className="block mb-2 text-sm sm:text-base font-medium text-white" htmlFor="phone">
                                     Phone Number
                                 </label>
                                 <input
@@ -778,64 +790,40 @@ export default function Landing({
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleInputChange}
-                                    className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#000] outline-none py-2"
+                                    className="w-full border-0 border-b-2 border-white/40 bg-transparent text-white placeholder-white/50 focus:border-white focus:ring-0 outline-none py-2 transition-colors"
                                     autoComplete="off"
                                 />
                             </div>
                         </div>
-                        <div>
-                            <label className="block mb-3 text-white">Select Subject?</label>
-                            <div className="flex flex-col lg:flex-row gap-3 px-10 md:px-0">
-                                <label className="inline-flex items-center flex-1">
-                                    <input
-                                        type="radio"
-                                        name="subject"
-                                        value="General Inquiry 1"
-                                        checked={formData.subject === "General Inquiry 1"}
-                                        onChange={handleInputChange}
-                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
-                                    />
-                                    <span className="ml-2 text-white">General Inquiry</span>
-                                </label>
-                                <label className="inline-flex items-center flex-1">
-                                    <input
-                                        type="radio"
-                                        name="subject"
-                                        value="General Inquiry 2"
-                                        checked={formData.subject === "General Inquiry 2"}
-                                        onChange={handleInputChange}
-                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
-                                    />
-                                    <span className="ml-2 text-white">General Inquiry</span>
-                                </label>
-                                <label className="inline-flex items-center flex-1">
-                                    <input
-                                        type="radio"
-                                        name="subject"
-                                        value="General Inquiry 3"
-                                        checked={formData.subject === "General Inquiry 3"}
-                                        onChange={handleInputChange}
-                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
-                                    />
-                                    <span className="ml-2 text-white">General Inquiry</span>
-                                </label>
-                                <label className="inline-flex items-center flex-1">
-                                    <input
-                                        type="radio"
-                                        name="subject"
-                                        value="General Inquiry 4"
-                                        checked={formData.subject === "General Inquiry 4"}
-                                        onChange={handleInputChange}
-                                        className="form-radio text-[#0079C2] focus:ring-[#0079C2]"
-                                    />
-                                    <span className="ml-2 text-white">General Inquiry</span>
-                                </label>
-                            </div>
 
+                        <div>
+                            <label className="block mb-3 text-sm sm:text-base font-medium text-white">Select Subject?</label>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                                {[1, 2, 3, 4].map((num) => (
+                                    <label
+                                        key={num}
+                                        className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all border ${
+                                            formData.subject === `General Inquiry ${num}`
+                                                ? 'bg-white text-[#0079C2] border-white font-semibold shadow-sm'
+                                                : 'border-white/30 text-white hover:bg-white/10'
+                                        }`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="subject"
+                                            value={`General Inquiry ${num}`}
+                                            checked={formData.subject === `General Inquiry ${num}`}
+                                            onChange={handleInputChange}
+                                            className="accent-[#0079C2] w-4 h-4 cursor-pointer"
+                                        />
+                                        <span className="text-xs sm:text-sm whitespace-nowrap">General Inquiry {num}</span>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-white" htmlFor="message">
+                            <label className="block mb-2 text-sm sm:text-base font-medium text-white" htmlFor="message">
                                 Message
                             </label>
                             <textarea
@@ -844,19 +832,21 @@ export default function Landing({
                                 value={formData.message}
                                 onChange={handleInputChange}
                                 rows={4}
-                                className="w-full border-0 border-b-2 border-gray-300 bg-transparent focus:ring-0 focus:border-[#000] outline-none py-2 resize-none"
+                                className="w-full border-0 border-b-2 border-white/40 bg-transparent text-white placeholder-white/50 focus:border-white focus:ring-0 outline-none py-2 resize-none transition-colors"
+                                placeholder="Write your message here..."
                                 required
                             ></textarea>
                         </div>
-                        <div className="flex justify-end">
+
+                        <div className="flex justify-end pt-2">
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className=" bg-white text-[#0079C2] text-center w-full  py-3 rounded-lg hover:bg-gray-100 transition mx-auto items-center gap-2"
+                                className="inline-flex justify-center items-center gap-2 bg-white text-[#0079C2] font-semibold text-base w-full sm:w-auto sm:min-w-[180px] px-8 py-3.5 rounded-lg shadow-md hover:bg-gray-100 active:scale-[0.99] transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg className="animate-spin h-5 w-5 text-[#0079C2]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
